@@ -3,10 +3,10 @@
 ## Current Status
 - Module: 01
 - Lesson: 01 (Environment Setup & First Commit)
-- Status: In Progress
+- Status: Completed
 
 ## Completed Lessons
-- (none yet)
+- Lesson 01: Environment Setup & First Commit
 
 ## Next Lesson
 - Lesson 02: Next.js Scaffold & TypeScript Setup
