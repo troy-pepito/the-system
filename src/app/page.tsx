@@ -1,7 +1,34 @@
+"use client";
+import { useState, useEffect } from "react";
 import StatCard from "@/components/StatCard";
 import StreakCard from "@/components/StreakCard";
+import XpBar from "@/components/XpBar";
+
+const RANKS = ["E", "D", "C", "B", "A", "S"];
+const XP_PER_LEVEL = 100;
+const XP_PER_STREAK_DAY = 10;
+const LEVELS_PER_RANK = 10;
+
+function getRank(level: number): string {
+  const rankIndex = Math.min(Math.floor(level / LEVELS_PER_RANK), RANKS.length - 1);
+  return RANKS[rankIndex];
+}
 
 export default function Home() {
+  const [streakDays, setStreakDays] = useState(0);
+  useEffect(() => {
+    const saved = localStorage.getItem("streakStartDate");
+    if (saved) {
+      const days = Math.floor((Date.now() - new Date(saved).getTime()) / (1000 * 60 * 60 * 24));
+      setStreakDays(days);
+    }
+  }, []);
+
+  const totalXp = streakDays * XP_PER_STREAK_DAY;
+  const level = Math.floor(totalXp / XP_PER_LEVEL) + 1;
+  const currentXp = totalXp % XP_PER_LEVEL;
+  const rank = getRank(level - 1);
+
   return (
     <main className="min-h-screen bg-slate-950 flex items-center justify-center p-8">
       <div className="max-w-2xl w-full space-y-8">
@@ -22,28 +49,30 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-xs text-slate-500 uppercase tracking-wider">Rank</p>
-              <p className="text-2xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]">E</p>
+              <p className="text-2xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]">{rank}</p>
             </div>
             <div>
               <p className="text-xs text-slate-500 uppercase tracking-wider">Level</p>
-              <p className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.6)]">1</p>
+              <p className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.6)]">{level}</p>
             </div>
           </div>
         </div>
+
+        <XpBar xp={currentXp} xpToNext={XP_PER_LEVEL} level={level} />
 
         <div>
           <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
             Stats
           </h2>
-          <div className="grid grid-cols-4 gap-3">
-            <StatCard name="NOFAP" value={5} />
-            <StatCard name="AGI" value={3} />
-            <StatCard name="INT" value={8} />
-            <StatCard name="VIT" value={4} />
+          <div className="grid grid-cols-2 gap-3">
+            <StatCard name="NOFAP" value={streakDays} />
+            <StatCard name="SPIRITUAL" value={0} />
+            <StatCard name="INT" value={0} />
+            <StatCard name="FITNESS" value={0} />
           </div>
         </div>
 
-        <StreakCard title="Nofap Streak" />
+        <StreakCard title="Nofap Streak" onStreakChange={setStreakDays} />
       </div>
     </main>
   );
