@@ -1,4 +1,5 @@
 import StatCard from "@/components/StatCard";
+import StreakCard from "@/components/StreakCard";
 
 export default function Home() {
   return (
@@ -35,12 +36,14 @@ export default function Home() {
             Stats
           </h2>
           <div className="grid grid-cols-4 gap-3">
-            <StatCard name="STR" value={5} />
+            <StatCard name="NOFAP" value={5} />
             <StatCard name="AGI" value={3} />
             <StatCard name="INT" value={8} />
             <StatCard name="VIT" value={4} />
           </div>
         </div>
+
+        <StreakCard title="Nofap Streak" />
       </div>
     </main>
   );
