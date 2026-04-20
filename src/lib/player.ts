@@ -34,9 +34,9 @@ export function getRank(level: number): string {
 
 export const STATS_UPDATED_EVENT = "system:stats-updated";
 
-export function notifyStatsUpdated() {
+export function notifyStatsUpdated(detail?: { xpDelta?: number }) {
   if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent(STATS_UPDATED_EVENT));
+    window.dispatchEvent(new CustomEvent(STATS_UPDATED_EVENT, { detail }));
   }
 }
 

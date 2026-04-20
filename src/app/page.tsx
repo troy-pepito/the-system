@@ -46,8 +46,13 @@ export default function Home() {
 
   useEffect(() => {
     reload();
-    window.addEventListener(STATS_UPDATED_EVENT, reload);
-    return () => window.removeEventListener(STATS_UPDATED_EVENT, reload);
+    const onEvent = (e: Event) => {
+      const delta = (e as CustomEvent<{ xpDelta?: number }>).detail?.xpDelta;
+      if (typeof delta === "number") return;
+      reload();
+    };
+    window.addEventListener(STATS_UPDATED_EVENT, onEvent);
+    return () => window.removeEventListener(STATS_UPDATED_EVENT, onEvent);
   }, []);
 
   const activeRuns = dashboard?.activeRuns ?? [];

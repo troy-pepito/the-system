@@ -54,9 +54,17 @@ export default function Navbar() {
         bonus.bankedStreakDays * XP_PER_STREAK_DAY;
       setTotalXp(totalStreakDays * XP_PER_STREAK_DAY + rewards.xp + bonusXp);
     };
+    const onEvent = (e: Event) => {
+      const delta = (e as CustomEvent<{ xpDelta?: number }>).detail?.xpDelta;
+      if (typeof delta === "number") {
+        setTotalXp((prev) => Math.max(0, prev + delta));
+        return;
+      }
+      recompute();
+    };
     recompute();
-    window.addEventListener(STATS_UPDATED_EVENT, recompute);
-    return () => window.removeEventListener(STATS_UPDATED_EVENT, recompute);
+    window.addEventListener(STATS_UPDATED_EVENT, onEvent);
+    return () => window.removeEventListener(STATS_UPDATED_EVENT, onEvent);
   }, []);
 
   const { level, currentXp, xpToNext } = getLevelFromXp(totalXp);
