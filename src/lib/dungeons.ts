@@ -178,7 +178,7 @@ export const DUNGEONS: DungeonDef[] = [
   },
   {
     id: "attention-reclaim",
-    name: "Attention Reclaim",
+    name: "No Doomscroll",
     rank: "E",
     ruleType: "timed",
     tiers: NOFAP_TIERS,
@@ -198,7 +198,6 @@ export const DUNGEONS: DungeonDef[] = [
       "Each rung has a target — log an exposure every time you do the action in real life.",
       "Clear the current rung to unlock the next. No skipping.",
       "Rungs progress ranks E → S. Dungeon cleared when the final rung is complete.",
-      "This dungeon is about social anxiety in general. A day-game focused ladder will live in its own dungeon later.",
     ],
   },
 ];
