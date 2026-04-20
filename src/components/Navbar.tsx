@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 import {
   STATS_UPDATED_EVENT,
   XP_PER_STREAK_DAY,
@@ -88,9 +89,17 @@ export default function Navbar() {
             {navLink("/portals", "Portals")}
             {navLink("/profile", "Profile")}
           </div>
-          <div className="flex gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
+          <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
             <span className="text-amber-400">Rank {rank}</span>
             <span className="text-emerald-400">Lv {level}</span>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox:
+                    "w-6 h-6 ring-1 ring-cyan-500/40 hover:ring-cyan-400 transition-all",
+                },
+              }}
+            />
           </div>
         </div>
         <div className="flex items-center gap-3">
