@@ -14,6 +14,7 @@ import {
   getRank,
   computeStreakDays,
   STATS_UPDATED_EVENT,
+  hasPendingMutations,
 } from "@/lib/player";
 import { getDungeon } from "@/lib/dungeons";
 import {
@@ -38,6 +39,7 @@ export default function Home() {
 
   const reload = () => {
     getDashboardData().then((d) => {
+      if (hasPendingMutations()) return;
       dashboardCache = d;
       setDashboard(d);
       setQuestRewards(d.lifetimeRewards);

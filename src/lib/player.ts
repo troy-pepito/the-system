@@ -40,6 +40,21 @@ export function notifyStatsUpdated(detail?: { xpDelta?: number }) {
   }
 }
 
+let pendingMutations = 0;
+
+export function beginMutation() {
+  pendingMutations++;
+}
+
+export function endMutation() {
+  pendingMutations = Math.max(0, pendingMutations - 1);
+  if (pendingMutations === 0) notifyStatsUpdated();
+}
+
+export function hasPendingMutations() {
+  return pendingMutations > 0;
+}
+
 export function computeStreakDays(streakStart: string | null): number {
   if (!streakStart) return 0;
   return Math.floor(

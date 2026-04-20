@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 import { getDungeon } from "@/lib/dungeons";
-import { computeStreakDays, notifyStatsUpdated } from "@/lib/player";
+import {
+  computeStreakDays,
+  notifyStatsUpdated,
+  beginMutation,
+  endMutation,
+} from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import {
   setRunStartDate,
@@ -49,15 +54,24 @@ export default function AllowanceDungeonCard({
   }
 
   async function handleLog() {
-    const { count, relapsed } = await logAllowanceEvent(dungeonId, eventType);
-    setMonthCount(count);
-    if (relapsed) {
-      setStartDate(null);
-      setStreak(0);
-      if (onStreakChange) onStreakChange(0);
-      if (onRelapse) onRelapse();
+    const prevCount = monthCount;
+    setMonthCount(prevCount + 1);
+
+    beginMutation();
+    try {
+      const { count, relapsed } = await logAllowanceEvent(dungeonId, eventType);
+      setMonthCount(count);
+      if (relapsed) {
+        setStartDate(null);
+        setStreak(0);
+        if (onStreakChange) onStreakChange(0);
+        if (onRelapse) onRelapse();
+      }
+    } catch {
+      setMonthCount(prevCount);
+    } finally {
+      endMutation();
     }
-    notifyStatsUpdated();
   }
 
   const highestClearedIndex = TIERS.filter((t) => streak >= t.days).length - 1;

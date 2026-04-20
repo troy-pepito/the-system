@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 import { getDungeon } from "@/lib/dungeons";
-import { notifyStatsUpdated } from "@/lib/player";
+import {
+  notifyStatsUpdated,
+  beginMutation,
+  endMutation,
+  XP_PER_EXPOSURE,
+} from "@/lib/player";
 import {
   enterDungeon,
   endRun,
@@ -48,31 +53,53 @@ export default function ProgressiveDungeonCard({
   async function handleLog() {
     if (!currentRung || busy) return;
     setBusy(true);
+
+    const rungId = currentRung.id;
+    const prevCount = counts[rungId] ?? 0;
+
+    setCounts((prev) => ({ ...prev, [rungId]: prevCount + 1 }));
+    notifyStatsUpdated({ xpDelta: XP_PER_EXPOSURE });
+
+    beginMutation();
     try {
       await handleEnsureActive();
       const { count, dungeonCleared: cleared } = await logRungExposure(
         dungeonId,
-        currentRung.id
+        rungId
       );
-      setCounts((prev) => ({ ...prev, [currentRung.id]: count }));
+      setCounts((prev) => ({ ...prev, [rungId]: count }));
       if (cleared) {
         setActive(false);
         if (onComplete) onComplete();
       }
-      notifyStatsUpdated();
+    } catch {
+      setCounts((prev) => ({ ...prev, [rungId]: prevCount }));
+      notifyStatsUpdated({ xpDelta: -XP_PER_EXPOSURE });
     } finally {
+      endMutation();
       setBusy(false);
     }
   }
 
   async function handleUndo() {
     if (!currentRung || busy) return;
+
+    const rungId = currentRung.id;
+    const prevCount = counts[rungId] ?? 0;
+    if (prevCount === 0) return;
+
     setBusy(true);
+    setCounts((prev) => ({ ...prev, [rungId]: prevCount - 1 }));
+    notifyStatsUpdated({ xpDelta: -XP_PER_EXPOSURE });
+
+    beginMutation();
     try {
-      const { count } = await undoRungExposure(dungeonId, currentRung.id);
-      setCounts((prev) => ({ ...prev, [currentRung.id]: count }));
-      notifyStatsUpdated();
+      await undoRungExposure(dungeonId, rungId);
+    } catch {
+      setCounts((prev) => ({ ...prev, [rungId]: prevCount }));
+      notifyStatsUpdated({ xpDelta: XP_PER_EXPOSURE });
     } finally {
+      endMutation();
       setBusy(false);
     }
   }

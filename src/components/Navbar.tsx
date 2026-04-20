@@ -11,6 +11,7 @@ import {
   computeStreakDays,
   getLevelFromXp,
   getRank,
+  hasPendingMutations,
 } from "@/lib/player";
 import { getAllActiveRuns, getBonusXp } from "@/app/actions/dungeons";
 import { getLifetimeRewards } from "@/app/actions/quests";
@@ -43,6 +44,7 @@ export default function Navbar() {
         getLifetimeRewards(),
         getBonusXp(),
       ]);
+      if (hasPendingMutations()) return;
       const totalStreakDays = runs.reduce(
         (sum, r) => sum + computeStreakDays(r.startDate),
         0

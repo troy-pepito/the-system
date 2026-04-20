@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
 import { getDungeon } from "@/lib/dungeons";
-import { computeStreakDays, notifyStatsUpdated } from "@/lib/player";
+import {
+  computeStreakDays,
+  notifyStatsUpdated,
+  beginMutation,
+  endMutation,
+  XP_PER_WORKOUT,
+} from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import {
   setRunStartDate,
@@ -47,11 +53,25 @@ export default function CadenceDungeonCard({
   }
 
   async function handleToggle(workoutId: string) {
-    const { completed: isNowDone } = await toggleWorkout(dungeonId, workoutId);
-    setCompleted((prev) =>
-      isNowDone ? [...prev, workoutId] : prev.filter((id) => id !== workoutId)
+    const wasDone = completed.includes(workoutId);
+    const isNowDone = !wasDone;
+    const prev = completed;
+
+    setCompleted(
+      isNowDone ? [...completed, workoutId] : completed.filter((id) => id !== workoutId)
     );
-    notifyStatsUpdated();
+    const xpDelta = (isNowDone ? 1 : -1) * XP_PER_WORKOUT;
+    notifyStatsUpdated({ xpDelta });
+
+    beginMutation();
+    try {
+      await toggleWorkout(dungeonId, workoutId);
+    } catch {
+      setCompleted(prev);
+      notifyStatsUpdated({ xpDelta: -xpDelta });
+    } finally {
+      endMutation();
+    }
   }
 
   async function handleRelapse() {
