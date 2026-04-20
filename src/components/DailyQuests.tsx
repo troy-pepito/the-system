@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   QUESTS,
   applyQuest,
@@ -24,6 +24,7 @@ export default function DailyQuests({
 }: DailyQuestsProps) {
   const [completed, setCompleted] = useState<string[]>(initialTodayIds);
   const [lifetime, setLifetime] = useState<QuestRewards>(initialLifetime);
+  const pendingCount = useRef(0);
 
   async function toggleQuest(id: string) {
     const quest = QUESTS.find((q) => q.id === id);
@@ -43,13 +44,20 @@ export default function DailyQuests({
     setLifetime(nextLifetime);
     onRewardsChange?.(nextLifetime);
 
+    const xpDelta = (isNowDone ? 1 : -1) * quest.xp;
+    notifyStatsUpdated({ xpDelta });
+
+    pendingCount.current++;
     try {
       await toggleQuestCompletion(id, todayLocalISO());
-      notifyStatsUpdated();
+      pendingCount.current--;
+      if (pendingCount.current === 0) notifyStatsUpdated();
     } catch {
+      pendingCount.current--;
       setCompleted(prevCompleted);
       setLifetime(prevLifetime);
       onRewardsChange?.(prevLifetime);
+      notifyStatsUpdated({ xpDelta: -xpDelta });
     }
   }
 
