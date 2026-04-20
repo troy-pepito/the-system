@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ClerkProvider, Show } from "@clerk/nextjs";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import AwakeningOverlay from "@/components/AwakeningOverlay";
 import AchievementToast from "@/components/AchievementToast";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import SignInGate from "@/components/SignInGate";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,17 +42,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <ServiceWorkerRegistration />
-        <AwakeningOverlay />
-        <Navbar />
-        {children}
-        <AchievementToast />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="en"
+        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      >
+        <body className="min-h-full flex flex-col">
+          <ServiceWorkerRegistration />
+          <AwakeningOverlay />
+          <Show when="signed-out">
+            <SignInGate />
+          </Show>
+          <Show when="signed-in">
+            <Navbar />
+            {children}
+            <AchievementToast />
+          </Show>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

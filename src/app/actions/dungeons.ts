@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getDungeon, DUNGEONS } from "@/lib/dungeons";
 import { getTodayCompletions, getLifetimeRewards } from "@/app/actions/quests";
 import { todayLocalISO, type QuestRewards } from "@/lib/quests";
+import { requireUserId } from "@/lib/auth";
 
 const TAG = "player:stats";
 
@@ -49,9 +50,9 @@ function toState(run: {
 }
 
 const getActiveRunCached = unstable_cache(
-  async (dungeonId: string) => {
+  async (userId: string, dungeonId: string) => {
     const run = await prisma.dungeonRun.findFirst({
-      where: { dungeonId, active: true },
+      where: { userId, dungeonId, active: true },
       orderBy: { createdAt: "desc" },
     });
     return run ? toState(run) : null;
@@ -63,13 +64,14 @@ const getActiveRunCached = unstable_cache(
 export async function getActiveRun(
   dungeonId: string
 ): Promise<DungeonRunState | null> {
-  return getActiveRunCached(dungeonId);
+  const userId = await requireUserId();
+  return getActiveRunCached(userId, dungeonId);
 }
 
 const getAllActiveRunsCached = unstable_cache(
-  async () => {
+  async (userId: string) => {
     const runs = await prisma.dungeonRun.findMany({
-      where: { active: true },
+      where: { userId, active: true },
       orderBy: { createdAt: "desc" },
     });
     return runs.map(toState);
@@ -79,7 +81,8 @@ const getAllActiveRunsCached = unstable_cache(
 );
 
 export async function getAllActiveRuns(): Promise<DungeonRunState[]> {
-  return getAllActiveRunsCached();
+  const userId = await requireUserId();
+  return getAllActiveRunsCached(userId);
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
@@ -123,13 +126,14 @@ export async function getDashboardData(): Promise<DashboardData> {
 export async function enterDungeon(
   dungeonId: string
 ): Promise<DungeonRunState> {
+  const userId = await requireUserId();
   const existing = await prisma.dungeonRun.findFirst({
-    where: { dungeonId, active: true },
+    where: { userId, dungeonId, active: true },
   });
   if (existing) return toState(existing);
 
   const run = await prisma.dungeonRun.create({
-    data: { dungeonId, active: true },
+    data: { userId, dungeonId, active: true },
   });
   updateTag(TAG);
   return toState(run);
@@ -139,8 +143,9 @@ export async function setRunStartDate(
   dungeonId: string,
   dateIso: string
 ): Promise<DungeonRunState> {
+  const userId = await requireUserId();
   const existing = await prisma.dungeonRun.findFirst({
-    where: { dungeonId, active: true },
+    where: { userId, dungeonId, active: true },
   });
   const date = new Date(dateIso);
   if (existing) {
@@ -152,7 +157,7 @@ export async function setRunStartDate(
     return toState(updated);
   }
   const run = await prisma.dungeonRun.create({
-    data: { dungeonId, startDate: date, active: true },
+    data: { userId, dungeonId, startDate: date, active: true },
   });
   updateTag(TAG);
   return toState(run);
@@ -162,8 +167,9 @@ export async function endRun(
   dungeonId: string,
   reason: "relapse" | "completed"
 ): Promise<void> {
+  const userId = await requireUserId();
   await prisma.dungeonRun.updateMany({
-    where: { dungeonId, active: true },
+    where: { userId, dungeonId, active: true },
     data: { active: false, endReason: reason },
   });
   updateTag(TAG);
@@ -194,9 +200,9 @@ function currentWeekBounds(): { start: Date; end: Date } {
 }
 
 const getWeekWorkoutsCached = unstable_cache(
-  async (dungeonId: string) => {
+  async (userId: string, dungeonId: string) => {
     const run = await prisma.dungeonRun.findFirst({
-      where: { dungeonId, active: true },
+      where: { userId, dungeonId, active: true },
     });
     if (!run) return [];
     const { start, end } = currentWeekBounds();
@@ -212,15 +218,17 @@ const getWeekWorkoutsCached = unstable_cache(
 );
 
 export async function getWeekWorkouts(dungeonId: string): Promise<string[]> {
-  return getWeekWorkoutsCached(dungeonId);
+  const userId = await requireUserId();
+  return getWeekWorkoutsCached(userId, dungeonId);
 }
 
 export async function toggleWorkout(
   dungeonId: string,
   workoutType: string
 ): Promise<{ completed: boolean }> {
+  const userId = await requireUserId();
   const run = await prisma.dungeonRun.findFirst({
-    where: { dungeonId, active: true },
+    where: { userId, dungeonId, active: true },
   });
   if (!run) throw new Error(`No active run for ${dungeonId}`);
 
@@ -253,9 +261,9 @@ export async function toggleWorkout(
 }
 
 const getMonthEventCountCached = unstable_cache(
-  async (dungeonId: string, type: string) => {
+  async (userId: string, dungeonId: string, type: string) => {
     const run = await prisma.dungeonRun.findFirst({
-      where: { dungeonId, active: true },
+      where: { userId, dungeonId, active: true },
     });
     if (!run) return 0;
     const { start, end } = currentMonthBounds();
@@ -271,11 +279,12 @@ export async function getMonthEventCount(
   dungeonId: string,
   type: string
 ): Promise<number> {
-  return getMonthEventCountCached(dungeonId, type);
+  const userId = await requireUserId();
+  return getMonthEventCountCached(userId, dungeonId, type);
 }
 
 const getBonusXpCached = unstable_cache(
-  async () => {
+  async (userId: string) => {
     const workoutIds = Array.from(
       new Set(
         DUNGEONS.flatMap((d) => d.cadence?.workouts.map((w) => w.id) ?? [])
@@ -289,13 +298,17 @@ const getBonusXpCached = unstable_cache(
 
     const [workoutCount, exposureCount, completedRuns] = await Promise.all([
       workoutIds.length > 0
-        ? prisma.dungeonEvent.count({ where: { type: { in: workoutIds } } })
+        ? prisma.dungeonEvent.count({
+            where: { type: { in: workoutIds }, run: { userId } },
+          })
         : Promise.resolve(0),
       exposureIds.length > 0
-        ? prisma.dungeonEvent.count({ where: { type: { in: exposureIds } } })
+        ? prisma.dungeonEvent.count({
+            where: { type: { in: exposureIds }, run: { userId } },
+          })
         : Promise.resolve(0),
       prisma.dungeonRun.findMany({
-        where: { active: false, endReason: "completed" },
+        where: { userId, active: false, endReason: "completed" },
         select: { startDate: true, updatedAt: true },
       }),
     ]);
@@ -326,13 +339,14 @@ export async function getBonusXp(): Promise<{
   completions: number;
   bankedStreakDays: number;
 }> {
-  return getBonusXpCached();
+  const userId = await requireUserId();
+  return getBonusXpCached(userId);
 }
 
 const getRungCountsCached = unstable_cache(
-  async (dungeonId: string) => {
+  async (userId: string, dungeonId: string) => {
     const run = await prisma.dungeonRun.findFirst({
-      where: { dungeonId, active: true },
+      where: { userId, dungeonId, active: true },
     });
     if (!run) return {} as Record<string, number>;
     const events = await prisma.dungeonEvent.groupBy({
@@ -353,13 +367,15 @@ const getRungCountsCached = unstable_cache(
 export async function getRungCounts(
   dungeonId: string
 ): Promise<Record<string, number>> {
-  return getRungCountsCached(dungeonId);
+  const userId = await requireUserId();
+  return getRungCountsCached(userId, dungeonId);
 }
 
 export async function logRungExposure(
   dungeonId: string,
   rungId: string
 ): Promise<{ count: number; rungCleared: boolean; dungeonCleared: boolean }> {
+  const userId = await requireUserId();
   const dungeon = getDungeon(dungeonId);
   if (!dungeon?.progressive) {
     throw new Error(`Dungeon ${dungeonId} has no progressive config`);
@@ -368,7 +384,7 @@ export async function logRungExposure(
   if (!rung) throw new Error(`Unknown rung ${rungId}`);
 
   const run = await prisma.dungeonRun.findFirst({
-    where: { dungeonId, active: true },
+    where: { userId, dungeonId, active: true },
   });
   if (!run) throw new Error(`No active run for ${dungeonId}`);
 
@@ -409,8 +425,9 @@ export async function undoRungExposure(
   dungeonId: string,
   rungId: string
 ): Promise<{ count: number }> {
+  const userId = await requireUserId();
   const run = await prisma.dungeonRun.findFirst({
-    where: { dungeonId, active: true },
+    where: { userId, dungeonId, active: true },
   });
   if (!run) throw new Error(`No active run for ${dungeonId}`);
 
@@ -432,12 +449,13 @@ export async function logAllowanceEvent(
   dungeonId: string,
   type: string
 ): Promise<{ count: number; relapsed: boolean }> {
+  const userId = await requireUserId();
   const dungeon = getDungeon(dungeonId);
   if (!dungeon?.allowance) {
     throw new Error(`Dungeon ${dungeonId} has no allowance config`);
   }
   const run = await prisma.dungeonRun.findFirst({
-    where: { dungeonId, active: true },
+    where: { userId, dungeonId, active: true },
   });
   if (!run) throw new Error(`No active run for ${dungeonId}`);
 
