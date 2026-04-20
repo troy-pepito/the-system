@@ -29,18 +29,28 @@ export default function DailyQuests({
     const quest = QUESTS.find((q) => q.id === id);
     if (!quest) return;
 
-    const today = todayLocalISO();
-    const { completed: isNowDone } = await toggleQuestCompletion(id, today);
+    const wasDone = completed.includes(id);
+    const isNowDone = !wasDone;
+    const prevCompleted = completed;
+    const prevLifetime = lifetime;
 
-    const next = isNowDone
+    const nextCompleted = isNowDone
       ? [...completed, id]
       : completed.filter((q) => q !== id);
-    const newLifetime = applyQuest(lifetime, quest, isNowDone ? 1 : -1);
+    const nextLifetime = applyQuest(lifetime, quest, isNowDone ? 1 : -1);
 
-    setCompleted(next);
-    setLifetime(newLifetime);
-    onRewardsChange?.(newLifetime);
-    notifyStatsUpdated();
+    setCompleted(nextCompleted);
+    setLifetime(nextLifetime);
+    onRewardsChange?.(nextLifetime);
+
+    try {
+      await toggleQuestCompletion(id, todayLocalISO());
+      notifyStatsUpdated();
+    } catch {
+      setCompleted(prevCompleted);
+      setLifetime(prevLifetime);
+      onRewardsChange?.(prevLifetime);
+    }
   }
 
   return (
