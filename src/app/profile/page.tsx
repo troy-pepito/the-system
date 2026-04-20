@@ -1,0 +1,171 @@
+"use client";
+import { useEffect, useState } from "react";
+import Card from "@/components/Card";
+import { ACHIEVEMENTS, rarityStyle } from "@/lib/achievements";
+import {
+  getProfilePageData,
+  type ProfilePageData,
+} from "@/app/actions/achievements";
+import { getRank, STATS_UPDATED_EVENT } from "@/lib/player";
+
+let profileCache: ProfilePageData | null = null;
+
+export default function ProfilePage() {
+  const [data, setData] = useState<ProfilePageData | null>(profileCache);
+
+  useEffect(() => {
+    const load = () => {
+      getProfilePageData()
+        .then((d) => {
+          profileCache = d;
+          setData(d);
+        })
+        .catch(() => {});
+    };
+    load();
+    window.addEventListener(STATS_UPDATED_EVENT, load);
+    return () => window.removeEventListener(STATS_UPDATED_EVENT, load);
+  }, []);
+
+  if (!data) return <main className="min-h-screen bg-slate-950 p-4 sm:p-8" />;
+
+  const { stats, unlocked } = data;
+  const unlockedMap = new Map(unlocked.map((u) => [u.id, u.unlockedAt]));
+  const totalCount = ACHIEVEMENTS.length;
+  const unlockedCount = unlocked.length;
+  const completion = Math.round((unlockedCount / totalCount) * 100);
+  const rank = getRank(stats.level);
+
+  return (
+    <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
+      <div className="max-w-2xl mx-auto w-full space-y-8">
+        <div className="text-center">
+          <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
+            Hunter Profile
+          </p>
+          <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+        </div>
+
+        <Card className="p-6 space-y-4">
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest">Rank</p>
+              <p className="text-3xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] mt-1">
+                {rank}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest">Level</p>
+              <p className="text-3xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.6)] mt-1">
+                {stats.level}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest">Total XP</p>
+              <p className="text-3xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)] mt-1">
+                {stats.totalXp.toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+            Lifetime Record
+          </p>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <StatLine label="Active Dungeons" value={stats.activeRunCount} />
+            <StatLine label="Dungeons Cleared" value={stats.completedRunCount} />
+            <StatLine label="Workouts Logged" value={stats.workoutTotal} />
+            <StatLine label="Exposures Logged" value={stats.exposureTotal} />
+            <StatLine label="Quests Completed" value={stats.questTotal} />
+            <StatLine label="Perfect Days" value={stats.perfectQuestDays} />
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
+              Trophies
+            </p>
+            <p className="text-xs text-slate-400">
+              <span className="text-amber-300 font-bold">{unlockedCount}</span>
+              <span className="text-slate-600"> / {totalCount}</span>
+              <span className="text-slate-500 ml-2">({completion}%)</span>
+            </p>
+          </div>
+          <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden mb-5">
+            <div
+              className="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full transition-all duration-700 ease-out shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+              style={{ width: `${completion}%` }}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {ACHIEVEMENTS.map((def) => {
+              const unlockedAt = unlockedMap.get(def.id);
+              const style = rarityStyle(def.rarity);
+              const isUnlocked = !!unlockedAt;
+              return (
+                <div
+                  key={def.id}
+                  className={`relative border rounded-lg p-3 transition-all ${
+                    isUnlocked
+                      ? `${style.bg} ${style.border} ${style.glow}`
+                      : "bg-slate-900/50 border-slate-800"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <span
+                      className={`text-xl font-bold flex-shrink-0 w-9 h-9 flex items-center justify-center border rounded ${
+                        isUnlocked
+                          ? `${style.text} ${style.border} ${style.bg} ${style.glow}`
+                          : "text-slate-700 border-slate-800 bg-slate-900"
+                      }`}
+                    >
+                      {isUnlocked ? def.icon : "?"}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className={`text-xs font-bold uppercase tracking-wider truncate ${
+                          isUnlocked ? style.text : "text-slate-600"
+                        }`}
+                      >
+                        {isUnlocked ? def.name : "???"}
+                      </p>
+                      <p
+                        className={`text-[10px] leading-snug mt-0.5 ${
+                          isUnlocked ? "text-slate-300" : "text-slate-700"
+                        }`}
+                      >
+                        {def.description}
+                      </p>
+                      <p
+                        className={`text-[9px] uppercase tracking-widest mt-1 ${
+                          isUnlocked ? style.text : "text-slate-700"
+                        }`}
+                      >
+                        {style.label}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      </div>
+    </main>
+  );
+}
+
+function StatLine({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="flex justify-between border-b border-slate-800 py-1.5">
+      <span className="text-[11px] text-slate-500 uppercase tracking-wider">
+        {label}
+      </span>
+      <span className="text-sm text-cyan-300 font-bold">{value}</span>
+    </div>
+  );
+}

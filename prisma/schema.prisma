@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model DungeonRun {
+  id         Int            @id @default(autoincrement())
+  dungeonId  String
+  startDate  DateTime?      @db.Date
+  active     Boolean        @default(true)
+  endReason  String?
+  events     DungeonEvent[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model DungeonEvent {
+  id        Int        @id @default(autoincrement())
+  runId     Int
+  run       DungeonRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  type      String
+  date      DateTime   @db.Date
+  value     Float?
+  note      String?
+  createdAt DateTime   @default(now())
+}
+
+model QuestCompletion {
+  id        Int      @id @default(autoincrement())
+  questId   String
+  date      DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  @@unique([questId, date])
+}
+
+model Achievement {
+  id             Int      @id @default(autoincrement())
+  achievementId  String   @unique
+  unlockedAt     DateTime @default(now())
+}

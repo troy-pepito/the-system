@@ -1,48 +1,90 @@
 "use client";
 import { useState, useEffect } from "react";
-import StatCard from "@/components/StatCard";
 import StreakCard from "@/components/StreakCard";
-import XpBar from "@/components/XpBar";
+import AllowanceDungeonCard from "@/components/AllowanceDungeonCard";
+import StatCard from "@/components/StatCard";
+import Card from "@/components/Card";
+import DailyQuests, { QuestRewards } from "@/components/DailyQuests";
+import {
+  XP_PER_STREAK_DAY,
+  XP_PER_WORKOUT,
+  XP_PER_EXPOSURE,
+  XP_PER_COMPLETION,
+  getLevelFromXp,
+  getRank,
+  computeStreakDays,
+  STATS_UPDATED_EVENT,
+} from "@/lib/player";
+import { getDungeon } from "@/lib/dungeons";
+import {
+  getDashboardData,
+  type DashboardData,
+} from "@/app/actions/dungeons";
+import TimedDungeonCard from "@/components/TimedDungeonCard";
+import CadenceDungeonCard from "@/components/CadenceDungeonCard";
+import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
 
-const RANKS = ["E", "D", "C", "B", "A", "S"];
-const XP_PER_LEVEL = 100;
-const XP_PER_STREAK_DAY = 10;
-const LEVELS_PER_RANK = 10;
+const ZERO_REWARDS: QuestRewards = { xp: 0, body: 0, mind: 0, emotion: 0, energy: 0, spirit: 0 };
 
-function getRank(level: number): string {
-  const rankIndex = Math.min(Math.floor(level / LEVELS_PER_RANK), RANKS.length - 1);
-  return RANKS[rankIndex];
-}
+let dashboardCache: DashboardData | null = null;
 
 export default function Home() {
-  const [streakDays, setStreakDays] = useState(0);
+  const [dashboard, setDashboard] = useState<DashboardData | null>(
+    dashboardCache
+  );
+  const [questRewards, setQuestRewards] = useState<QuestRewards>(
+    dashboardCache?.lifetimeRewards ?? ZERO_REWARDS
+  );
+
+  const reload = () => {
+    getDashboardData().then((d) => {
+      dashboardCache = d;
+      setDashboard(d);
+      setQuestRewards(d.lifetimeRewards);
+    });
+  };
+
   useEffect(() => {
-    const saved = localStorage.getItem("streakStartDate");
-    if (saved) {
-      const days = Math.floor((Date.now() - new Date(saved).getTime()) / (1000 * 60 * 60 * 24));
-      setStreakDays(days);
-    }
+    reload();
+    window.addEventListener(STATS_UPDATED_EVENT, reload);
+    return () => window.removeEventListener(STATS_UPDATED_EVENT, reload);
   }, []);
 
-  const totalXp = streakDays * XP_PER_STREAK_DAY;
-  const level = Math.floor(totalXp / XP_PER_LEVEL) + 1;
-  const currentXp = totalXp % XP_PER_LEVEL;
-  const rank = getRank(level - 1);
+  const activeRuns = dashboard?.activeRuns ?? [];
+  const bonus = dashboard?.bonusXp ?? {
+    workouts: 0,
+    exposures: 0,
+    completions: 0,
+    bankedStreakDays: 0,
+  };
+  const details = dashboard?.details ?? {};
+
+  const totalStreakDays = activeRuns.reduce(
+    (sum, run) => sum + computeStreakDays(run.startDate),
+    0
+  );
+
+  const bonusXp =
+    bonus.workouts * XP_PER_WORKOUT +
+    bonus.exposures * XP_PER_EXPOSURE +
+    bonus.completions * XP_PER_COMPLETION +
+    bonus.bankedStreakDays * XP_PER_STREAK_DAY;
+  const totalXp =
+    totalStreakDays * XP_PER_STREAK_DAY + questRewards.xp + bonusXp;
+  const { level } = getLevelFromXp(totalXp);
+  const rank = getRank(level);
 
   return (
-    <main className="min-h-screen bg-slate-950 flex items-center justify-center p-8">
-      <div className="max-w-2xl w-full space-y-8">
-        <div className="text-center space-y-2">
+    <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
+      <div className="max-w-2xl mx-auto w-full space-y-8">
+        <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
             Player Status Window
           </p>
-          <h1 className="text-5xl font-bold text-cyan-400 drop-shadow-[0_0_30px_rgba(34,211,238,0.8)] tracking-widest uppercase">
-            The System
-          </h1>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
 
-        <div className="bg-slate-900/80 rounded-xl p-6 border border-cyan-500/20 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+        <Card className="p-6">
           <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
             Awakening Status
           </h2>
@@ -56,23 +98,96 @@ export default function Home() {
               <p className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.6)]">{level}</p>
             </div>
           </div>
-        </div>
-
-        <XpBar xp={currentXp} xpToNext={XP_PER_LEVEL} level={level} />
+        </Card>
 
         <div>
           <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-            Stats
+            Dimensions
           </h2>
           <div className="grid grid-cols-2 gap-3">
-            <StatCard name="NOFAP" value={streakDays} />
-            <StatCard name="SPIRITUAL" value={0} />
-            <StatCard name="INT" value={0} />
-            <StatCard name="FITNESS" value={0} />
+            <StatCard name="BODY" value={questRewards.body} />
+            <StatCard name="MIND" value={questRewards.mind} />
+            <StatCard name="EMOTION" value={questRewards.emotion} />
+            <StatCard name="ENERGY" value={questRewards.energy} />
+            <div className="col-span-2">
+              <StatCard name="SPIRIT" value={questRewards.spirit} />
+            </div>
           </div>
         </div>
 
-        <StreakCard title="Nofap Streak" onStreakChange={setStreakDays} />
+        {dashboard && (
+          <DailyQuests
+            initialTodayIds={dashboard.todayQuestIds}
+            initialLifetime={dashboard.lifetimeRewards}
+            onRewardsChange={setQuestRewards}
+          />
+        )}
+
+        {dashboard &&
+          activeRuns.map((run) => {
+            const d = getDungeon(run.dungeonId);
+            if (!d) return null;
+            const detail = details[run.dungeonId] ?? {};
+            if (d.ruleType === "continuous_streak") {
+              return (
+                <StreakCard
+                  key={run.dungeonId}
+                  dungeonId={run.dungeonId}
+                  initialRun={run}
+                  onStreakChange={reload}
+                  onRelapse={reload}
+                />
+              );
+            }
+            if (d.ruleType === "allowance") {
+              return (
+                <AllowanceDungeonCard
+                  key={run.dungeonId}
+                  dungeonId={run.dungeonId}
+                  eventType={d.allowance?.unitLabel ?? "consume"}
+                  initialRun={run}
+                  initialMonthCount={detail.monthCount ?? 0}
+                  onStreakChange={reload}
+                  onRelapse={reload}
+                />
+              );
+            }
+            if (d.ruleType === "timed") {
+              return (
+                <TimedDungeonCard
+                  key={run.dungeonId}
+                  dungeonId={run.dungeonId}
+                  initialRun={run}
+                  onRelapse={reload}
+                  onComplete={reload}
+                />
+              );
+            }
+            if (d.ruleType === "cadence") {
+              return (
+                <CadenceDungeonCard
+                  key={run.dungeonId}
+                  dungeonId={run.dungeonId}
+                  initialRun={run}
+                  initialWeekWorkouts={detail.weekWorkouts ?? []}
+                  onRelapse={reload}
+                />
+              );
+            }
+            if (d.ruleType === "progressive") {
+              return (
+                <ProgressiveDungeonCard
+                  key={run.dungeonId}
+                  dungeonId={run.dungeonId}
+                  initialActive={run.active}
+                  initialRungCounts={detail.rungCounts ?? {}}
+                  onRelapse={reload}
+                  onComplete={reload}
+                />
+              );
+            }
+            return null;
+          })}
       </div>
     </main>
   );

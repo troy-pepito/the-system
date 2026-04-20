@@ -1,6 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import AwakeningOverlay from "@/components/AwakeningOverlay";
+import AchievementToast from "@/components/AchievementToast";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,6 +19,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "The System",
   description: "Solo Leveling-inspired gamified self-improvement web app",
+  appleWebApp: {
+    capable: true,
+    title: "The System",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#020617",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -27,7 +44,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ServiceWorkerRegistration />
+        <AwakeningOverlay />
+        <Navbar />
+        {children}
+        <AchievementToast />
+      </body>
     </html>
   );
 }

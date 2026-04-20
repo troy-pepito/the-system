@@ -9,21 +9,24 @@ import {
   type DungeonRunState,
 } from "@/app/actions/dungeons";
 
-interface StreakCardProps {
+interface TimedDungeonCardProps {
   dungeonId: string;
   initialRun: DungeonRunState;
   onStreakChange?: (days: number) => void;
   onRelapse?: () => void;
+  onComplete?: () => void;
 }
 
-export default function StreakCard({
+export default function TimedDungeonCard({
   dungeonId,
   initialRun,
   onStreakChange,
   onRelapse,
-}: StreakCardProps) {
+  onComplete,
+}: TimedDungeonCardProps) {
   const dungeon = getDungeon(dungeonId);
   const TIERS = dungeon?.tiers ?? [];
+  const TARGET = dungeon?.timed?.targetDays ?? 30;
 
   const [startDate, setStartDate] = useState<string | null>(
     initialRun.startDate
@@ -39,6 +42,15 @@ export default function StreakCard({
     notifyStatsUpdated();
   }
 
+  async function handleClaimVictory() {
+    await endRun(dungeonId, "completed");
+    setStartDate(null);
+    setStreak(0);
+    if (onStreakChange) onStreakChange(0);
+    if (onComplete) onComplete();
+    notifyStatsUpdated();
+  }
+
   async function handleRelapse() {
     await endRun(dungeonId, "relapse");
     setStartDate(null);
@@ -48,12 +60,10 @@ export default function StreakCard({
     notifyStatsUpdated();
   }
 
+  const cleared = streak >= TARGET;
+  const progressPercent = Math.min(100, Math.round((streak / TARGET) * 100));
+
   const highestClearedIndex = TIERS.filter((t) => streak >= t.days).length - 1;
-  const nextTier = TIERS[highestClearedIndex + 1] ?? null;
-  const prevDays = highestClearedIndex >= 0 ? TIERS[highestClearedIndex].days : 0;
-  const progressToNext = nextTier
-    ? Math.min(100, Math.round(((streak - prevDays) / (nextTier.days - prevDays)) * 100))
-    : 100;
 
   return (
     <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
@@ -63,26 +73,27 @@ export default function StreakCard({
       {startDate ? (
         <div className="space-y-4">
           <div className="py-2">
-            <p className="text-4xl font-bold text-emerald-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.8)]">
+            <p
+              className={`text-4xl font-bold drop-shadow-[0_0_20px_rgba(52,211,153,0.8)] ${
+                cleared ? "text-amber-300" : "text-emerald-400"
+              }`}
+            >
               {streak}
             </p>
             <p className="text-xs text-emerald-400/60 uppercase tracking-wider mt-1">
-              {streak === 1 ? "day" : "days"} strong
+              {streak === 1 ? "day" : "days"} reclaimed
             </p>
           </div>
 
           <div className="flex justify-center gap-2">
             {TIERS.map((t, i) => {
-              const cleared = i <= highestClearedIndex;
-              const isNext = nextTier !== null && t.rank === nextTier.rank;
+              const clearedTier = i <= highestClearedIndex;
               return (
                 <span
                   key={t.rank}
                   className={`w-8 h-8 flex items-center justify-center rounded border text-xs font-bold transition-all ${
-                    cleared
+                    clearedTier
                       ? "bg-amber-500/20 border-amber-400 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
-                      : isNext
-                      ? "bg-cyan-500/10 border-cyan-400/60 text-cyan-300 animate-pulse"
                       : "bg-slate-800/50 border-slate-700 text-slate-600"
                   }`}
                 >
@@ -92,23 +103,37 @@ export default function StreakCard({
             })}
           </div>
 
-          {nextTier ? (
-            <div className="space-y-1">
-              <div className="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
-                <span>Next tier: {nextTier.rank}</span>
-                <span>{streak} / {nextTier.days} days</span>
-              </div>
-              <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full transition-all duration-700 ease-out shadow-[0_0_6px_rgba(34,211,238,0.6)]"
-                  style={{ width: `${progressToNext}%` }}
-                />
-              </div>
+          <div className="space-y-1">
+            <div className="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
+              <span>Target: {TARGET} days</span>
+              <span>
+                {streak} / {TARGET}
+              </span>
             </div>
-          ) : (
-            <p className="text-xs text-amber-300 uppercase tracking-widest drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">
-              Dungeon mastered
-            </p>
+            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-700 ease-out ${
+                  cleared
+                    ? "bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.8)]"
+                    : "bg-gradient-to-r from-cyan-500 to-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.6)]"
+                }`}
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {cleared && (
+            <div className="space-y-3 pt-2">
+              <p className="text-sm text-amber-300 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] animate-pulse">
+                ★ Dungeon Cleared ★
+              </p>
+              <button
+                onClick={handleClaimVictory}
+                className="w-full px-4 py-3 bg-amber-500/20 border border-amber-400/50 rounded text-amber-300 text-sm uppercase tracking-widest hover:bg-amber-500/30 transition-colors drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]"
+              >
+                Claim Victory
+              </button>
+            </div>
           )}
 
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>

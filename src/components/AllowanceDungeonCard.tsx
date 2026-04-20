@@ -5,30 +5,39 @@ import { computeStreakDays, notifyStatsUpdated } from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import {
   setRunStartDate,
-  endRun,
+  logAllowanceEvent,
   type DungeonRunState,
 } from "@/app/actions/dungeons";
 
-interface StreakCardProps {
+interface AllowanceDungeonCardProps {
   dungeonId: string;
+  eventType?: string;
   initialRun: DungeonRunState;
+  initialMonthCount: number;
   onStreakChange?: (days: number) => void;
   onRelapse?: () => void;
 }
 
-export default function StreakCard({
+export default function AllowanceDungeonCard({
   dungeonId,
+  eventType = "consume",
   initialRun,
+  initialMonthCount,
   onStreakChange,
   onRelapse,
-}: StreakCardProps) {
+}: AllowanceDungeonCardProps) {
   const dungeon = getDungeon(dungeonId);
   const TIERS = dungeon?.tiers ?? [];
+  const allowance = dungeon?.allowance;
+  const LIMIT = allowance?.limit ?? 0;
+  const unit = allowance?.unitLabel ?? "unit";
+  const unitPlural = allowance?.unitLabelPlural ?? "units";
 
   const [startDate, setStartDate] = useState<string | null>(
     initialRun.startDate
   );
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
+  const [monthCount, setMonthCount] = useState(initialMonthCount);
 
   async function handleDatePick(date: string) {
     await setRunStartDate(dungeonId, date);
@@ -39,12 +48,15 @@ export default function StreakCard({
     notifyStatsUpdated();
   }
 
-  async function handleRelapse() {
-    await endRun(dungeonId, "relapse");
-    setStartDate(null);
-    setStreak(0);
-    if (onStreakChange) onStreakChange(0);
-    if (onRelapse) onRelapse();
+  async function handleLog() {
+    const { count, relapsed } = await logAllowanceEvent(dungeonId, eventType);
+    setMonthCount(count);
+    if (relapsed) {
+      setStartDate(null);
+      setStreak(0);
+      if (onStreakChange) onStreakChange(0);
+      if (onRelapse) onRelapse();
+    }
     notifyStatsUpdated();
   }
 
@@ -54,6 +66,9 @@ export default function StreakCard({
   const progressToNext = nextTier
     ? Math.min(100, Math.round(((streak - prevDays) / (nextTier.days - prevDays)) * 100))
     : 100;
+
+  const atLimit = monthCount >= LIMIT;
+  const remaining = Math.max(0, LIMIT - monthCount);
 
   return (
     <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
@@ -111,13 +126,42 @@ export default function StreakCard({
             </p>
           )}
 
+          <div className="border border-slate-700 rounded-lg p-3 space-y-2">
+            <div className="flex justify-between items-center text-xs uppercase tracking-wider">
+              <span className="text-slate-500">This month</span>
+              <span
+                className={
+                  atLimit
+                    ? "text-red-400 font-bold"
+                    : "text-cyan-300 font-bold"
+                }
+              >
+                {monthCount} / {LIMIT} {monthCount === 1 ? unit : unitPlural}
+              </span>
+            </div>
+            {!atLimit && (
+              <p className="text-[10px] text-slate-500">
+                {remaining} {remaining === 1 ? unit : unitPlural} remaining this month
+              </p>
+            )}
+            {atLimit && (
+              <p className="text-[10px] text-red-400/80 uppercase tracking-wider">
+                ⚠ Logging another {unit} will relapse the run
+              </p>
+            )}
+            <button
+              onClick={handleLog}
+              className={`w-full px-4 py-2 rounded text-xs uppercase tracking-wider transition-colors ${
+                atLimit
+                  ? "bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20"
+                  : "bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20"
+              }`}
+            >
+              {atLimit ? `Log ${unit} (Relapse)` : `+ Log ${unit}`}
+            </button>
+          </div>
+
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
-          <button
-            onClick={handleRelapse}
-            className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
-          >
-            Relapse — Reset
-          </button>
         </div>
       ) : (
         <div className="space-y-4 py-3">
