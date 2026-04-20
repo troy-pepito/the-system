@@ -12,6 +12,7 @@ import {
   ACHIEVEMENTS,
   type PlayerSnapshot,
 } from "@/lib/achievements";
+import { requireUserId } from "@/lib/auth";
 
 import {
   XP_PER_STREAK_DAY,
@@ -29,15 +30,10 @@ export interface UnlockedAchievement {
   unlockedAt: string;
 }
 
-const buildSnapshot = unstable_cache(
-  _buildSnapshot,
-  ["build-snapshot"],
-  { tags: [TAG] }
-);
-
-async function _buildSnapshot(): Promise<PlayerSnapshot> {
+async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   const [runs, events, quests] = await Promise.all([
     prisma.dungeonRun.findMany({
+      where: { userId },
       select: {
         id: true,
         dungeonId: true,
@@ -47,8 +43,14 @@ async function _buildSnapshot(): Promise<PlayerSnapshot> {
         updatedAt: true,
       },
     }),
-    prisma.dungeonEvent.findMany({ select: { type: true } }),
-    prisma.questCompletion.findMany({ select: { questId: true, date: true } }),
+    prisma.dungeonEvent.findMany({
+      where: { run: { userId } },
+      select: { type: true },
+    }),
+    prisma.questCompletion.findMany({
+      where: { userId },
+      select: { questId: true, date: true },
+    }),
   ]);
 
   const runsByDungeon: PlayerSnapshot["runsByDungeon"] = {};
@@ -154,9 +156,17 @@ async function _buildSnapshot(): Promise<PlayerSnapshot> {
   };
 }
 
+const buildSnapshot = unstable_cache(
+  _buildSnapshot,
+  ["build-snapshot"],
+  { tags: [TAG] }
+);
+
 export async function evaluateAchievements(): Promise<string[]> {
-  const snapshot = await buildSnapshot();
+  const userId = await requireUserId();
+  const snapshot = await buildSnapshot(userId);
   const existing = await prisma.achievement.findMany({
+    where: { userId },
     select: { achievementId: true },
   });
   const existingIds = new Set(existing.map((e) => e.achievementId));
@@ -171,7 +181,7 @@ export async function evaluateAchievements(): Promise<string[]> {
 
   if (newlyUnlocked.length > 0) {
     await prisma.achievement.createMany({
-      data: newlyUnlocked.map((id) => ({ achievementId: id })),
+      data: newlyUnlocked.map((id) => ({ userId, achievementId: id })),
       skipDuplicates: true,
     });
     updateTag(TAG);
@@ -184,8 +194,9 @@ export async function evaluateAchievements(): Promise<string[]> {
 }
 
 const getUnlockedAchievementsCached = unstable_cache(
-  async () => {
+  async (userId: string) => {
     const rows = await prisma.achievement.findMany({
+      where: { userId },
       orderBy: { unlockedAt: "desc" },
     });
     return rows.map((r) => ({
@@ -198,7 +209,8 @@ const getUnlockedAchievementsCached = unstable_cache(
 );
 
 export async function getUnlockedAchievements(): Promise<UnlockedAchievement[]> {
-  return getUnlockedAchievementsCached();
+  const userId = await requireUserId();
+  return getUnlockedAchievementsCached(userId);
 }
 
 export async function getProfileStats(): Promise<{
@@ -211,7 +223,8 @@ export async function getProfileStats(): Promise<{
   questTotal: number;
   perfectQuestDays: number;
 }> {
-  const s = await buildSnapshot();
+  const userId = await requireUserId();
+  const s = await buildSnapshot(userId);
   return {
     level: s.level,
     totalXp: s.totalXp,
@@ -239,10 +252,13 @@ export interface ProfilePageData {
 }
 
 const getProfilePageDataCached = unstable_cache(
-  async () => {
+  async (userId: string) => {
     const [snapshot, rows] = await Promise.all([
-      _buildSnapshot(),
-      prisma.achievement.findMany({ orderBy: { unlockedAt: "desc" } }),
+      _buildSnapshot(userId),
+      prisma.achievement.findMany({
+        where: { userId },
+        orderBy: { unlockedAt: "desc" },
+      }),
     ]);
     return {
       stats: {
@@ -266,5 +282,6 @@ const getProfilePageDataCached = unstable_cache(
 );
 
 export async function getProfilePageData(): Promise<ProfilePageData> {
-  return getProfilePageDataCached();
+  const userId = await requireUserId();
+  return getProfilePageDataCached(userId);
 }
