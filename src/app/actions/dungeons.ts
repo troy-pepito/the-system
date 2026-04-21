@@ -4,7 +4,7 @@ import { unstable_cache, updateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getDungeon, DUNGEONS } from "@/lib/dungeons";
 import { getTodayCompletions, getLifetimeRewards } from "@/app/actions/quests";
-import { todayLocalISO, type QuestRewards } from "@/lib/quests";
+import { type QuestRewards } from "@/lib/quests";
 import { requireUserId } from "@/lib/auth";
 
 const TAG = "player:stats";
@@ -85,12 +85,14 @@ export async function getAllActiveRuns(): Promise<DungeonRunState[]> {
   return getAllActiveRunsCached(userId);
 }
 
-export async function getDashboardData(): Promise<DashboardData> {
+export async function getDashboardData(
+  todayIso: string
+): Promise<DashboardData> {
   const [activeRuns, bonusXp, todayQuestIds, lifetimeRewards] =
     await Promise.all([
       getAllActiveRuns(),
       getBonusXp(),
-      getTodayCompletions(todayLocalISO()),
+      getTodayCompletions(todayIso),
       getLifetimeRewards(),
     ]);
 

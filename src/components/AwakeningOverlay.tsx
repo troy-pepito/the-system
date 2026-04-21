@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 const AWAKENED_KEY = "system:awakened";
+const AWAKENED_EVENT = "system:awakened-changed";
 
 const LINES = [
   "[ NOTIFICATION ]",
@@ -14,22 +15,32 @@ const LINES = [
   "Do you wish to accept?",
 ];
 
+function subscribeAwakened(cb: () => void) {
+  window.addEventListener(AWAKENED_EVENT, cb);
+  return () => window.removeEventListener(AWAKENED_EVENT, cb);
+}
+
+function getAwakenedSnapshot() {
+  return localStorage.getItem(AWAKENED_KEY) === "true";
+}
+
+function getAwakenedServerSnapshot() {
+  return true;
+}
+
 export default function AwakeningOverlay() {
-  const [mounted, setMounted] = useState(false);
-  const [awakened, setAwakened] = useState(true);
+  const awakened = useSyncExternalStore(
+    subscribeAwakened,
+    getAwakenedSnapshot,
+    getAwakenedServerSnapshot
+  );
   const [lineIdx, setLineIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [declined, setDeclined] = useState(false);
   const [accepting, setAccepting] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem(AWAKENED_KEY);
-    if (saved !== "true") setAwakened(false);
-  }, []);
-
-  useEffect(() => {
-    if (awakened || !mounted) return;
+    if (awakened) return;
     if (lineIdx >= LINES.length) return;
 
     const line = LINES[lineIdx];
@@ -43,13 +54,13 @@ export default function AwakeningOverlay() {
       setCharIdx(0);
     }, line === "" ? 120 : 260);
     return () => clearTimeout(t);
-  }, [awakened, mounted, lineIdx, charIdx]);
+  }, [awakened, lineIdx, charIdx]);
 
   function handleAccept() {
     setAccepting(true);
     setTimeout(() => {
       localStorage.setItem(AWAKENED_KEY, "true");
-      setAwakened(true);
+      window.dispatchEvent(new Event(AWAKENED_EVENT));
     }, 900);
   }
 
@@ -63,7 +74,7 @@ export default function AwakeningOverlay() {
     setCharIdx(0);
   }
 
-  if (!mounted || awakened) return null;
+  if (awakened) return null;
 
   const complete = lineIdx >= LINES.length;
 

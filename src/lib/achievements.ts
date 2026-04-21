@@ -1,4 +1,3 @@
-import { computeStreakDays } from "@/lib/player";
 import { DUNGEONS } from "@/lib/dungeons";
 
 export type AchievementRarity =
@@ -401,6 +400,3 @@ export function rarityStyle(rarity: AchievementRarity): {
       };
   }
 }
-
-// Used by server-side evaluation; keeps streak math in one place.
-export { computeStreakDays };

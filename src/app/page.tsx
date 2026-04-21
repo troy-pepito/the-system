@@ -21,26 +21,21 @@ import {
   getDashboardData,
   type DashboardData,
 } from "@/app/actions/dungeons";
+import { todayLocalISO } from "@/lib/quests";
 import TimedDungeonCard from "@/components/TimedDungeonCard";
 import CadenceDungeonCard from "@/components/CadenceDungeonCard";
 import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
 
 const ZERO_REWARDS: QuestRewards = { xp: 0, body: 0, mind: 0, emotion: 0, energy: 0, spirit: 0 };
 
-let dashboardCache: DashboardData | null = null;
-
 export default function Home() {
-  const [dashboard, setDashboard] = useState<DashboardData | null>(
-    dashboardCache
-  );
-  const [questRewards, setQuestRewards] = useState<QuestRewards>(
-    dashboardCache?.lifetimeRewards ?? ZERO_REWARDS
-  );
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
+  const [questRewards, setQuestRewards] =
+    useState<QuestRewards>(ZERO_REWARDS);
 
   const reload = () => {
-    getDashboardData().then((d) => {
+    getDashboardData(todayLocalISO()).then((d) => {
       if (hasPendingMutations()) return;
-      dashboardCache = d;
       setDashboard(d);
       setQuestRewards(d.lifetimeRewards);
     });

@@ -3,7 +3,6 @@
 import { unstable_cache, updateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import {
-  DUNGEONS,
   SOCIAL_RECLAIM_RUNGS,
   GYM_LIFE_WORKOUTS,
 } from "@/lib/dungeons";
@@ -186,9 +185,6 @@ export async function evaluateAchievements(): Promise<string[]> {
     });
     updateTag(TAG);
   }
-
-  // Silence unused-import warning: DUNGEONS kept for future criteria.
-  void DUNGEONS;
 
   return newlyUnlocked;
 }

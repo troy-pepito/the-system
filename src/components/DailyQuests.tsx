@@ -28,8 +28,10 @@ export default function DailyQuests({
 }: DailyQuestsProps) {
   const [completed, setCompleted] = useState<string[]>(initialTodayIds);
   const [lifetime, setLifetime] = useState<QuestRewards>(initialLifetime);
+  const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
 
   async function toggleQuest(id: string) {
+    if (busyIds.has(id)) return;
     const quest = QUESTS.find((q) => q.id === id);
     if (!quest) return;
 
@@ -46,6 +48,7 @@ export default function DailyQuests({
     setCompleted(nextCompleted);
     setLifetime(nextLifetime);
     onRewardsChange?.(nextLifetime);
+    setBusyIds((prev) => new Set(prev).add(id));
 
     const xpDelta = (isNowDone ? 1 : -1) * quest.xp;
     notifyStatsUpdated({ xpDelta });
@@ -60,6 +63,11 @@ export default function DailyQuests({
       notifyStatsUpdated({ xpDelta: -xpDelta });
     } finally {
       endMutation();
+      setBusyIds((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
     }
   }
 
