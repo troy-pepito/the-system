@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const AWAKENED_KEY = "system:awakened";
 const AWAKENED_EVENT = "system:awakened-changed";
@@ -46,8 +47,11 @@ export default function AwakeningOverlay() {
     getAwakenedSnapshot,
     getAwakenedServerSnapshot
   );
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
+  const router = useRouter();
   const [phase, setPhase] = useState<Phase>("intro");
+  const [accepted, setAccepted] = useState(false);
   const [lineIdx, setLineIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [declined, setDeclined] = useState(false);
@@ -57,6 +61,15 @@ export default function AwakeningOverlay() {
   const [error, setError] = useState<string | null>(null);
 
   const activeLines = phase === "naming" ? NAME_LINES : INTRO_LINES;
+
+  useEffect(() => {
+    if (accepted && isSignedIn && phase === "intro") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPhase("naming");
+      setLineIdx(0);
+      setCharIdx(0);
+    }
+  }, [accepted, isSignedIn, phase]);
 
   useEffect(() => {
     if (awakened) return;
@@ -76,9 +89,14 @@ export default function AwakeningOverlay() {
   }, [awakened, phase, activeLines, lineIdx, charIdx]);
 
   function handleAccept() {
-    setPhase("naming");
-    setLineIdx(0);
-    setCharIdx(0);
+    setAccepted(true);
+    if (isSignedIn) {
+      setPhase("naming");
+      setLineIdx(0);
+      setCharIdx(0);
+    } else {
+      openSignIn();
+    }
   }
 
   function handleDecline() {
@@ -87,6 +105,7 @@ export default function AwakeningOverlay() {
 
   function handleReconsider() {
     setDeclined(false);
+    setAccepted(false);
     setPhase("intro");
     setLineIdx(0);
     setCharIdx(0);
@@ -105,6 +124,7 @@ export default function AwakeningOverlay() {
       setTimeout(() => {
         localStorage.setItem(AWAKENED_KEY, "true");
         window.dispatchEvent(new Event(AWAKENED_EVENT));
+        router.push("/profile");
       }, 900);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
