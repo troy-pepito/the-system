@@ -90,7 +90,7 @@ export default function ProfilePage() {
           </p>
           <StatRadar values={stats.dimensions} />
           <p className="text-[10px] text-slate-500 text-center mt-3 tracking-wider">
-            Lifetime quest rewards across the five domains.
+            Earned from daily quests and dungeon ranks cleared.
           </p>
         </Card>
 

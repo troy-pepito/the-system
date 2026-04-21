@@ -45,6 +45,14 @@ export interface ProgressiveConfig {
 }
 
 
+export interface DungeonDimensions {
+  body?: number;
+  mind?: number;
+  emotion?: number;
+  energy?: number;
+  spirit?: number;
+}
+
 export interface DungeonDef {
   id: string;
   name: string;
@@ -57,7 +65,12 @@ export interface DungeonDef {
   cadence?: CadenceConfig;
   progressive?: ProgressiveConfig;
   rules?: string[];
+  dimensions?: DungeonDimensions;
 }
+
+// Multipliers for rank-cleared dimension rewards (E, D, C, B, A, S).
+// Each rank cleared adds base × multiplier to the mapped dimensions.
+export const DIMENSION_RANK_MULTIPLIERS = [1, 2, 4, 8, 16, 32];
 
 export const SOCIAL_RECLAIM_RUNGS: Rung[] = [
   {
@@ -129,20 +142,6 @@ export const NOFAP_TIERS: DungeonTier[] = [
 
 export const DUNGEONS: DungeonDef[] = [
   {
-    id: "nofap",
-    name: "NoFap Dungeon",
-    rank: "E",
-    ruleType: "continuous_streak",
-    tiers: NOFAP_TIERS,
-    description:
-      "Reclaim your vital energy. Strict: no porn, masturbation, edging, or gooning. Sex and orgasm with a partner are fine — the rule targets compulsive solo use, not intimacy.",
-    rules: [
-      "Relapse = porn, masturbation, edging, or gooning (thirst traps, bot accounts, sensualized social feeds).",
-      "Allowed: sex and orgasm with a partner — this dungeon is about compulsion, not abstinence.",
-      "Any relapse resets the streak to 0. Clear ranks E → S by hitting day milestones.",
-    ],
-  },
-  {
     id: "caffeine",
     name: "Caffeine Reboot",
     rank: "E",
@@ -155,7 +154,29 @@ export const DUNGEONS: DungeonDef[] = [
       unitLabelPlural: "coffees",
     },
     description:
-      "Two coffees per month is fine. A third relapses the run. (Sadhguru framing.)",
+      "Two coffees per month is fine. A third relapses the run.",
+    dimensions: { energy: 2 },
+  },
+  {
+    id: "sensible-diet",
+    name: "Sensible Diet",
+    rank: "E",
+    ruleType: "allowance",
+    tiers: NOFAP_TIERS,
+    allowance: {
+      limit: 4,
+      window: "month",
+      unitLabel: "sweet",
+      unitLabelPlural: "sweets",
+    },
+    description:
+      "Eat with awareness. 2–3 meals a day, no snacking between. Plant-first, animal-source second, seafood after that, meat only if nothing else. Up to 4 unnatural sweets per month — a fifth ends the run.",
+    rules: [
+      "2–3 meals per day. No snacks between meals — let the gut rest.",
+      "Eat plants first; then animal-source (eggs, dairy, nuts); then seafood; then meat only if no alternative.",
+      "Log a sweet for any candy, soda, donut, pastry, or other processed sugar. 4 per month allowed — the 5th is a relapse.",
+    ],
+    dimensions: { body: 2, energy: 2 },
   },
   {
     id: "gym-life",
@@ -175,6 +196,7 @@ export const DUNGEONS: DungeonDef[] = [
       "Check in on the day the workout is done. Week runs Monday–Sunday (UTC).",
       "Manual relapse if you fall off the cadence. Tiers progress by days since entry.",
     ],
+    dimensions: { body: 2 },
   },
   {
     id: "attention-reclaim",
@@ -185,6 +207,23 @@ export const DUNGEONS: DungeonDef[] = [
     timed: { targetDays: 30 },
     description:
       "30 days without doom scrolling. Messaging, posting, and intentional single-video views are fine — only passive infinite feeds count as a slip.",
+    dimensions: { mind: 2, spirit: 2 },
+  },
+  {
+    id: "music-sensitization",
+    name: "Music Sensitization",
+    rank: "E",
+    ruleType: "timed",
+    tiers: NOFAP_TIERS,
+    timed: { targetDays: 30 },
+    description:
+      "30 days without music. A sensory reset — let the ears grow quiet so wind, rain, birdsong, and real voices start to feel alive again.",
+    rules: [
+      "Relapse = intentionally listening to songs (playlists, albums, concerts, background music you chose).",
+      "Allowed: podcasts, audiobooks, film scores, nature sounds, and involuntary ambient music (stores, cafes, other people's speakers).",
+      "Reach day 30 to clear. Claim Victory to retire the run.",
+    ],
+    dimensions: { spirit: 2, mind: 2 },
   },
   {
     id: "social-reclaim",
@@ -199,6 +238,22 @@ export const DUNGEONS: DungeonDef[] = [
       "Clear the current rung to unlock the next. No skipping.",
       "Rungs progress ranks E → S. Dungeon cleared when the final rung is complete.",
     ],
+    dimensions: { emotion: 2 },
+  },
+  {
+    id: "nofap",
+    name: "NoFap Dungeon",
+    rank: "E",
+    ruleType: "continuous_streak",
+    tiers: NOFAP_TIERS,
+    description:
+      "Reclaim your vital energy. Strict: no porn, masturbation, edging, or gooning. Sex and orgasm with a partner are fine — the rule targets compulsive solo use, not intimacy.",
+    rules: [
+      "Relapse = porn, masturbation, edging, or gooning (thirst traps, bot accounts, sensualized social feeds).",
+      "Allowed: sex and orgasm with a partner — this dungeon is about compulsion, not abstinence.",
+      "Any relapse resets the streak to 0. Clear ranks E → S by hitting day milestones.",
+    ],
+    dimensions: { energy: 2, spirit: 2, emotion: 2 },
   },
 ];
 

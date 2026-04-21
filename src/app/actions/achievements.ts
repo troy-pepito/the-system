@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import {
   SOCIAL_RECLAIM_RUNGS,
   GYM_LIFE_WORKOUTS,
+  DUNGEONS,
+  DIMENSION_RANK_MULTIPLIERS,
 } from "@/lib/dungeons";
 import { QUESTS } from "@/lib/quests";
 import {
@@ -175,6 +177,41 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     dimensions.emotion += def.emotion ?? 0;
     dimensions.energy += def.energy ?? 0;
     dimensions.spirit += def.spirit ?? 0;
+  }
+
+  for (const d of DUNGEONS) {
+    const dims = d.dimensions;
+    if (!dims) continue;
+    const run = runsByDungeon[d.id];
+    if (!run) continue;
+
+    const tierCap =
+      d.ruleType === "timed" && d.timed ? d.timed.targetDays : Infinity;
+
+    if (d.tiers) {
+      d.tiers.forEach((tier, idx) => {
+        if (tier.days > tierCap) return;
+        if (run.maxStreak < tier.days) return;
+        const mult = DIMENSION_RANK_MULTIPLIERS[idx] ?? 0;
+        dimensions.body += (dims.body ?? 0) * mult;
+        dimensions.mind += (dims.mind ?? 0) * mult;
+        dimensions.emotion += (dims.emotion ?? 0) * mult;
+        dimensions.energy += (dims.energy ?? 0) * mult;
+        dimensions.spirit += (dims.spirit ?? 0) * mult;
+      });
+    }
+
+    if (d.progressive) {
+      d.progressive.rungs.forEach((rung, idx) => {
+        if ((rungCounts[rung.id] ?? 0) < rung.target) return;
+        const mult = DIMENSION_RANK_MULTIPLIERS[idx] ?? 0;
+        dimensions.body += (dims.body ?? 0) * mult;
+        dimensions.mind += (dims.mind ?? 0) * mult;
+        dimensions.emotion += (dims.emotion ?? 0) * mult;
+        dimensions.energy += (dims.energy ?? 0) * mult;
+        dimensions.spirit += (dims.spirit ?? 0) * mult;
+      });
+    }
   }
 
   const totalXp =
