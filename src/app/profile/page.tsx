@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
 import Heatmap from "@/components/Heatmap";
+import HunterCard from "@/components/HunterCard";
 import { ACHIEVEMENTS, rarityStyle } from "@/lib/achievements";
 import {
   getProfilePageData,
   type ProfilePageData,
 } from "@/app/actions/achievements";
-import { getRank, STATS_UPDATED_EVENT } from "@/lib/player";
+import { STATS_UPDATED_EVENT } from "@/lib/player";
 
 let profileCache: ProfilePageData | null = null;
 
@@ -39,7 +40,6 @@ export default function ProfilePage() {
   const totalCount = ACHIEVEMENTS.length;
   const unlockedCount = unlocked.length;
   const completion = Math.round((unlockedCount / totalCount) * 100);
-  const rank = getRank(stats.level);
 
   const windowed =
     range === "week"
@@ -65,28 +65,7 @@ export default function ProfilePage() {
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
 
-        <Card className="p-6 space-y-4">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest">Rank</p>
-              <p className="text-3xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] mt-1">
-                {rank}
-              </p>
-            </div>
-            <div>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest">Level</p>
-              <p className="text-3xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.6)] mt-1">
-                {stats.level}
-              </p>
-            </div>
-            <div>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest">Total XP</p>
-              <p className="text-3xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)] mt-1">
-                {stats.totalXp.toLocaleString()}
-              </p>
-            </div>
-          </div>
-        </Card>
+        <HunterCard level={stats.level} />
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
