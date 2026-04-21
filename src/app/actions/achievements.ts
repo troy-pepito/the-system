@@ -44,13 +44,20 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     }),
     prisma.dungeonEvent.findMany({
       where: { run: { userId } },
-      select: { type: true },
+      select: { type: true, date: true },
     }),
     prisma.questCompletion.findMany({
       where: { userId },
       select: { questId: true, date: true },
     }),
   ]);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const weekCutoff = new Date(today);
+  weekCutoff.setDate(weekCutoff.getDate() - 6);
+  const monthCutoff = new Date(today);
+  monthCutoff.setDate(monthCutoff.getDate() - 29);
 
   const runsByDungeon: PlayerSnapshot["runsByDungeon"] = {};
   let activeRunCount = 0;
@@ -92,33 +99,63 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     runsByDungeon[run.dungeonId] = existing;
   }
 
-  const eventCounts: Record<string, number> = {};
-  for (const e of events) {
-    eventCounts[e.type] = (eventCounts[e.type] ?? 0) + 1;
-  }
-
   const workoutIds = new Set(GYM_LIFE_WORKOUTS.map((w) => w.id));
   const exposureIds = new Set(SOCIAL_RECLAIM_RUNGS.map((r) => r.id));
+
+  const eventCounts: Record<string, number> = {};
+  const rungCounts: Record<string, number> = {};
   let workoutTotal = 0;
   let exposureTotal = 0;
-  const rungCounts: Record<string, number> = {};
+  let weekWorkout = 0;
+  let weekExposure = 0;
+  let monthWorkout = 0;
+  let monthExposure = 0;
 
-  for (const [type, count] of Object.entries(eventCounts)) {
-    if (workoutIds.has(type)) workoutTotal += count;
-    if (exposureIds.has(type)) {
-      exposureTotal += count;
-      rungCounts[type] = count;
+  for (const e of events) {
+    eventCounts[e.type] = (eventCounts[e.type] ?? 0) + 1;
+    const inWeek = e.date >= weekCutoff;
+    const inMonth = e.date >= monthCutoff;
+    if (workoutIds.has(e.type)) {
+      workoutTotal++;
+      if (inWeek) weekWorkout++;
+      if (inMonth) monthWorkout++;
+    }
+    if (exposureIds.has(e.type)) {
+      exposureTotal++;
+      rungCounts[e.type] = (rungCounts[e.type] ?? 0) + 1;
+      if (inWeek) weekExposure++;
+      if (inMonth) monthExposure++;
     }
   }
 
   // Perfect quest days: any date where every quest was completed
   const byDate: Record<string, Set<string>> = {};
+  const weekByDate: Record<string, Set<string>> = {};
+  const monthByDate: Record<string, Set<string>> = {};
+  let weekQuestTotal = 0;
+  let monthQuestTotal = 0;
   for (const q of quests) {
     const key = q.date.toISOString().split("T")[0];
     if (!byDate[key]) byDate[key] = new Set();
     byDate[key].add(q.questId);
+    if (q.date >= monthCutoff) {
+      monthQuestTotal++;
+      if (!monthByDate[key]) monthByDate[key] = new Set();
+      monthByDate[key].add(q.questId);
+    }
+    if (q.date >= weekCutoff) {
+      weekQuestTotal++;
+      if (!weekByDate[key]) weekByDate[key] = new Set();
+      weekByDate[key].add(q.questId);
+    }
   }
   const perfectQuestDays = Object.values(byDate).filter(
+    (set) => set.size >= QUESTS.length
+  ).length;
+  const weekPerfect = Object.values(weekByDate).filter(
+    (set) => set.size >= QUESTS.length
+  ).length;
+  const monthPerfect = Object.values(monthByDate).filter(
     (set) => set.size >= QUESTS.length
   ).length;
 
@@ -127,16 +164,26 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     0
   );
 
+  let questXpTotal = 0;
+  const dimensions = { body: 0, mind: 0, emotion: 0, energy: 0, spirit: 0 };
+  for (const q of quests) {
+    const def = QUESTS.find((x) => x.id === q.questId);
+    if (!def) continue;
+    questXpTotal += def.xp;
+    dimensions.body += def.body ?? 0;
+    dimensions.mind += def.mind ?? 0;
+    dimensions.emotion += def.emotion ?? 0;
+    dimensions.energy += def.energy ?? 0;
+    dimensions.spirit += def.spirit ?? 0;
+  }
+
   const totalXp =
     activeStreakTotal * XP_PER_STREAK_DAY +
     bankedStreakDays * XP_PER_STREAK_DAY +
     workoutTotal * XP_PER_WORKOUT +
     exposureTotal * XP_PER_EXPOSURE +
     completedRunCount * XP_PER_COMPLETION +
-    quests.reduce((sum, q) => {
-      const def = QUESTS.find((x) => x.id === q.questId);
-      return sum + (def?.xp ?? 0);
-    }, 0);
+    questXpTotal;
 
   const { level } = getLevelFromXp(totalXp);
 
@@ -152,6 +199,21 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     questTotal: quests.length,
     perfectQuestDays,
     completedRunCount,
+    dimensions,
+    windows: {
+      week: {
+        questTotal: weekQuestTotal,
+        workoutTotal: weekWorkout,
+        exposureTotal: weekExposure,
+        perfectQuestDays: weekPerfect,
+      },
+      month: {
+        questTotal: monthQuestTotal,
+        workoutTotal: monthWorkout,
+        exposureTotal: monthExposure,
+        perfectQuestDays: monthPerfect,
+      },
+    },
   };
 }
 
@@ -243,18 +305,69 @@ export interface ProfilePageData {
     exposureTotal: number;
     questTotal: number;
     perfectQuestDays: number;
+    dimensions: {
+      body: number;
+      mind: number;
+      emotion: number;
+      energy: number;
+      spirit: number;
+    };
+    windows: {
+      week: {
+        questTotal: number;
+        workoutTotal: number;
+        exposureTotal: number;
+        perfectQuestDays: number;
+      };
+      month: {
+        questTotal: number;
+        workoutTotal: number;
+        exposureTotal: number;
+        perfectQuestDays: number;
+      };
+    };
   };
   unlocked: UnlockedAchievement[];
+  heatmap: Record<string, number>;
+}
+
+async function _buildHeatmap(userId: string): Promise<Record<string, number>> {
+  const cutoff = new Date();
+  cutoff.setHours(0, 0, 0, 0);
+  cutoff.setDate(cutoff.getDate() - 91);
+
+  const [quests, events] = await Promise.all([
+    prisma.questCompletion.findMany({
+      where: { userId, date: { gte: cutoff } },
+      select: { date: true },
+    }),
+    prisma.dungeonEvent.findMany({
+      where: { run: { userId }, date: { gte: cutoff } },
+      select: { date: true },
+    }),
+  ]);
+
+  const bucket: Record<string, number> = {};
+  for (const q of quests) {
+    const key = q.date.toISOString().split("T")[0];
+    bucket[key] = (bucket[key] ?? 0) + 1;
+  }
+  for (const e of events) {
+    const key = e.date.toISOString().split("T")[0];
+    bucket[key] = (bucket[key] ?? 0) + 1;
+  }
+  return bucket;
 }
 
 const getProfilePageDataCached = unstable_cache(
   async (userId: string) => {
-    const [snapshot, rows] = await Promise.all([
+    const [snapshot, rows, heatmap] = await Promise.all([
       _buildSnapshot(userId),
       prisma.achievement.findMany({
         where: { userId },
         orderBy: { unlockedAt: "desc" },
       }),
+      _buildHeatmap(userId),
     ]);
     return {
       stats: {
@@ -266,11 +379,14 @@ const getProfilePageDataCached = unstable_cache(
         exposureTotal: snapshot.exposureTotal,
         questTotal: snapshot.questTotal,
         perfectQuestDays: snapshot.perfectQuestDays,
+        dimensions: snapshot.dimensions,
+        windows: snapshot.windows,
       },
       unlocked: rows.map((r) => ({
         id: r.achievementId,
         unlockedAt: r.unlockedAt.toISOString(),
       })),
+      heatmap,
     };
   },
   ["profile-page-data"],

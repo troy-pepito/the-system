@@ -31,9 +31,9 @@ export const QUESTS: Quest[] = [
   { id: "cold-shower", name: "Cold Shower", xp: 10, body: 2, energy: 1 },
   { id: "supplements", name: "Take Supplements", xp: 10, body: 2 },
   { id: "meditation", name: "Meditation / Yoga", xp: 10, spirit: 2, energy: 1 },
-  { id: "cardio", name: "Walk or Run (10+ min)", xp: 10, body: 2 },
+  { id: "cardio", name: "Walk / Run (10+ min)", xp: 10, body: 2 },
   { id: "journal", name: "Journal Entry", xp: 10, mind: 1, emotion: 2 },
-  { id: "read", name: "Read (10+ pages)", xp: 10, mind: 2 },
+  { id: "read", name: "Study / Read (10+ pages)", xp: 10, mind: 2 },
   { id: "clean-room", name: "Clean Room", xp: 10, mind: 1 },
 ];
 

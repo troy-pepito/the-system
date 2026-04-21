@@ -6,6 +6,13 @@ export type AchievementRarity =
   | "epic"
   | "legendary";
 
+export interface WindowStats {
+  questTotal: number;
+  workoutTotal: number;
+  exposureTotal: number;
+  perfectQuestDays: number;
+}
+
 export interface PlayerSnapshot {
   totalXp: number;
   level: number;
@@ -21,6 +28,17 @@ export interface PlayerSnapshot {
   questTotal: number;
   perfectQuestDays: number;
   completedRunCount: number;
+  dimensions: {
+    body: number;
+    mind: number;
+    emotion: number;
+    energy: number;
+    spirit: number;
+  };
+  windows: {
+    week: WindowStats;
+    month: WindowStats;
+  };
 }
 
 export interface AchievementDef {
