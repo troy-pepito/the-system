@@ -72,6 +72,22 @@ export interface DungeonDef {
 // Each rank cleared adds base × multiplier to the mapped dimensions.
 export const DIMENSION_RANK_MULTIPLIERS = [1, 2, 4, 8, 16, 32];
 
+export const DIM_ORDER = ["body", "mind", "emotion", "energy", "spirit"] as const;
+export type DimKey = (typeof DIM_ORDER)[number];
+
+export const DIM_STYLE: Record<DimKey, string> = {
+  body: "text-emerald-300 border-emerald-400/40 bg-emerald-500/10",
+  mind: "text-cyan-300 border-cyan-400/40 bg-cyan-500/10",
+  emotion: "text-rose-300 border-rose-400/40 bg-rose-500/10",
+  energy: "text-amber-300 border-amber-400/40 bg-amber-500/10",
+  spirit: "text-violet-300 border-violet-400/40 bg-violet-500/10",
+};
+
+export function dungeonDims(d: DungeonDef): DimKey[] {
+  if (!d.dimensions) return [];
+  return DIM_ORDER.filter((k) => (d.dimensions?.[k] ?? 0) > 0);
+}
+
 export const SOCIAL_RECLAIM_RUNGS: Rung[] = [
   {
     id: "presence",

@@ -82,7 +82,7 @@ export default function Navbar() {
             href="/"
             className="text-cyan-400 font-bold tracking-[0.2em] sm:tracking-[0.25em] text-xs sm:text-sm uppercase drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
           >
-            Shivaliva
+            The System
           </Link>
           <div className="hidden sm:flex gap-5 text-[10px] uppercase tracking-widest">
             {navLink("/", "Status")}

@@ -3,7 +3,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Card from "@/components/Card";
-import { DUNGEONS, getDungeonRules } from "@/lib/dungeons";
+import {
+  DUNGEONS,
+  getDungeonRules,
+  dungeonDims,
+  DIM_STYLE,
+} from "@/lib/dungeons";
 import { enterDungeon, getAllActiveRuns } from "@/app/actions/dungeons";
 
 let activeIdsCache: Set<string> | null = null;
@@ -51,17 +56,24 @@ export default function PortalsPage() {
               }`}
               onClick={() => setExpandedId(isExpanded ? null : d.id)}
             >
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <span className="text-xs uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">
-                    Rank {d.rank}
-                  </span>
-                  <h2 className="text-xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] mt-1 uppercase tracking-wider">
+              <div className="flex items-start justify-between mb-3 gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
+                    {dungeonDims(d).map((dim) => (
+                      <span
+                        key={dim}
+                        className={`text-[9px] font-bold uppercase tracking-[0.25em] px-1.5 py-0.5 border rounded-sm ${DIM_STYLE[dim]}`}
+                      >
+                        {dim}
+                      </span>
+                    ))}
+                  </div>
+                  <h2 className="text-xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] uppercase tracking-wider">
                     {d.name}
                   </h2>
                 </div>
                 {isActive && (
-                  <span className="text-[10px] uppercase tracking-widest text-emerald-400 border border-emerald-400/40 rounded px-2 py-1">
+                  <span className="shrink-0 text-[10px] uppercase tracking-widest text-emerald-400 border border-emerald-400/40 rounded px-2 py-1">
                     Active
                   </span>
                 )}

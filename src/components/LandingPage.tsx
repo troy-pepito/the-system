@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
-import { DUNGEONS } from "@/lib/dungeons";
+import { DUNGEONS, dungeonDims, DIM_STYLE } from "@/lib/dungeons";
 
 const STEPS = [
   {
@@ -53,6 +53,16 @@ export default function LandingPage() {
             <span className="absolute inset-0 bg-cyan-400/20 opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
             <span className="relative">Accept the System</span>
           </button>
+          <div className="mt-5">
+            <Link
+              href="/guide"
+              className="text-[10px] tracking-[0.4em] uppercase text-slate-500 hover:text-cyan-300 transition-colors"
+            >
+              Read the Hunter Guide →
+            </Link>
+          </div>
+
+          <StatusWindowPreview />
         </div>
       </section>
 
@@ -90,11 +100,16 @@ export default function LandingPage() {
               key={d.id}
               className="border border-slate-800 bg-slate-900/40 p-5"
             >
-              <div className="flex items-start justify-between mb-2 gap-3">
-                <p className="text-sm font-bold text-cyan-100">{d.name}</p>
-                <span className="text-[10px] text-amber-400 tracking-wider flex-shrink-0">
-                  {d.rank} RANK
-                </span>
+              <p className="text-sm font-bold text-cyan-100 mb-2">{d.name}</p>
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {dungeonDims(d).map((dim) => (
+                  <span
+                    key={dim}
+                    className={`text-[9px] font-bold uppercase tracking-[0.25em] px-1.5 py-0.5 border rounded-sm ${DIM_STYLE[dim]}`}
+                  >
+                    {dim}
+                  </span>
+                ))}
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
                 {d.description}
@@ -130,8 +145,12 @@ export default function LandingPage() {
       </section>
 
       <section className="max-w-2xl mx-auto px-6 py-20 text-center border-t border-slate-800/60">
-        <p className="text-sm sm:text-base text-slate-300 mb-8 tracking-widest">
+        <p className="text-sm sm:text-base text-slate-300 mb-4 tracking-widest">
           The quest remains open.
+        </p>
+        <p className="text-[10px] tracking-[0.4em] uppercase text-slate-500 mb-8">
+          Free to play <span className="text-slate-700">·</span>{" "}
+          <span className="text-amber-300/80">Pro — $39 lifetime</span>
         </p>
         <button
           onClick={() => openSignIn()}
@@ -146,6 +165,12 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] tracking-[0.3em] uppercase text-slate-500">
           <p>© Shivaliva Leveling</p>
           <div className="flex items-center gap-6">
+            <Link
+              href="/guide"
+              className="hover:text-cyan-300 transition-colors"
+            >
+              Guide
+            </Link>
             <Link
               href="/privacy"
               className="hover:text-cyan-300 transition-colors"
@@ -168,5 +193,78 @@ export default function LandingPage() {
         </div>
       </footer>
     </main>
+  );
+}
+
+function StatusWindowPreview() {
+  const entries: { label: string; xp: string; tone: "cyan" | "amber" }[] = [
+    { label: "NoFap Dungeon · Day 21", xp: "+5 XP", tone: "cyan" },
+    { label: "Daily Quest · Morning Walk", xp: "+15 XP", tone: "cyan" },
+    { label: "Gym Life · Full Body", xp: "+25 XP", tone: "cyan" },
+    { label: "14-Day Combo", xp: "+100 XP", tone: "amber" },
+  ];
+  return (
+    <div className="relative mx-auto max-w-md mt-16 text-left">
+      <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-400 z-10 pointer-events-none" />
+      <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-cyan-400 z-10 pointer-events-none" />
+      <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-400 z-10 pointer-events-none" />
+      <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-400 z-10 pointer-events-none" />
+      <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.25),inset_0_0_20px_rgba(34,211,238,0.05)] p-5 sm:p-6">
+        <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase mb-5">
+          Hunter Status Window
+        </p>
+        <div className="flex items-center gap-6 mb-5">
+          <div>
+            <p className="text-[9px] text-slate-500 tracking-widest uppercase">
+              Rank
+            </p>
+            <p className="text-3xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.7)] leading-none mt-1">
+              A
+            </p>
+          </div>
+          <div className="h-10 w-px bg-slate-700" />
+          <div>
+            <p className="text-[9px] text-slate-500 tracking-widest uppercase">
+              Level
+            </p>
+            <p className="text-3xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.7)] leading-none mt-1">
+              34
+            </p>
+          </div>
+          <div className="h-10 w-px bg-slate-700" />
+          <div className="flex-1 min-w-0">
+            <div className="flex justify-between text-[9px] text-slate-500 uppercase tracking-wider mb-1.5">
+              <span>Progress</span>
+              <span className="font-mono text-amber-300/80">420 / 900</span>
+            </div>
+            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full shadow-[0_0_6px_rgba(34,211,238,0.6)]"
+                style={{ width: "46%" }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-slate-800 pt-3 space-y-2">
+          {entries.map((e, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-between text-xs"
+            >
+              <span className="text-slate-300 truncate pr-3">{e.label}</span>
+              <span
+                className={`font-mono shrink-0 ${
+                  e.tone === "amber"
+                    ? "text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.5)]"
+                    : "text-cyan-300"
+                }`}
+              >
+                {e.xp}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

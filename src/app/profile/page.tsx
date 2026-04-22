@@ -6,9 +6,12 @@ import Heatmap from "@/components/Heatmap";
 import HunterCard from "@/components/HunterCard";
 import {
   ACHIEVEMENTS,
+  achievementCategory,
   isComboAchievementId,
   rarityStyle,
+  type AchievementDef,
 } from "@/lib/achievements";
+import { DUNGEONS } from "@/lib/dungeons";
 import {
   getProfilePageData,
   type ProfilePageData,
@@ -45,6 +48,22 @@ export default function ProfilePage() {
   const totalCount = ACHIEVEMENTS.length;
   const unlockedCount = trophyUnlocked.length;
   const completion = Math.round((unlockedCount / totalCount) * 100);
+
+  const foundations: AchievementDef[] = [];
+  const progression: AchievementDef[] = [];
+  const training: AchievementDef[] = [];
+  const byDungeon = new Map<string, AchievementDef[]>();
+  for (const def of ACHIEVEMENTS) {
+    const cat = achievementCategory(def.id);
+    if (cat.category === "foundations") foundations.push(def);
+    else if (cat.category === "progression") progression.push(def);
+    else if (cat.category === "training") training.push(def);
+    else if (cat.category === "dungeon" && cat.dungeonId) {
+      const arr = byDungeon.get(cat.dungeonId) ?? [];
+      arr.push(def);
+      byDungeon.set(cat.dungeonId, arr);
+    }
+  }
 
   const windowed =
     range === "week"
@@ -124,61 +143,128 @@ export default function ProfilePage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {ACHIEVEMENTS.map((def) => {
-              const unlockedAt = unlockedMap.get(def.id);
-              const style = rarityStyle(def.rarity);
-              const isUnlocked = !!unlockedAt;
-              return (
-                <div
-                  key={def.id}
-                  className={`relative border rounded-lg p-3 transition-all ${
-                    isUnlocked
-                      ? `${style.bg} ${style.border} ${style.glow}`
-                      : "bg-slate-900/50 border-slate-800"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <span
-                      className={`text-xl font-bold flex-shrink-0 w-9 h-9 flex items-center justify-center border rounded ${
-                        isUnlocked
-                          ? `${style.text} ${style.border} ${style.bg} ${style.glow}`
-                          : "text-slate-700 border-slate-800 bg-slate-900"
-                      }`}
-                    >
-                      {isUnlocked ? def.icon : "?"}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className={`text-xs font-bold uppercase tracking-wider truncate ${
-                          isUnlocked ? style.text : "text-slate-600"
-                        }`}
-                      >
-                        {isUnlocked ? def.name : "???"}
-                      </p>
-                      <p
-                        className={`text-[10px] leading-snug mt-0.5 ${
-                          isUnlocked ? "text-slate-300" : "text-slate-700"
-                        }`}
-                      >
-                        {def.description}
-                      </p>
-                      <p
-                        className={`text-[9px] uppercase tracking-widest mt-1 ${
-                          isUnlocked ? style.text : "text-slate-700"
-                        }`}
-                      >
-                        {style.label}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <TrophySection
+            label="Foundations"
+            defs={foundations}
+            unlockedMap={unlockedMap}
+          />
+          <TrophySection
+            label="Hunter Progression"
+            defs={progression}
+            unlockedMap={unlockedMap}
+          />
+          <TrophySection
+            label="Training"
+            defs={training}
+            unlockedMap={unlockedMap}
+          />
+          <div className="mt-6">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-3">
+              Dungeon Mastery
+            </p>
+            <div className="space-y-5">
+              {DUNGEONS.map((d) => {
+                const defs = byDungeon.get(d.id);
+                if (!defs || defs.length === 0) return null;
+                return (
+                  <TrophySection
+                    key={d.id}
+                    label={d.name}
+                    defs={defs}
+                    unlockedMap={unlockedMap}
+                    nested
+                  />
+                );
+              })}
+            </div>
           </div>
         </Card>
       </div>
     </main>
+  );
+}
+
+function TrophySection({
+  label,
+  defs,
+  unlockedMap,
+  nested,
+}: {
+  label: string;
+  defs: AchievementDef[];
+  unlockedMap: Map<string, unknown>;
+  nested?: boolean;
+}) {
+  if (defs.length === 0) return null;
+  const unlockedHere = defs.filter((d) => unlockedMap.has(d.id)).length;
+  return (
+    <div className={nested ? "" : "mt-6 first:mt-0"}>
+      <div className="flex items-center justify-between mb-3">
+        <p
+          className={`tracking-[0.3em] uppercase ${
+            nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-400"
+          }`}
+        >
+          {label}
+        </p>
+        <p className="text-[10px] text-slate-500 font-mono">
+          <span className="text-amber-300">{unlockedHere}</span>
+          <span className="text-slate-700"> / {defs.length}</span>
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {defs.map((def) => {
+          const unlockedAt = unlockedMap.get(def.id);
+          const style = rarityStyle(def.rarity);
+          const isUnlocked = !!unlockedAt;
+          return (
+            <div
+              key={def.id}
+              className={`relative border rounded-lg p-3 transition-all ${
+                isUnlocked
+                  ? `${style.bg} ${style.border} ${style.glow}`
+                  : "bg-slate-900/50 border-slate-800"
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <span
+                  className={`text-xl font-bold flex-shrink-0 w-9 h-9 flex items-center justify-center border rounded ${
+                    isUnlocked
+                      ? `${style.text} ${style.border} ${style.bg} ${style.glow}`
+                      : "text-slate-700 border-slate-800 bg-slate-900"
+                  }`}
+                >
+                  {isUnlocked ? def.icon : "?"}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p
+                    className={`text-xs font-bold uppercase tracking-wider truncate ${
+                      isUnlocked ? style.text : "text-slate-600"
+                    }`}
+                  >
+                    {isUnlocked ? def.name : "???"}
+                  </p>
+                  <p
+                    className={`text-[10px] leading-snug mt-0.5 ${
+                      isUnlocked ? "text-slate-300" : "text-slate-700"
+                    }`}
+                  >
+                    {def.description}
+                  </p>
+                  <p
+                    className={`text-[9px] uppercase tracking-widest mt-1 ${
+                      isUnlocked ? style.text : "text-slate-700"
+                    }`}
+                  >
+                    {style.label}
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 

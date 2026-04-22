@@ -409,6 +409,43 @@ export function isComboAchievementId(id: string): boolean {
   return COMBO_ID_REGEX.test(id);
 }
 
+export type AchievementCategory =
+  | "foundations"
+  | "progression"
+  | "training"
+  | "dungeon";
+
+const FOUNDATION_IDS = new Set([
+  "awakened",
+  "first-streak",
+  "first-quest",
+  "first-workout",
+  "first-exposure",
+]);
+
+const TRAINING_IDS = new Set([
+  "perfect-day",
+  "grinder",
+  "grind-lord",
+  "iron-will",
+  "forged",
+  "ladder-climber",
+  "fearless",
+]);
+
+export function achievementCategory(
+  id: string
+): { category: AchievementCategory; dungeonId?: string } {
+  if (FOUNDATION_IDS.has(id)) return { category: "foundations" };
+  if (TRAINING_IDS.has(id)) return { category: "training" };
+  for (const d of DUNGEONS) {
+    if (id.startsWith(`${d.id}-`)) {
+      return { category: "dungeon", dungeonId: d.id };
+    }
+  }
+  return { category: "progression" };
+}
+
 export function rarityStyle(rarity: AchievementRarity): {
   text: string;
   border: string;
