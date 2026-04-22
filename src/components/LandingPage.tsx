@@ -141,27 +141,26 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* TROY — rewrite this block in your own voice. The draft below is a scaffold. */}
       <section className="max-w-2xl mx-auto px-6 py-16 border-t border-slate-800/60">
         <div className="border border-slate-800 bg-slate-900/40 p-8">
           <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 mb-5">
             Why this exists
           </p>
           <p className="text-sm text-slate-300 leading-relaxed mb-3">
-            I built this because I needed it. After a rough breakup I
-            started spiraling — doomscrolling, broken sleep, compulsions
-            I didn&apos;t want to admit to anyone.
+            I made this during a dark chapter — for myself, first. I needed a
+            system that made discipline feel less like willpower and more
+            like a game I could show up to every day.
           </p>
           <p className="text-sm text-slate-300 leading-relaxed mb-3">
-            I couldn&apos;t talk my way out of it, and pep talks
-            didn&apos;t stick. What did stick was a system: structured,
-            honest, and gamified enough that showing up became a habit
-            instead of a chore.
+            Now it&apos;s here for anyone yearning for the same: people
+            fighting compulsions, people losing to procrastination, people
+            who know they need accountability but have no one to hold them
+            to it.
           </p>
           <p className="text-sm text-slate-400 leading-relaxed">
-            If any of this lands for you, you&apos;re not alone.
+            If that&apos;s you, welcome.
             <br />
-            — Troy
+            — Trojan Bulldog
           </p>
         </div>
       </section>
@@ -220,9 +219,9 @@ export default function LandingPage() {
 
 function StatusWindowPreview() {
   const entries: { label: string; xp: string; tone: "cyan" | "amber" }[] = [
-    { label: "NoFap Dungeon · Day 21", xp: "+5 XP", tone: "cyan" },
+    { label: "NoFap · Day 21", xp: "+5 XP", tone: "cyan" },
     { label: "Daily Quest · Morning Walk", xp: "+15 XP", tone: "cyan" },
-    { label: "Gym Life · Full Body", xp: "+25 XP", tone: "cyan" },
+    { label: "Training Regimen · Full Body", xp: "+25 XP", tone: "cyan" },
     { label: "14-Day Combo", xp: "+100 XP", tone: "amber" },
   ];
   return (

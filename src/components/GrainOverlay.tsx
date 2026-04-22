@@ -16,20 +16,20 @@ export default function GrainOverlay() {
 
   return (
     <>
-      {/* Film grain — SVG fractalNoise, GPU-composited */}
+      {/* Film grain — smaller SVG, fractalNoise cached once */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-[200] opacity-[0.05] mix-blend-overlay"
+        className="pointer-events-none fixed inset-0 z-[200] opacity-[0.045] mix-blend-overlay"
         style={{
-          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")`,
+          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")`,
           backgroundRepeat: "repeat",
           animation: "grain-shift 8s steps(10) infinite",
         }}
       />
-      {/* Scanlines with radial mask — CRT tube feel */}
+      {/* Scanlines with radial mask — static (drift removed; background-position animation caused repaints) */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-[199] opacity-[0.05]"
+        className="pointer-events-none fixed inset-0 z-[199] opacity-[0.04]"
         style={{
           backgroundImage:
             "repeating-linear-gradient(0deg, rgba(34,211,238,1) 0, rgba(34,211,238,1) 1px, transparent 1px, transparent 3px)",
@@ -37,7 +37,6 @@ export default function GrainOverlay() {
             "radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,1) 75%)",
           maskImage:
             "radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,1) 75%)",
-          animation: "scanline-drift 18s linear infinite",
         }}
       />
       {/* Pulsing vignette */}

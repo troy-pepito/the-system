@@ -28,7 +28,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="2. Who we are">
-          The app is operated by Troy Pepito, a solo developer. Contact:{" "}
+          The app is operated by Trojan Bulldog, a solo developer. Contact:{" "}
           <a
             href="mailto:trojanato@gmail.com"
             className="text-cyan-300 hover:text-cyan-200 underline"

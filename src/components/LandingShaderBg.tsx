@@ -23,7 +23,7 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
   float v = 0.0;
   float a = 0.5;
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 3; i++) {
     v += a * noise(p);
     p *= 2.0;
     a *= 0.5;
@@ -115,10 +115,12 @@ export default function LandingShaderBg() {
 
     let raf = 0;
     let running = true;
+    let lastFrame = 0;
+    const FRAME_INTERVAL = 1000 / 30; // cap at 30fps
     const start = performance.now();
 
     const resize = () => {
-      const scale = 0.5; // half-res render for GPU cost
+      const scale = 0.45; // sub-half-res, GPU-friendly
       const w = Math.max(
         1,
         Math.floor(canvas.clientWidth * scale)
@@ -135,11 +137,14 @@ export default function LandingShaderBg() {
       }
     };
 
-    const frame = () => {
+    const frame = (now: number) => {
       if (!running) return;
-      resize();
-      gl.uniform1f(uTime, (performance.now() - start) / 1000);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (now - lastFrame >= FRAME_INTERVAL) {
+        lastFrame = now;
+        resize();
+        gl.uniform1f(uTime, (now - start) / 1000);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
       raf = requestAnimationFrame(frame);
     };
 
@@ -149,6 +154,7 @@ export default function LandingShaderBg() {
         cancelAnimationFrame(raf);
       } else if (!running) {
         running = true;
+        lastFrame = 0;
         raf = requestAnimationFrame(frame);
       }
     };
@@ -158,6 +164,7 @@ export default function LandingShaderBg() {
         const visible = entries[0]?.isIntersecting ?? false;
         if (visible && !running) {
           running = true;
+          lastFrame = 0;
           raf = requestAnimationFrame(frame);
         } else if (!visible && running) {
           running = false;

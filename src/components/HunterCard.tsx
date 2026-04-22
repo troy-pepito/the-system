@@ -164,7 +164,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
           </button>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-3 flex-wrap mb-1.5">
               <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
                 Name
               </p>
@@ -213,7 +213,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 </span>
               </button>
             )}
-            <div className="flex items-center gap-4 mt-3">
+            <div className="flex items-center gap-5 mt-5">
               <div>
                 <p className="text-[9px] text-slate-500 tracking-widest uppercase">
                   Rank
@@ -235,8 +235,8 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
           </div>
         </div>
 
-        <div className="mt-6">
-          <div className="flex justify-between text-[9px] text-slate-500 uppercase tracking-wider mb-3">
+        <div className="mt-8">
+          <div className="flex justify-between items-center text-[9px] text-slate-500 uppercase tracking-wider mb-4">
             <span>Rank Path</span>
             <span className="font-mono text-amber-300/80">
               {isMaxRank

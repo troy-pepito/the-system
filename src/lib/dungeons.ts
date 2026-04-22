@@ -140,10 +140,10 @@ export const SOCIAL_RECLAIM_RUNGS: Rung[] = [
 ];
 
 export const GYM_LIFE_WORKOUTS: WorkoutType[] = [
-  { id: "pushups", name: "Pushups" },
-  { id: "legs", name: "Legs" },
-  { id: "pullups", name: "Pullups" },
-  { id: "abs", name: "Abs / Core" },
+  { id: "pushups", name: "Chest & Shoulders" },
+  { id: "pullups", name: "Back & Arms" },
+  { id: "legs", name: "Legs & Glutes" },
+  { id: "abs", name: "Core" },
   { id: "fullbody", name: "Full Body" },
 ];
 
@@ -171,11 +171,11 @@ export const DUNGEONS: DungeonDef[] = [
     },
     description:
       "Two coffees per month is fine. A third relapses the run.",
-    dimensions: { energy: 2 },
+    dimensions: { energy: 3 },
   },
   {
     id: "sensible-diet",
-    name: "Sensible Diet",
+    name: "Diet Challenge",
     rank: "E",
     ruleType: "allowance",
     tiers: NOFAP_TIERS,
@@ -192,11 +192,11 @@ export const DUNGEONS: DungeonDef[] = [
       "Eat plants first; then animal-source (eggs, dairy, nuts); then seafood; then meat only if no alternative.",
       "Log a sweet for any candy, soda, donut, pastry, or other processed sugar. 4 per month allowed — the 5th is a relapse.",
     ],
-    dimensions: { body: 2, energy: 2 },
+    dimensions: { body: 2 },
   },
   {
     id: "gym-life",
-    name: "Gym Life",
+    name: "Training Regimen",
     rank: "E",
     ruleType: "cadence",
     tiers: NOFAP_TIERS,
@@ -206,13 +206,13 @@ export const DUNGEONS: DungeonDef[] = [
       workouts: GYM_LIFE_WORKOUTS,
     },
     description:
-      "Forge the body. 5 workouts per week — one each: Pushups, Legs, Pullups, Abs/Core, Full Body. Discipline is cadence, not intensity.",
+      "Forge the body. 5 workouts per week — one per muscle group: Chest & Shoulders, Back & Arms, Legs & Glutes, Core, and Full Body. Discipline is cadence, not intensity.",
     rules: [
-      "Complete 5 workouts per week — one of each: Pushups, Legs, Pullups, Abs/Core, Full Body.",
-      "Check in on the day the workout is done. Week runs Monday–Sunday (UTC).",
-      "Manual relapse if you fall off the cadence. Tiers progress by days since entry.",
+      "Complete 5 workouts per week — one of each: Chest & Shoulders, Back & Arms, Legs & Glutes, Core, Full Body.",
+      "Pick any exercises that hit the target muscle group. Log when the session is done.",
+      "Week runs Monday–Sunday (UTC). Manual relapse if you fall off the cadence.",
     ],
-    dimensions: { body: 2 },
+    dimensions: { body: 2, energy: 1 },
   },
   {
     id: "attention-reclaim",
@@ -223,11 +223,11 @@ export const DUNGEONS: DungeonDef[] = [
     timed: { targetDays: 30 },
     description:
       "30 days without doom scrolling. Messaging, posting, and intentional single-video views are fine — only passive infinite feeds count as a slip.",
-    dimensions: { mind: 2, spirit: 2 },
+    dimensions: { mind: 2, spirit: 1 },
   },
   {
     id: "music-sensitization",
-    name: "Music Sensitization",
+    name: "Sound Sensitization",
     rank: "E",
     ruleType: "timed",
     tiers: NOFAP_TIERS,
@@ -239,7 +239,7 @@ export const DUNGEONS: DungeonDef[] = [
       "Allowed: podcasts, audiobooks, film scores, nature sounds, and involuntary ambient music (stores, cafes, other people's speakers).",
       "Reach day 30 to clear. Claim Victory to retire the run.",
     ],
-    dimensions: { spirit: 2, mind: 2 },
+    dimensions: { spirit: 2, mind: 1 },
   },
   {
     id: "social-reclaim",
@@ -254,11 +254,11 @@ export const DUNGEONS: DungeonDef[] = [
       "Clear the current rung to unlock the next. No skipping.",
       "Rungs progress ranks E → S. Dungeon cleared when the final rung is complete.",
     ],
-    dimensions: { emotion: 2 },
+    dimensions: { emotion: 2, mind: 1 },
   },
   {
     id: "nofap",
-    name: "NoFap Dungeon",
+    name: "NoFap",
     rank: "E",
     ruleType: "continuous_streak",
     tiers: NOFAP_TIERS,
@@ -269,7 +269,7 @@ export const DUNGEONS: DungeonDef[] = [
       "Allowed: sex and orgasm with a partner — this dungeon is about compulsion, not abstinence.",
       "Any relapse resets the streak to 0. Clear ranks E → S by hitting day milestones.",
     ],
-    dimensions: { energy: 2, spirit: 2, emotion: 2 },
+    dimensions: { emotion: 2, spirit: 1 },
   },
 ];
 

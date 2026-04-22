@@ -102,26 +102,26 @@ export default function Dashboard() {
         </div>
 
         <Card className="p-6">
-          <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+          <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-5">
             Awakening Status
           </h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-slate-500 uppercase tracking-wider">Rank</p>
-              <p className="text-2xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]">{rank}</p>
+              <p className="text-xs text-slate-500 uppercase tracking-wider mb-1.5">Rank</p>
+              <p className="font-display text-2xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] leading-none">{rank}</p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 uppercase tracking-wider">Level</p>
-              <p className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.6)]">{level}</p>
+              <p className="text-xs text-slate-500 uppercase tracking-wider mb-1.5">Level</p>
+              <p className="font-display text-2xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.6)] leading-none">{level}</p>
             </div>
           </div>
         </Card>
 
         <div>
-          <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+          <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-5">
             Dimensions
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <StatCard name="BODY" value={questRewards.body} />
             <StatCard name="MIND" value={questRewards.mind} />
             <StatCard name="EMOTION" value={questRewards.emotion} />

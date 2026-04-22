@@ -163,10 +163,14 @@ export default function ProfilePage() {
             defs={training}
             unlockedMap={unlockedMap}
           />
-          <div className="mt-6">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-3">
-              Dungeon Mastery
-            </p>
+          <div className="mt-8">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-cyan-500/40" />
+              <p className="font-display text-[10px] tracking-[0.4em] uppercase text-cyan-300/80 shrink-0 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+                Dungeon Mastery
+              </p>
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-cyan-500/40" />
+            </div>
             <div className="space-y-5">
               {DUNGEONS.map((d) => {
                 const defs = byDungeon.get(d.id);
@@ -322,7 +326,7 @@ function TrophySection({
                     {isUnlocked ? def.name : "???"}
                   </p>
                   <p
-                    className={`text-[10px] leading-snug mt-0.5 ${
+                    className={`text-[11px] leading-relaxed mt-1 ${
                       isUnlocked ? "text-slate-300" : "text-slate-700"
                     }`}
                   >

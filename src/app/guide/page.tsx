@@ -35,25 +35,25 @@ const RULE_TYPES: {
   {
     type: "continuous_streak",
     summary: "Consecutive days from entry. Any relapse resets to 0.",
-    used_by: "NoFap Dungeon",
+    used_by: "NoFap",
   },
   {
     type: "allowance",
     summary:
       "A budget per month. Stay under the limit; exceed it and the run resets.",
-    used_by: "Caffeine Reboot · Sensible Diet",
+    used_by: "Caffeine Reboot · Diet Challenge",
   },
   {
     type: "cadence",
     summary:
       "A weekly pattern. Hit your target each week. Miss the cadence and you manually relapse.",
-    used_by: "Gym Life",
+    used_by: "Training Regimen",
   },
   {
     type: "timed",
     summary:
       "A fixed N-day target. Any slip resets. Claim Victory at the end to retire the run.",
-    used_by: "No Doomscroll · Music Sensitization",
+    used_by: "No Doomscroll · Sound Sensitization",
   },
   {
     type: "progressive",
@@ -140,25 +140,25 @@ export default function GuidePage() {
         </Section>
 
         <Section title="2. The Five Rule Types">
-          <p className="mb-5">
+          <p className="mb-6">
             Every dungeon runs on one of five rule types. Read this once and
             the rest of the System collapses into something simple.
           </p>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {RULE_TYPES.map((r) => (
               <div
                 key={r.type}
-                className="border border-slate-800 bg-slate-900/40 p-4 rounded"
+                className="border border-slate-800 bg-slate-900/40 p-5 rounded"
               >
-                <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
-                  <p className="text-sm font-bold text-cyan-200 uppercase tracking-wider">
+                <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+                  <p className="font-display text-sm font-bold text-cyan-200 uppercase tracking-wider">
                     {RULE_LABEL[r.type]}
                   </p>
                   <p className="text-[10px] uppercase tracking-[0.25em] text-slate-500">
                     {r.used_by}
                   </p>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-sm text-slate-400 leading-relaxed">
                   {r.summary}
                 </p>
               </div>
@@ -167,23 +167,23 @@ export default function GuidePage() {
         </Section>
 
         <Section title="3. The Seven Portals">
-          <p className="mb-5">
+          <p className="mb-6">
             Each portal is a specific discipline with specific rules and
             specific dimensions it trains.
           </p>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {DUNGEONS.map((d) => (
               <div
                 key={d.id}
-                className="border border-slate-800 bg-slate-900/40 p-4 rounded"
+                className="border border-slate-800 bg-slate-900/40 p-5 rounded"
               >
-                <div className="flex items-start justify-between flex-wrap gap-2 mb-2">
-                  <p className="text-sm font-bold text-cyan-100">{d.name}</p>
+                <div className="flex items-start justify-between flex-wrap gap-2 mb-3">
+                  <p className="font-display text-base font-bold text-cyan-100">{d.name}</p>
                   <span className="text-[9px] uppercase tracking-[0.25em] text-amber-400/80 px-2 py-0.5 border border-amber-400/30 rounded-sm">
                     {RULE_LABEL[d.ruleType]}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-1.5 mb-2">
+                <div className="flex flex-wrap gap-1.5 mb-3">
                   {dungeonDims(d).map((dim) => (
                     <span
                       key={dim}
@@ -193,7 +193,7 @@ export default function GuidePage() {
                     </span>
                   ))}
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-sm text-slate-400 leading-relaxed">
                   {d.description}
                 </p>
               </div>
@@ -241,7 +241,7 @@ export default function GuidePage() {
                 <span className="text-cyan-300 font-mono">
                   +{XP_PER_WORKOUT}
                 </span>{" "}
-                per workout logged in Gym Life
+                per workout logged in Training Regimen
               </span>
             </li>
             <li className="flex gap-3">
@@ -266,24 +266,24 @@ export default function GuidePage() {
         </Section>
 
         <Section title="5. The Five Dimensions">
-          <p className="mb-5">
+          <p className="mb-6">
             Progress is tracked across five dimensions, not one flat XP bar.
             Each dungeon trains a specific subset. Your profile shows a radar
             chart — balanced hunters see a pentagon; specialized hunters see a
             spike.
           </p>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {DIMENSIONS.map((d) => (
               <div
                 key={d.key}
-                className="flex items-start gap-3 border border-slate-800 bg-slate-900/40 p-4 rounded"
+                className="flex items-start gap-4 border border-slate-800 bg-slate-900/40 p-5 rounded"
               >
                 <span
                   className={`text-[10px] font-bold uppercase tracking-[0.3em] px-2 py-1 border rounded-sm shrink-0 self-start ${DIM_STYLE[d.key]}`}
                 >
                   {d.name}
                 </span>
-                <p className="text-xs text-slate-400 leading-relaxed flex-1">
+                <p className="text-sm text-slate-400 leading-relaxed flex-1">
                   {d.description}
                 </p>
               </div>

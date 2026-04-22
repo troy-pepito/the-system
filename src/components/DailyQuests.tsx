@@ -104,17 +104,17 @@ export default function DailyQuests({
 
   return (
   <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-6 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
-    <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-1">
+    <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-2">
       (!) Quest Info
     </p>
-    <h2 className="text-sm uppercase tracking-wider text-slate-200 text-center mb-4">
+    <h2 className="font-display text-sm uppercase tracking-wider text-slate-200 text-center mb-5">
       Daily Quest — Forge the Awakened Self
     </h2>
-    <p className="text-emerald-400 text-center uppercase tracking-widest text-sm mb-4">
+    <p className="text-emerald-400 text-center uppercase tracking-widest text-xs mb-5">
       Goals
     </p>
 
-    <ul className="space-y-2 mb-6">
+    <ul className="space-y-3 mb-6">
       {QUESTS.map((quest) => {
         const done = completed.includes(quest.id);
         return (

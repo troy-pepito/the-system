@@ -23,7 +23,7 @@ export default function PrivacyPage() {
 
         <Section title="1. Who we are">
           Shivaliva Leveling (&quot;the app&quot;) is a solo-developed web
-          application operated by Troy Pepito. Contact:{" "}
+          application operated by Trojan Bulldog. Contact:{" "}
           <a
             href="mailto:trojanato@gmail.com"
             className="text-cyan-300 hover:text-cyan-200 underline"
