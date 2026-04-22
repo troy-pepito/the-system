@@ -1,8 +1,14 @@
 "use client";
 import { useClerk } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
+
+const PUBLIC_ROUTES = ["/", "/privacy", "/terms"];
 
 export default function SignInGate() {
   const { openSignIn } = useClerk();
+  const pathname = usePathname();
+
+  if (PUBLIC_ROUTES.includes(pathname)) return null;
 
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950 px-6">

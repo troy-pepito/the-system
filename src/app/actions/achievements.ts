@@ -8,7 +8,15 @@ import {
   DUNGEONS,
   DIMENSION_RANK_MULTIPLIERS,
 } from "@/lib/dungeons";
-import { QUESTS } from "@/lib/quests";
+import {
+  QUESTS,
+  COMBO_THRESHOLD,
+  computeComboRuns,
+  totalMilestoneXp,
+  milestoneIdsForRuns,
+  addDaysISO,
+  todayLocalISO,
+} from "@/lib/quests";
 import {
   ACHIEVEMENTS,
   type PlayerSnapshot,
@@ -151,6 +159,19 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       weekByDate[key].add(q.questId);
     }
   }
+
+  const qualifyingDates = Object.entries(byDate)
+    .filter(([, set]) => set.size >= COMBO_THRESHOLD)
+    .map(([d]) => d)
+    .sort();
+  const comboRuns = computeComboRuns(qualifyingDates);
+  const comboMilestoneXp = totalMilestoneXp(comboRuns);
+  const comboMilestoneIds = milestoneIdsForRuns(comboRuns);
+
+  const todayISO = todayLocalISO();
+  const yesterdayISO = addDaysISO(todayISO, -1);
+  const hasAnyCompletion = Object.keys(byDate).length > 0;
+  const scattered = hasAnyCompletion && !byDate[yesterdayISO];
   const perfectQuestDays = Object.values(byDate).filter(
     (set) => set.size >= QUESTS.length
   ).length;
@@ -220,7 +241,8 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     workoutTotal * XP_PER_WORKOUT +
     exposureTotal * XP_PER_EXPOSURE +
     completedRunCount * XP_PER_COMPLETION +
-    questXpTotal;
+    questXpTotal +
+    comboMilestoneXp;
 
   const { level } = getLevelFromXp(totalXp);
 
@@ -251,6 +273,9 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
         perfectQuestDays: monthPerfect,
       },
     },
+    comboMilestoneXp,
+    comboMilestoneIds,
+    scattered,
   };
 }
 
@@ -275,6 +300,9 @@ export async function evaluateAchievements(): Promise<string[]> {
     if (def.check(snapshot)) {
       newlyUnlocked.push(def.id);
     }
+  }
+  for (const id of snapshot.comboMilestoneIds) {
+    if (!existingIds.has(id)) newlyUnlocked.push(id);
   }
 
   if (newlyUnlocked.length > 0) {
@@ -342,6 +370,7 @@ export interface ProfilePageData {
     exposureTotal: number;
     questTotal: number;
     perfectQuestDays: number;
+    scattered: boolean;
     dimensions: {
       body: number;
       mind: number;
@@ -416,6 +445,7 @@ const getProfilePageDataCached = unstable_cache(
         exposureTotal: snapshot.exposureTotal,
         questTotal: snapshot.questTotal,
         perfectQuestDays: snapshot.perfectQuestDays,
+        scattered: snapshot.scattered,
         dimensions: snapshot.dimensions,
         windows: snapshot.windows,
       },

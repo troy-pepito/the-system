@@ -111,7 +111,7 @@ export default function PortalsPage() {
               {loaded &&
                 (isActive ? (
                   <Link
-                    href="/"
+                    href={`/#dungeon-${d.id}`}
                     onClick={(e) => e.stopPropagation()}
                     className="block w-full text-center px-4 py-3 bg-slate-800/60 border border-cyan-500/30 rounded text-cyan-300 text-xs uppercase tracking-widest hover:bg-cyan-500/20 transition-colors"
                   >

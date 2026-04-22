@@ -4,7 +4,11 @@ import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
 import Heatmap from "@/components/Heatmap";
 import HunterCard from "@/components/HunterCard";
-import { ACHIEVEMENTS, rarityStyle } from "@/lib/achievements";
+import {
+  ACHIEVEMENTS,
+  isComboAchievementId,
+  rarityStyle,
+} from "@/lib/achievements";
 import {
   getProfilePageData,
   type ProfilePageData,
@@ -36,9 +40,10 @@ export default function ProfilePage() {
   if (!data) return <main className="min-h-screen bg-slate-950 p-4 sm:p-8" />;
 
   const { stats, unlocked } = data;
-  const unlockedMap = new Map(unlocked.map((u) => [u.id, u.unlockedAt]));
+  const trophyUnlocked = unlocked.filter((u) => !isComboAchievementId(u.id));
+  const unlockedMap = new Map(trophyUnlocked.map((u) => [u.id, u.unlockedAt]));
   const totalCount = ACHIEVEMENTS.length;
-  const unlockedCount = unlocked.length;
+  const unlockedCount = trophyUnlocked.length;
   const completion = Math.round((unlockedCount / totalCount) * 100);
 
   const windowed =
@@ -65,7 +70,7 @@ export default function ProfilePage() {
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
 
-        <HunterCard level={stats.level} />
+        <HunterCard level={stats.level} scattered={stats.scattered} />
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">

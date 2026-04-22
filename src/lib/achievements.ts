@@ -1,4 +1,5 @@
 import { DUNGEONS } from "@/lib/dungeons";
+import { COMBO_MILESTONES } from "@/lib/quests";
 
 export type AchievementRarity =
   | "common"
@@ -39,6 +40,9 @@ export interface PlayerSnapshot {
     week: WindowStats;
     month: WindowStats;
   };
+  comboMilestoneXp: number;
+  comboMilestoneIds: string[];
+  scattered: boolean;
 }
 
 export interface AchievementDef {
@@ -372,8 +376,37 @@ function perDungeonAchievements(): AchievementDef[] {
 
 ACHIEVEMENTS.push(...perDungeonAchievements());
 
+const COMBO_ID_REGEX = /^combo-(\d{4}-\d{2}-\d{2})-(\d+)$/;
+
+function rarityForComboDays(days: number): AchievementRarity {
+  if (days >= 180) return "legendary";
+  if (days >= 60) return "epic";
+  if (days >= 14) return "rare";
+  return "common";
+}
+
 export function getAchievement(id: string): AchievementDef | undefined {
-  return ACHIEVEMENTS.find((a) => a.id === id);
+  const direct = ACHIEVEMENTS.find((a) => a.id === id);
+  if (direct) return direct;
+  const match = COMBO_ID_REGEX.exec(id);
+  if (match) {
+    const days = parseInt(match[2], 10);
+    const milestone = COMBO_MILESTONES.find((m) => m.days === days);
+    if (!milestone) return undefined;
+    return {
+      id,
+      name: `${days}-Day Combo`,
+      description: `Daily quest combo reached ${days} days. +${milestone.xp} XP`,
+      icon: "⚡",
+      rarity: rarityForComboDays(days),
+      check: () => false,
+    };
+  }
+  return undefined;
+}
+
+export function isComboAchievementId(id: string): boolean {
+  return COMBO_ID_REGEX.test(id);
 }
 
 export function rarityStyle(rarity: AchievementRarity): {

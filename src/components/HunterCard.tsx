@@ -9,9 +9,10 @@ const LEVELS_PER_RANK = 10;
 
 interface HunterCardProps {
   level: number;
+  scattered?: boolean;
 }
 
-export default function HunterCard({ level }: HunterCardProps) {
+export default function HunterCard({ level, scattered }: HunterCardProps) {
   const { user, isLoaded } = useUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -156,9 +157,20 @@ export default function HunterCard({ level }: HunterCardProps) {
           </button>
 
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
-              Name
-            </p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
+                Name
+              </p>
+              {scattered && (
+                <span
+                  title="No daily quests completed yesterday. Clears after your next active day."
+                  className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm"
+                >
+                  <span aria-hidden>⚠</span>
+                  <span>Scattered</span>
+                </span>
+              )}
+            </div>
             {editingName ? (
               <input
                 ref={nameInputRef}

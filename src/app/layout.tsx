@@ -19,12 +19,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The System",
-  description: "Solo Leveling-inspired gamified self-improvement web app",
+  title: "Shivaliva Leveling",
+  description: "Face your shadows. Rank up in real life.",
   appleWebApp: {
     capable: true,
-    title: "The System",
+    title: "Shivaliva Leveling",
     statusBarStyle: "black-translucent",
+  },
+  openGraph: {
+    title: "Shivaliva Leveling",
+    description:
+      "A gamified self-improvement system for the battles nobody's watching.",
+    type: "website",
+    siteName: "Shivaliva Leveling",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shivaliva Leveling",
+    description:
+      "A gamified self-improvement system for the battles nobody's watching.",
   },
 };
 
@@ -55,7 +68,9 @@ export default function RootLayout({
           </Show>
           <Show when="signed-in">
             <Navbar />
-            {children}
+          </Show>
+          {children}
+          <Show when="signed-in">
             <AchievementToast />
           </Show>
         </body>

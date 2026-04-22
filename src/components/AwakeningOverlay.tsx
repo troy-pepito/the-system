@@ -133,6 +133,8 @@ export default function AwakeningOverlay() {
   }
 
   if (awakened) return null;
+  if (!isLoaded) return null;
+  if (!isSignedIn) return null;
 
   const complete = lineIdx >= activeLines.length;
 

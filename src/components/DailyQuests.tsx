@@ -4,6 +4,7 @@ import {
   QUESTS,
   applyQuest,
   todayLocalISO,
+  COMBO_THRESHOLD,
   type QuestRewards,
 } from "@/lib/quests";
 import {
@@ -18,17 +19,30 @@ export type { QuestRewards };
 interface DailyQuestsProps {
   initialTodayIds: string[];
   initialLifetime: QuestRewards;
+  priorComboDays: number;
   onRewardsChange?: (rewards: QuestRewards) => void;
 }
 
 export default function DailyQuests({
   initialTodayIds,
   initialLifetime,
+  priorComboDays,
   onRewardsChange,
 }: DailyQuestsProps) {
   const [completed, setCompleted] = useState<string[]>(initialTodayIds);
   const [lifetime, setLifetime] = useState<QuestRewards>(initialLifetime);
   const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
+
+  const todayQualifies = completed.length >= COMBO_THRESHOLD;
+  const comboDays =
+    priorComboDays > 0
+      ? todayQualifies
+        ? priorComboDays + 1
+        : priorComboDays
+      : todayQualifies
+        ? 1
+        : 0;
+  const remainingForCombo = Math.max(0, COMBO_THRESHOLD - completed.length);
 
   async function toggleQuest(id: string) {
     if (busyIds.has(id)) return;
@@ -105,9 +119,38 @@ export default function DailyQuests({
       })}
     </ul>
 
-    <p className="text-xs text-center text-slate-400 leading-relaxed">
-      <span className="text-red-400 font-bold">CAUTION!</span> — If the daily quest remains incomplete, penalties will be given accordingly.
-    </p>
+    <div className="border-t border-cyan-500/10 pt-4 flex flex-col items-center gap-1">
+      <div className="flex items-center gap-3">
+        <span className="text-[10px] text-cyan-400/70 tracking-[0.3em] uppercase">
+          Daily Combo
+        </span>
+        <span
+          className={`text-2xl font-bold tabular-nums ${
+            comboDays > 0
+              ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+              : "text-slate-600"
+          }`}
+        >
+          {comboDays}
+        </span>
+        <span className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
+          {comboDays === 1 ? "Day" : "Days"}
+        </span>
+      </div>
+      {comboDays === 0 ? (
+        <p className="text-[10px] text-slate-500 tracking-wider text-center">
+          Complete {COMBO_THRESHOLD}+ quests to start a combo.
+        </p>
+      ) : todayQualifies ? (
+        <p className="text-[10px] text-emerald-400/80 tracking-[0.2em] uppercase">
+          Combo extended · See you tomorrow
+        </p>
+      ) : (
+        <p className="text-[10px] text-amber-400/80 tracking-[0.2em] uppercase">
+          {remainingForCombo} more to keep the combo alive
+        </p>
+      )}
+    </div>
   </div>
 );
 }

@@ -2,14 +2,18 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "The System",
-    short_name: "System",
+    name: "Shivaliva Leveling",
+    short_name: "Shivaliva",
     description: "Gamified self-improvement. Rank up in real life.",
     start_url: "/",
+    scope: "/",
     display: "standalone",
     orientation: "portrait",
     background_color: "#020617",
     theme_color: "#22d3ee",
+    lang: "en",
+    dir: "ltr",
+    categories: ["productivity", "lifestyle", "health"],
     icons: [
       {
         src: "/icon",

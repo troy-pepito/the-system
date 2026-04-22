@@ -4,7 +4,14 @@ import { unstable_cache, updateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getDungeon, DUNGEONS } from "@/lib/dungeons";
 import { getTodayCompletions, getLifetimeRewards } from "@/app/actions/quests";
-import { type QuestRewards } from "@/lib/quests";
+import {
+  type QuestRewards,
+  COMBO_THRESHOLD,
+  computeComboRuns,
+  priorComboDays as computePriorComboDays,
+  totalMilestoneXp,
+  addDaysISO,
+} from "@/lib/quests";
 import { requireUserId } from "@/lib/auth";
 
 const TAG = "player:stats";
@@ -33,6 +40,9 @@ export interface DashboardData {
   details: Record<string, RunDetail>;
   todayQuestIds: string[];
   lifetimeRewards: QuestRewards;
+  priorComboDays: number;
+  milestoneXp: number;
+  scattered: boolean;
 }
 
 function toState(run: {
@@ -85,15 +95,59 @@ export async function getAllActiveRuns(): Promise<DungeonRunState[]> {
   return getAllActiveRunsCached(userId);
 }
 
+const getComboStateCached = unstable_cache(
+  async (userId: string, todayIso: string) => {
+    const rows = await prisma.questCompletion.findMany({
+      where: { userId },
+      select: { questId: true, date: true },
+    });
+    const byDate: Record<string, Set<string>> = {};
+    for (const r of rows) {
+      const key = r.date.toISOString().split("T")[0];
+      if (!byDate[key]) byDate[key] = new Set();
+      byDate[key].add(r.questId);
+    }
+    const allQualifying = Object.entries(byDate)
+      .filter(([, set]) => set.size >= COMBO_THRESHOLD)
+      .map(([d]) => d)
+      .sort();
+    const pastQualifying = allQualifying.filter((d) => d < todayIso);
+    const runs = computeComboRuns(allQualifying);
+    const pastRuns = computeComboRuns(pastQualifying);
+
+    const yesterdayIso = addDaysISO(todayIso, -1);
+    const hasAnyCompletion = Object.keys(byDate).length > 0;
+    const scattered = hasAnyCompletion && !byDate[yesterdayIso];
+
+    return {
+      priorComboDays: computePriorComboDays(pastRuns, todayIso),
+      milestoneXp: totalMilestoneXp(runs),
+      scattered,
+    };
+  },
+  ["combo-state"],
+  { tags: [TAG] }
+);
+
+async function getComboState(todayIso: string): Promise<{
+  priorComboDays: number;
+  milestoneXp: number;
+  scattered: boolean;
+}> {
+  const userId = await requireUserId();
+  return getComboStateCached(userId, todayIso);
+}
+
 export async function getDashboardData(
   todayIso: string
 ): Promise<DashboardData> {
-  const [activeRuns, bonusXp, todayQuestIds, lifetimeRewards] =
+  const [activeRuns, bonusXp, todayQuestIds, lifetimeRewards, comboState] =
     await Promise.all([
       getAllActiveRuns(),
       getBonusXp(),
       getTodayCompletions(todayIso),
       getLifetimeRewards(),
+      getComboState(todayIso),
     ]);
 
   const detailEntries = await Promise.all(
@@ -122,6 +176,9 @@ export async function getDashboardData(
     details: Object.fromEntries(detailEntries),
     todayQuestIds,
     lifetimeRewards,
+    priorComboDays: comboState.priorComboDays,
+    milestoneXp: comboState.milestoneXp,
+    scattered: comboState.scattered,
   };
 }
 
