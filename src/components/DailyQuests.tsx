@@ -117,20 +117,23 @@ export default function DailyQuests({
     <ul className="space-y-3 mb-6">
       {QUESTS.map((quest) => {
         const done = completed.includes(quest.id);
+        const saving = busyIds.has(quest.id);
         return (
           <li key={quest.id} className="flex items-center justify-between">
             <button
               onClick={() => toggleQuest(quest.id)}
               className="flex items-center gap-3 text-left w-full group"
             >
-              <span className={`w-5 h-5 border flex items-center justify-center rounded ${done ? "bg-cyan-500/30 border-cyan-400" : "border-cyan-500/40 group-hover:border-cyan-400"}`}>
+              <span className={`w-5 h-5 border flex items-center justify-center rounded transition-colors ${done ? "bg-cyan-500/30 border-cyan-400" : "border-cyan-500/40 group-hover:border-cyan-400"} ${saving ? "animate-pulse" : ""}`}>
                 {done && <span className="text-cyan-300 text-xs">✓</span>}
               </span>
               <span className={`text-sm uppercase tracking-wider ${done ? "text-slate-500 line-through" : "text-slate-200"}`}>
                 - {quest.name}
               </span>
             </button>
-            <span className="text-xs text-cyan-400/60">[{done ? 1 : 0}/1]</span>
+            <span className={`text-[10px] font-mono tracking-wider shrink-0 ${done ? "text-slate-600" : "text-cyan-400/80"}`}>
+              +{quest.xp} XP
+            </span>
           </li>
         );
       })}

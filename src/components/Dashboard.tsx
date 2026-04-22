@@ -53,6 +53,14 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (hasPendingMutations()) e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, []);
+
+  useEffect(() => {
     if (!dashboard) return;
     const hash = window.location.hash;
     if (!hash) return;
@@ -201,7 +209,7 @@ export default function Dashboard() {
               <div
                 key={run.dungeonId}
                 id={`dungeon-${run.dungeonId}`}
-                className="scroll-mt-20"
+                className="scroll-mt-32 sm:scroll-mt-24"
               >
                 {card}
               </div>

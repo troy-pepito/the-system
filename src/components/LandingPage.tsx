@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { DUNGEONS, dungeonDims, DIM_STYLE } from "@/lib/dungeons";
 import LandingShaderBg from "@/components/LandingShaderBg";
 
@@ -27,6 +28,16 @@ const STEPS = [
 
 export default function LandingPage() {
   const { openSignIn } = useClerk();
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+
+  const handleAccept = () => {
+    if (isSignedIn) {
+      router.push("/");
+    } else {
+      openSignIn();
+    }
+  };
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-200">
@@ -58,7 +69,7 @@ export default function LandingPage() {
             not streaks on paper.
           </p>
           <button
-            onClick={() => openSignIn()}
+            onClick={handleAccept}
             className="group relative px-10 py-4 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-sm uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:shadow-[0_0_40px_rgba(34,211,238,0.8)] animate-reveal"
             style={{ animationDelay: "0.7s" }}
           >
@@ -174,7 +185,7 @@ export default function LandingPage() {
           <span className="text-amber-300/80">Pro — $39 lifetime</span>
         </p>
         <button
-          onClick={() => openSignIn()}
+          onClick={handleAccept}
           className="group relative px-10 py-4 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-sm uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white transition-all shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:shadow-[0_0_40px_rgba(34,211,238,0.8)]"
         >
           <span className="absolute inset-0 bg-cyan-400/20 opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />

@@ -64,6 +64,7 @@ If you catch yourself coding a feature, close the file. Go write a launch post.
 ### Ship
 - **Accountability Pods** — private groups of 2–10 users. Create via invite link. Inside a pod: see each other's active dungeons, streaks, weekly check-ins. *No public feed, no strangers.* Pro feature (one member needs Pro to create; joiners can be free).
 - **Per-run journal** — on *your own* profile, add optional text notes to dungeon events ("Day 7, rough day at work, held the streak"). Private by default; toggle to share to your pod.
+- **Custom daily quests (Pro)** — Pro users add up to 5 custom quests on top of the 7 base quests. User defines name, XP (capped at 10), and up to 2 dimension rewards. Does NOT unlock new achievements — custom quests are personal habit tracking, not a new progression axis. Scope: single CRUD surface on profile, no server-side validation beyond caps, ~4–6 h build.
 - **Pod weekly digest email** — "Here's how your pod did this week."
 
 ### Measure
@@ -125,8 +126,9 @@ If you catch yourself coding a feature, close the file. Go write a launch post.
 3. **Streak Insurance** (1 per month)
 4. **Lifetime analytics** — full heatmap history, dimension history charts, export data
 5. **Accountability Pods** (creator must be Pro; joiners free)
-6. **Custom dungeons** (Month 3+)
-7. **Whole-app themes** — Shadow Monarch, S-Rank Ascendant, Blood Red Gate, Verdant Dungeon
+6. **Custom daily quests** — up to 5 personal quests on top of the 7 base quests (Month 2)
+7. **Custom dungeons** (Month 3+)
+8. **Whole-app themes** — Shadow Monarch, S-Rank Ascendant, Blood Red Gate, Verdant Dungeon
 
 ### What Pro does NOT paywall
 - **Exposure Therapy dungeon.** Hard no. The dungeon for socially isolated, lonely people is the last thing you lock behind a paycheck. This is an ethical line — don't cross it even for revenue.

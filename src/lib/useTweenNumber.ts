@@ -5,9 +5,14 @@ function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-export function useTweenNumber(target: number, duration = 500): number {
-  const [value, setValue] = useState(target);
-  const currentRef = useRef(target);
+export function useTweenNumber(
+  target: number,
+  duration = 500,
+  initialFrom?: number
+): number {
+  const from = initialFrom ?? target;
+  const [value, setValue] = useState(from);
+  const currentRef = useRef(from);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
