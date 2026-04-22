@@ -13,6 +13,7 @@ import {
   endMutation,
 } from "@/lib/player";
 import { toggleQuestCompletion } from "@/app/actions/quests";
+import { track } from "@/lib/analytics";
 
 export type { QuestRewards };
 
@@ -66,6 +67,13 @@ export default function DailyQuests({
 
     const xpDelta = (isNowDone ? 1 : -1) * quest.xp;
     notifyStatsUpdated({ xpDelta });
+
+    if (isNowDone) {
+      track("quest_completed", {
+        quest_id: quest.id,
+        quest_xp: quest.xp,
+      });
+    }
 
     beginMutation();
     try {

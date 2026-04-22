@@ -15,6 +15,7 @@ import {
   toggleWorkout,
   type DungeonRunState,
 } from "@/app/actions/dungeons";
+import { track } from "@/lib/analytics";
 
 interface CadenceDungeonCardProps {
   dungeonId: string;
@@ -76,6 +77,11 @@ export default function CadenceDungeonCard({
 
   async function handleRelapse() {
     await endRun(dungeonId, "relapse");
+    track("relapse", {
+      dungeon_id: dungeonId,
+      rule_type: "cadence",
+      streak_days: streak,
+    });
     setStartDate(null);
     setStreak(0);
     setCompleted([]);

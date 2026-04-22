@@ -7,6 +7,8 @@ import AwakeningOverlay from "@/components/AwakeningOverlay";
 import AchievementToast from "@/components/AchievementToast";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import SignInGate from "@/components/SignInGate";
+import PostHogProvider from "@/components/PostHogProvider";
+import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,18 +63,21 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
         <body className="min-h-full flex flex-col">
-          <ServiceWorkerRegistration />
-          <AwakeningOverlay />
-          <Show when="signed-out">
-            <SignInGate />
-          </Show>
-          <Show when="signed-in">
-            <Navbar />
-          </Show>
-          {children}
-          <Show when="signed-in">
-            <AchievementToast />
-          </Show>
+          <PostHogProvider>
+            <ServiceWorkerRegistration />
+            <AwakeningOverlay />
+            <Show when="signed-out">
+              <SignInGate />
+            </Show>
+            <Show when="signed-in">
+              <Navbar />
+            </Show>
+            {children}
+            <Show when="signed-in">
+              <AchievementToast />
+              <PwaInstallPrompt />
+            </Show>
+          </PostHogProvider>
         </body>
       </html>
     </ClerkProvider>

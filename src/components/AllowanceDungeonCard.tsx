@@ -13,6 +13,7 @@ import {
   logAllowanceEvent,
   type DungeonRunState,
 } from "@/app/actions/dungeons";
+import { track } from "@/lib/analytics";
 
 interface AllowanceDungeonCardProps {
   dungeonId: string;
@@ -62,6 +63,12 @@ export default function AllowanceDungeonCard({
       const { count, relapsed } = await logAllowanceEvent(dungeonId, eventType);
       setMonthCount(count);
       if (relapsed) {
+        track("relapse", {
+          dungeon_id: dungeonId,
+          rule_type: "allowance",
+          streak_days: streak,
+          month_count: count,
+        });
         setStartDate(null);
         setStreak(0);
         if (onStreakChange) onStreakChange(0);

@@ -8,6 +8,7 @@ import {
   endRun,
   type DungeonRunState,
 } from "@/app/actions/dungeons";
+import { track } from "@/lib/analytics";
 
 interface TimedDungeonCardProps {
   dungeonId: string;
@@ -53,6 +54,11 @@ export default function TimedDungeonCard({
 
   async function handleRelapse() {
     await endRun(dungeonId, "relapse");
+    track("relapse", {
+      dungeon_id: dungeonId,
+      rule_type: "timed",
+      streak_days: streak,
+    });
     setStartDate(null);
     setStreak(0);
     if (onStreakChange) onStreakChange(0);

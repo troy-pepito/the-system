@@ -8,6 +8,7 @@ import {
   endRun,
   type DungeonRunState,
 } from "@/app/actions/dungeons";
+import { track } from "@/lib/analytics";
 
 interface StreakCardProps {
   dungeonId: string;
@@ -41,6 +42,11 @@ export default function StreakCard({
 
   async function handleRelapse() {
     await endRun(dungeonId, "relapse");
+    track("relapse", {
+      dungeon_id: dungeonId,
+      rule_type: "continuous_streak",
+      streak_days: streak,
+    });
     setStartDate(null);
     setStreak(0);
     if (onStreakChange) onStreakChange(0);

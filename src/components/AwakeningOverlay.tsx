@@ -2,6 +2,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { track } from "@/lib/analytics";
 
 const AWAKENED_KEY = "system:awakened";
 const AWAKENED_EVENT = "system:awakened-changed";
@@ -120,6 +121,7 @@ export default function AwakeningOverlay() {
       await user.update({
         unsafeMetadata: { ...user.unsafeMetadata, hunterName: name },
       });
+      track("awakening_complete", { hunter_name_length: name.length });
       setAccepting(true);
       setTimeout(() => {
         localStorage.setItem(AWAKENED_KEY, "true");

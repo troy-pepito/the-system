@@ -55,3 +55,12 @@ model Achievement {
 
   @@unique([userId, achievementId])
 }
+
+model EmailSent {
+  id     Int      @id @default(autoincrement())
+  userId String
+  type   String
+  sentAt DateTime @default(now())
+
+  @@index([userId, type, sentAt])
+}

@@ -13,6 +13,7 @@ import {
   logRungExposure,
   undoRungExposure,
 } from "@/app/actions/dungeons";
+import { track } from "@/lib/analytics";
 
 interface ProgressiveDungeonCardProps {
   dungeonId: string;
@@ -106,6 +107,11 @@ export default function ProgressiveDungeonCard({
 
   async function handleRelapse() {
     await endRun(dungeonId, "relapse");
+    track("relapse", {
+      dungeon_id: dungeonId,
+      rule_type: "progressive",
+      current_rung: currentRung?.id ?? null,
+    });
     setActive(false);
     setCounts({});
     if (onRelapse) onRelapse();

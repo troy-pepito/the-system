@@ -10,6 +10,7 @@ import {
   DIM_STYLE,
 } from "@/lib/dungeons";
 import { enterDungeon, getAllActiveRuns } from "@/app/actions/dungeons";
+import { track } from "@/lib/analytics";
 
 let activeIdsCache: Set<string> | null = null;
 
@@ -30,6 +31,7 @@ export default function PortalsPage() {
 
   async function handleEnter(dungeonId: string) {
     await enterDungeon(dungeonId);
+    track("dungeon_entered", { dungeon_id: dungeonId });
     router.push("/");
   }
 
