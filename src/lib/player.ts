@@ -40,6 +40,29 @@ export function notifyStatsUpdated(detail?: { xpDelta?: number }) {
   }
 }
 
+export const RANK_UP_EVENT = "system:rank-up";
+
+export function notifyRankUp(detail: { from: string; to: string }) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(RANK_UP_EVENT, { detail }));
+}
+
+export const REWARD_EVENT = "system:reward-granted";
+
+export interface RewardDelta {
+  xp?: number;
+  body?: number;
+  mind?: number;
+  emotion?: number;
+  energy?: number;
+  spirit?: number;
+}
+
+export function notifyReward(delta: RewardDelta) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(REWARD_EVENT, { detail: delta }));
+}
+
 let pendingMutations = 0;
 
 export function beginMutation() {

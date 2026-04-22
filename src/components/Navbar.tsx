@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
@@ -13,7 +13,9 @@ import {
   getLevelFromXp,
   getRank,
   hasPendingMutations,
+  notifyRankUp,
 } from "@/lib/player";
+import { useTweenNumber } from "@/lib/useTweenNumber";
 import { getAllActiveRuns, getBonusXp } from "@/app/actions/dungeons";
 import { getLifetimeRewards } from "@/app/actions/quests";
 
@@ -70,9 +72,22 @@ export default function Navbar() {
     return () => window.removeEventListener(STATS_UPDATED_EVENT, onEvent);
   }, []);
 
-  const { level, currentXp, xpToNext } = getLevelFromXp(totalXp);
+  const tweenedTotal = useTweenNumber(totalXp, 600);
+  const { level, currentXp, xpToNext } = getLevelFromXp(
+    Math.round(tweenedTotal)
+  );
   const rank = getRank(level);
   const percent = Math.round((currentXp / xpToNext) * 100);
+
+  const prevRankRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (totalXp <= 0) return;
+    const prev = prevRankRef.current;
+    if (prev && prev !== rank) {
+      notifyRankUp({ from: prev, to: rank });
+    }
+    prevRankRef.current = rank;
+  }, [rank, totalXp]);
 
   return (
     <nav className="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-cyan-500/20 shadow-[0_0_20px_rgba(34,211,238,0.1)]">
@@ -105,7 +120,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full transition-all duration-700 ease-out shadow-[0_0_6px_rgba(34,211,238,0.6)]"
+              className="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full shadow-[0_0_6px_rgba(34,211,238,0.6)]"
               style={{ width: `${percent}%` }}
             />
           </div>

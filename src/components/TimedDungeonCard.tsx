@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 import { getDungeon } from "@/lib/dungeons";
-import { computeStreakDays, notifyStatsUpdated } from "@/lib/player";
+import {
+  computeStreakDays,
+  notifyStatsUpdated,
+  notifyReward,
+  XP_PER_COMPLETION,
+} from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import {
   setRunStartDate,
@@ -45,6 +50,7 @@ export default function TimedDungeonCard({
 
   async function handleClaimVictory() {
     await endRun(dungeonId, "completed");
+    notifyReward({ xp: XP_PER_COMPLETION });
     setStartDate(null);
     setStreak(0);
     if (onStreakChange) onStreakChange(0);

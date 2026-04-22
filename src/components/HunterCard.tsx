@@ -2,17 +2,22 @@
 
 import { useUser } from "@clerk/nextjs";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { getRank } from "@/lib/player";
+import { getLevelFromXp, getRank } from "@/lib/player";
+import { useTweenNumber } from "@/lib/useTweenNumber";
 
 const RANKS = ["E", "D", "C", "B", "A", "S"] as const;
 const LEVELS_PER_RANK = 10;
 
 interface HunterCardProps {
-  level: number;
+  totalXp: number;
   scattered?: boolean;
 }
 
-export default function HunterCard({ level, scattered }: HunterCardProps) {
+export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
+  const tweenedXp = useTweenNumber(totalXp, 700);
+  const { level, currentXp, xpToNext } = getLevelFromXp(
+    Math.round(tweenedXp)
+  );
   const { user, isLoaded } = useUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -29,11 +34,13 @@ export default function HunterCard({ level, scattered }: HunterCardProps) {
   const levelsToNext = LEVELS_PER_RANK - levelIntoRank;
   const nextRank = isMaxRank ? null : RANKS[rankIdx + 1];
 
+  const levelProgress = xpToNext > 0 ? currentXp / xpToNext : 0;
+  const fractionalLevelIntoRank = levelIntoRank + levelProgress;
   const segmentFillPct = (i: number): number => {
     if (i < rankIdx) return 100;
     if (i > rankIdx) return 0;
     if (isMaxRank) return 100;
-    return (levelIntoRank / LEVELS_PER_RANK) * 100;
+    return (fractionalLevelIntoRank / LEVELS_PER_RANK) * 100;
   };
 
   const hunterName =
@@ -198,7 +205,7 @@ export default function HunterCard({ level, scattered }: HunterCardProps) {
                 title="Rename"
                 className="group flex items-center gap-2 w-full text-left"
               >
-                <span className="text-lg sm:text-xl font-bold text-cyan-100 truncate tracking-wider group-hover:text-white transition-colors">
+                <span className="font-display text-lg sm:text-xl font-bold text-cyan-100 truncate tracking-wider group-hover:text-white transition-colors">
                   {displayName}
                 </span>
                 <span className="text-[9px] text-slate-600 tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
@@ -258,7 +265,7 @@ export default function HunterCard({ level, scattered }: HunterCardProps) {
                     <div className="flex-1 mx-1.5 h-px relative">
                       <div className="absolute inset-0 bg-slate-800" />
                       <div
-                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_6px_rgba(251,191,36,0.6)] transition-all duration-700"
+                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_6px_rgba(251,191,36,0.6)]"
                         style={{ width: `${segmentFillPct(i)}%` }}
                       />
                     </div>

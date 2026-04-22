@@ -32,7 +32,7 @@ export default function PortalsPage() {
   async function handleEnter(dungeonId: string) {
     await enterDungeon(dungeonId);
     track("dungeon_entered", { dungeon_id: dungeonId });
-    router.push("/");
+    router.push(`/#dungeon-${dungeonId}`);
   }
 
   return (
@@ -70,7 +70,7 @@ export default function PortalsPage() {
                       </span>
                     ))}
                   </div>
-                  <h2 className="text-xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] uppercase tracking-wider">
+                  <h2 className="font-display text-xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] uppercase tracking-wider">
                     {d.name}
                   </h2>
                 </div>
@@ -137,7 +137,7 @@ export default function PortalsPage() {
                       e.stopPropagation();
                       handleEnter(d.id);
                     }}
-                    className="w-full px-4 py-3 bg-cyan-500/20 border border-cyan-500/40 rounded text-cyan-300 text-sm uppercase tracking-widest hover:bg-cyan-500/30 transition-colors drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]"
+                    className="w-full px-4 py-3 bg-cyan-500/20 border border-cyan-500/40 rounded text-cyan-300 text-sm uppercase tracking-widest hover:bg-cyan-500/30 active:scale-[0.98] transition-all drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]"
                   >
                     Enter Dungeon
                   </button>

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
 import { DUNGEONS, dungeonDims, DIM_STYLE } from "@/lib/dungeons";
+import LandingShaderBg from "@/components/LandingShaderBg";
 
 const STEPS = [
   {
@@ -30,30 +31,44 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-200">
       <section className="relative overflow-hidden border-b border-cyan-500/20">
+        <LandingShaderBg />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(34,211,238,0.12)_0%,transparent_60%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0px,transparent_3px,rgba(34,211,238,0.02)_3px,rgba(34,211,238,0.02)_4px)]" />
         <div className="relative max-w-3xl mx-auto px-6 py-20 sm:py-28 text-center">
-          <p className="text-[10px] tracking-[0.5em] text-cyan-400/70 uppercase mb-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+          <p
+            className="text-[10px] tracking-[0.5em] text-cyan-400/70 uppercase mb-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] animate-reveal"
+            style={{ animationDelay: "0.05s" }}
+          >
             [ Shivaliva Leveling ]
           </p>
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-cyan-100 leading-tight mb-6">
+          <h1
+            className="font-display text-aberration text-3xl sm:text-5xl font-bold tracking-tight text-cyan-100 leading-tight mb-6 animate-reveal"
+            style={{ animationDelay: "0.2s" }}
+          >
             Face your shadows.
             <br />
             Rank up in real life.
           </h1>
-          <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed">
+          <p
+            className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed animate-reveal"
+            style={{ animationDelay: "0.45s" }}
+          >
             A gamified self-improvement system for the compulsions
             nobody&apos;s watching. Built for hunters who want real progress,
             not streaks on paper.
           </p>
           <button
             onClick={() => openSignIn()}
-            className="group relative px-10 py-4 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-sm uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white transition-all shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:shadow-[0_0_40px_rgba(34,211,238,0.8)]"
+            className="group relative px-10 py-4 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-sm uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:shadow-[0_0_40px_rgba(34,211,238,0.8)] animate-reveal"
+            style={{ animationDelay: "0.7s" }}
           >
             <span className="absolute inset-0 bg-cyan-400/20 opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
             <span className="relative">Accept the System</span>
           </button>
-          <div className="mt-5">
+          <div
+            className="mt-5 animate-reveal"
+            style={{ animationDelay: "0.9s" }}
+          >
             <Link
               href="/guide"
               className="text-[10px] tracking-[0.4em] uppercase text-slate-500 hover:text-cyan-300 transition-colors"
@@ -62,7 +77,14 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <StatusWindowPreview />
+          <div
+            className="animate-reveal"
+            style={{ animationDelay: "1.1s" }}
+          >
+            <div className="animate-float-slow">
+              <StatusWindowPreview />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -79,7 +101,7 @@ export default function LandingPage() {
               <p className="text-[10px] tracking-[0.4em] text-cyan-400/60 mb-3">
                 {s.num}
               </p>
-              <p className="text-sm font-bold text-cyan-100 uppercase tracking-wider mb-2">
+              <p className="font-display text-sm font-bold text-cyan-100 uppercase tracking-wider mb-2">
                 {s.title}
               </p>
               <p className="text-xs text-slate-400 leading-relaxed">
@@ -100,7 +122,7 @@ export default function LandingPage() {
               key={d.id}
               className="border border-slate-800 bg-slate-900/40 p-5"
             >
-              <p className="text-sm font-bold text-cyan-100 mb-2">{d.name}</p>
+              <p className="font-display text-sm font-bold text-cyan-100 mb-2">{d.name}</p>
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {dungeonDims(d).map((dim) => (
                   <span
@@ -218,9 +240,24 @@ function StatusWindowPreview() {
             <p className="text-[9px] text-slate-500 tracking-widest uppercase">
               Rank
             </p>
-            <p className="text-3xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.7)] leading-none mt-1">
-              A
-            </p>
+            <div className="relative w-12 h-12 mt-1 flex items-center justify-center">
+              <div
+                aria-hidden
+                className="absolute inset-0 rounded-full opacity-60 animate-core-spin"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, transparent 0deg, rgba(251,191,36,0.55) 90deg, transparent 180deg, rgba(34,211,238,0.45) 270deg, transparent 360deg)",
+                  filter: "blur(3px)",
+                }}
+              />
+              <div
+                aria-hidden
+                className="absolute inset-[3px] rounded-full bg-slate-950/90"
+              />
+              <p className="relative font-display text-3xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.7)] leading-none">
+                A
+              </p>
+            </div>
           </div>
           <div className="h-10 w-px bg-slate-700" />
           <div>

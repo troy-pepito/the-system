@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Chakra_Petch } from "next/font/google";
 import { ClerkProvider, Show } from "@clerk/nextjs";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -9,6 +9,12 @@ import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import SignInGate from "@/components/SignInGate";
 import PostHogProvider from "@/components/PostHogProvider";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
+import GrainOverlay from "@/components/GrainOverlay";
+import PageTransition from "@/components/PageTransition";
+import GainToast from "@/components/GainToast";
+import RankUpGlitch from "@/components/RankUpGlitch";
+import DevTestPanel from "@/components/DevTestPanel";
+import BackToTop from "@/components/BackToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +24,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const chakraPetch = Chakra_Petch({
+  variable: "--font-chakra-petch",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -60,11 +72,12 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
-        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${chakraPetch.variable} h-full antialiased`}
       >
         <body className="min-h-full flex flex-col">
           <PostHogProvider>
             <ServiceWorkerRegistration />
+            <GrainOverlay />
             <AwakeningOverlay />
             <Show when="signed-out">
               <SignInGate />
@@ -72,10 +85,14 @@ export default function RootLayout({
             <Show when="signed-in">
               <Navbar />
             </Show>
-            {children}
+            <PageTransition>{children}</PageTransition>
             <Show when="signed-in">
               <AchievementToast />
+              <GainToast />
+              <RankUpGlitch />
+              <BackToTop />
               <PwaInstallPrompt />
+              <DevTestPanel />
             </Show>
           </PostHogProvider>
         </body>

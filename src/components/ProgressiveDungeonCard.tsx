@@ -3,6 +3,7 @@ import { useState } from "react";
 import { getDungeon } from "@/lib/dungeons";
 import {
   notifyStatsUpdated,
+  notifyReward,
   beginMutation,
   endMutation,
   XP_PER_EXPOSURE,
@@ -60,6 +61,7 @@ export default function ProgressiveDungeonCard({
 
     setCounts((prev) => ({ ...prev, [rungId]: prevCount + 1 }));
     notifyStatsUpdated({ xpDelta: XP_PER_EXPOSURE });
+    notifyReward({ xp: XP_PER_EXPOSURE });
 
     beginMutation();
     try {

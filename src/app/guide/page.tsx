@@ -117,7 +117,7 @@ export default function GuidePage() {
           <p className="text-[10px] tracking-[0.5em] text-cyan-400/70 uppercase mb-4 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
             [ The System Manual ]
           </p>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-cyan-100 mb-4">
+          <h1 className="font-display text-aberration text-3xl sm:text-4xl font-bold tracking-tight text-cyan-100 mb-4">
             Hunter Guide
           </h1>
           <p className="text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
@@ -397,7 +397,7 @@ function Section({
 }) {
   return (
     <section>
-      <h2 className="text-lg sm:text-xl font-bold text-cyan-200 uppercase tracking-wider mb-4">
+      <h2 className="font-display text-lg sm:text-xl font-bold text-cyan-200 uppercase tracking-wider mb-4">
         {title}
       </h2>
       <div className="text-sm text-slate-300 leading-relaxed">{children}</div>

@@ -1,3 +1,6 @@
+"use client";
+import { useTweenNumber } from "@/lib/useTweenNumber";
+
 const DIMS = [
   { key: "body", label: "BODY", color: "#ef4444" },
   { key: "mind", label: "MIND", color: "#60a5fa" },
@@ -13,14 +16,21 @@ interface StatRadarProps {
 }
 
 export default function StatRadar({ values }: StatRadarProps) {
+  const body = useTweenNumber(values.body, 800);
+  const mind = useTweenNumber(values.mind, 800);
+  const emotion = useTweenNumber(values.emotion, 800);
+  const energy = useTweenNumber(values.energy, 800);
+  const spirit = useTweenNumber(values.spirit, 800);
+  const tweened: Record<DimKey, number> = { body, mind, emotion, energy, spirit };
+
   const cx = 120;
   const cy = 130;
   const r = 78;
-  const max = Math.max(1, ...DIMS.map((d) => values[d.key]));
+  const max = Math.max(1, ...DIMS.map((d) => tweened[d.key]));
 
   const axes = DIMS.map((d, i) => {
     const angle = (Math.PI * 2 * i) / DIMS.length - Math.PI / 2;
-    const scale = values[d.key] / max;
+    const scale = tweened[d.key] / max;
     return {
       dim: d,
       angle,
@@ -101,7 +111,7 @@ export default function StatRadar({ values }: StatRadarProps) {
             fontFamily="ui-monospace, monospace"
             fill="rgb(148, 163, 184)"
           >
-            {values[a.dim.key]}
+            {Math.round(tweened[a.dim.key])}
           </text>
         </g>
       ))}

@@ -4,6 +4,7 @@ import { getDungeon } from "@/lib/dungeons";
 import {
   computeStreakDays,
   notifyStatsUpdated,
+  notifyReward,
   beginMutation,
   endMutation,
   XP_PER_WORKOUT,
@@ -63,6 +64,7 @@ export default function CadenceDungeonCard({
     );
     const xpDelta = (isNowDone ? 1 : -1) * XP_PER_WORKOUT;
     notifyStatsUpdated({ xpDelta });
+    if (isNowDone) notifyReward({ xp: XP_PER_WORKOUT });
 
     beginMutation();
     try {

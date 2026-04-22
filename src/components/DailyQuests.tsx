@@ -9,6 +9,7 @@ import {
 } from "@/lib/quests";
 import {
   notifyStatsUpdated,
+  notifyReward,
   beginMutation,
   endMutation,
 } from "@/lib/player";
@@ -72,6 +73,14 @@ export default function DailyQuests({
       track("quest_completed", {
         quest_id: quest.id,
         quest_xp: quest.xp,
+      });
+      notifyReward({
+        xp: quest.xp,
+        body: quest.body,
+        mind: quest.mind,
+        emotion: quest.emotion,
+        energy: quest.energy,
+        spirit: quest.spirit,
       });
     }
 

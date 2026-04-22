@@ -17,6 +17,11 @@ import {
   type ProfilePageData,
 } from "@/app/actions/achievements";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
+import {
+  ATMOSPHERE_EVENT,
+  getAtmosphereEnabled,
+  setAtmosphereEnabled,
+} from "@/lib/preferences";
 
 let profileCache: ProfilePageData | null = null;
 
@@ -89,7 +94,7 @@ export default function ProfilePage() {
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
 
-        <HunterCard level={stats.level} scattered={stats.scattered} />
+        <HunterCard totalXp={stats.totalXp} scattered={stats.scattered} />
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
@@ -179,8 +184,62 @@ export default function ProfilePage() {
             </div>
           </div>
         </Card>
+
+        <Card className="p-6">
+          <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+            Settings
+          </p>
+          <AtmosphereToggle />
+        </Card>
       </div>
     </main>
+  );
+}
+
+function AtmosphereToggle() {
+  const [enabled, setEnabled] = useState(true);
+
+  useEffect(() => {
+    setEnabled(getAtmosphereEnabled());
+    const handler = () => setEnabled(getAtmosphereEnabled());
+    window.addEventListener(ATMOSPHERE_EVENT, handler);
+    return () => window.removeEventListener(ATMOSPHERE_EVENT, handler);
+  }, []);
+
+  function toggle() {
+    setAtmosphereEnabled(!enabled);
+  }
+
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex-1 min-w-0">
+        <p className="text-sm text-slate-200 uppercase tracking-wider">
+          Atmosphere
+        </p>
+        <p className="text-xs text-slate-500 leading-relaxed mt-1">
+          Film grain, scanlines, and vignette. Disable for a cleaner, flatter view.
+        </p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={enabled}
+        onClick={toggle}
+        className={`shrink-0 relative w-14 h-7 rounded-full border transition-colors ${
+          enabled
+            ? "bg-cyan-500/25 border-cyan-400/60 shadow-[0_0_14px_rgba(34,211,238,0.4)]"
+            : "bg-slate-900 border-slate-700"
+        }`}
+      >
+        <span
+          className={`absolute top-[3px] w-[22px] h-[22px] rounded-full transition-all duration-200 ease-out ${
+            enabled
+              ? "left-[31px] bg-cyan-100 shadow-[0_0_8px_rgba(34,211,238,0.6)]"
+              : "left-[3px] bg-slate-400"
+          }`}
+        />
+      </button>
+    </div>
   );
 }
 
@@ -195,23 +254,41 @@ function TrophySection({
   unlockedMap: Map<string, unknown>;
   nested?: boolean;
 }) {
+  const [expanded, setExpanded] = useState(false);
   if (defs.length === 0) return null;
   const unlockedHere = defs.filter((d) => unlockedMap.has(d.id)).length;
   return (
     <div className={nested ? "" : "mt-6 first:mt-0"}>
-      <div className="flex items-center justify-between mb-3">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        className={`w-full flex items-center justify-between gap-3 py-2 rounded transition-colors hover:text-cyan-200 ${
+          expanded ? "mb-3" : "mb-0"
+        }`}
+      >
         <p
-          className={`tracking-[0.3em] uppercase ${
+          className={`tracking-[0.3em] uppercase text-left ${
             nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-400"
           }`}
         >
           {label}
         </p>
-        <p className="text-[10px] text-slate-500 font-mono">
-          <span className="text-amber-300">{unlockedHere}</span>
-          <span className="text-slate-700"> / {defs.length}</span>
-        </p>
-      </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <p className="text-[10px] text-slate-500 font-mono">
+            <span className="text-amber-300">{unlockedHere}</span>
+            <span className="text-slate-700"> / {defs.length}</span>
+          </p>
+          <span
+            className={`text-[10px] text-slate-500 transition-transform ${
+              expanded ? "rotate-180" : ""
+            }`}
+          >
+            ▾
+          </span>
+        </div>
+      </button>
+      {expanded && (
       <div className="grid grid-cols-2 gap-3">
         {defs.map((def) => {
           const unlockedAt = unlockedMap.get(def.id);
@@ -264,6 +341,7 @@ function TrophySection({
           );
         })}
       </div>
+      )}
     </div>
   );
 }
