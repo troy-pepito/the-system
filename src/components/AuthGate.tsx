@@ -22,13 +22,12 @@ function useOfflineAwareAuth() {
     }
   }, [isLoaded, isSignedIn, user, online]);
 
-  const trustCache = !isLoaded && !online;
-  const effectiveSignedIn = isLoaded
-    ? isSignedIn === true
-    : trustCache && knownSignedInUserId !== null;
-  const effectiveSignedOut = isLoaded
-    ? isSignedIn === false
-    : trustCache && knownSignedInUserId === null;
+  const effectiveSignedIn = online
+    ? isLoaded && isSignedIn === true
+    : knownSignedInUserId !== null;
+  const effectiveSignedOut = online
+    ? isLoaded && isSignedIn === false
+    : knownSignedInUserId === null;
 
   return { effectiveSignedIn, effectiveSignedOut };
 }
