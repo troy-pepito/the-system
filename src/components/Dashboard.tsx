@@ -17,12 +17,15 @@ import TimedDungeonCard from "@/components/TimedDungeonCard";
 import CadenceDungeonCard from "@/components/CadenceDungeonCard";
 import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
 
+let dashboardCache: DashboardData | null = null;
+
 export default function Dashboard() {
-  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardData | null>(dashboardCache);
 
   const reload = () => {
     getDashboardData(todayLocalISO()).then((d) => {
       if (hasPendingMutations()) return;
+      dashboardCache = d;
       setDashboard(d);
     });
   };
