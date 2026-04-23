@@ -1,16 +1,16 @@
-import { Show } from "@clerk/nextjs";
 import LandingPage from "@/components/LandingPage";
 import Dashboard from "@/components/Dashboard";
+import { SignedIn, SignedOut } from "@/components/AuthGate";
 
 export default function Home() {
   return (
     <>
-      <Show when="signed-out">
+      <SignedOut>
         <LandingPage />
-      </Show>
-      <Show when="signed-in">
+      </SignedOut>
+      <SignedIn>
         <Dashboard />
-      </Show>
+      </SignedIn>
     </>
   );
 }

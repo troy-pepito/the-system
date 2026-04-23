@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Chakra_Petch } from "next/font/google";
-import { ClerkProvider, Show } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import AwakeningOverlay from "@/components/AwakeningOverlay";
@@ -15,6 +15,8 @@ import GainToast from "@/components/GainToast";
 import RankUpGlitch from "@/components/RankUpGlitch";
 import DevTestPanel from "@/components/DevTestPanel";
 import BackToTop from "@/components/BackToTop";
+import OfflineBanner from "@/components/OfflineBanner";
+import { SignedIn, SignedOut } from "@/components/AuthGate";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,23 +79,24 @@ export default function RootLayout({
         <body className="min-h-full flex flex-col">
           <PostHogProvider>
             <ServiceWorkerRegistration />
+            <OfflineBanner />
             <GrainOverlay />
             <AwakeningOverlay />
-            <Show when="signed-out">
+            <SignedOut>
               <SignInGate />
-            </Show>
-            <Show when="signed-in">
+            </SignedOut>
+            <SignedIn>
               <Navbar />
-            </Show>
+            </SignedIn>
             <PageTransition>{children}</PageTransition>
-            <Show when="signed-in">
+            <SignedIn>
               <AchievementToast />
               <GainToast />
               <RankUpGlitch />
               <BackToTop />
               <PwaInstallPrompt />
               <DevTestPanel />
-            </Show>
+            </SignedIn>
           </PostHogProvider>
         </body>
       </html>
