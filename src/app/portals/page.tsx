@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Card from "@/components/Card";
+import Paywall from "@/components/Paywall";
 import {
   DUNGEONS,
   getDungeonRules,
@@ -20,6 +21,7 @@ export default function PortalsPage() {
     activeIdsCache
   );
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
 
   useEffect(() => {
     getAllActiveRuns().then((runs) => {
@@ -30,7 +32,15 @@ export default function PortalsPage() {
   }, []);
 
   async function handleEnter(dungeonId: string) {
-    await enterDungeon(dungeonId);
+    try {
+      await enterDungeon(dungeonId);
+    } catch (err) {
+      if (err instanceof Error && err.message === "PAYWALL") {
+        setPaywallOpen(true);
+        return;
+      }
+      throw err;
+    }
     track("dungeon_entered", { dungeon_id: dungeonId });
     router.push(`/#dungeon-${dungeonId}`);
   }
@@ -146,6 +156,7 @@ export default function PortalsPage() {
           );
         })}
       </div>
+      <Paywall open={paywallOpen} onClose={() => setPaywallOpen(false)} />
     </main>
   );
 }

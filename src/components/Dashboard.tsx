@@ -2,17 +2,8 @@
 import { useState, useEffect } from "react";
 import StreakCard from "@/components/StreakCard";
 import AllowanceDungeonCard from "@/components/AllowanceDungeonCard";
-import StatCard from "@/components/StatCard";
-import Card from "@/components/Card";
-import DailyQuests, { QuestRewards } from "@/components/DailyQuests";
+import DailyQuests from "@/components/DailyQuests";
 import {
-  XP_PER_STREAK_DAY,
-  XP_PER_WORKOUT,
-  XP_PER_EXPOSURE,
-  XP_PER_COMPLETION,
-  getLevelFromXp,
-  getRank,
-  computeStreakDays,
   STATS_UPDATED_EVENT,
   hasPendingMutations,
 } from "@/lib/player";
@@ -26,18 +17,13 @@ import TimedDungeonCard from "@/components/TimedDungeonCard";
 import CadenceDungeonCard from "@/components/CadenceDungeonCard";
 import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
 
-const ZERO_REWARDS: QuestRewards = { xp: 0, body: 0, mind: 0, emotion: 0, energy: 0, spirit: 0 };
-
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
-  const [questRewards, setQuestRewards] =
-    useState<QuestRewards>(ZERO_REWARDS);
 
   const reload = () => {
     getDashboardData(todayLocalISO()).then((d) => {
       if (hasPendingMutations()) return;
       setDashboard(d);
-      setQuestRewards(d.lifetimeRewards);
     });
   };
 
@@ -72,32 +58,7 @@ export default function Dashboard() {
   }, [dashboard]);
 
   const activeRuns = dashboard?.activeRuns ?? [];
-  const bonus = dashboard?.bonusXp ?? {
-    workouts: 0,
-    exposures: 0,
-    completions: 0,
-    bankedStreakDays: 0,
-  };
   const details = dashboard?.details ?? {};
-
-  const totalStreakDays = activeRuns.reduce(
-    (sum, run) => sum + computeStreakDays(run.startDate),
-    0
-  );
-
-  const bonusXp =
-    bonus.workouts * XP_PER_WORKOUT +
-    bonus.exposures * XP_PER_EXPOSURE +
-    bonus.completions * XP_PER_COMPLETION +
-    bonus.bankedStreakDays * XP_PER_STREAK_DAY;
-  const milestoneXp = dashboard?.milestoneXp ?? 0;
-  const totalXp =
-    totalStreakDays * XP_PER_STREAK_DAY +
-    questRewards.xp +
-    bonusXp +
-    milestoneXp;
-  const { level } = getLevelFromXp(totalXp);
-  const rank = getRank(level);
 
   return (
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
@@ -109,43 +70,11 @@ export default function Dashboard() {
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
 
-        <Card className="p-6">
-          <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-5">
-            Awakening Status
-          </h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs text-slate-500 uppercase tracking-wider mb-1.5">Rank</p>
-              <p className="font-display text-2xl font-bold text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] leading-none">{rank}</p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-500 uppercase tracking-wider mb-1.5">Level</p>
-              <p className="font-display text-2xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.6)] leading-none">{level}</p>
-            </div>
-          </div>
-        </Card>
-
-        <div>
-          <h2 className="text-sm tracking-[0.2em] uppercase text-cyan-400/70 mb-5">
-            Dimensions
-          </h2>
-          <div className="grid grid-cols-2 gap-4">
-            <StatCard name="BODY" value={questRewards.body} />
-            <StatCard name="MIND" value={questRewards.mind} />
-            <StatCard name="EMOTION" value={questRewards.emotion} />
-            <StatCard name="ENERGY" value={questRewards.energy} />
-            <div className="col-span-2">
-              <StatCard name="SPIRIT" value={questRewards.spirit} />
-            </div>
-          </div>
-        </div>
-
         {dashboard && (
           <DailyQuests
             initialTodayIds={dashboard.todayQuestIds}
             initialLifetime={dashboard.lifetimeRewards}
             priorComboDays={dashboard.priorComboDays}
-            onRewardsChange={setQuestRewards}
           />
         )}
 

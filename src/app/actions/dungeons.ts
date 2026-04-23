@@ -13,6 +13,12 @@ import {
   addDaysISO,
 } from "@/lib/quests";
 import { requireUserId } from "@/lib/auth";
+import { clerkClient } from "@clerk/nextjs/server";
+import {
+  FREE_DUNGEON_LIMIT,
+  isPricingEnabled,
+  isUserPro,
+} from "@/lib/pricing";
 
 const TAG = "player:stats";
 
@@ -190,6 +196,20 @@ export async function enterDungeon(
     where: { userId, dungeonId, active: true },
   });
   if (existing) return toState(existing);
+
+  if (isPricingEnabled()) {
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
+    const userIsPro = isUserPro(user);
+    if (!userIsPro) {
+      const activeCount = await prisma.dungeonRun.count({
+        where: { userId, active: true },
+      });
+      if (activeCount >= FREE_DUNGEON_LIMIT) {
+        throw new Error("PAYWALL");
+      }
+    }
+  }
 
   const run = await prisma.dungeonRun.create({
     data: { userId, dungeonId, active: true },

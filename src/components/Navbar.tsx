@@ -2,7 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
+import Paywall from "@/components/Paywall";
+import { isPricingEnabled, isUserPro } from "@/lib/pricing";
 import {
   STATS_UPDATED_EVENT,
   XP_PER_STREAK_DAY,
@@ -89,6 +91,11 @@ export default function Navbar() {
     prevRankRef.current = rank;
   }, [rank, totalXp]);
 
+  const { user } = useUser();
+  const pricingOn = isPricingEnabled();
+  const showUpgrade = pricingOn && !isUserPro(user);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+
   return (
     <nav className="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-cyan-500/20 shadow-[0_0_20px_rgba(34,211,238,0.1)]">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-3">
@@ -105,6 +112,14 @@ export default function Navbar() {
             {navLink("/profile", "Profile")}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
+            {showUpgrade && (
+              <button
+                onClick={() => setPaywallOpen(true)}
+                className="px-2 py-0.5 border border-amber-400/50 text-amber-300 hover:bg-amber-500/10 transition-colors rounded-sm tracking-widest drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]"
+              >
+                Pro
+              </button>
+            )}
             <span className="text-amber-400">Rank {rank}</span>
             <span className="text-emerald-400">Lv {level}</span>
             <UserButton
@@ -134,6 +149,7 @@ export default function Navbar() {
           {navLink("/profile", "Profile")}
         </div>
       </div>
+      <Paywall open={paywallOpen} onClose={() => setPaywallOpen(false)} />
     </nav>
   );
 }

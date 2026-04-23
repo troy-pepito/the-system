@@ -342,33 +342,16 @@ export default function GuidePage() {
           </p>
         </Section>
 
-        <Section title="8. What Pro Unlocks">
-          <p className="mb-5">
-            Most of the System is free — all seven dungeons, all 64
-            achievements, daily quests, dimensions, the activity heatmap. Pro
-            is a cosmetic and quality-of-life upgrade, not a gate.
+        <Section title="8. Free During Launch">
+          <p>
+            Every feature is free for every hunter during launch — all seven
+            dungeons, all 64 achievements, daily quests, dimensions, the
+            activity heatmap, unlimited active runs.
           </p>
-          <ul className="space-y-2">
-            {[
-              "Unlimited active dungeons (free supports 2 at once)",
-              "Streak Insurance — one relapse forgiven per month",
-              "VIP cosmetic frame and badge on your Hunter Card",
-              "Whole-app theme packs (Shadow Monarch, S-Rank Ascendant, and more)",
-              "Lifetime analytics — full history and data export",
-            ].map((item) => (
-              <li
-                key={item}
-                className="flex gap-3 text-xs text-slate-300 leading-relaxed"
-              >
-                <span className="text-amber-400/70 mt-0.5">◆</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 text-xs text-slate-400">
-            <span className="text-amber-300 font-bold">$4.99</span> / month or{" "}
-            <span className="text-amber-300 font-bold">$39</span> lifetime.
-            Seven-day trial on the monthly plan.
+          <p className="mt-3">
+            Early hunters who help us through launch will be remembered when
+            the System matures. That&apos;s the deal. Show up, hunt hard, and
+            the System has your back.
           </p>
         </Section>
 

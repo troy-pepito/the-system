@@ -181,8 +181,7 @@ export default function LandingPage() {
           The quest remains open.
         </p>
         <p className="text-[10px] tracking-[0.4em] uppercase text-slate-500 mb-8">
-          Free to play <span className="text-slate-700">·</span>{" "}
-          <span className="text-amber-300/80">Pro — $39 lifetime</span>
+          Free for every hunter during launch
         </p>
         <button
           onClick={handleAccept}
