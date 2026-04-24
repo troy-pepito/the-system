@@ -13,6 +13,7 @@ export type DungeonEndRunMutation = {
   type: "dungeon:endRun";
   dungeonId: string;
   reason: "relapse" | "completed";
+  note?: string;
 };
 
 export type DungeonWorkoutToggleMutation = {
@@ -28,6 +29,7 @@ export type DungeonLogAllowanceMutation = {
   type: "dungeon:logAllowance";
   dungeonId: string;
   eventType: string;
+  note?: string;
 };
 
 export type DungeonLogExposureMutation = {
@@ -35,6 +37,7 @@ export type DungeonLogExposureMutation = {
   type: "dungeon:logExposure";
   dungeonId: string;
   rungId: string;
+  note?: string;
 };
 
 export type DungeonUndoExposureMutation = {

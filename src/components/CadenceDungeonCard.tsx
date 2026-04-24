@@ -24,6 +24,7 @@ import {
   setRunStartDateInCache,
   setWorkoutInCache,
 } from "@/lib/dashboardCacheOps";
+import NoteModal from "@/components/NoteModal";
 
 interface CadenceDungeonCardProps {
   dungeonId: string;
@@ -51,6 +52,7 @@ export default function CadenceDungeonCard({
   );
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
   const [completed, setCompleted] = useState<string[]>(initialWeekWorkouts);
+  const [relapseModalOpen, setRelapseModalOpen] = useState(false);
 
   async function handleDatePick(date: string) {
     setStartDate(date);
@@ -102,7 +104,8 @@ export default function CadenceDungeonCard({
     }
   }
 
-  async function handleRelapse() {
+  async function handleRelapse(note: string | null) {
+    setRelapseModalOpen(false);
     track("relapse", {
       dungeon_id: dungeonId,
       rule_type: "cadence",
@@ -117,13 +120,14 @@ export default function CadenceDungeonCard({
     notifyStatsUpdated();
 
     try {
-      await endRun(dungeonId, "relapse");
+      await endRun(dungeonId, "relapse", note ?? undefined);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:endRun",
         dungeonId,
         reason: "relapse",
+        ...(note ? { note } : {}),
       });
       drainQueue().catch(() => {});
     }
@@ -261,7 +265,7 @@ export default function CadenceDungeonCard({
 
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
           <button
-            onClick={handleRelapse}
+            onClick={() => setRelapseModalOpen(true)}
             className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
           >
             Relapse — Reset
@@ -276,6 +280,17 @@ export default function CadenceDungeonCard({
           <DateEntryPicker onEnter={handleDatePick} />
         </div>
       )}
+
+      <NoteModal
+        open={relapseModalOpen}
+        title={`Relapse — ${dungeon?.name ?? dungeonId}`}
+        placeholder="What threw the rhythm off? (optional)"
+        confirmLabel="Log Relapse"
+        skipLabel="Skip Note"
+        tone="danger"
+        onSubmit={handleRelapse}
+        onCancel={() => setRelapseModalOpen(false)}
+      />
     </div>
   );
 }

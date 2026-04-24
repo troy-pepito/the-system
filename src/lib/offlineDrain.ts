@@ -36,7 +36,7 @@ async function applyDungeonEndRun(
 ): Promise<void> {
   const active = await getAllActiveRuns();
   const stillActive = active.some((r) => r.dungeonId === m.dungeonId);
-  if (stillActive) await endRun(m.dungeonId, m.reason);
+  if (stillActive) await endRun(m.dungeonId, m.reason, m.note);
 }
 
 async function applyDungeonWorkoutToggle(
@@ -58,10 +58,10 @@ async function applyMutation(m: Mutation): Promise<void> {
     case "dungeon:workoutToggle":
       return applyDungeonWorkoutToggle(m);
     case "dungeon:logAllowance":
-      await logAllowanceEvent(m.dungeonId, m.eventType);
+      await logAllowanceEvent(m.dungeonId, m.eventType, m.note);
       return;
     case "dungeon:logExposure":
-      await logRungExposure(m.dungeonId, m.rungId);
+      await logRungExposure(m.dungeonId, m.rungId, m.note);
       return;
     case "dungeon:undoExposure":
       await undoRungExposure(m.dungeonId, m.rungId);

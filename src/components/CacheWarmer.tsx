@@ -2,7 +2,11 @@
 import { useEffect } from "react";
 import { readCache, writeCache } from "@/lib/offlineCache";
 import { useOnline } from "@/lib/offline";
-import { getAllActiveRuns, getDashboardData } from "@/app/actions/dungeons";
+import {
+  getAllActiveRuns,
+  getDashboardData,
+  getJournalEntries,
+} from "@/app/actions/dungeons";
 import { getProfilePageData } from "@/app/actions/achievements";
 import { todayLocalISO } from "@/lib/quests";
 
@@ -25,6 +29,11 @@ export default function CacheWarmer() {
     if (!readCache("activeRuns")) {
       getAllActiveRuns()
         .then((d) => writeCache("activeRuns", d))
+        .catch(() => {});
+    }
+    if (!readCache("journal")) {
+      getJournalEntries()
+        .then((d) => writeCache("journal", d))
         .catch(() => {});
     }
   }, [online]);

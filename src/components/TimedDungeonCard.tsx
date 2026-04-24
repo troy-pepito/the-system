@@ -20,6 +20,7 @@ import {
   endRunInCache,
   setRunStartDateInCache,
 } from "@/lib/dashboardCacheOps";
+import NoteModal from "@/components/NoteModal";
 
 interface TimedDungeonCardProps {
   dungeonId: string;
@@ -44,6 +45,8 @@ export default function TimedDungeonCard({
     initialRun.startDate
   );
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
+  const [relapseModalOpen, setRelapseModalOpen] = useState(false);
+  const [victoryModalOpen, setVictoryModalOpen] = useState(false);
 
   async function handleDatePick(date: string) {
     setStartDate(date);
@@ -66,7 +69,8 @@ export default function TimedDungeonCard({
     }
   }
 
-  async function handleClaimVictory() {
+  async function handleClaimVictory(note: string | null) {
+    setVictoryModalOpen(false);
     notifyReward({ xp: XP_PER_COMPLETION });
     setStartDate(null);
     setStreak(0);
@@ -76,19 +80,21 @@ export default function TimedDungeonCard({
     notifyStatsUpdated();
 
     try {
-      await endRun(dungeonId, "completed");
+      await endRun(dungeonId, "completed", note ?? undefined);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:endRun",
         dungeonId,
         reason: "completed",
+        ...(note ? { note } : {}),
       });
       drainQueue().catch(() => {});
     }
   }
 
-  async function handleRelapse() {
+  async function handleRelapse(note: string | null) {
+    setRelapseModalOpen(false);
     track("relapse", {
       dungeon_id: dungeonId,
       rule_type: "timed",
@@ -102,13 +108,14 @@ export default function TimedDungeonCard({
     notifyStatsUpdated();
 
     try {
-      await endRun(dungeonId, "relapse");
+      await endRun(dungeonId, "relapse", note ?? undefined);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:endRun",
         dungeonId,
         reason: "relapse",
+        ...(note ? { note } : {}),
       });
       drainQueue().catch(() => {});
     }
@@ -182,7 +189,7 @@ export default function TimedDungeonCard({
                 ★ Dungeon Cleared ★
               </p>
               <button
-                onClick={handleClaimVictory}
+                onClick={() => setVictoryModalOpen(true)}
                 className="w-full px-4 py-3 bg-amber-500/20 border border-amber-400/50 rounded text-amber-300 text-sm uppercase tracking-widest hover:bg-amber-500/30 transition-colors drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]"
               >
                 Claim Victory
@@ -192,7 +199,7 @@ export default function TimedDungeonCard({
 
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
           <button
-            onClick={handleRelapse}
+            onClick={() => setRelapseModalOpen(true)}
             className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
           >
             Relapse — Reset
@@ -207,6 +214,26 @@ export default function TimedDungeonCard({
           <DateEntryPicker onEnter={handleDatePick} />
         </div>
       )}
+
+      <NoteModal
+        open={relapseModalOpen}
+        title={`Relapse — ${dungeon?.name ?? dungeonId}`}
+        placeholder="What triggered it? How are you feeling? (optional)"
+        confirmLabel="Log Relapse"
+        skipLabel="Skip Note"
+        tone="danger"
+        onSubmit={handleRelapse}
+        onCancel={() => setRelapseModalOpen(false)}
+      />
+      <NoteModal
+        open={victoryModalOpen}
+        title={`Victory — ${dungeon?.name ?? dungeonId}`}
+        placeholder="How did this run change you? (optional)"
+        confirmLabel="Claim Victory"
+        skipLabel="Skip Note"
+        onSubmit={handleClaimVictory}
+        onCancel={() => setVictoryModalOpen(false)}
+      />
     </div>
   );
 }

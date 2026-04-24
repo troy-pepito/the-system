@@ -16,6 +16,11 @@ import {
   getProfilePageData,
   type ProfilePageData,
 } from "@/app/actions/achievements";
+import {
+  getJournalEntries,
+  type JournalEntry,
+} from "@/app/actions/dungeons";
+import { getDungeon } from "@/lib/dungeons";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
 import {
   ATMOSPHERE_EVENT,
@@ -25,6 +30,7 @@ import {
 import { readCache, writeCache } from "@/lib/offlineCache";
 
 const PROFILE_CACHE_KEY = "profile";
+const JOURNAL_CACHE_KEY = "journal";
 
 type Range = "week" | "month" | "all";
 
@@ -34,6 +40,11 @@ export default function ProfilePage() {
       ? null
       : readCache<ProfilePageData>(PROFILE_CACHE_KEY)
   );
+  const [journal, setJournal] = useState<JournalEntry[]>(() =>
+    typeof window === "undefined"
+      ? []
+      : readCache<JournalEntry[]>(JOURNAL_CACHE_KEY) ?? []
+  );
   const [range, setRange] = useState<Range>("all");
 
   useEffect(() => {
@@ -42,6 +53,12 @@ export default function ProfilePage() {
         .then((d) => {
           writeCache(PROFILE_CACHE_KEY, d);
           setData(d);
+        })
+        .catch(() => {});
+      getJournalEntries()
+        .then((j) => {
+          writeCache(JOURNAL_CACHE_KEY, j);
+          setJournal(j);
         })
         .catch(() => {});
     };
@@ -134,6 +151,8 @@ export default function ProfilePage() {
           </p>
           <Heatmap activity={data.heatmap} />
         </Card>
+
+        <JournalSection entries={journal} />
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
@@ -363,6 +382,64 @@ function StatLine({ label, value }: { label: string; value: number }) {
       </span>
       <span className="text-sm text-cyan-300 font-bold">{value}</span>
     </div>
+  );
+}
+
+function eventLabel(type: string): string {
+  if (type === "relapse") return "Relapse";
+  if (type === "completed") return "Completed";
+  return type.replace(/-/g, " ");
+}
+
+function eventTone(type: string): string {
+  if (type === "relapse") return "text-red-300 border-red-500/40 bg-red-500/10";
+  if (type === "completed")
+    return "text-amber-300 border-amber-500/40 bg-amber-500/10";
+  return "text-cyan-300 border-cyan-500/40 bg-cyan-500/10";
+}
+
+function JournalSection({ entries }: { entries: JournalEntry[] }) {
+  return (
+    <Card className="p-6">
+      <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+        Journal
+      </p>
+      {entries.length === 0 ? (
+        <p className="text-xs text-slate-500 leading-relaxed">
+          No entries yet. When you relapse, log a coffee, or mark an exposure,
+          you'll be asked if you want to write a note — skip or save, your call.
+        </p>
+      ) : (
+        <ul className="space-y-4">
+          {entries.map((e) => {
+            const dungeon = getDungeon(e.dungeonId);
+            return (
+              <li
+                key={e.id}
+                className="border-l-2 border-cyan-500/30 pl-3 py-0.5"
+              >
+                <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <span className="text-[9px] tracking-[0.3em] uppercase text-slate-500 font-mono">
+                    {e.date}
+                  </span>
+                  <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
+                    {dungeon?.name ?? e.dungeonId}
+                  </span>
+                  <span
+                    className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${eventTone(e.type)}`}
+                  >
+                    {eventLabel(e.type)}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
+                  {e.note}
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </Card>
   );
 }
 

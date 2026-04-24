@@ -21,6 +21,7 @@ import {
   endRunInCache,
   setRunStartDateInCache,
 } from "@/lib/dashboardCacheOps";
+import NoteModal from "@/components/NoteModal";
 
 interface AllowanceDungeonCardProps {
   dungeonId: string;
@@ -51,6 +52,7 @@ export default function AllowanceDungeonCard({
   );
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
   const [monthCount, setMonthCount] = useState(initialMonthCount);
+  const [logModalOpen, setLogModalOpen] = useState(false);
 
   async function handleDatePick(date: string) {
     setStartDate(date);
@@ -73,7 +75,8 @@ export default function AllowanceDungeonCard({
     }
   }
 
-  async function handleLog() {
+  async function handleLog(note: string | null) {
+    setLogModalOpen(false);
     const nextCount = monthCount + 1;
     const willRelapse = nextCount > LIMIT;
 
@@ -96,7 +99,11 @@ export default function AllowanceDungeonCard({
 
     beginMutation();
     try {
-      const { count } = await logAllowanceEvent(dungeonId, eventType);
+      const { count } = await logAllowanceEvent(
+        dungeonId,
+        eventType,
+        note ?? undefined
+      );
       setMonthCount(count);
     } catch {
       enqueueMutation({
@@ -104,6 +111,7 @@ export default function AllowanceDungeonCard({
         type: "dungeon:logAllowance",
         dungeonId,
         eventType,
+        ...(note ? { note } : {}),
       });
       drainQueue().catch(() => {});
     } finally {
@@ -201,7 +209,7 @@ export default function AllowanceDungeonCard({
               </p>
             )}
             <button
-              onClick={handleLog}
+              onClick={() => setLogModalOpen(true)}
               className={`w-full px-4 py-2 rounded text-xs uppercase tracking-wider transition-colors ${
                 atLimit
                   ? "bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20"
@@ -223,6 +231,25 @@ export default function AllowanceDungeonCard({
           <DateEntryPicker onEnter={handleDatePick} />
         </div>
       )}
+
+      <NoteModal
+        open={logModalOpen}
+        title={
+          atLimit
+            ? `Log ${unit} (Relapse) — ${dungeon?.name ?? dungeonId}`
+            : `Log ${unit} — ${dungeon?.name ?? dungeonId}`
+        }
+        placeholder={
+          atLimit
+            ? "What pulled you over the limit? (optional)"
+            : "Craving, context, how you feel (optional)"
+        }
+        confirmLabel={atLimit ? "Log Relapse" : `Log ${unit}`}
+        skipLabel="Skip Note"
+        tone={atLimit ? "danger" : "neutral"}
+        onSubmit={handleLog}
+        onCancel={() => setLogModalOpen(false)}
+      />
     </div>
   );
 }

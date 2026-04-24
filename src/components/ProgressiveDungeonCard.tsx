@@ -22,6 +22,7 @@ import {
   adjustRungCountInCache,
   endRunInCache,
 } from "@/lib/dashboardCacheOps";
+import NoteModal from "@/components/NoteModal";
 
 interface ProgressiveDungeonCardProps {
   dungeonId: string;
@@ -45,6 +46,8 @@ export default function ProgressiveDungeonCard({
   const [counts, setCounts] =
     useState<Record<string, number>>(initialRungCounts);
   const [busy, setBusy] = useState(false);
+  const [relapseModalOpen, setRelapseModalOpen] = useState(false);
+  const [logModalOpen, setLogModalOpen] = useState(false);
 
   const currentRungIndex = RUNGS.findIndex(
     (r) => (counts[r.id] ?? 0) < r.target
@@ -59,7 +62,8 @@ export default function ProgressiveDungeonCard({
     }
   }
 
-  async function handleLog() {
+  async function handleLog(note: string | null) {
+    setLogModalOpen(false);
     if (!currentRung || busy) return;
     setBusy(true);
 
@@ -90,7 +94,8 @@ export default function ProgressiveDungeonCard({
       await handleEnsureActive();
       const { count, dungeonCleared: cleared } = await logRungExposure(
         dungeonId,
-        rungId
+        rungId,
+        note ?? undefined
       );
       setCounts((prev) => ({ ...prev, [rungId]: count }));
       if (cleared) {
@@ -110,6 +115,7 @@ export default function ProgressiveDungeonCard({
         type: "dungeon:logExposure",
         dungeonId,
         rungId,
+        ...(note ? { note } : {}),
       });
       drainQueue().catch(() => {});
     } finally {
@@ -147,7 +153,8 @@ export default function ProgressiveDungeonCard({
     }
   }
 
-  async function handleRelapse() {
+  async function handleRelapse(note: string | null) {
+    setRelapseModalOpen(false);
     track("relapse", {
       dungeon_id: dungeonId,
       rule_type: "progressive",
@@ -160,13 +167,14 @@ export default function ProgressiveDungeonCard({
     notifyStatsUpdated();
 
     try {
-      await endRun(dungeonId, "relapse");
+      await endRun(dungeonId, "relapse", note ?? undefined);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:endRun",
         dungeonId,
         reason: "relapse",
+        ...(note ? { note } : {}),
       });
       drainQueue().catch(() => {});
     }
@@ -223,7 +231,7 @@ export default function ProgressiveDungeonCard({
 
           <div className="flex gap-2">
             <button
-              onClick={handleLog}
+              onClick={() => setLogModalOpen(true)}
               disabled={busy}
               className="flex-1 px-4 py-3 bg-cyan-500/20 border border-cyan-500/40 rounded text-cyan-300 text-sm uppercase tracking-widest hover:bg-cyan-500/30 transition-colors drop-shadow-[0_0_8px_rgba(34,211,238,0.3)] disabled:opacity-50"
             >
@@ -286,7 +294,7 @@ export default function ProgressiveDungeonCard({
 
           {active && (
             <button
-              onClick={handleRelapse}
+              onClick={() => setRelapseModalOpen(true)}
               className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
             >
               Abandon Ladder — Reset
@@ -296,6 +304,26 @@ export default function ProgressiveDungeonCard({
       ) : (
         <p className="text-xs text-slate-600 py-4">No rungs configured.</p>
       )}
+
+      <NoteModal
+        open={logModalOpen}
+        title={`Log Exposure — ${currentRung?.name ?? ""}`}
+        placeholder="What did you face? How did it go? (optional)"
+        confirmLabel="Log Exposure"
+        skipLabel="Skip Note"
+        onSubmit={handleLog}
+        onCancel={() => setLogModalOpen(false)}
+      />
+      <NoteModal
+        open={relapseModalOpen}
+        title={`Abandon Ladder — ${dungeon?.name ?? dungeonId}`}
+        placeholder="What stopped the climb? (optional)"
+        confirmLabel="Abandon"
+        skipLabel="Skip Note"
+        tone="danger"
+        onSubmit={handleRelapse}
+        onCancel={() => setRelapseModalOpen(false)}
+      />
     </div>
   );
 }

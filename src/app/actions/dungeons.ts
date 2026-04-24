@@ -244,9 +244,26 @@ export async function setRunStartDate(
 
 export async function endRun(
   dungeonId: string,
-  reason: "relapse" | "completed"
+  reason: "relapse" | "completed",
+  note?: string
 ): Promise<void> {
   const userId = await requireUserId();
+  const trimmedNote = note?.trim();
+  if (trimmedNote) {
+    const run = await prisma.dungeonRun.findFirst({
+      where: { userId, dungeonId, active: true },
+    });
+    if (run) {
+      await prisma.dungeonEvent.create({
+        data: {
+          runId: run.id,
+          type: reason,
+          date: new Date(),
+          note: trimmedNote,
+        },
+      });
+    }
+  }
   await prisma.dungeonRun.updateMany({
     where: { userId, dungeonId, active: true },
     data: { active: false, endReason: reason },
@@ -422,6 +439,41 @@ export async function getBonusXp(): Promise<{
   return getBonusXpCached(userId);
 }
 
+export interface JournalEntry {
+  id: number;
+  dungeonId: string;
+  type: string;
+  date: string;
+  note: string;
+  createdAt: string;
+}
+
+const getJournalEntriesCached = unstable_cache(
+  async (userId: string) => {
+    const events = await prisma.dungeonEvent.findMany({
+      where: { note: { not: null }, run: { userId } },
+      include: { run: { select: { dungeonId: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    });
+    return events.map((e) => ({
+      id: e.id,
+      dungeonId: e.run.dungeonId,
+      type: e.type,
+      date: e.date.toISOString().split("T")[0],
+      note: e.note ?? "",
+      createdAt: e.createdAt.toISOString(),
+    }));
+  },
+  ["journal-entries"],
+  { tags: [TAG] }
+);
+
+export async function getJournalEntries(): Promise<JournalEntry[]> {
+  const userId = await requireUserId();
+  return getJournalEntriesCached(userId);
+}
+
 const getRungCountsCached = unstable_cache(
   async (userId: string, dungeonId: string) => {
     const run = await prisma.dungeonRun.findFirst({
@@ -452,7 +504,8 @@ export async function getRungCounts(
 
 export async function logRungExposure(
   dungeonId: string,
-  rungId: string
+  rungId: string,
+  note?: string
 ): Promise<{ count: number; rungCleared: boolean; dungeonCleared: boolean }> {
   const userId = await requireUserId();
   const dungeon = getDungeon(dungeonId);
@@ -467,8 +520,15 @@ export async function logRungExposure(
   });
   if (!run) throw new Error(`No active run for ${dungeonId}`);
 
+  const trimmedNote = note?.trim();
   await prisma.dungeonEvent.create({
-    data: { runId: run.id, type: rungId, date: new Date(), value: 1 },
+    data: {
+      runId: run.id,
+      type: rungId,
+      date: new Date(),
+      value: 1,
+      ...(trimmedNote ? { note: trimmedNote } : {}),
+    },
   });
 
   const count = await prisma.dungeonEvent.count({
@@ -526,7 +586,8 @@ export async function undoRungExposure(
 
 export async function logAllowanceEvent(
   dungeonId: string,
-  type: string
+  type: string,
+  note?: string
 ): Promise<{ count: number; relapsed: boolean }> {
   const userId = await requireUserId();
   const dungeon = getDungeon(dungeonId);
@@ -539,8 +600,15 @@ export async function logAllowanceEvent(
   if (!run) throw new Error(`No active run for ${dungeonId}`);
 
   const now = new Date();
+  const trimmedNote = note?.trim();
   await prisma.dungeonEvent.create({
-    data: { runId: run.id, type, date: now, value: 1 },
+    data: {
+      runId: run.id,
+      type,
+      date: now,
+      value: 1,
+      ...(trimmedNote ? { note: trimmedNote } : {}),
+    },
   });
 
   const { start, end } = currentMonthBounds();
