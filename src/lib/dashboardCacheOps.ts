@@ -1,0 +1,69 @@
+import { readCache, writeCache } from "@/lib/offlineCache";
+import type { DashboardData, RunDetail } from "@/app/actions/dungeons";
+
+const KEY = "dashboard";
+
+function mutate(fn: (d: DashboardData) => DashboardData): void {
+  const current = readCache<DashboardData>(KEY);
+  if (!current) return;
+  writeCache(KEY, fn(current));
+}
+
+function withDetail(
+  data: DashboardData,
+  dungeonId: string,
+  update: (d: RunDetail) => RunDetail
+): DashboardData {
+  const existing = data.details[dungeonId] ?? {};
+  return {
+    ...data,
+    details: { ...data.details, [dungeonId]: update(existing) },
+  };
+}
+
+export function endRunInCache(dungeonId: string): void {
+  mutate((d) => ({
+    ...d,
+    activeRuns: d.activeRuns.filter((r) => r.dungeonId !== dungeonId),
+    details: { ...d.details, [dungeonId]: {} },
+  }));
+}
+
+export function setWorkoutInCache(
+  dungeonId: string,
+  workoutId: string,
+  done: boolean
+): void {
+  mutate((d) =>
+    withDetail(d, dungeonId, (detail) => {
+      const existing = detail.weekWorkouts ?? [];
+      const next = done
+        ? Array.from(new Set([...existing, workoutId]))
+        : existing.filter((w) => w !== workoutId);
+      return { ...detail, weekWorkouts: next };
+    })
+  );
+}
+
+export function bumpAllowanceInCache(dungeonId: string, delta: number): void {
+  mutate((d) =>
+    withDetail(d, dungeonId, (detail) => ({
+      ...detail,
+      monthCount: Math.max(0, (detail.monthCount ?? 0) + delta),
+    }))
+  );
+}
+
+export function adjustRungCountInCache(
+  dungeonId: string,
+  rungId: string,
+  delta: number
+): void {
+  mutate((d) =>
+    withDetail(d, dungeonId, (detail) => {
+      const counts = { ...(detail.rungCounts ?? {}) };
+      counts[rungId] = Math.max(0, (counts[rungId] ?? 0) + delta);
+      return { ...detail, rungCounts: counts };
+    })
+  );
+}

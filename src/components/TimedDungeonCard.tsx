@@ -14,6 +14,9 @@ import {
   type DungeonRunState,
 } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
+import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
+import { drainQueue } from "@/lib/offlineDrain";
+import { endRunInCache } from "@/lib/dashboardCacheOps";
 
 interface TimedDungeonCardProps {
   dungeonId: string;
@@ -49,17 +52,28 @@ export default function TimedDungeonCard({
   }
 
   async function handleClaimVictory() {
-    await endRun(dungeonId, "completed");
     notifyReward({ xp: XP_PER_COMPLETION });
     setStartDate(null);
     setStreak(0);
+    endRunInCache(dungeonId);
     if (onStreakChange) onStreakChange(0);
     if (onComplete) onComplete();
     notifyStatsUpdated();
+
+    try {
+      await endRun(dungeonId, "completed");
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:endRun",
+        dungeonId,
+        reason: "completed",
+      });
+      drainQueue().catch(() => {});
+    }
   }
 
   async function handleRelapse() {
-    await endRun(dungeonId, "relapse");
     track("relapse", {
       dungeon_id: dungeonId,
       rule_type: "timed",
@@ -67,9 +81,22 @@ export default function TimedDungeonCard({
     });
     setStartDate(null);
     setStreak(0);
+    endRunInCache(dungeonId);
     if (onStreakChange) onStreakChange(0);
     if (onRelapse) onRelapse();
     notifyStatsUpdated();
+
+    try {
+      await endRun(dungeonId, "relapse");
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:endRun",
+        dungeonId,
+        reason: "relapse",
+      });
+      drainQueue().catch(() => {});
+    }
   }
 
   const cleared = streak >= TARGET;

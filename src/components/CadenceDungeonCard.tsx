@@ -17,6 +17,12 @@ import {
   type DungeonRunState,
 } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
+import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
+import { drainQueue } from "@/lib/offlineDrain";
+import {
+  endRunInCache,
+  setWorkoutInCache,
+} from "@/lib/dashboardCacheOps";
 
 interface CadenceDungeonCardProps {
   dungeonId: string;
@@ -57,11 +63,11 @@ export default function CadenceDungeonCard({
   async function handleToggle(workoutId: string) {
     const wasDone = completed.includes(workoutId);
     const isNowDone = !wasDone;
-    const prev = completed;
 
     setCompleted(
       isNowDone ? [...completed, workoutId] : completed.filter((id) => id !== workoutId)
     );
+    setWorkoutInCache(dungeonId, workoutId, isNowDone);
     const xpDelta = (isNowDone ? 1 : -1) * XP_PER_WORKOUT;
     notifyStatsUpdated({ xpDelta });
     if (isNowDone) notifyReward({ xp: XP_PER_WORKOUT });
@@ -70,15 +76,20 @@ export default function CadenceDungeonCard({
     try {
       await toggleWorkout(dungeonId, workoutId);
     } catch {
-      setCompleted(prev);
-      notifyStatsUpdated({ xpDelta: -xpDelta });
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:workoutToggle",
+        dungeonId,
+        workoutId,
+        desiredCompleted: isNowDone,
+      });
+      drainQueue().catch(() => {});
     } finally {
       endMutation();
     }
   }
 
   async function handleRelapse() {
-    await endRun(dungeonId, "relapse");
     track("relapse", {
       dungeon_id: dungeonId,
       rule_type: "cadence",
@@ -87,9 +98,22 @@ export default function CadenceDungeonCard({
     setStartDate(null);
     setStreak(0);
     setCompleted([]);
+    endRunInCache(dungeonId);
     if (onStreakChange) onStreakChange(0);
     if (onRelapse) onRelapse();
     notifyStatsUpdated();
+
+    try {
+      await endRun(dungeonId, "relapse");
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:endRun",
+        dungeonId,
+        reason: "relapse",
+      });
+      drainQueue().catch(() => {});
+    }
   }
 
   const highestClearedIndex = TIERS.filter((t) => streak >= t.days).length - 1;

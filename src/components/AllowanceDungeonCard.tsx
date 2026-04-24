@@ -14,6 +14,12 @@ import {
   type DungeonRunState,
 } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
+import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
+import { drainQueue } from "@/lib/offlineDrain";
+import {
+  bumpAllowanceInCache,
+  endRunInCache,
+} from "@/lib/dashboardCacheOps";
 
 interface AllowanceDungeonCardProps {
   dungeonId: string;
@@ -55,27 +61,38 @@ export default function AllowanceDungeonCard({
   }
 
   async function handleLog() {
-    const prevCount = monthCount;
-    setMonthCount(prevCount + 1);
+    const nextCount = monthCount + 1;
+    const willRelapse = nextCount > LIMIT;
+
+    setMonthCount(nextCount);
+    bumpAllowanceInCache(dungeonId, 1);
+
+    if (willRelapse) {
+      track("relapse", {
+        dungeon_id: dungeonId,
+        rule_type: "allowance",
+        streak_days: streak,
+        month_count: nextCount,
+      });
+      setStartDate(null);
+      setStreak(0);
+      endRunInCache(dungeonId);
+      if (onStreakChange) onStreakChange(0);
+      if (onRelapse) onRelapse();
+    }
 
     beginMutation();
     try {
-      const { count, relapsed } = await logAllowanceEvent(dungeonId, eventType);
+      const { count } = await logAllowanceEvent(dungeonId, eventType);
       setMonthCount(count);
-      if (relapsed) {
-        track("relapse", {
-          dungeon_id: dungeonId,
-          rule_type: "allowance",
-          streak_days: streak,
-          month_count: count,
-        });
-        setStartDate(null);
-        setStreak(0);
-        if (onStreakChange) onStreakChange(0);
-        if (onRelapse) onRelapse();
-      }
     } catch {
-      setMonthCount(prevCount);
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:logAllowance",
+        dungeonId,
+        eventType,
+      });
+      drainQueue().catch(() => {});
     } finally {
       endMutation();
     }

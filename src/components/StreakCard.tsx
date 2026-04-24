@@ -9,6 +9,9 @@ import {
   type DungeonRunState,
 } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
+import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
+import { drainQueue } from "@/lib/offlineDrain";
+import { endRunInCache } from "@/lib/dashboardCacheOps";
 
 interface StreakCardProps {
   dungeonId: string;
@@ -41,7 +44,6 @@ export default function StreakCard({
   }
 
   async function handleRelapse() {
-    await endRun(dungeonId, "relapse");
     track("relapse", {
       dungeon_id: dungeonId,
       rule_type: "continuous_streak",
@@ -49,9 +51,22 @@ export default function StreakCard({
     });
     setStartDate(null);
     setStreak(0);
+    endRunInCache(dungeonId);
     if (onStreakChange) onStreakChange(0);
     if (onRelapse) onRelapse();
     notifyStatsUpdated();
+
+    try {
+      await endRun(dungeonId, "relapse");
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:endRun",
+        dungeonId,
+        reason: "relapse",
+      });
+      drainQueue().catch(() => {});
+    }
   }
 
   const highestClearedIndex = TIERS.filter((t) => streak >= t.days).length - 1;

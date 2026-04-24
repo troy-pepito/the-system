@@ -15,6 +15,12 @@ import {
   undoRungExposure,
 } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
+import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
+import { drainQueue } from "@/lib/offlineDrain";
+import {
+  adjustRungCountInCache,
+  endRunInCache,
+} from "@/lib/dashboardCacheOps";
 
 interface ProgressiveDungeonCardProps {
   dungeonId: string;
@@ -59,9 +65,19 @@ export default function ProgressiveDungeonCard({
     const rungId = currentRung.id;
     const prevCount = counts[rungId] ?? 0;
 
-    setCounts((prev) => ({ ...prev, [rungId]: prevCount + 1 }));
+    const nextCounts = { ...counts, [rungId]: prevCount + 1 };
+    setCounts(nextCounts);
+    adjustRungCountInCache(dungeonId, rungId, 1);
     notifyStatsUpdated({ xpDelta: XP_PER_EXPOSURE });
     notifyReward({ xp: XP_PER_EXPOSURE });
+
+    const allCleared =
+      RUNGS.length > 0 && RUNGS.every((r) => (nextCounts[r.id] ?? 0) >= r.target);
+    if (allCleared) {
+      setActive(false);
+      endRunInCache(dungeonId);
+      if (onComplete) onComplete();
+    }
 
     beginMutation();
     try {
@@ -76,8 +92,13 @@ export default function ProgressiveDungeonCard({
         if (onComplete) onComplete();
       }
     } catch {
-      setCounts((prev) => ({ ...prev, [rungId]: prevCount }));
-      notifyStatsUpdated({ xpDelta: -XP_PER_EXPOSURE });
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:logExposure",
+        dungeonId,
+        rungId,
+      });
+      drainQueue().catch(() => {});
     } finally {
       endMutation();
       setBusy(false);
@@ -93,14 +114,20 @@ export default function ProgressiveDungeonCard({
 
     setBusy(true);
     setCounts((prev) => ({ ...prev, [rungId]: prevCount - 1 }));
+    adjustRungCountInCache(dungeonId, rungId, -1);
     notifyStatsUpdated({ xpDelta: -XP_PER_EXPOSURE });
 
     beginMutation();
     try {
       await undoRungExposure(dungeonId, rungId);
     } catch {
-      setCounts((prev) => ({ ...prev, [rungId]: prevCount }));
-      notifyStatsUpdated({ xpDelta: XP_PER_EXPOSURE });
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:undoExposure",
+        dungeonId,
+        rungId,
+      });
+      drainQueue().catch(() => {});
     } finally {
       endMutation();
       setBusy(false);
@@ -108,7 +135,6 @@ export default function ProgressiveDungeonCard({
   }
 
   async function handleRelapse() {
-    await endRun(dungeonId, "relapse");
     track("relapse", {
       dungeon_id: dungeonId,
       rule_type: "progressive",
@@ -116,8 +142,21 @@ export default function ProgressiveDungeonCard({
     });
     setActive(false);
     setCounts({});
+    endRunInCache(dungeonId);
     if (onRelapse) onRelapse();
     notifyStatsUpdated();
+
+    try {
+      await endRun(dungeonId, "relapse");
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:endRun",
+        dungeonId,
+        reason: "relapse",
+      });
+      drainQueue().catch(() => {});
+    }
   }
 
   const currentCount = currentRung ? counts[currentRung.id] ?? 0 : 0;

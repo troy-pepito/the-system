@@ -8,7 +8,49 @@ export type QuestToggleMutation = {
   desiredCompleted: boolean;
 };
 
-export type Mutation = QuestToggleMutation;
+export type DungeonEndRunMutation = {
+  id: string;
+  type: "dungeon:endRun";
+  dungeonId: string;
+  reason: "relapse" | "completed";
+};
+
+export type DungeonWorkoutToggleMutation = {
+  id: string;
+  type: "dungeon:workoutToggle";
+  dungeonId: string;
+  workoutId: string;
+  desiredCompleted: boolean;
+};
+
+export type DungeonLogAllowanceMutation = {
+  id: string;
+  type: "dungeon:logAllowance";
+  dungeonId: string;
+  eventType: string;
+};
+
+export type DungeonLogExposureMutation = {
+  id: string;
+  type: "dungeon:logExposure";
+  dungeonId: string;
+  rungId: string;
+};
+
+export type DungeonUndoExposureMutation = {
+  id: string;
+  type: "dungeon:undoExposure";
+  dungeonId: string;
+  rungId: string;
+};
+
+export type Mutation =
+  | QuestToggleMutation
+  | DungeonEndRunMutation
+  | DungeonWorkoutToggleMutation
+  | DungeonLogAllowanceMutation
+  | DungeonLogExposureMutation
+  | DungeonUndoExposureMutation;
 
 const QUEUE_KEY = "shivaliva:queue";
 const QUEUE_EVENT = "shivaliva:queue-change";

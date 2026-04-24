@@ -3,71 +3,85 @@ import {
   toggleQuestCompletion,
 } from "@/app/actions/quests";
 import {
+  endRun,
+  logAllowanceEvent,
+  logRungExposure,
+  toggleWorkout,
+  undoRungExposure,
+  getAllActiveRuns,
+  getWeekWorkouts,
+} from "@/app/actions/dungeons";
+import {
   getQueue,
   removeMutations,
-  type QuestToggleMutation,
+  type Mutation,
 } from "@/lib/offlineQueue";
 
 let drainInFlight: Promise<void> | null = null;
 
-async function drainQuestToggles(
-  mutations: QuestToggleMutation[]
+async function applyQuestToggle(
+  m: Extract<Mutation, { type: "quest:toggle" }>
 ): Promise<void> {
-  const latest = new Map<string, QuestToggleMutation>();
-  for (const m of mutations) {
-    latest.set(`${m.questId}:${m.date}`, m);
+  const serverCompleted = new Set(await getTodayCompletions(m.date));
+  const isCompleted = serverCompleted.has(m.questId);
+  if (isCompleted !== m.desiredCompleted) {
+    await toggleQuestCompletion(m.questId, m.date);
   }
+}
 
-  const byDate = new Map<string, QuestToggleMutation[]>();
-  for (const m of latest.values()) {
-    const arr = byDate.get(m.date) ?? [];
-    arr.push(m);
-    byDate.set(m.date, arr);
+async function applyDungeonEndRun(
+  m: Extract<Mutation, { type: "dungeon:endRun" }>
+): Promise<void> {
+  const active = await getAllActiveRuns();
+  const stillActive = active.some((r) => r.dungeonId === m.dungeonId);
+  if (stillActive) await endRun(m.dungeonId, m.reason);
+}
+
+async function applyDungeonWorkoutToggle(
+  m: Extract<Mutation, { type: "dungeon:workoutToggle" }>
+): Promise<void> {
+  const week = new Set(await getWeekWorkouts(m.dungeonId));
+  const isCompleted = week.has(m.workoutId);
+  if (isCompleted !== m.desiredCompleted) {
+    await toggleWorkout(m.dungeonId, m.workoutId);
   }
+}
 
-  const toRemove: string[] = [];
-
-  for (const [date, entries] of byDate) {
-    let serverCompleted: Set<string>;
-    try {
-      serverCompleted = new Set(await getTodayCompletions(date));
-    } catch {
+async function applyMutation(m: Mutation): Promise<void> {
+  switch (m.type) {
+    case "quest:toggle":
+      return applyQuestToggle(m);
+    case "dungeon:endRun":
+      return applyDungeonEndRun(m);
+    case "dungeon:workoutToggle":
+      return applyDungeonWorkoutToggle(m);
+    case "dungeon:logAllowance":
+      await logAllowanceEvent(m.dungeonId, m.eventType);
       return;
-    }
-
-    for (const m of entries) {
-      const isCompleted = serverCompleted.has(m.questId);
-      if (isCompleted !== m.desiredCompleted) {
-        try {
-          await toggleQuestCompletion(m.questId, m.date);
-        } catch {
-          return;
-        }
-      }
-      const duplicates = getQueue().filter(
-        (q) =>
-          q.type === "quest:toggle" &&
-          q.questId === m.questId &&
-          q.date === m.date
-      );
-      for (const d of duplicates) toRemove.push(d.id);
-    }
+    case "dungeon:logExposure":
+      await logRungExposure(m.dungeonId, m.rungId);
+      return;
+    case "dungeon:undoExposure":
+      await undoRungExposure(m.dungeonId, m.rungId);
+      return;
   }
-
-  if (toRemove.length > 0) removeMutations(toRemove);
 }
 
 export async function drainQueue(): Promise<void> {
   if (drainInFlight) return drainInFlight;
   drainInFlight = (async () => {
     try {
-      const queue = getQueue();
-      if (queue.length === 0) return;
-
-      const questToggles = queue.filter(
-        (m): m is QuestToggleMutation => m.type === "quest:toggle"
-      );
-      if (questToggles.length > 0) await drainQuestToggles(questToggles);
+      while (true) {
+        const queue = getQueue();
+        if (queue.length === 0) return;
+        const next = queue[0];
+        try {
+          await applyMutation(next);
+          removeMutations([next.id]);
+        } catch {
+          return;
+        }
+      }
     } finally {
       drainInFlight = null;
     }
