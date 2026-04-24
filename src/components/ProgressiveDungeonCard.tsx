@@ -18,6 +18,7 @@ import { track } from "@/lib/analytics";
 import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
 import {
+  addRunToCache,
   adjustRungCountInCache,
   endRunInCache,
 } from "@/lib/dashboardCacheOps";
@@ -64,10 +65,15 @@ export default function ProgressiveDungeonCard({
 
     const rungId = currentRung.id;
     const prevCount = counts[rungId] ?? 0;
+    const wasInactive = !active;
 
     const nextCounts = { ...counts, [rungId]: prevCount + 1 };
     setCounts(nextCounts);
     adjustRungCountInCache(dungeonId, rungId, 1);
+    if (wasInactive) {
+      setActive(true);
+      addRunToCache(dungeonId, null);
+    }
     notifyStatsUpdated({ xpDelta: XP_PER_EXPOSURE });
     notifyReward({ xp: XP_PER_EXPOSURE });
 
@@ -92,6 +98,13 @@ export default function ProgressiveDungeonCard({
         if (onComplete) onComplete();
       }
     } catch {
+      if (wasInactive) {
+        enqueueMutation({
+          id: newMutationId(),
+          type: "dungeon:enter",
+          dungeonId,
+        });
+      }
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:logExposure",

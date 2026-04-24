@@ -29,6 +29,43 @@ export function endRunInCache(dungeonId: string): void {
   }));
 }
 
+export function addRunToCache(dungeonId: string, startDate: string | null): void {
+  mutate((d) => {
+    if (d.activeRuns.some((r) => r.dungeonId === dungeonId)) return d;
+    return {
+      ...d,
+      activeRuns: [
+        ...d.activeRuns,
+        { id: -Date.now(), dungeonId, startDate, active: true },
+      ],
+    };
+  });
+}
+
+export function setRunStartDateInCache(
+  dungeonId: string,
+  dateIso: string
+): void {
+  mutate((d) => {
+    const existing = d.activeRuns.find((r) => r.dungeonId === dungeonId);
+    if (existing) {
+      return {
+        ...d,
+        activeRuns: d.activeRuns.map((r) =>
+          r.dungeonId === dungeonId ? { ...r, startDate: dateIso } : r
+        ),
+      };
+    }
+    return {
+      ...d,
+      activeRuns: [
+        ...d.activeRuns,
+        { id: -Date.now(), dungeonId, startDate: dateIso, active: true },
+      ],
+    };
+  });
+}
+
 export function setWorkoutInCache(
   dungeonId: string,
   workoutId: string,

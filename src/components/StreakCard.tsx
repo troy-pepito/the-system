@@ -11,7 +11,10 @@ import {
 import { track } from "@/lib/analytics";
 import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
-import { endRunInCache } from "@/lib/dashboardCacheOps";
+import {
+  endRunInCache,
+  setRunStartDateInCache,
+} from "@/lib/dashboardCacheOps";
 
 interface StreakCardProps {
   dungeonId: string;
@@ -35,12 +38,24 @@ export default function StreakCard({
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
 
   async function handleDatePick(date: string) {
-    await setRunStartDate(dungeonId, date);
     setStartDate(date);
     const days = computeStreakDays(date);
     setStreak(days);
+    setRunStartDateInCache(dungeonId, date);
     if (onStreakChange) onStreakChange(days);
     notifyStatsUpdated();
+
+    try {
+      await setRunStartDate(dungeonId, date);
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:setStartDate",
+        dungeonId,
+        dateIso: date,
+      });
+      drainQueue().catch(() => {});
+    }
   }
 
   async function handleRelapse() {

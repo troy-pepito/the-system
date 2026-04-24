@@ -4,6 +4,13 @@ import { useUser } from "@clerk/nextjs";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { getLevelFromXp, getRank } from "@/lib/player";
 import { useTweenNumber } from "@/lib/useTweenNumber";
+import {
+  enqueueMutation,
+  newMutationId,
+  removeMutations,
+  getQueue,
+  usePendingHunterName,
+} from "@/lib/offlineQueue";
 
 const RANKS = ["E", "D", "C", "B", "A", "S"] as const;
 const LEVELS_PER_RANK = 10;
@@ -45,7 +52,9 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
 
   const hunterName =
     (user?.unsafeMetadata as { hunterName?: string } | undefined)?.hunterName;
+  const pendingName = usePendingHunterName();
   const displayName =
+    pendingName ||
     hunterName ||
     user?.firstName ||
     user?.username ||
@@ -80,14 +89,26 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
     }
     setSavingName(true);
     setError(null);
+
+    const existingPending = getQueue().filter(
+      (m) => m.type === "clerk:updateHunterName"
+    );
+    const mutationId = newMutationId();
+    enqueueMutation({
+      id: mutationId,
+      type: "clerk:updateHunterName",
+      hunterName: next,
+    });
+    setEditingName(false);
+    setNameDraft("");
+
     try {
       await user.update({
         unsafeMetadata: { ...user.unsafeMetadata, hunterName: next },
       });
-      setEditingName(false);
-      setNameDraft("");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Rename failed");
+      removeMutations([mutationId, ...existingPending.map((m) => m.id)]);
+    } catch {
+      // Stays in queue; OfflineSyncManager retries when online.
     } finally {
       setSavingName(false);
     }

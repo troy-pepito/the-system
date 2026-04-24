@@ -44,13 +44,35 @@ export type DungeonUndoExposureMutation = {
   rungId: string;
 };
 
+export type DungeonEnterMutation = {
+  id: string;
+  type: "dungeon:enter";
+  dungeonId: string;
+};
+
+export type DungeonSetStartDateMutation = {
+  id: string;
+  type: "dungeon:setStartDate";
+  dungeonId: string;
+  dateIso: string;
+};
+
+export type ClerkUpdateHunterNameMutation = {
+  id: string;
+  type: "clerk:updateHunterName";
+  hunterName: string;
+};
+
 export type Mutation =
   | QuestToggleMutation
   | DungeonEndRunMutation
   | DungeonWorkoutToggleMutation
   | DungeonLogAllowanceMutation
   | DungeonLogExposureMutation
-  | DungeonUndoExposureMutation;
+  | DungeonUndoExposureMutation
+  | DungeonEnterMutation
+  | DungeonSetStartDateMutation
+  | ClerkUpdateHunterNameMutation;
 
 const QUEUE_KEY = "shivaliva:queue";
 const QUEUE_EVENT = "shivaliva:queue-change";
@@ -111,5 +133,21 @@ export function useQueueCount(): number {
     subscribeQueue,
     getQueueCountSnapshot,
     getQueueCountServerSnapshot
+  );
+}
+
+function getPendingHunterNameSnapshot(): string | null {
+  const pending = getQueue()
+    .filter((m) => m.type === "clerk:updateHunterName")
+    .pop();
+  if (!pending || pending.type !== "clerk:updateHunterName") return null;
+  return pending.hunterName;
+}
+
+export function usePendingHunterName(): string | null {
+  return useSyncExternalStore(
+    subscribeQueue,
+    getPendingHunterNameSnapshot,
+    () => null
   );
 }

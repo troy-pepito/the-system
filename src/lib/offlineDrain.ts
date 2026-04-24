@@ -4,8 +4,10 @@ import {
 } from "@/app/actions/quests";
 import {
   endRun,
+  enterDungeon,
   logAllowanceEvent,
   logRungExposure,
+  setRunStartDate,
   toggleWorkout,
   undoRungExposure,
   getAllActiveRuns,
@@ -64,7 +66,19 @@ async function applyMutation(m: Mutation): Promise<void> {
     case "dungeon:undoExposure":
       await undoRungExposure(m.dungeonId, m.rungId);
       return;
+    case "dungeon:enter":
+      await enterDungeon(m.dungeonId);
+      return;
+    case "dungeon:setStartDate":
+      await setRunStartDate(m.dungeonId, m.dateIso);
+      return;
+    case "clerk:updateHunterName":
+      throw new Error("clerk mutations are handled outside drainQueue");
   }
+}
+
+function isDrainable(m: Mutation): boolean {
+  return !m.type.startsWith("clerk:");
 }
 
 export async function drainQueue(): Promise<void> {
@@ -73,8 +87,8 @@ export async function drainQueue(): Promise<void> {
     try {
       while (true) {
         const queue = getQueue();
-        if (queue.length === 0) return;
-        const next = queue[0];
+        const next = queue.find(isDrainable);
+        if (!next) return;
         try {
           await applyMutation(next);
           removeMutations([next.id]);

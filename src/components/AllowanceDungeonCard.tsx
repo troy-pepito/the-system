@@ -19,6 +19,7 @@ import { drainQueue } from "@/lib/offlineDrain";
 import {
   bumpAllowanceInCache,
   endRunInCache,
+  setRunStartDateInCache,
 } from "@/lib/dashboardCacheOps";
 
 interface AllowanceDungeonCardProps {
@@ -52,12 +53,24 @@ export default function AllowanceDungeonCard({
   const [monthCount, setMonthCount] = useState(initialMonthCount);
 
   async function handleDatePick(date: string) {
-    await setRunStartDate(dungeonId, date);
     setStartDate(date);
     const days = computeStreakDays(date);
     setStreak(days);
+    setRunStartDateInCache(dungeonId, date);
     if (onStreakChange) onStreakChange(days);
     notifyStatsUpdated();
+
+    try {
+      await setRunStartDate(dungeonId, date);
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:setStartDate",
+        dungeonId,
+        dateIso: date,
+      });
+      drainQueue().catch(() => {});
+    }
   }
 
   async function handleLog() {

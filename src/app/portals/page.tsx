@@ -13,6 +13,9 @@ import {
 import { enterDungeon, getAllActiveRuns } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
 import { readCache, writeCache } from "@/lib/offlineCache";
+import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
+import { drainQueue } from "@/lib/offlineDrain";
+import { addRunToCache, endRunInCache } from "@/lib/dashboardCacheOps";
 
 const ACTIVE_RUNS_CACHE_KEY = "activeRuns";
 
@@ -39,15 +42,29 @@ export default function PortalsPage() {
   }, []);
 
   async function handleEnter(dungeonId: string) {
+    addRunToCache(dungeonId, null);
+
     try {
       await enterDungeon(dungeonId);
     } catch (err) {
       if (err instanceof Error && err.message === "PAYWALL") {
+        endRunInCache(dungeonId);
         setPaywallOpen(true);
         return;
       }
-      throw err;
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:enter",
+        dungeonId,
+      });
+      drainQueue().catch(() => {});
     }
+
+    setActiveIds((prev) => {
+      const next = new Set(prev ?? []);
+      next.add(dungeonId);
+      return next;
+    });
     track("dungeon_entered", { dungeon_id: dungeonId });
     router.push(`/#dungeon-${dungeonId}`);
   }

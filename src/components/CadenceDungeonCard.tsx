@@ -21,6 +21,7 @@ import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
 import {
   endRunInCache,
+  setRunStartDateInCache,
   setWorkoutInCache,
 } from "@/lib/dashboardCacheOps";
 
@@ -52,12 +53,24 @@ export default function CadenceDungeonCard({
   const [completed, setCompleted] = useState<string[]>(initialWeekWorkouts);
 
   async function handleDatePick(date: string) {
-    await setRunStartDate(dungeonId, date);
     setStartDate(date);
     const days = computeStreakDays(date);
     setStreak(days);
+    setRunStartDateInCache(dungeonId, date);
     if (onStreakChange) onStreakChange(days);
     notifyStatsUpdated();
+
+    try {
+      await setRunStartDate(dungeonId, date);
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:setStartDate",
+        dungeonId,
+        dateIso: date,
+      });
+      drainQueue().catch(() => {});
+    }
   }
 
   async function handleToggle(workoutId: string) {
