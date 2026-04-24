@@ -17,6 +17,7 @@ import DevTestPanel from "@/components/DevTestPanel";
 import BackToTop from "@/components/BackToTop";
 import OfflineBanner from "@/components/OfflineBanner";
 import CacheWarmer from "@/components/CacheWarmer";
+import OfflineSyncManager from "@/components/OfflineSyncManager";
 import { SignedIn, SignedOut } from "@/components/AuthGate";
 
 const geistSans = Geist({
@@ -92,6 +93,7 @@ export default function RootLayout({
             <PageTransition>{children}</PageTransition>
             <SignedIn>
               <CacheWarmer />
+              <OfflineSyncManager />
               <AchievementToast />
               <GainToast />
               <RankUpGlitch />

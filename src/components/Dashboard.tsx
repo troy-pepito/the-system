@@ -17,6 +17,7 @@ import TimedDungeonCard from "@/components/TimedDungeonCard";
 import CadenceDungeonCard from "@/components/CadenceDungeonCard";
 import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
 import { readCache, writeCache } from "@/lib/offlineCache";
+import { drainQueue } from "@/lib/offlineDrain";
 
 const DASHBOARD_CACHE_KEY = "dashboard";
 
@@ -28,7 +29,9 @@ export default function Dashboard() {
   );
 
   const reload = () => {
-    getDashboardData(todayLocalISO())
+    drainQueue()
+      .catch(() => {})
+      .then(() => getDashboardData(todayLocalISO()))
       .then((d) => {
         if (hasPendingMutations()) return;
         writeCache(DASHBOARD_CACHE_KEY, d);

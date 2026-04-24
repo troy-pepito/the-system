@@ -15,6 +15,10 @@ import {
 } from "@/lib/player";
 import { toggleQuestCompletion } from "@/app/actions/quests";
 import { track } from "@/lib/analytics";
+import { readCache, writeCache } from "@/lib/offlineCache";
+import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
+import { drainQueue } from "@/lib/offlineDrain";
+import type { DashboardData } from "@/app/actions/dungeons";
 
 export type { QuestRewards };
 
@@ -53,8 +57,7 @@ export default function DailyQuests({
 
     const wasDone = completed.includes(id);
     const isNowDone = !wasDone;
-    const prevCompleted = completed;
-    const prevLifetime = lifetime;
+    const date = todayLocalISO();
 
     const nextCompleted = isNowDone
       ? [...completed, id]
@@ -65,6 +68,15 @@ export default function DailyQuests({
     setLifetime(nextLifetime);
     onRewardsChange?.(nextLifetime);
     setBusyIds((prev) => new Set(prev).add(id));
+
+    const cached = readCache<DashboardData>("dashboard");
+    if (cached) {
+      writeCache("dashboard", {
+        ...cached,
+        todayQuestIds: nextCompleted,
+        lifetimeRewards: nextLifetime,
+      });
+    }
 
     const xpDelta = (isNowDone ? 1 : -1) * quest.xp;
     notifyStatsUpdated({ xpDelta });
@@ -86,12 +98,16 @@ export default function DailyQuests({
 
     beginMutation();
     try {
-      await toggleQuestCompletion(id, todayLocalISO());
+      await toggleQuestCompletion(id, date);
     } catch {
-      setCompleted(prevCompleted);
-      setLifetime(prevLifetime);
-      onRewardsChange?.(prevLifetime);
-      notifyStatsUpdated({ xpDelta: -xpDelta });
+      enqueueMutation({
+        id: newMutationId(),
+        type: "quest:toggle",
+        questId: id,
+        date,
+        desiredCompleted: isNowDone,
+      });
+      drainQueue().catch(() => {});
     } finally {
       endMutation();
       setBusyIds((prev) => {
