@@ -67,6 +67,14 @@ export default function NotificationSettings() {
         return;
       }
       const reg = await navigator.serviceWorker.ready;
+      await reg.update().catch(() => {});
+
+      const existing = await reg.pushManager.getSubscription();
+      if (existing) {
+        await existing.unsubscribe().catch(() => {});
+        await removePushSubscription(existing.endpoint).catch(() => {});
+      }
+
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey).buffer as ArrayBuffer,
