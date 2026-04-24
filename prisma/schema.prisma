@@ -64,3 +64,14 @@ model EmailSent {
 
   @@index([userId, type, sentAt])
 }
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

@@ -90,3 +90,47 @@ async function networkFirst(req, cacheName) {
     throw err;
   }
 }
+
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { title: "Shivaliva Leveling", body: event.data?.text?.() ?? "" };
+  }
+  const title = data.title || "Shivaliva Leveling";
+  const options = {
+    body: data.body || "",
+    icon: "/icon1",
+    badge: "/icon",
+    tag: data.tag || "default",
+    renotify: true,
+    data: { url: data.url || "/" },
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || "/";
+  event.waitUntil(
+    (async () => {
+      const all = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
+      for (const client of all) {
+        try {
+          await client.focus();
+          if ("navigate" in client && client.url !== targetUrl) {
+            await client.navigate(targetUrl);
+          }
+          return;
+        } catch {}
+      }
+      if (self.clients.openWindow) {
+        await self.clients.openWindow(targetUrl);
+      }
+    })()
+  );
+});

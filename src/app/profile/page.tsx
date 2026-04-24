@@ -21,6 +21,7 @@ import {
   type JournalEntry,
 } from "@/app/actions/dungeons";
 import { getDungeon } from "@/lib/dungeons";
+import NotificationSettings from "@/components/NotificationSettings";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
 import {
   ATMOSPHERE_EVENT,
@@ -217,7 +218,10 @@ export default function ProfilePage() {
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
             Settings
           </p>
-          <AtmosphereToggle />
+          <div className="space-y-5">
+            <AtmosphereToggle />
+            <NotificationSettings />
+          </div>
         </Card>
       </div>
     </main>
