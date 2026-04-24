@@ -1,8 +1,23 @@
 const STATIC_CACHE = "system-static-v1";
 const RUNTIME_CACHE = "system-runtime-v1";
 
-self.addEventListener("install", () => {
-  self.skipWaiting();
+const PRECACHE_URLS = ["/", "/portals", "/profile"];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(RUNTIME_CACHE);
+      await Promise.allSettled(
+        PRECACHE_URLS.map(async (url) => {
+          try {
+            const res = await fetch(url, { credentials: "include" });
+            if (res && res.ok) await cache.put(url, res);
+          } catch {}
+        })
+      );
+      await self.skipWaiting();
+    })()
+  );
 });
 
 self.addEventListener("activate", (event) => {
