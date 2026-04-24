@@ -20,9 +20,16 @@ import {
 import { useTweenNumber } from "@/lib/useTweenNumber";
 import { getAllActiveRuns, getBonusXp } from "@/app/actions/dungeons";
 import { getLifetimeRewards } from "@/app/actions/quests";
+import { readCache, writeCache } from "@/lib/offlineCache";
+
+const TOTAL_XP_CACHE_KEY = "totalXp";
 
 export default function Navbar() {
-  const [totalXp, setTotalXp] = useState(0);
+  const [totalXp, setTotalXp] = useState<number>(() =>
+    typeof window === "undefined"
+      ? 0
+      : readCache<number>(TOTAL_XP_CACHE_KEY) ?? 0
+  );
   const pathname = usePathname();
 
   const navLink = (href: string, label: string) => {
@@ -44,27 +51,35 @@ export default function Navbar() {
 
   useEffect(() => {
     const recompute = async () => {
-      const [runs, rewards, bonus] = await Promise.all([
-        getAllActiveRuns(),
-        getLifetimeRewards(),
-        getBonusXp(),
-      ]);
-      if (hasPendingMutations()) return;
-      const totalStreakDays = runs.reduce(
-        (sum, r) => sum + computeStreakDays(r.startDate),
-        0
-      );
-      const bonusXp =
-        bonus.workouts * XP_PER_WORKOUT +
-        bonus.exposures * XP_PER_EXPOSURE +
-        bonus.completions * XP_PER_COMPLETION +
-        bonus.bankedStreakDays * XP_PER_STREAK_DAY;
-      setTotalXp(totalStreakDays * XP_PER_STREAK_DAY + rewards.xp + bonusXp);
+      try {
+        const [runs, rewards, bonus] = await Promise.all([
+          getAllActiveRuns(),
+          getLifetimeRewards(),
+          getBonusXp(),
+        ]);
+        if (hasPendingMutations()) return;
+        const totalStreakDays = runs.reduce(
+          (sum, r) => sum + computeStreakDays(r.startDate),
+          0
+        );
+        const bonusXp =
+          bonus.workouts * XP_PER_WORKOUT +
+          bonus.exposures * XP_PER_EXPOSURE +
+          bonus.completions * XP_PER_COMPLETION +
+          bonus.bankedStreakDays * XP_PER_STREAK_DAY;
+        const xp = totalStreakDays * XP_PER_STREAK_DAY + rewards.xp + bonusXp;
+        writeCache(TOTAL_XP_CACHE_KEY, xp);
+        setTotalXp(xp);
+      } catch {}
     };
     const onEvent = (e: Event) => {
       const delta = (e as CustomEvent<{ xpDelta?: number }>).detail?.xpDelta;
       if (typeof delta === "number") {
-        setTotalXp((prev) => Math.max(0, prev + delta));
+        setTotalXp((prev) => {
+          const next = Math.max(0, prev + delta);
+          writeCache(TOTAL_XP_CACHE_KEY, next);
+          return next;
+        });
         return;
       }
       recompute();

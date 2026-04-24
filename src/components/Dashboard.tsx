@@ -16,18 +16,25 @@ import { todayLocalISO } from "@/lib/quests";
 import TimedDungeonCard from "@/components/TimedDungeonCard";
 import CadenceDungeonCard from "@/components/CadenceDungeonCard";
 import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
+import { readCache, writeCache } from "@/lib/offlineCache";
 
-let dashboardCache: DashboardData | null = null;
+const DASHBOARD_CACHE_KEY = "dashboard";
 
 export default function Dashboard() {
-  const [dashboard, setDashboard] = useState<DashboardData | null>(dashboardCache);
+  const [dashboard, setDashboard] = useState<DashboardData | null>(() =>
+    typeof window === "undefined"
+      ? null
+      : readCache<DashboardData>(DASHBOARD_CACHE_KEY)
+  );
 
   const reload = () => {
-    getDashboardData(todayLocalISO()).then((d) => {
-      if (hasPendingMutations()) return;
-      dashboardCache = d;
-      setDashboard(d);
-    });
+    getDashboardData(todayLocalISO())
+      .then((d) => {
+        if (hasPendingMutations()) return;
+        writeCache(DASHBOARD_CACHE_KEY, d);
+        setDashboard(d);
+      })
+      .catch(() => {});
   };
 
   useEffect(() => {

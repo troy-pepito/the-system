@@ -12,23 +12,30 @@ import {
 } from "@/lib/dungeons";
 import { enterDungeon, getAllActiveRuns } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
+import { readCache, writeCache } from "@/lib/offlineCache";
 
-let activeIdsCache: Set<string> | null = null;
+const ACTIVE_RUNS_CACHE_KEY = "activeRuns";
+
+type CachedRun = { dungeonId: string };
 
 export default function PortalsPage() {
   const router = useRouter();
-  const [activeIds, setActiveIds] = useState<Set<string> | null>(
-    activeIdsCache
-  );
+  const [activeIds, setActiveIds] = useState<Set<string> | null>(() => {
+    if (typeof window === "undefined") return null;
+    const cached = readCache<CachedRun[]>(ACTIVE_RUNS_CACHE_KEY);
+    if (!cached) return null;
+    return new Set(cached.map((r) => r.dungeonId));
+  });
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
 
   useEffect(() => {
-    getAllActiveRuns().then((runs) => {
-      const active = new Set<string>(runs.map((r) => r.dungeonId));
-      activeIdsCache = active;
-      setActiveIds(active);
-    });
+    getAllActiveRuns()
+      .then((runs) => {
+        writeCache(ACTIVE_RUNS_CACHE_KEY, runs);
+        setActiveIds(new Set<string>(runs.map((r) => r.dungeonId)));
+      })
+      .catch(() => {});
   }, []);
 
   async function handleEnter(dungeonId: string) {

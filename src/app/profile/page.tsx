@@ -22,20 +22,25 @@ import {
   getAtmosphereEnabled,
   setAtmosphereEnabled,
 } from "@/lib/preferences";
+import { readCache, writeCache } from "@/lib/offlineCache";
 
-let profileCache: ProfilePageData | null = null;
+const PROFILE_CACHE_KEY = "profile";
 
 type Range = "week" | "month" | "all";
 
 export default function ProfilePage() {
-  const [data, setData] = useState<ProfilePageData | null>(profileCache);
+  const [data, setData] = useState<ProfilePageData | null>(() =>
+    typeof window === "undefined"
+      ? null
+      : readCache<ProfilePageData>(PROFILE_CACHE_KEY)
+  );
   const [range, setRange] = useState<Range>("all");
 
   useEffect(() => {
     const load = () => {
       getProfilePageData()
         .then((d) => {
-          profileCache = d;
+          writeCache(PROFILE_CACHE_KEY, d);
           setData(d);
         })
         .catch(() => {});
