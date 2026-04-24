@@ -8,6 +8,7 @@ import {
   useQueueCount,
 } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
+import { clearPendingAvatar, getPendingAvatar } from "@/lib/pendingAvatar";
 
 export default function OfflineSyncManager() {
   const online = useOnline();
@@ -34,6 +35,26 @@ export default function OfflineSyncManager() {
       })
       .then(() => {
         removeMutations(pending.map((m) => m.id));
+      })
+      .catch(() => {});
+  }, [online, isLoaded, user, queueCount]);
+
+  useEffect(() => {
+    if (!online || !isLoaded || !user) return;
+    const pending = getQueue().filter((m) => m.type === "clerk:updateAvatar");
+    if (pending.length === 0) return;
+    getPendingAvatar()
+      .then((blob) => {
+        if (!blob) {
+          removeMutations(pending.map((m) => m.id));
+          return null;
+        }
+        return user
+          .setProfileImage({ file: blob })
+          .then(() => {
+            removeMutations(pending.map((m) => m.id));
+            return clearPendingAvatar();
+          });
       })
       .catch(() => {});
   }, [online, isLoaded, user, queueCount]);

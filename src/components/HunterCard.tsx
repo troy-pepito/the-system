@@ -11,6 +11,11 @@ import {
   getQueue,
   usePendingHunterName,
 } from "@/lib/offlineQueue";
+import {
+  clearPendingAvatar,
+  savePendingAvatar,
+  usePendingAvatarUrl,
+} from "@/lib/pendingAvatar";
 
 const RANKS = ["E", "D", "C", "B", "A", "S"] as const;
 const LEVELS_PER_RANK = 10;
@@ -53,6 +58,8 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
   const hunterName =
     (user?.unsafeMetadata as { hunterName?: string } | undefined)?.hunterName;
   const pendingName = usePendingHunterName();
+  const pendingAvatarUrl = usePendingAvatarUrl();
+  const avatarSrc = pendingAvatarUrl || (isLoaded ? user?.imageUrl : null);
   const displayName =
     pendingName ||
     hunterName ||
@@ -119,10 +126,28 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
     if (!file || !user) return;
     setError(null);
     setUploading(true);
+
+    try {
+      await savePendingAvatar(file);
+    } catch {
+      setError("Could not store avatar locally");
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    const existingPending = getQueue().filter(
+      (m) => m.type === "clerk:updateAvatar"
+    );
+    const mutationId = newMutationId();
+    enqueueMutation({ id: mutationId, type: "clerk:updateAvatar" });
+
     try {
       await user.setProfileImage({ file });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
+      removeMutations([mutationId, ...existingPending.map((m) => m.id)]);
+      await clearPendingAvatar();
+    } catch {
+      // Stays in IDB + queue; OfflineSyncManager retries when online.
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -149,10 +174,10 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
             aria-label="Change profile picture"
             className="group relative shrink-0 w-24 h-24 sm:w-28 sm:h-28 overflow-hidden border border-cyan-400/50 bg-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.25)] disabled:cursor-not-allowed"
           >
-            {isLoaded && user?.imageUrl ? (
+            {avatarSrc ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={user.imageUrl}
+                src={avatarSrc}
                 alt={displayName}
                 className="w-full h-full object-cover"
               />

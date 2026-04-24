@@ -63,6 +63,11 @@ export type ClerkUpdateHunterNameMutation = {
   hunterName: string;
 };
 
+export type ClerkUpdateAvatarMutation = {
+  id: string;
+  type: "clerk:updateAvatar";
+};
+
 export type Mutation =
   | QuestToggleMutation
   | DungeonEndRunMutation
@@ -72,7 +77,8 @@ export type Mutation =
   | DungeonUndoExposureMutation
   | DungeonEnterMutation
   | DungeonSetStartDateMutation
-  | ClerkUpdateHunterNameMutation;
+  | ClerkUpdateHunterNameMutation
+  | ClerkUpdateAvatarMutation;
 
 const QUEUE_KEY = "shivaliva:queue";
 const QUEUE_EVENT = "shivaliva:queue-change";

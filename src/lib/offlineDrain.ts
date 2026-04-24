@@ -73,6 +73,7 @@ async function applyMutation(m: Mutation): Promise<void> {
       await setRunStartDate(m.dungeonId, m.dateIso);
       return;
     case "clerk:updateHunterName":
+    case "clerk:updateAvatar":
       throw new Error("clerk mutations are handled outside drainQueue");
   }
 }
