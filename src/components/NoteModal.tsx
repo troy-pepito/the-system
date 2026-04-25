@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface NoteModalProps {
   open: boolean;
@@ -20,7 +21,8 @@ interface NoteModalProps {
 
 export default function NoteModal(props: NoteModalProps) {
   if (!props.open) return null;
-  return <NoteModalInner {...props} />;
+  if (typeof document === "undefined") return null;
+  return createPortal(<NoteModalInner {...props} />, document.body);
 }
 
 function NoteModalInner({
