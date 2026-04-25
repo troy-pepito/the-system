@@ -321,6 +321,7 @@ export default function AllowanceDungeonCard({
         placeholder="What's on your mind today?"
         confirmLabel="Save Entry"
         skipLabel="Cancel"
+        cancelOnSkip
         onSubmit={handleJournal}
         onCancel={() => setJournalModalOpen(false)}
       />

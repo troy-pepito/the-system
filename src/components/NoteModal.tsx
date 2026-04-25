@@ -10,6 +10,12 @@ interface NoteModalProps {
   onSubmit: (note: string | null) => void;
   onCancel?: () => void;
   tone?: "neutral" | "danger";
+  /**
+   * When true, the "skip" button calls onCancel instead of onSubmit(null).
+   * Use for destructive actions where the secondary button should mean
+   * "abort", not "do the action without writing about it."
+   */
+  cancelOnSkip?: boolean;
 }
 
 export default function NoteModal(props: NoteModalProps) {
@@ -25,6 +31,7 @@ function NoteModalInner({
   onSubmit,
   onCancel,
   tone = "neutral",
+  cancelOnSkip = false,
 }: NoteModalProps) {
   const [note, setNote] = useState("");
   const taRef = useRef<HTMLTextAreaElement>(null);
@@ -89,7 +96,9 @@ function NoteModalInner({
         <div className="flex items-center justify-end gap-2 mt-4">
           <button
             type="button"
-            onClick={() => onSubmit(null)}
+            onClick={() =>
+              cancelOnSkip ? onCancel?.() : onSubmit(null)
+            }
             className="px-4 py-2 border border-slate-700 text-slate-400 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors"
           >
             {skipLabel}

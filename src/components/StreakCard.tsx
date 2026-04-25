@@ -199,9 +199,10 @@ export default function StreakCard({
         open={relapseModalOpen}
         title={`Relapse — ${dungeon?.name ?? dungeonId}`}
         placeholder="What triggered it? How are you feeling? (optional)"
-        confirmLabel="Log Relapse"
-        skipLabel="Skip Note"
+        confirmLabel="Confirm Relapse"
+        skipLabel="Cancel"
         tone="danger"
+        cancelOnSkip
         onSubmit={handleRelapse}
         onCancel={() => setRelapseModalOpen(false)}
       />
@@ -211,6 +212,7 @@ export default function StreakCard({
         placeholder="What's on your mind today?"
         confirmLabel="Save Entry"
         skipLabel="Cancel"
+        cancelOnSkip
         onSubmit={handleJournal}
         onCancel={() => setJournalModalOpen(false)}
       />

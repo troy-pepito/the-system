@@ -344,9 +344,10 @@ export default function ProgressiveDungeonCard({
         open={relapseModalOpen}
         title={`Abandon Ladder — ${dungeon?.name ?? dungeonId}`}
         placeholder="What stopped the climb? (optional)"
-        confirmLabel="Abandon"
-        skipLabel="Skip Note"
+        confirmLabel="Confirm Abandon"
+        skipLabel="Cancel"
         tone="danger"
+        cancelOnSkip
         onSubmit={handleRelapse}
         onCancel={() => setRelapseModalOpen(false)}
       />
@@ -356,6 +357,7 @@ export default function ProgressiveDungeonCard({
         placeholder="What's on your mind today?"
         confirmLabel="Save Entry"
         skipLabel="Cancel"
+        cancelOnSkip
         onSubmit={handleJournal}
         onCancel={() => setJournalModalOpen(false)}
       />
