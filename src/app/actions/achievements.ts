@@ -1,6 +1,7 @@
 "use server";
 
 import { unstable_cache, updateTag } from "next/cache";
+import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import {
   SOCIAL_RECLAIM_RUNGS,
@@ -29,6 +30,7 @@ import {
   XP_PER_EXPOSURE,
   XP_PER_COMPLETION,
   getLevelFromXp,
+  getRank,
   computeStreakDays,
 } from "@/lib/player";
 
@@ -463,4 +465,97 @@ const getProfilePageDataCached = unstable_cache(
 export async function getProfilePageData(): Promise<ProfilePageData> {
   const userId = await requireUserId();
   return getProfilePageDataCached(userId);
+}
+
+export interface PublicDungeonRunSummary {
+  dungeonId: string;
+  startDate: string | null;
+  active: boolean;
+  streakDays: number;
+}
+
+export interface PublicHunterData {
+  hunterId: string;
+  hunterName: string;
+  imageUrl: string | null;
+  totalXp: number;
+  level: number;
+  rank: string;
+  activeRuns: PublicDungeonRunSummary[];
+  completedRunCount: number;
+  workoutTotal: number;
+  exposureTotal: number;
+  questTotal: number;
+  perfectQuestDays: number;
+  scattered: boolean;
+  dimensions: PlayerSnapshot["dimensions"];
+  unlocked: UnlockedAchievement[];
+  heatmap: Record<string, number>;
+}
+
+export async function getPublicHunterData(
+  hunterId: string
+): Promise<PublicHunterData | null> {
+  await requireUserId();
+
+  let user;
+  try {
+    const client = await clerkClient();
+    user = await client.users.getUser(hunterId);
+  } catch {
+    return null;
+  }
+
+  const meta = user.unsafeMetadata as { hunterName?: string } | undefined;
+  const hunterName =
+    meta?.hunterName ||
+    user.firstName ||
+    user.username ||
+    user.primaryEmailAddress?.emailAddress.split("@")[0] ||
+    "Hunter";
+
+  const [snapshot, achievementRows, heatmap, runs] = await Promise.all([
+    buildSnapshot(hunterId),
+    prisma.achievement.findMany({
+      where: { userId: hunterId },
+      orderBy: { unlockedAt: "desc" },
+    }),
+    _buildHeatmap(hunterId),
+    prisma.dungeonRun.findMany({
+      where: { userId: hunterId, active: true },
+      orderBy: { createdAt: "desc" },
+      select: { dungeonId: true, startDate: true, active: true },
+    }),
+  ]);
+
+  const activeRuns: PublicDungeonRunSummary[] = runs.map((r) => ({
+    dungeonId: r.dungeonId,
+    startDate: r.startDate ? r.startDate.toISOString().split("T")[0] : null,
+    active: r.active,
+    streakDays: r.startDate
+      ? computeStreakDays(r.startDate.toISOString())
+      : 0,
+  }));
+
+  return {
+    hunterId,
+    hunterName,
+    imageUrl: user.imageUrl ?? null,
+    totalXp: snapshot.totalXp,
+    level: snapshot.level,
+    rank: getRank(snapshot.level),
+    activeRuns,
+    completedRunCount: snapshot.completedRunCount,
+    workoutTotal: snapshot.workoutTotal,
+    exposureTotal: snapshot.exposureTotal,
+    questTotal: snapshot.questTotal,
+    perfectQuestDays: snapshot.perfectQuestDays,
+    scattered: snapshot.scattered,
+    dimensions: snapshot.dimensions,
+    unlocked: achievementRows.map((r) => ({
+      id: r.achievementId,
+      unlockedAt: r.unlockedAt.toISOString(),
+    })),
+    heatmap,
+  };
 }
