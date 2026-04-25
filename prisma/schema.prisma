@@ -76,3 +76,17 @@ model PushSubscription {
 
   @@index([userId])
 }
+
+model Friendship {
+  id          Int      @id @default(autoincrement())
+  requesterId String
+  addresseeId String
+  status      String   // "pending" | "accepted"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([requesterId, addresseeId])
+  @@index([requesterId])
+  @@index([addresseeId])
+  @@index([status])
+}

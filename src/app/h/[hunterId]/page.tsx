@@ -15,6 +15,7 @@ import { DUNGEONS, getDungeon } from "@/lib/dungeons";
 import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
 import Heatmap from "@/components/Heatmap";
+import FriendActions from "@/components/FriendActions";
 
 interface Props {
   params: Promise<{ hunterId: string }>;
@@ -141,6 +142,10 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="flex justify-center">
+          <FriendActions hunterId={data.hunterId} />
         </div>
 
         <Card className="p-6">

@@ -22,6 +22,7 @@ import {
 } from "@/app/actions/dungeons";
 import { getDungeon } from "@/lib/dungeons";
 import NotificationSettings from "@/components/NotificationSettings";
+import FriendsSection from "@/components/FriendsSection";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
 import {
   ATMOSPHERE_EVENT,
@@ -152,6 +153,8 @@ export default function ProfilePage() {
           </p>
           <Heatmap activity={data.heatmap} />
         </Card>
+
+        <FriendsSection />
 
         <JournalSection entries={journal} />
 
