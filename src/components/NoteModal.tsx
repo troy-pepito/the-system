@@ -37,7 +37,9 @@ function NoteModalInner({
   const taRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => taRef.current?.focus());
+    const frame = requestAnimationFrame(() =>
+      taRef.current?.focus({ preventScroll: true })
+    );
     const cancel = onCancel ?? (() => onSubmit(null));
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {

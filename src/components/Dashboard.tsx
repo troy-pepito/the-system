@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StreakCard from "@/components/StreakCard";
 import AllowanceDungeonCard from "@/components/AllowanceDungeonCard";
 import DailyQuests from "@/components/DailyQuests";
@@ -59,8 +59,11 @@ export default function Dashboard() {
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
 
+  const initialHashScrollDone = useRef(false);
   useEffect(() => {
     if (!dashboard) return;
+    if (initialHashScrollDone.current) return;
+    initialHashScrollDone.current = true;
     const hash = window.location.hash;
     if (!hash) return;
     const target = document.getElementById(hash.slice(1));
