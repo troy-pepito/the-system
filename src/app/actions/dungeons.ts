@@ -627,3 +627,52 @@ export async function logAllowanceEvent(
   updateTag(TAG);
   return { count, relapsed: false };
 }
+
+export async function undoAllowanceEvent(
+  dungeonId: string,
+  type: string
+): Promise<{ count: number }> {
+  const userId = await requireUserId();
+  const run = await prisma.dungeonRun.findFirst({
+    where: { userId, dungeonId, active: true },
+  });
+  if (!run) throw new Error(`No active run for ${dungeonId}`);
+
+  const last = await prisma.dungeonEvent.findFirst({
+    where: { runId: run.id, type },
+    orderBy: { createdAt: "desc" },
+  });
+  if (last) {
+    await prisma.dungeonEvent.delete({ where: { id: last.id } });
+  }
+
+  const { start, end } = currentMonthBounds();
+  const count = await prisma.dungeonEvent.count({
+    where: { runId: run.id, type, date: { gte: start, lt: end } },
+  });
+  updateTag(TAG);
+  return { count };
+}
+
+export async function logJournalEntry(
+  dungeonId: string,
+  note: string
+): Promise<void> {
+  const userId = await requireUserId();
+  const trimmed = note.trim();
+  if (!trimmed) return;
+  const run = await prisma.dungeonRun.findFirst({
+    where: { userId, dungeonId, active: true },
+  });
+  if (!run) throw new Error(`No active run for ${dungeonId}`);
+
+  await prisma.dungeonEvent.create({
+    data: {
+      runId: run.id,
+      type: "journal",
+      date: new Date(),
+      note: trimmed,
+    },
+  });
+  updateTag(TAG);
+}

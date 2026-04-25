@@ -11,6 +11,7 @@ import {
 import {
   enterDungeon,
   endRun,
+  logJournalEntry,
   logRungExposure,
   undoRungExposure,
 } from "@/app/actions/dungeons";
@@ -48,6 +49,23 @@ export default function ProgressiveDungeonCard({
   const [busy, setBusy] = useState(false);
   const [relapseModalOpen, setRelapseModalOpen] = useState(false);
   const [logModalOpen, setLogModalOpen] = useState(false);
+  const [journalModalOpen, setJournalModalOpen] = useState(false);
+
+  async function handleJournal(note: string | null) {
+    setJournalModalOpen(false);
+    if (!note) return;
+    try {
+      await logJournalEntry(dungeonId, note);
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:journalLog",
+        dungeonId,
+        note,
+      });
+      drainQueue().catch(() => {});
+    }
+  }
 
   const currentRungIndex = RUNGS.findIndex(
     (r) => (counts[r.id] ?? 0) < r.target
@@ -293,12 +311,20 @@ export default function ProgressiveDungeonCard({
           </div>
 
           {active && (
-            <button
-              onClick={() => setRelapseModalOpen(true)}
-              className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
-            >
-              Abandon Ladder — Reset
-            </button>
+            <div className="flex flex-col gap-2 items-stretch">
+              <button
+                onClick={() => setJournalModalOpen(true)}
+                className="px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
+              >
+                + Journal Entry
+              </button>
+              <button
+                onClick={() => setRelapseModalOpen(true)}
+                className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
+              >
+                Abandon Ladder — Reset
+              </button>
+            </div>
           )}
         </div>
       ) : (
@@ -323,6 +349,15 @@ export default function ProgressiveDungeonCard({
         tone="danger"
         onSubmit={handleRelapse}
         onCancel={() => setRelapseModalOpen(false)}
+      />
+      <NoteModal
+        open={journalModalOpen}
+        title={`Journal — ${dungeon?.name ?? dungeonId}`}
+        placeholder="What's on your mind today?"
+        confirmLabel="Save Entry"
+        skipLabel="Cancel"
+        onSubmit={handleJournal}
+        onCancel={() => setJournalModalOpen(false)}
       />
     </div>
   );

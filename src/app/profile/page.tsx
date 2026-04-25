@@ -392,6 +392,7 @@ function StatLine({ label, value }: { label: string; value: number }) {
 function eventLabel(type: string): string {
   if (type === "relapse") return "Relapse";
   if (type === "completed") return "Completed";
+  if (type === "journal") return "Journal";
   return type.replace(/-/g, " ");
 }
 
@@ -399,6 +400,8 @@ function eventTone(type: string): string {
   if (type === "relapse") return "text-red-300 border-red-500/40 bg-red-500/10";
   if (type === "completed")
     return "text-amber-300 border-amber-500/40 bg-amber-500/10";
+  if (type === "journal")
+    return "text-slate-300 border-slate-600 bg-slate-800/60";
   return "text-cyan-300 border-cyan-500/40 bg-cyan-500/10";
 }
 

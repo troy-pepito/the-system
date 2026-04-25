@@ -11,6 +11,8 @@ import DateEntryPicker from "@/components/DateEntryPicker";
 import {
   setRunStartDate,
   logAllowanceEvent,
+  logJournalEntry,
+  undoAllowanceEvent,
   type DungeonRunState,
 } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
@@ -53,6 +55,8 @@ export default function AllowanceDungeonCard({
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
   const [monthCount, setMonthCount] = useState(initialMonthCount);
   const [logModalOpen, setLogModalOpen] = useState(false);
+  const [journalModalOpen, setJournalModalOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   async function handleDatePick(date: string) {
     setStartDate(date);
@@ -70,6 +74,48 @@ export default function AllowanceDungeonCard({
         type: "dungeon:setStartDate",
         dungeonId,
         dateIso: date,
+      });
+      drainQueue().catch(() => {});
+    }
+  }
+
+  async function handleUndo() {
+    if (busy || monthCount <= 0) return;
+    setBusy(true);
+    const prevCount = monthCount;
+    setMonthCount(Math.max(0, prevCount - 1));
+    bumpAllowanceInCache(dungeonId, -1);
+
+    beginMutation();
+    try {
+      const { count } = await undoAllowanceEvent(dungeonId, eventType);
+      setMonthCount(count);
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:undoAllowance",
+        dungeonId,
+        eventType,
+      });
+      drainQueue().catch(() => {});
+    } finally {
+      endMutation();
+      setBusy(false);
+    }
+  }
+
+  async function handleJournal(note: string | null) {
+    setJournalModalOpen(false);
+    if (!note) return;
+
+    try {
+      await logJournalEntry(dungeonId, note);
+    } catch {
+      enqueueMutation({
+        id: newMutationId(),
+        type: "dungeon:journalLog",
+        dungeonId,
+        note,
       });
       drainQueue().catch(() => {});
     }
@@ -208,17 +254,36 @@ export default function AllowanceDungeonCard({
                 ⚠ Logging another {unit} will relapse the run
               </p>
             )}
-            <button
-              onClick={() => setLogModalOpen(true)}
-              className={`w-full px-4 py-2 rounded text-xs uppercase tracking-wider transition-colors ${
-                atLimit
-                  ? "bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20"
-                  : "bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20"
-              }`}
-            >
-              {atLimit ? `Log ${unit} (Relapse)` : `+ Log ${unit}`}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setLogModalOpen(true)}
+                disabled={busy}
+                className={`flex-1 px-4 py-2 rounded text-xs uppercase tracking-wider transition-colors disabled:opacity-50 ${
+                  atLimit
+                    ? "bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20"
+                    : "bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20"
+                }`}
+              >
+                {atLimit ? `Log ${unit} (Relapse)` : `+ Log ${unit}`}
+              </button>
+              {monthCount > 0 && (
+                <button
+                  onClick={handleUndo}
+                  disabled={busy}
+                  className="px-3 py-2 bg-slate-800/60 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-wider hover:bg-slate-700/60 transition-colors disabled:opacity-50"
+                >
+                  Undo
+                </button>
+              )}
+            </div>
           </div>
+
+          <button
+            onClick={() => setJournalModalOpen(true)}
+            className="w-full px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
+          >
+            + Journal Entry
+          </button>
 
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
         </div>
@@ -249,6 +314,15 @@ export default function AllowanceDungeonCard({
         tone={atLimit ? "danger" : "neutral"}
         onSubmit={handleLog}
         onCancel={() => setLogModalOpen(false)}
+      />
+      <NoteModal
+        open={journalModalOpen}
+        title={`Journal — ${dungeon?.name ?? dungeonId}`}
+        placeholder="What's on your mind today?"
+        confirmLabel="Save Entry"
+        skipLabel="Cancel"
+        onSubmit={handleJournal}
+        onCancel={() => setJournalModalOpen(false)}
       />
     </div>
   );

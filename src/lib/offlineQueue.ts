@@ -32,6 +32,20 @@ export type DungeonLogAllowanceMutation = {
   note?: string;
 };
 
+export type DungeonUndoAllowanceMutation = {
+  id: string;
+  type: "dungeon:undoAllowance";
+  dungeonId: string;
+  eventType: string;
+};
+
+export type DungeonJournalLogMutation = {
+  id: string;
+  type: "dungeon:journalLog";
+  dungeonId: string;
+  note: string;
+};
+
 export type DungeonLogExposureMutation = {
   id: string;
   type: "dungeon:logExposure";
@@ -76,10 +90,12 @@ export type Mutation =
   | DungeonEndRunMutation
   | DungeonWorkoutToggleMutation
   | DungeonLogAllowanceMutation
+  | DungeonUndoAllowanceMutation
   | DungeonLogExposureMutation
   | DungeonUndoExposureMutation
   | DungeonEnterMutation
   | DungeonSetStartDateMutation
+  | DungeonJournalLogMutation
   | ClerkUpdateHunterNameMutation
   | ClerkUpdateAvatarMutation;
 

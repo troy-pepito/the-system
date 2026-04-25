@@ -6,9 +6,11 @@ import {
   endRun,
   enterDungeon,
   logAllowanceEvent,
+  logJournalEntry,
   logRungExposure,
   setRunStartDate,
   toggleWorkout,
+  undoAllowanceEvent,
   undoRungExposure,
   getAllActiveRuns,
   getWeekWorkouts,
@@ -60,11 +62,17 @@ async function applyMutation(m: Mutation): Promise<void> {
     case "dungeon:logAllowance":
       await logAllowanceEvent(m.dungeonId, m.eventType, m.note);
       return;
+    case "dungeon:undoAllowance":
+      await undoAllowanceEvent(m.dungeonId, m.eventType);
+      return;
     case "dungeon:logExposure":
       await logRungExposure(m.dungeonId, m.rungId, m.note);
       return;
     case "dungeon:undoExposure":
       await undoRungExposure(m.dungeonId, m.rungId);
+      return;
+    case "dungeon:journalLog":
+      await logJournalEntry(m.dungeonId, m.note);
       return;
     case "dungeon:enter":
       await enterDungeon(m.dungeonId);
