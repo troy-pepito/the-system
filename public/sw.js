@@ -1,5 +1,5 @@
-const STATIC_CACHE = "system-static-v1";
-const RUNTIME_CACHE = "system-runtime-v1";
+const STATIC_CACHE = "system-static-v2";
+const RUNTIME_CACHE = "system-runtime-v2";
 
 const PRECACHE_URLS = ["/", "/portals", "/profile"];
 
@@ -50,10 +50,14 @@ self.addEventListener("fetch", (event) => {
     url.pathname === "/icon" ||
     url.pathname === "/apple-icon" ||
     url.pathname === "/icon1" ||
-    url.pathname === "/favicon.ico" ||
-    url.pathname === "/manifest.webmanifest"
+    url.pathname === "/favicon.ico"
   ) {
     event.respondWith(cacheFirst(req, STATIC_CACHE));
+    return;
+  }
+
+  if (url.pathname === "/manifest.webmanifest") {
+    event.respondWith(networkFirst(req, RUNTIME_CACHE));
     return;
   }
 
