@@ -402,46 +402,102 @@ function eventTone(type: string): string {
   return "text-cyan-300 border-cyan-500/40 bg-cyan-500/10";
 }
 
+function relativeDateLabel(iso: string): string {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const date = new Date(`${iso}T00:00:00`);
+  const diffDays = Math.round(
+    (today.getTime() - date.getTime()) / 86_400_000
+  );
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Yesterday";
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (date.getFullYear() === today.getFullYear()) {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+  }
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function groupEntriesByDate(
+  entries: JournalEntry[]
+): Array<[string, JournalEntry[]]> {
+  const map = new Map<string, JournalEntry[]>();
+  for (const e of entries) {
+    const arr = map.get(e.date) ?? [];
+    arr.push(e);
+    map.set(e.date, arr);
+  }
+  return Array.from(map.entries());
+}
+
 function JournalSection({ entries }: { entries: JournalEntry[] }) {
+  const groups = groupEntriesByDate(entries);
+
   return (
     <Card className="p-6">
-      <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-        Journal
-      </p>
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
+          Journal
+        </p>
+        {entries.length > 0 && (
+          <p className="text-[10px] text-slate-500 tracking-wider">
+            {entries.length}{" "}
+            {entries.length === 1 ? "entry" : "entries"} ·{" "}
+            {groups.length} {groups.length === 1 ? "day" : "days"}
+          </p>
+        )}
+      </div>
       {entries.length === 0 ? (
         <p className="text-xs text-slate-500 leading-relaxed">
           No entries yet. When you relapse, log a coffee, or mark an exposure,
           you'll be asked if you want to write a note — skip or save, your call.
         </p>
       ) : (
-        <ul className="space-y-4">
-          {entries.map((e) => {
-            const dungeon = getDungeon(e.dungeonId);
-            return (
-              <li
-                key={e.id}
-                className="border-l-2 border-cyan-500/30 pl-3 py-0.5"
-              >
-                <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <span className="text-[9px] tracking-[0.3em] uppercase text-slate-500 font-mono">
-                    {e.date}
-                  </span>
-                  <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
-                    {dungeon?.name ?? e.dungeonId}
-                  </span>
-                  <span
-                    className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${eventTone(e.type)}`}
-                  >
-                    {eventLabel(e.type)}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
-                  {e.note}
+        <div className="space-y-6">
+          {groups.map(([date, dayEntries]) => (
+            <div key={date}>
+              <div className="flex items-center gap-3 mb-3">
+                <p className="text-[11px] tracking-[0.3em] uppercase text-cyan-300 font-bold drop-shadow-[0_0_6px_rgba(34,211,238,0.4)]">
+                  {relativeDateLabel(date)}
                 </p>
-              </li>
-            );
-          })}
-        </ul>
+                <div className="flex-1 h-px bg-cyan-500/20" />
+                <p className="text-[9px] text-slate-600 font-mono">{date}</p>
+              </div>
+              <ul className="space-y-3">
+                {dayEntries.map((e) => {
+                  const dungeon = getDungeon(e.dungeonId);
+                  return (
+                    <li
+                      key={e.id}
+                      className="border-l-2 border-cyan-500/30 pl-3 py-0.5"
+                    >
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
+                          {dungeon?.name ?? e.dungeonId}
+                        </span>
+                        <span
+                          className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${eventTone(e.type)}`}
+                        >
+                          {eventLabel(e.type)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
+                        {e.note}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
       )}
     </Card>
   );
