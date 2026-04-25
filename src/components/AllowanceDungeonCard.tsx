@@ -104,18 +104,19 @@ export default function AllowanceDungeonCard({
     }
   }
 
-  async function handleJournal(note: string | null) {
+  async function handleJournal(note: string | null, isPublic?: boolean) {
     setJournalModalOpen(false);
     if (!note) return;
 
     try {
-      await logJournalEntry(dungeonId, note);
+      await logJournalEntry(dungeonId, note, isPublic ?? false);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:journalLog",
         dungeonId,
         note,
+        isPublic: isPublic ?? false,
       });
       drainQueue().catch(() => {});
     }
@@ -322,6 +323,7 @@ export default function AllowanceDungeonCard({
         confirmLabel="Save Entry"
         skipLabel="Cancel"
         cancelOnSkip
+        showPublicToggle
         onSubmit={handleJournal}
         onCancel={() => setJournalModalOpen(false)}
       />

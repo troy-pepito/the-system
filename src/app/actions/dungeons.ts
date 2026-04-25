@@ -445,6 +445,7 @@ export interface JournalEntry {
   type: string;
   date: string;
   note: string;
+  isPublic: boolean;
   createdAt: string;
 }
 
@@ -462,6 +463,7 @@ const getJournalEntriesCached = unstable_cache(
       type: e.type,
       date: e.date.toISOString().split("T")[0],
       note: e.note ?? "",
+      isPublic: e.isPublic,
       createdAt: e.createdAt.toISOString(),
     }));
   },
@@ -656,7 +658,8 @@ export async function undoAllowanceEvent(
 
 export async function logJournalEntry(
   dungeonId: string,
-  note: string
+  note: string,
+  isPublic = false
 ): Promise<void> {
   const userId = await requireUserId();
   const trimmed = note.trim();
@@ -672,6 +675,7 @@ export async function logJournalEntry(
       type: "journal",
       date: new Date(),
       note: trimmed,
+      isPublic,
     },
   });
   updateTag(TAG);

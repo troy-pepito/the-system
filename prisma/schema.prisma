@@ -34,6 +34,7 @@ model DungeonEvent {
   date      DateTime   @db.Date
   value     Float?
   note      String?
+  isPublic  Boolean    @default(false)
   createdAt DateTime   @default(now())
 }
 

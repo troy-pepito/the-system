@@ -44,6 +44,7 @@ export type DungeonJournalLogMutation = {
   type: "dungeon:journalLog";
   dungeonId: string;
   note: string;
+  isPublic?: boolean;
 };
 
 export type DungeonLogExposureMutation = {

@@ -474,6 +474,14 @@ export interface PublicDungeonRunSummary {
   streakDays: number;
 }
 
+export interface PublicJournalEntry {
+  id: number;
+  dungeonId: string;
+  date: string;
+  note: string;
+  createdAt: string;
+}
+
 export interface PublicHunterData {
   hunterId: string;
   hunterName: string;
@@ -491,6 +499,7 @@ export interface PublicHunterData {
   dimensions: PlayerSnapshot["dimensions"];
   unlocked: UnlockedAchievement[];
   heatmap: Record<string, number>;
+  publicJournal: PublicJournalEntry[];
 }
 
 export async function getPublicHunterData(
@@ -514,19 +523,30 @@ export async function getPublicHunterData(
     user.primaryEmailAddress?.emailAddress.split("@")[0] ||
     "Hunter";
 
-  const [snapshot, achievementRows, heatmap, runs] = await Promise.all([
-    buildSnapshot(hunterId),
-    prisma.achievement.findMany({
-      where: { userId: hunterId },
-      orderBy: { unlockedAt: "desc" },
-    }),
-    _buildHeatmap(hunterId),
-    prisma.dungeonRun.findMany({
-      where: { userId: hunterId, active: true },
-      orderBy: { createdAt: "desc" },
-      select: { dungeonId: true, startDate: true, active: true },
-    }),
-  ]);
+  const [snapshot, achievementRows, heatmap, runs, publicEvents] =
+    await Promise.all([
+      buildSnapshot(hunterId),
+      prisma.achievement.findMany({
+        where: { userId: hunterId },
+        orderBy: { unlockedAt: "desc" },
+      }),
+      _buildHeatmap(hunterId),
+      prisma.dungeonRun.findMany({
+        where: { userId: hunterId, active: true },
+        orderBy: { createdAt: "desc" },
+        select: { dungeonId: true, startDate: true, active: true },
+      }),
+      prisma.dungeonEvent.findMany({
+        where: {
+          run: { userId: hunterId },
+          isPublic: true,
+          note: { not: null },
+        },
+        include: { run: { select: { dungeonId: true } } },
+        orderBy: { createdAt: "desc" },
+        take: 50,
+      }),
+    ]);
 
   const activeRuns: PublicDungeonRunSummary[] = runs.map((r) => ({
     dungeonId: r.dungeonId,
@@ -557,5 +577,12 @@ export async function getPublicHunterData(
       unlockedAt: r.unlockedAt.toISOString(),
     })),
     heatmap,
+    publicJournal: publicEvents.map((e) => ({
+      id: e.id,
+      dungeonId: e.run.dungeonId,
+      date: e.date.toISOString().split("T")[0],
+      note: e.note ?? "",
+      createdAt: e.createdAt.toISOString(),
+    })),
   };
 }

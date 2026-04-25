@@ -206,6 +206,37 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
           <Heatmap activity={data.heatmap} />
         </Card>
 
+        {data.publicJournal.length > 0 && (
+          <Card className="p-6">
+            <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+              Reflections
+            </p>
+            <ul className="space-y-4">
+              {data.publicJournal.map((e) => {
+                const dungeon = getDungeon(e.dungeonId);
+                return (
+                  <li
+                    key={e.id}
+                    className="border-l-2 border-cyan-500/30 pl-3 py-0.5"
+                  >
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className="text-[9px] tracking-[0.3em] uppercase text-slate-500 font-mono">
+                        {e.date}
+                      </span>
+                      <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
+                        {dungeon?.name ?? e.dungeonId}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
+                      {e.note}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          </Card>
+        )}
+
         <Card className="p-6">
           <div className="flex items-center justify-between mb-5">
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">

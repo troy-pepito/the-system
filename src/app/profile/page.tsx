@@ -490,6 +490,11 @@ function JournalSection({ entries }: { entries: JournalEntry[] }) {
                         >
                           {eventLabel(e.type)}
                         </span>
+                        {e.isPublic && (
+                          <span className="text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm text-cyan-300 border-cyan-400/40 bg-cyan-500/5">
+                            ◉ Public
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
                         {e.note}

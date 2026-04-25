@@ -8,7 +8,7 @@ interface NoteModalProps {
   placeholder?: string;
   confirmLabel?: string;
   skipLabel?: string;
-  onSubmit: (note: string | null) => void;
+  onSubmit: (note: string | null, isPublic?: boolean) => void;
   onCancel?: () => void;
   tone?: "neutral" | "danger";
   /**
@@ -17,6 +17,11 @@ interface NoteModalProps {
    * "abort", not "do the action without writing about it."
    */
   cancelOnSkip?: boolean;
+  /**
+   * When true, renders a "Share to public profile" checkbox below the
+   * textarea. The chosen value is passed to onSubmit as the second arg.
+   */
+  showPublicToggle?: boolean;
 }
 
 export default function NoteModal(props: NoteModalProps) {
@@ -34,8 +39,10 @@ function NoteModalInner({
   onCancel,
   tone = "neutral",
   cancelOnSkip = false,
+  showPublicToggle = false,
 }: NoteModalProps) {
   const [note, setNote] = useState("");
+  const [isPublic, setIsPublic] = useState(false);
   const taRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -63,7 +70,10 @@ function NoteModalInner({
 
   function submit() {
     const trimmed = note.trim();
-    onSubmit(trimmed.length > 0 ? trimmed : null);
+    onSubmit(
+      trimmed.length > 0 ? trimmed : null,
+      showPublicToggle ? isPublic : undefined
+    );
   }
 
   return (
@@ -96,6 +106,20 @@ function NoteModalInner({
           rows={5}
           className="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-400/60 focus:outline-none text-sm text-slate-200 p-3 resize-none placeholder:text-slate-600 tracking-wide leading-relaxed"
         />
+
+        {showPublicToggle && (
+          <label className="flex items-center gap-2 mt-3 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+              className="w-4 h-4 accent-cyan-400 cursor-pointer"
+            />
+            <span className="text-[10px] tracking-[0.25em] uppercase text-slate-400">
+              Share to public profile
+            </span>
+          </label>
+        )}
 
         <div className="flex items-center justify-end gap-2 mt-4">
           <button

@@ -72,7 +72,7 @@ async function applyMutation(m: Mutation): Promise<void> {
       await undoRungExposure(m.dungeonId, m.rungId);
       return;
     case "dungeon:journalLog":
-      await logJournalEntry(m.dungeonId, m.note);
+      await logJournalEntry(m.dungeonId, m.note, m.isPublic);
       return;
     case "dungeon:enter":
       await enterDungeon(m.dungeonId);
