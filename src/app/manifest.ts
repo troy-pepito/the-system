@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Shivaliva Leveling",
-    short_name: "Shivaliva",
+    name: "Shivaliva Leveling: The System",
+    short_name: "The System",
     description: "Gamified self-improvement. Rank up in real life.",
     start_url: "/",
     scope: "/",
