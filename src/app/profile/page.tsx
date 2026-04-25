@@ -22,7 +22,6 @@ import {
 } from "@/app/actions/dungeons";
 import { getDungeon } from "@/lib/dungeons";
 import NotificationSettings from "@/components/NotificationSettings";
-import ShareProfileBar from "@/components/ShareProfileBar";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
 import {
   ATMOSPHERE_EVENT,
@@ -119,7 +118,6 @@ export default function ProfilePage() {
         </div>
 
         <HunterCard totalXp={stats.totalXp} scattered={stats.scattered} />
-        <ShareProfileBar />
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">

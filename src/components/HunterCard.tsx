@@ -2,6 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { Fragment, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { getLevelFromXp, getRank } from "@/lib/player";
 import { useTweenNumber } from "@/lib/useTweenNumber";
 import {
@@ -38,6 +39,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
   const [editingName, setEditingName] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
   const [savingName, setSavingName] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
 
   const rank = getRank(level);
   const rankIdx = RANKS.indexOf(rank as (typeof RANKS)[number]);
@@ -121,6 +123,16 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
     }
   }
 
+  async function handleShare() {
+    if (!user || typeof window === "undefined") return;
+    const url = `${window.location.origin}/h/${user.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 1800);
+    } catch {}
+  }
+
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !user) return;
@@ -162,9 +174,29 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
       <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-400 z-10 pointer-events-none" />
 
       <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.2),inset_0_0_20px_rgba(34,211,238,0.05)] p-5 sm:p-6">
-        <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase mb-4">
-          Hunter ID
-        </p>
+        <div className="flex items-center justify-between mb-4 gap-3">
+          <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
+            Hunter ID
+          </p>
+          {user && (
+            <div className="flex items-center gap-3 text-[9px] tracking-[0.3em] uppercase shrink-0">
+              <button
+                type="button"
+                onClick={handleShare}
+                className="text-slate-500 hover:text-cyan-300 transition-colors"
+              >
+                {shareCopied ? "✓ Copied" : "Share"}
+              </button>
+              <span className="text-slate-700">·</span>
+              <Link
+                href={`/h/${user.id}`}
+                className="text-slate-500 hover:text-cyan-300 transition-colors"
+              >
+                View Public
+              </Link>
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center gap-5">
           <button
