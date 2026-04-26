@@ -126,7 +126,7 @@ export default function AwakeningOverlay() {
       setTimeout(() => {
         localStorage.setItem(AWAKENED_KEY, "true");
         window.dispatchEvent(new Event(AWAKENED_EVENT));
-        router.push("/portals");
+        router.push("/guide");
       }, 900);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");

@@ -342,16 +342,75 @@ export default function GuidePage() {
           </p>
         </Section>
 
-        <Section title="8. Free During Launch">
+        <Section title="8. The Social Layer">
           <p>
-            Every feature is free for every hunter during launch — all seven
-            dungeons, all 64 achievements, daily quests, dimensions, the
-            activity heatmap, unlimited active runs.
+            Other hunters exist. The System lets you cross paths.
           </p>
           <p className="mt-3">
-            Early hunters who help us through launch will be remembered when
-            the System matures. That&apos;s the deal. Show up, hunt hard, and
-            the System has your back.
+            <span className="text-cyan-300 font-bold">Public Profile.</span>{" "}
+            Every hunter has a read-only profile at{" "}
+            <span className="font-mono text-cyan-300">/h/&lt;id&gt;</span> —
+            rank, level, active dungeons, dimensions, trophies. Other
+            signed-in hunters with your link can view it (not exposed to the
+            open internet). Find your share link on your{" "}
+            <Link href="/profile" className="text-cyan-300 hover:text-cyan-200 underline underline-offset-2">/profile</Link>{" "}
+            page.
+          </p>
+          <p className="mt-3">
+            <span className="text-cyan-300 font-bold">Friends.</span> Visit
+            another hunter&apos;s profile and tap{" "}
+            <span className="text-cyan-300 font-mono">+ Add Friend</span>.
+            They&apos;ll get a notification, accept, and you both appear on
+            each other&apos;s friends list. Friendship is the foundation —
+            group hunts and leaderboards build on top of it later.
+          </p>
+          <p className="mt-3">
+            <span className="text-cyan-300 font-bold">Journal Entries.</span>{" "}
+            When you relapse, log a coffee, complete a run, or just want to
+            write — a small note modal lets you save a reflection. Default
+            is private (only you see it on your profile). Tick{" "}
+            <span className="font-mono text-cyan-300">Share to public profile</span>{" "}
+            to surface that one entry on your public profile under
+            Reflections.
+          </p>
+        </Section>
+
+        <Section title="9. Reach & Reliability">
+          <p>
+            <span className="text-cyan-300 font-bold">Daily Reminders.</span>{" "}
+            On your profile, flip on the Daily Reminder toggle. The System
+            sends a morning push if your day went unused yesterday and an
+            evening push if today is slipping away. The message is
+            state-aware — relapsed yesterday gets a comeback nudge, fell
+            behind gets a pattern-break, on track gets a keep-going reset.
+          </p>
+          <p className="mt-3">
+            On iPhone, push only works if you&apos;ve installed the app to
+            your home screen via Safari&apos;s{" "}
+            <span className="text-cyan-300 font-mono">Share → Add to Home Screen</span>{" "}
+            (iOS 16.4+). On Android Chrome, just installing the PWA is
+            enough.
+          </p>
+          <p className="mt-3">
+            <span className="text-cyan-300 font-bold">Offline.</span> The app
+            works without a connection. On a plane, in the subway, in
+            bad-signal zones — complete quests, log relapses, write journal
+            entries. Everything queues locally and drains to the server the
+            moment you reconnect. An amber banner shows when you&apos;re
+            offline and how many actions are waiting to sync.
+          </p>
+        </Section>
+
+        <Section title="10. Currently Free">
+          <p>
+            Every feature is currently free — every dungeon, every
+            achievement, daily quests, dimensions, the heatmap, friends,
+            journal, push, unlimited active runs.
+          </p>
+          <p className="mt-3">
+            If paid tiers ever exist, core self-hunting stays free.
+            Competition with yourself shouldn&apos;t have a paywall. Early
+            hunters get remembered.
           </p>
         </Section>
 
@@ -360,10 +419,10 @@ export default function GuidePage() {
             The quest remains open.
           </p>
           <Link
-            href="/"
+            href="/portals"
             className="inline-block px-8 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white transition-all shadow-[0_0_20px_rgba(34,211,238,0.4)]"
           >
-            Accept the System →
+            Enter the Portal Registry →
           </Link>
         </div>
       </article>

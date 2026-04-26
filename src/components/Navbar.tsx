@@ -105,6 +105,7 @@ export default function Navbar() {
             {navLink("/", "Status")}
             {navLink("/portals", "Portals")}
             {navLink("/profile", "Profile")}
+            {navLink("/guide", "Manual")}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
             {showUpgrade && (
@@ -138,10 +139,11 @@ export default function Navbar() {
             {currentXp} / {xpToNext} XP
           </p>
         </div>
-        <div className="sm:hidden flex justify-center gap-6 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
+        <div className="sm:hidden flex justify-center gap-5 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
           {navLink("/", "Status")}
           {navLink("/portals", "Portals")}
           {navLink("/profile", "Profile")}
+          {navLink("/guide", "Manual")}
         </div>
       </div>
       <Paywall open={paywallOpen} onClose={() => setPaywallOpen(false)} />
