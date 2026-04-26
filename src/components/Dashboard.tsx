@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import StreakCard from "@/components/StreakCard";
 import AllowanceDungeonCard from "@/components/AllowanceDungeonCard";
 import DailyQuests from "@/components/DailyQuests";
@@ -92,6 +93,28 @@ export default function Dashboard() {
             initialLifetime={dashboard.lifetimeRewards}
             priorComboDays={dashboard.priorComboDays}
           />
+        )}
+
+        {dashboard && activeRuns.length === 0 && (
+          <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.2),inset_0_0_20px_rgba(34,211,238,0.05)] p-6 text-center">
+            <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-300 pointer-events-none" />
+            <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-cyan-300 pointer-events-none" />
+            <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
+            <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-3">
+              [ Portal Registry Awaits ]
+            </p>
+            <p className="text-sm text-slate-300 leading-relaxed mb-5 max-w-sm mx-auto">
+              No active dungeons yet. Choose your first portal to begin
+              shaping your hunter&apos;s path.
+            </p>
+            <Link
+              href="/portals"
+              className="inline-block px-6 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white transition-all shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:shadow-[0_0_30px_rgba(34,211,238,0.8)]"
+            >
+              Enter Portal Registry →
+            </Link>
+          </div>
         )}
 
         {dashboard &&
