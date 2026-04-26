@@ -477,6 +477,7 @@ export interface PublicDungeonRunSummary {
 export interface PublicJournalEntry {
   id: number;
   dungeonId: string;
+  type: string;
   date: string;
   note: string;
   createdAt: string;
@@ -580,6 +581,7 @@ export async function getPublicHunterData(
     publicJournal: publicEvents.map((e) => ({
       id: e.id,
       dungeonId: e.run.dungeonId,
+      type: e.type,
       date: e.date.toISOString().split("T")[0],
       note: e.note ?? "",
       createdAt: e.createdAt.toISOString(),

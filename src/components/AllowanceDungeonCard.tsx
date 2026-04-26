@@ -122,7 +122,7 @@ export default function AllowanceDungeonCard({
     }
   }
 
-  async function handleLog(note: string | null) {
+  async function handleLog(note: string | null, isPublic?: boolean) {
     setLogModalOpen(false);
     const nextCount = monthCount + 1;
     const willRelapse = nextCount > LIMIT;
@@ -149,7 +149,8 @@ export default function AllowanceDungeonCard({
       const { count } = await logAllowanceEvent(
         dungeonId,
         eventType,
-        note ?? undefined
+        note ?? undefined,
+        isPublic ?? false
       );
       setMonthCount(count);
     } catch {
@@ -158,7 +159,7 @@ export default function AllowanceDungeonCard({
         type: "dungeon:logAllowance",
         dungeonId,
         eventType,
-        ...(note ? { note } : {}),
+        ...(note ? { note, isPublic: isPublic ?? false } : {}),
       });
       drainQueue().catch(() => {});
     } finally {
@@ -313,6 +314,7 @@ export default function AllowanceDungeonCard({
         confirmLabel={atLimit ? "Log Relapse" : `Log ${unit}`}
         skipLabel="Skip Note"
         tone={atLimit ? "danger" : "neutral"}
+        showPublicToggle
         onSubmit={handleLog}
         onCancel={() => setLogModalOpen(false)}
       />

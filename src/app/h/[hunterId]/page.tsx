@@ -231,6 +231,11 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
                       <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
                         {dungeon?.name ?? e.dungeonId}
                       </span>
+                      <span
+                        className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${publicEntryTone(e.type)}`}
+                      >
+                        {publicEntryLabel(e.type)}
+                      </span>
                     </div>
                     <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
                       {e.note}
@@ -306,6 +311,22 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
       </div>
     </main>
   );
+}
+
+function publicEntryLabel(type: string): string {
+  if (type === "relapse") return "Relapse";
+  if (type === "completed") return "Completed";
+  if (type === "journal") return "Journal";
+  return type.replace(/-/g, " ");
+}
+
+function publicEntryTone(type: string): string {
+  if (type === "relapse") return "text-red-300 border-red-500/40 bg-red-500/10";
+  if (type === "completed")
+    return "text-amber-300 border-amber-500/40 bg-amber-500/10";
+  if (type === "journal")
+    return "text-slate-300 border-slate-600 bg-slate-800/60";
+  return "text-cyan-300 border-cyan-500/40 bg-cyan-500/10";
 }
 
 function StatLine({ label, value }: { label: string; value: number }) {

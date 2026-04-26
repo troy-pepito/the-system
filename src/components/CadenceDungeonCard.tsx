@@ -123,7 +123,7 @@ export default function CadenceDungeonCard({
     }
   }
 
-  async function handleRelapse(note: string | null) {
+  async function handleRelapse(note: string | null, isPublic?: boolean) {
     setRelapseModalOpen(false);
     track("relapse", {
       dungeon_id: dungeonId,
@@ -139,14 +139,14 @@ export default function CadenceDungeonCard({
     notifyStatsUpdated();
 
     try {
-      await endRun(dungeonId, "relapse", note ?? undefined);
+      await endRun(dungeonId, "relapse", note ?? undefined, isPublic ?? false);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:endRun",
         dungeonId,
         reason: "relapse",
-        ...(note ? { note } : {}),
+        ...(note ? { note, isPublic: isPublic ?? false } : {}),
       });
       drainQueue().catch(() => {});
     }
@@ -316,6 +316,7 @@ export default function CadenceDungeonCard({
         skipLabel="Cancel"
         tone="danger"
         cancelOnSkip
+        showPublicToggle
         onSubmit={handleRelapse}
         onCancel={() => setRelapseModalOpen(false)}
       />

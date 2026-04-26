@@ -88,7 +88,7 @@ export default function TimedDungeonCard({
     }
   }
 
-  async function handleClaimVictory(note: string | null) {
+  async function handleClaimVictory(note: string | null, isPublic?: boolean) {
     setVictoryModalOpen(false);
     notifyReward({ xp: XP_PER_COMPLETION });
     setStartDate(null);
@@ -99,20 +99,20 @@ export default function TimedDungeonCard({
     notifyStatsUpdated();
 
     try {
-      await endRun(dungeonId, "completed", note ?? undefined);
+      await endRun(dungeonId, "completed", note ?? undefined, isPublic ?? false);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:endRun",
         dungeonId,
         reason: "completed",
-        ...(note ? { note } : {}),
+        ...(note ? { note, isPublic: isPublic ?? false } : {}),
       });
       drainQueue().catch(() => {});
     }
   }
 
-  async function handleRelapse(note: string | null) {
+  async function handleRelapse(note: string | null, isPublic?: boolean) {
     setRelapseModalOpen(false);
     track("relapse", {
       dungeon_id: dungeonId,
@@ -127,14 +127,14 @@ export default function TimedDungeonCard({
     notifyStatsUpdated();
 
     try {
-      await endRun(dungeonId, "relapse", note ?? undefined);
+      await endRun(dungeonId, "relapse", note ?? undefined, isPublic ?? false);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:endRun",
         dungeonId,
         reason: "relapse",
-        ...(note ? { note } : {}),
+        ...(note ? { note, isPublic: isPublic ?? false } : {}),
       });
       drainQueue().catch(() => {});
     }
@@ -250,6 +250,7 @@ export default function TimedDungeonCard({
         skipLabel="Cancel"
         tone="danger"
         cancelOnSkip
+        showPublicToggle
         onSubmit={handleRelapse}
         onCancel={() => setRelapseModalOpen(false)}
       />
@@ -259,6 +260,7 @@ export default function TimedDungeonCard({
         placeholder="How did this run change you? (optional)"
         confirmLabel="Claim Victory"
         skipLabel="Skip Note"
+        showPublicToggle
         onSubmit={handleClaimVictory}
         onCancel={() => setVictoryModalOpen(false)}
       />

@@ -81,7 +81,7 @@ export default function ProgressiveDungeonCard({
     }
   }
 
-  async function handleLog(note: string | null) {
+  async function handleLog(note: string | null, isPublic?: boolean) {
     setLogModalOpen(false);
     if (!currentRung || busy) return;
     setBusy(true);
@@ -114,7 +114,8 @@ export default function ProgressiveDungeonCard({
       const { count, dungeonCleared: cleared } = await logRungExposure(
         dungeonId,
         rungId,
-        note ?? undefined
+        note ?? undefined,
+        isPublic ?? false
       );
       setCounts((prev) => ({ ...prev, [rungId]: count }));
       if (cleared) {
@@ -134,7 +135,7 @@ export default function ProgressiveDungeonCard({
         type: "dungeon:logExposure",
         dungeonId,
         rungId,
-        ...(note ? { note } : {}),
+        ...(note ? { note, isPublic: isPublic ?? false } : {}),
       });
       drainQueue().catch(() => {});
     } finally {
@@ -172,7 +173,7 @@ export default function ProgressiveDungeonCard({
     }
   }
 
-  async function handleRelapse(note: string | null) {
+  async function handleRelapse(note: string | null, isPublic?: boolean) {
     setRelapseModalOpen(false);
     track("relapse", {
       dungeon_id: dungeonId,
@@ -186,14 +187,14 @@ export default function ProgressiveDungeonCard({
     notifyStatsUpdated();
 
     try {
-      await endRun(dungeonId, "relapse", note ?? undefined);
+      await endRun(dungeonId, "relapse", note ?? undefined, isPublic ?? false);
     } catch {
       enqueueMutation({
         id: newMutationId(),
         type: "dungeon:endRun",
         dungeonId,
         reason: "relapse",
-        ...(note ? { note } : {}),
+        ...(note ? { note, isPublic: isPublic ?? false } : {}),
       });
       drainQueue().catch(() => {});
     }
@@ -338,6 +339,7 @@ export default function ProgressiveDungeonCard({
         placeholder="What did you face? How did it go? (optional)"
         confirmLabel="Log Exposure"
         skipLabel="Skip Note"
+        showPublicToggle
         onSubmit={handleLog}
         onCancel={() => setLogModalOpen(false)}
       />
@@ -349,6 +351,7 @@ export default function ProgressiveDungeonCard({
         skipLabel="Cancel"
         tone="danger"
         cancelOnSkip
+        showPublicToggle
         onSubmit={handleRelapse}
         onCancel={() => setRelapseModalOpen(false)}
       />

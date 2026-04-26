@@ -245,7 +245,8 @@ export async function setRunStartDate(
 export async function endRun(
   dungeonId: string,
   reason: "relapse" | "completed",
-  note?: string
+  note?: string,
+  isPublic = false
 ): Promise<void> {
   const userId = await requireUserId();
   const trimmedNote = note?.trim();
@@ -260,6 +261,7 @@ export async function endRun(
           type: reason,
           date: new Date(),
           note: trimmedNote,
+          isPublic,
         },
       });
     }
@@ -507,7 +509,8 @@ export async function getRungCounts(
 export async function logRungExposure(
   dungeonId: string,
   rungId: string,
-  note?: string
+  note?: string,
+  isPublic = false
 ): Promise<{ count: number; rungCleared: boolean; dungeonCleared: boolean }> {
   const userId = await requireUserId();
   const dungeon = getDungeon(dungeonId);
@@ -529,7 +532,7 @@ export async function logRungExposure(
       type: rungId,
       date: new Date(),
       value: 1,
-      ...(trimmedNote ? { note: trimmedNote } : {}),
+      ...(trimmedNote ? { note: trimmedNote, isPublic } : {}),
     },
   });
 
@@ -589,7 +592,8 @@ export async function undoRungExposure(
 export async function logAllowanceEvent(
   dungeonId: string,
   type: string,
-  note?: string
+  note?: string,
+  isPublic = false
 ): Promise<{ count: number; relapsed: boolean }> {
   const userId = await requireUserId();
   const dungeon = getDungeon(dungeonId);
@@ -609,7 +613,7 @@ export async function logAllowanceEvent(
       type,
       date: now,
       value: 1,
-      ...(trimmedNote ? { note: trimmedNote } : {}),
+      ...(trimmedNote ? { note: trimmedNote, isPublic } : {}),
     },
   });
 
