@@ -108,20 +108,6 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       }
     }
 
-    // Relapsed runs don't bank streak XP (you didn't complete the dungeon),
-    // but their tier achievements persist — maxStreak carries over so
-    // dimension multipliers from cleared tiers stay earned.
-    if (!run.active && run.endReason === "relapse") {
-      if (run.startDate) {
-        const days = Math.floor(
-          (run.updatedAt.getTime() - run.startDate.getTime()) /
-            (1000 * 60 * 60 * 24)
-        );
-        const safe = Math.max(0, days);
-        if (safe > existing.maxStreak) existing.maxStreak = safe;
-      }
-    }
-
     runsByDungeon[run.dungeonId] = existing;
   }
 
