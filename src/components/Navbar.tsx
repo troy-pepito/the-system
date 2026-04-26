@@ -7,19 +7,13 @@ import Paywall from "@/components/Paywall";
 import { isPricingEnabled, isUserPro } from "@/lib/pricing";
 import {
   STATS_UPDATED_EVENT,
-  XP_PER_STREAK_DAY,
-  XP_PER_WORKOUT,
-  XP_PER_EXPOSURE,
-  XP_PER_COMPLETION,
-  computeStreakDays,
   getLevelFromXp,
   getRank,
   hasPendingMutations,
   notifyRankUp,
 } from "@/lib/player";
 import { useTweenNumber } from "@/lib/useTweenNumber";
-import { getAllActiveRuns, getBonusXp } from "@/app/actions/dungeons";
-import { getLifetimeRewards } from "@/app/actions/quests";
+import { getProfileStats } from "@/app/actions/achievements";
 import { readCache, writeCache } from "@/lib/offlineCache";
 
 const TOTAL_XP_CACHE_KEY = "totalXp";
@@ -52,24 +46,10 @@ export default function Navbar() {
   useEffect(() => {
     const recompute = async () => {
       try {
-        const [runs, rewards, bonus] = await Promise.all([
-          getAllActiveRuns(),
-          getLifetimeRewards(),
-          getBonusXp(),
-        ]);
+        const stats = await getProfileStats();
         if (hasPendingMutations()) return;
-        const totalStreakDays = runs.reduce(
-          (sum, r) => sum + computeStreakDays(r.startDate),
-          0
-        );
-        const bonusXp =
-          bonus.workouts * XP_PER_WORKOUT +
-          bonus.exposures * XP_PER_EXPOSURE +
-          bonus.completions * XP_PER_COMPLETION +
-          bonus.bankedStreakDays * XP_PER_STREAK_DAY;
-        const xp = totalStreakDays * XP_PER_STREAK_DAY + rewards.xp + bonusXp;
-        writeCache(TOTAL_XP_CACHE_KEY, xp);
-        setTotalXp(xp);
+        writeCache(TOTAL_XP_CACHE_KEY, stats.totalXp);
+        setTotalXp(stats.totalXp);
       } catch {}
     };
     const onEvent = (e: Event) => {

@@ -1,10 +1,9 @@
 "use server";
 
 import { clerkClient } from "@clerk/nextjs/server";
-import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
-import { getLevelFromXp, getRank } from "@/lib/player";
+import { getPlayerLevelForUser } from "@/app/actions/achievements";
 import { sendPushToUser } from "@/lib/push";
 
 export type FriendStatus =
@@ -45,76 +44,11 @@ function clerkDisplayName(user: {
   );
 }
 
-const getTotalXpCached = unstable_cache(
-  async (userId: string) => {
-    const [runs, events, quests] = await Promise.all([
-      prisma.dungeonRun.findMany({
-        where: { userId },
-        select: {
-          startDate: true,
-          active: true,
-          endReason: true,
-          updatedAt: true,
-        },
-      }),
-      prisma.dungeonEvent.findMany({
-        where: { run: { userId } },
-        select: { type: true },
-      }),
-      prisma.questCompletion.count({ where: { userId } }),
-    ]);
-
-    let activeStreakDays = 0;
-    let bankedStreakDays = 0;
-    let completedRunCount = 0;
-    for (const r of runs) {
-      if (r.active && r.startDate) {
-        activeStreakDays += Math.max(
-          0,
-          Math.floor(
-            (Date.now() - r.startDate.getTime()) / (1000 * 60 * 60 * 24)
-          )
-        );
-      }
-      if (!r.active && r.endReason === "completed") {
-        completedRunCount++;
-        if (r.startDate) {
-          bankedStreakDays += Math.max(
-            0,
-            Math.floor(
-              (r.updatedAt.getTime() - r.startDate.getTime()) /
-                (1000 * 60 * 60 * 24)
-            )
-          );
-        }
-      }
-    }
-
-    return {
-      activeStreakDays,
-      bankedStreakDays,
-      completedRunCount,
-      eventCount: events.length,
-      questCount: quests,
-    };
-  },
-  ["friend-totals"],
-  { tags: ["player:stats"] }
-);
-
-async function levelForUser(userId: string): Promise<{ level: number; rank: string }> {
-  // Lightweight XP estimate — enough to display level/rank on cards.
-  // This intentionally uses a simpler formula than buildSnapshot to avoid
-  // a circular dep / heavy query for the friends list.
-  const stats = await getTotalXpCached(userId);
-  const xp =
-    stats.activeStreakDays * 10 +
-    stats.bankedStreakDays * 10 +
-    stats.completedRunCount * 100 +
-    stats.eventCount * 5 +
-    stats.questCount * 5;
-  const { level } = getLevelFromXp(xp);
-  return { level, rank: getRank(level) };
+async function levelForUser(
+  userId: string
+): Promise<{ level: number; rank: string }> {
+  const { level, rank } = await getPlayerLevelForUser(userId);
+  return { level, rank };
 }
 
 export async function requestFriend(targetId: string): Promise<void> {

@@ -41,6 +41,21 @@ export default function Dashboard() {
       .catch(() => {});
   };
 
+  const handleRunEnded = (dungeonId: string) => {
+    // Drop the card from the local list immediately so it doesn't linger
+    // while the server reload is in flight.
+    setDashboard((d) =>
+      d
+        ? {
+            ...d,
+            activeRuns: d.activeRuns.filter((r) => r.dungeonId !== dungeonId),
+            details: { ...d.details, [dungeonId]: {} },
+          }
+        : d
+    );
+    reload();
+  };
+
   useEffect(() => {
     reload();
     const onEvent = (e: Event) => {
@@ -64,14 +79,35 @@ export default function Dashboard() {
   useEffect(() => {
     if (!dashboard) return;
     if (initialHashScrollDone.current) return;
-    initialHashScrollDone.current = true;
     const hash = window.location.hash;
-    if (!hash) return;
-    const target = document.getElementById(hash.slice(1));
-    if (!target) return;
-    requestAnimationFrame(() => {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    if (!hash) {
+      initialHashScrollDone.current = true;
+      return;
+    }
+    // Retry up to 5 times — the dungeon card might not be in the DOM
+    // yet when this effect first fires (especially on first nav from
+    // /portals → /#dungeon-X with a freshly entered run).
+    let attempts = 0;
+    let cancelled = false;
+    const tryScroll = () => {
+      if (cancelled) return;
+      const target = document.getElementById(hash.slice(1));
+      if (target) {
+        initialHashScrollDone.current = true;
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      attempts++;
+      if (attempts >= 8) {
+        initialHashScrollDone.current = true;
+        return;
+      }
+      setTimeout(tryScroll, 80);
+    };
+    tryScroll();
+    return () => {
+      cancelled = true;
+    };
   }, [dashboard]);
 
   const activeRuns = dashboard?.activeRuns ?? [];
@@ -122,6 +158,7 @@ export default function Dashboard() {
             const d = getDungeon(run.dungeonId);
             if (!d) return null;
             const detail = details[run.dungeonId] ?? {};
+            const handleEnded = () => handleRunEnded(run.dungeonId);
             let card: React.ReactNode = null;
             if (d.ruleType === "continuous_streak") {
               card = (
@@ -129,7 +166,7 @@ export default function Dashboard() {
                   dungeonId={run.dungeonId}
                   initialRun={run}
                   onStreakChange={reload}
-                  onRelapse={reload}
+                  onRelapse={handleEnded}
                 />
               );
             } else if (d.ruleType === "allowance") {
@@ -140,7 +177,7 @@ export default function Dashboard() {
                   initialRun={run}
                   initialMonthCount={detail.monthCount ?? 0}
                   onStreakChange={reload}
-                  onRelapse={reload}
+                  onRelapse={handleEnded}
                 />
               );
             } else if (d.ruleType === "timed") {
@@ -148,8 +185,8 @@ export default function Dashboard() {
                 <TimedDungeonCard
                   dungeonId={run.dungeonId}
                   initialRun={run}
-                  onRelapse={reload}
-                  onComplete={reload}
+                  onRelapse={handleEnded}
+                  onComplete={handleEnded}
                 />
               );
             } else if (d.ruleType === "cadence") {
@@ -158,7 +195,7 @@ export default function Dashboard() {
                   dungeonId={run.dungeonId}
                   initialRun={run}
                   initialWeekWorkouts={detail.weekWorkouts ?? []}
-                  onRelapse={reload}
+                  onRelapse={handleEnded}
                 />
               );
             } else if (d.ruleType === "progressive") {
@@ -167,8 +204,8 @@ export default function Dashboard() {
                   dungeonId={run.dungeonId}
                   initialActive={run.active}
                   initialRungCounts={detail.rungCounts ?? {}}
-                  onRelapse={reload}
-                  onComplete={reload}
+                  onRelapse={handleEnded}
+                  onComplete={handleEnded}
                 />
               );
             }
