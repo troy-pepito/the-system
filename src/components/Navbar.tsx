@@ -105,7 +105,6 @@ export default function Navbar() {
             {navLink("/", "Status")}
             {navLink("/portals", "Portals")}
             {navLink("/profile", "Profile")}
-            {navLink("/guide", "Manual")}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
             {showUpgrade && (
@@ -143,7 +142,6 @@ export default function Navbar() {
           {navLink("/", "Status")}
           {navLink("/portals", "Portals")}
           {navLink("/profile", "Profile")}
-          {navLink("/guide", "Manual")}
         </div>
       </div>
       <Paywall open={paywallOpen} onClose={() => setPaywallOpen(false)} />

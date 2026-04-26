@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Chakra_Petch } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import AwakeningOverlay from "@/components/AwakeningOverlay";
 import AchievementToast from "@/components/AchievementToast";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
@@ -91,6 +92,7 @@ export default function RootLayout({
               <Navbar />
             </SignedIn>
             <PageTransition>{children}</PageTransition>
+            <Footer />
             <SignedIn>
               <CacheWarmer />
               <OfflineSyncManager />
