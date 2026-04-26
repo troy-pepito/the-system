@@ -10,12 +10,9 @@ import {
 } from "@/lib/player";
 import {
   enterDungeon,
-  endRun,
-  logJournalEntry,
   logRungExposure,
   undoRungExposure,
 } from "@/app/actions/dungeons";
-import { track } from "@/lib/analytics";
 import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
 import {
@@ -23,6 +20,10 @@ import {
   adjustRungCountInCache,
   endRunInCache,
 } from "@/lib/dashboardCacheOps";
+import {
+  useEndRunAction,
+  useJournalAction,
+} from "@/lib/dungeonActions";
 import NoteModal from "@/components/NoteModal";
 
 interface ProgressiveDungeonCardProps {
@@ -41,38 +42,40 @@ export default function ProgressiveDungeonCard({
   onComplete,
 }: ProgressiveDungeonCardProps) {
   const dungeon = getDungeon(dungeonId);
+  const dungeonName = dungeon?.name ?? dungeonId;
   const RUNGS = dungeon?.progressive?.rungs ?? [];
 
   const [active, setActive] = useState<boolean>(initialActive);
   const [counts, setCounts] =
     useState<Record<string, number>>(initialRungCounts);
   const [busy, setBusy] = useState(false);
-  const [relapseModalOpen, setRelapseModalOpen] = useState(false);
   const [logModalOpen, setLogModalOpen] = useState(false);
-  const [journalModalOpen, setJournalModalOpen] = useState(false);
-
-  async function handleJournal(note: string | null, isPublic?: boolean) {
-    setJournalModalOpen(false);
-    if (!note) return;
-    try {
-      await logJournalEntry(dungeonId, note, isPublic ?? false);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:journalLog",
-        dungeonId,
-        note,
-        isPublic: isPublic ?? false,
-      });
-      drainQueue().catch(() => {});
-    }
-  }
 
   const currentRungIndex = RUNGS.findIndex(
     (r) => (counts[r.id] ?? 0) < r.target
   );
   const dungeonCleared = currentRungIndex === -1 && RUNGS.length > 0;
   const currentRung = currentRungIndex >= 0 ? RUNGS[currentRungIndex] : null;
+
+  const journal = useJournalAction({ dungeonId, dungeonName });
+  const relapse = useEndRunAction({
+    dungeonId,
+    dungeonName,
+    reason: "relapse",
+    ruleType: "progressive",
+    trackProperties: { current_rung: currentRung?.id ?? null },
+    modalOverrides: {
+      title: `Abandon Ladder — ${dungeonName}`,
+      placeholder: "What stopped the climb? (optional)",
+      confirmLabel: "Confirm Abandon",
+    },
+    onLocalReset: () => {
+      setActive(false);
+      setCounts({});
+      endRunInCache(dungeonId);
+      onRelapse?.();
+    },
+  });
 
   async function handleEnsureActive() {
     if (!active) {
@@ -173,33 +176,6 @@ export default function ProgressiveDungeonCard({
     }
   }
 
-  async function handleRelapse(note: string | null, isPublic?: boolean) {
-    setRelapseModalOpen(false);
-    track("relapse", {
-      dungeon_id: dungeonId,
-      rule_type: "progressive",
-      current_rung: currentRung?.id ?? null,
-    });
-    setActive(false);
-    setCounts({});
-    endRunInCache(dungeonId);
-    if (onRelapse) onRelapse();
-    notifyStatsUpdated();
-
-    try {
-      await endRun(dungeonId, "relapse", note ?? undefined, isPublic ?? false);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:endRun",
-        dungeonId,
-        reason: "relapse",
-        ...(note ? { note, isPublic: isPublic ?? false } : {}),
-      });
-      drainQueue().catch(() => {});
-    }
-  }
-
   const currentCount = currentRung ? counts[currentRung.id] ?? 0 : 0;
   const currentPercent = currentRung
     ? Math.min(100, Math.round((currentCount / currentRung.target) * 100))
@@ -208,7 +184,7 @@ export default function ProgressiveDungeonCard({
   return (
     <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
       <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">
-        {dungeon?.name ?? dungeonId}
+        {dungeonName}
       </p>
 
       {dungeonCleared ? (
@@ -315,13 +291,13 @@ export default function ProgressiveDungeonCard({
           {active && (
             <div className="flex flex-col gap-2 items-stretch">
               <button
-                onClick={() => setJournalModalOpen(true)}
+                onClick={journal.open}
                 className="px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
               >
                 + Journal Entry
               </button>
               <button
-                onClick={() => setRelapseModalOpen(true)}
+                onClick={relapse.open}
                 className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
               >
                 Abandon Ladder — Reset
@@ -343,29 +319,8 @@ export default function ProgressiveDungeonCard({
         onSubmit={handleLog}
         onCancel={() => setLogModalOpen(false)}
       />
-      <NoteModal
-        open={relapseModalOpen}
-        title={`Abandon Ladder — ${dungeon?.name ?? dungeonId}`}
-        placeholder="What stopped the climb? (optional)"
-        confirmLabel="Confirm Abandon"
-        skipLabel="Cancel"
-        tone="danger"
-        cancelOnSkip
-        showPublicToggle
-        onSubmit={handleRelapse}
-        onCancel={() => setRelapseModalOpen(false)}
-      />
-      <NoteModal
-        open={journalModalOpen}
-        title={`Journal — ${dungeon?.name ?? dungeonId}`}
-        placeholder="What's on your mind today?"
-        confirmLabel="Save Entry"
-        skipLabel="Cancel"
-        cancelOnSkip
-        showPublicToggle
-        onSubmit={handleJournal}
-        onCancel={() => setJournalModalOpen(false)}
-      />
+      <NoteModal {...relapse.modalProps} />
+      <NoteModal {...journal.modalProps} />
     </div>
   );
 }

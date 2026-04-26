@@ -3,19 +3,16 @@ import { useState } from "react";
 import { getDungeon } from "@/lib/dungeons";
 import { computeStreakDays, notifyStatsUpdated } from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
-import {
-  setRunStartDate,
-  endRun,
-  logJournalEntry,
-  type DungeonRunState,
-} from "@/app/actions/dungeons";
-import { track } from "@/lib/analytics";
-import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
-import { drainQueue } from "@/lib/offlineDrain";
+import { type DungeonRunState } from "@/app/actions/dungeons";
 import {
   endRunInCache,
   setRunStartDateInCache,
 } from "@/lib/dashboardCacheOps";
+import {
+  commitSetStartDate,
+  useEndRunAction,
+  useJournalAction,
+} from "@/lib/dungeonActions";
 import NoteModal from "@/components/NoteModal";
 
 interface StreakCardProps {
@@ -32,79 +29,38 @@ export default function StreakCard({
   onRelapse,
 }: StreakCardProps) {
   const dungeon = getDungeon(dungeonId);
+  const dungeonName = dungeon?.name ?? dungeonId;
   const TIERS = dungeon?.tiers ?? [];
 
   const [startDate, setStartDate] = useState<string | null>(
     initialRun.startDate
   );
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
-  const [relapseModalOpen, setRelapseModalOpen] = useState(false);
-  const [journalModalOpen, setJournalModalOpen] = useState(false);
 
-  async function handleJournal(note: string | null, isPublic?: boolean) {
-    setJournalModalOpen(false);
-    if (!note) return;
-    try {
-      await logJournalEntry(dungeonId, note, isPublic ?? false);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:journalLog",
-        dungeonId,
-        note,
-        isPublic: isPublic ?? false,
-      });
-      drainQueue().catch(() => {});
-    }
-  }
+  const journal = useJournalAction({ dungeonId, dungeonName });
+  const relapse = useEndRunAction({
+    dungeonId,
+    dungeonName,
+    reason: "relapse",
+    ruleType: "continuous_streak",
+    trackProperties: { streak_days: streak },
+    onLocalReset: () => {
+      setStartDate(null);
+      setStreak(0);
+      endRunInCache(dungeonId);
+      onStreakChange?.(0);
+      onRelapse?.();
+    },
+  });
 
   async function handleDatePick(date: string) {
     setStartDate(date);
     const days = computeStreakDays(date);
     setStreak(days);
     setRunStartDateInCache(dungeonId, date);
-    if (onStreakChange) onStreakChange(days);
+    onStreakChange?.(days);
     notifyStatsUpdated();
-
-    try {
-      await setRunStartDate(dungeonId, date);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:setStartDate",
-        dungeonId,
-        dateIso: date,
-      });
-      drainQueue().catch(() => {});
-    }
-  }
-
-  async function handleRelapse(note: string | null, isPublic?: boolean) {
-    setRelapseModalOpen(false);
-    track("relapse", {
-      dungeon_id: dungeonId,
-      rule_type: "continuous_streak",
-      streak_days: streak,
-    });
-    setStartDate(null);
-    setStreak(0);
-    endRunInCache(dungeonId);
-    if (onStreakChange) onStreakChange(0);
-    if (onRelapse) onRelapse();
-    notifyStatsUpdated();
-
-    try {
-      await endRun(dungeonId, "relapse", note ?? undefined, isPublic ?? false);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:endRun",
-        dungeonId,
-        reason: "relapse",
-        ...(note ? { note, isPublic: isPublic ?? false } : {}),
-      });
-      drainQueue().catch(() => {});
-    }
+    await commitSetStartDate(dungeonId, date);
   }
 
   const highestClearedIndex = TIERS.filter((t) => streak >= t.days).length - 1;
@@ -117,7 +73,7 @@ export default function StreakCard({
   return (
     <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
       <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">
-        {dungeon?.name ?? dungeonId}
+        {dungeonName}
       </p>
       {startDate ? (
         <div className="space-y-4">
@@ -173,13 +129,13 @@ export default function StreakCard({
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
           <div className="flex flex-col gap-2 items-stretch">
             <button
-              onClick={() => setJournalModalOpen(true)}
+              onClick={journal.open}
               className="px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
             >
               + Journal Entry
             </button>
             <button
-              onClick={() => setRelapseModalOpen(true)}
+              onClick={relapse.open}
               className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
             >
               Relapse — Reset
@@ -196,29 +152,8 @@ export default function StreakCard({
         </div>
       )}
 
-      <NoteModal
-        open={relapseModalOpen}
-        title={`Relapse — ${dungeon?.name ?? dungeonId}`}
-        placeholder="What triggered it? How are you feeling? (optional)"
-        confirmLabel="Confirm Relapse"
-        skipLabel="Cancel"
-        tone="danger"
-        cancelOnSkip
-        showPublicToggle
-        onSubmit={handleRelapse}
-        onCancel={() => setRelapseModalOpen(false)}
-      />
-      <NoteModal
-        open={journalModalOpen}
-        title={`Journal — ${dungeon?.name ?? dungeonId}`}
-        placeholder="What's on your mind today?"
-        confirmLabel="Save Entry"
-        skipLabel="Cancel"
-        cancelOnSkip
-        showPublicToggle
-        onSubmit={handleJournal}
-        onCancel={() => setJournalModalOpen(false)}
-      />
+      <NoteModal {...relapse.modalProps} />
+      <NoteModal {...journal.modalProps} />
     </div>
   );
 }

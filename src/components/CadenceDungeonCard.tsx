@@ -11,13 +11,9 @@ import {
 } from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import {
-  setRunStartDate,
-  endRun,
-  logJournalEntry,
   toggleWorkout,
   type DungeonRunState,
 } from "@/app/actions/dungeons";
-import { track } from "@/lib/analytics";
 import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
 import {
@@ -25,6 +21,11 @@ import {
   setRunStartDateInCache,
   setWorkoutInCache,
 } from "@/lib/dashboardCacheOps";
+import {
+  commitSetStartDate,
+  useEndRunAction,
+  useJournalAction,
+} from "@/lib/dungeonActions";
 import NoteModal from "@/components/NoteModal";
 
 interface CadenceDungeonCardProps {
@@ -43,6 +44,7 @@ export default function CadenceDungeonCard({
   onRelapse,
 }: CadenceDungeonCardProps) {
   const dungeon = getDungeon(dungeonId);
+  const dungeonName = dungeon?.name ?? dungeonId;
   const TIERS = dungeon?.tiers ?? [];
   const cadence = dungeon?.cadence;
   const WORKOUTS = cadence?.workouts ?? [];
@@ -53,45 +55,35 @@ export default function CadenceDungeonCard({
   );
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
   const [completed, setCompleted] = useState<string[]>(initialWeekWorkouts);
-  const [relapseModalOpen, setRelapseModalOpen] = useState(false);
-  const [journalModalOpen, setJournalModalOpen] = useState(false);
 
-  async function handleJournal(note: string | null, isPublic?: boolean) {
-    setJournalModalOpen(false);
-    if (!note) return;
-    try {
-      await logJournalEntry(dungeonId, note, isPublic ?? false);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:journalLog",
-        dungeonId,
-        note,
-        isPublic: isPublic ?? false,
-      });
-      drainQueue().catch(() => {});
-    }
-  }
+  const journal = useJournalAction({ dungeonId, dungeonName });
+  const relapse = useEndRunAction({
+    dungeonId,
+    dungeonName,
+    reason: "relapse",
+    ruleType: "cadence",
+    trackProperties: { streak_days: streak },
+    modalOverrides: {
+      placeholder: "What threw the rhythm off? (optional)",
+    },
+    onLocalReset: () => {
+      setStartDate(null);
+      setStreak(0);
+      setCompleted([]);
+      endRunInCache(dungeonId);
+      onStreakChange?.(0);
+      onRelapse?.();
+    },
+  });
 
   async function handleDatePick(date: string) {
     setStartDate(date);
     const days = computeStreakDays(date);
     setStreak(days);
     setRunStartDateInCache(dungeonId, date);
-    if (onStreakChange) onStreakChange(days);
+    onStreakChange?.(days);
     notifyStatsUpdated();
-
-    try {
-      await setRunStartDate(dungeonId, date);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:setStartDate",
-        dungeonId,
-        dateIso: date,
-      });
-      drainQueue().catch(() => {});
-    }
+    await commitSetStartDate(dungeonId, date);
   }
 
   async function handleToggle(workoutId: string) {
@@ -120,35 +112,6 @@ export default function CadenceDungeonCard({
       drainQueue().catch(() => {});
     } finally {
       endMutation();
-    }
-  }
-
-  async function handleRelapse(note: string | null, isPublic?: boolean) {
-    setRelapseModalOpen(false);
-    track("relapse", {
-      dungeon_id: dungeonId,
-      rule_type: "cadence",
-      streak_days: streak,
-    });
-    setStartDate(null);
-    setStreak(0);
-    setCompleted([]);
-    endRunInCache(dungeonId);
-    if (onStreakChange) onStreakChange(0);
-    if (onRelapse) onRelapse();
-    notifyStatsUpdated();
-
-    try {
-      await endRun(dungeonId, "relapse", note ?? undefined, isPublic ?? false);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:endRun",
-        dungeonId,
-        reason: "relapse",
-        ...(note ? { note, isPublic: isPublic ?? false } : {}),
-      });
-      drainQueue().catch(() => {});
     }
   }
 
@@ -285,13 +248,13 @@ export default function CadenceDungeonCard({
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
           <div className="flex flex-col gap-2 items-stretch">
             <button
-              onClick={() => setJournalModalOpen(true)}
+              onClick={journal.open}
               className="px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
             >
               + Journal Entry
             </button>
             <button
-              onClick={() => setRelapseModalOpen(true)}
+              onClick={relapse.open}
               className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
             >
               Relapse — Reset
@@ -308,29 +271,8 @@ export default function CadenceDungeonCard({
         </div>
       )}
 
-      <NoteModal
-        open={relapseModalOpen}
-        title={`Relapse — ${dungeon?.name ?? dungeonId}`}
-        placeholder="What threw the rhythm off? (optional)"
-        confirmLabel="Confirm Relapse"
-        skipLabel="Cancel"
-        tone="danger"
-        cancelOnSkip
-        showPublicToggle
-        onSubmit={handleRelapse}
-        onCancel={() => setRelapseModalOpen(false)}
-      />
-      <NoteModal
-        open={journalModalOpen}
-        title={`Journal — ${dungeon?.name ?? dungeonId}`}
-        placeholder="What's on your mind today?"
-        confirmLabel="Save Entry"
-        skipLabel="Cancel"
-        cancelOnSkip
-        showPublicToggle
-        onSubmit={handleJournal}
-        onCancel={() => setJournalModalOpen(false)}
-      />
+      <NoteModal {...relapse.modalProps} />
+      <NoteModal {...journal.modalProps} />
     </div>
   );
 }

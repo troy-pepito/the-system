@@ -9,9 +9,7 @@ import {
 } from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import {
-  setRunStartDate,
   logAllowanceEvent,
-  logJournalEntry,
   undoAllowanceEvent,
   type DungeonRunState,
 } from "@/app/actions/dungeons";
@@ -23,6 +21,10 @@ import {
   endRunInCache,
   setRunStartDateInCache,
 } from "@/lib/dashboardCacheOps";
+import {
+  commitSetStartDate,
+  useJournalAction,
+} from "@/lib/dungeonActions";
 import NoteModal from "@/components/NoteModal";
 
 interface AllowanceDungeonCardProps {
@@ -43,6 +45,7 @@ export default function AllowanceDungeonCard({
   onRelapse,
 }: AllowanceDungeonCardProps) {
   const dungeon = getDungeon(dungeonId);
+  const dungeonName = dungeon?.name ?? dungeonId;
   const TIERS = dungeon?.tiers ?? [];
   const allowance = dungeon?.allowance;
   const LIMIT = allowance?.limit ?? 0;
@@ -55,28 +58,18 @@ export default function AllowanceDungeonCard({
   const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
   const [monthCount, setMonthCount] = useState(initialMonthCount);
   const [logModalOpen, setLogModalOpen] = useState(false);
-  const [journalModalOpen, setJournalModalOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+
+  const journal = useJournalAction({ dungeonId, dungeonName });
 
   async function handleDatePick(date: string) {
     setStartDate(date);
     const days = computeStreakDays(date);
     setStreak(days);
     setRunStartDateInCache(dungeonId, date);
-    if (onStreakChange) onStreakChange(days);
+    onStreakChange?.(days);
     notifyStatsUpdated();
-
-    try {
-      await setRunStartDate(dungeonId, date);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:setStartDate",
-        dungeonId,
-        dateIso: date,
-      });
-      drainQueue().catch(() => {});
-    }
+    await commitSetStartDate(dungeonId, date);
   }
 
   async function handleUndo() {
@@ -101,24 +94,6 @@ export default function AllowanceDungeonCard({
     } finally {
       endMutation();
       setBusy(false);
-    }
-  }
-
-  async function handleJournal(note: string | null, isPublic?: boolean) {
-    setJournalModalOpen(false);
-    if (!note) return;
-
-    try {
-      await logJournalEntry(dungeonId, note, isPublic ?? false);
-    } catch {
-      enqueueMutation({
-        id: newMutationId(),
-        type: "dungeon:journalLog",
-        dungeonId,
-        note,
-        isPublic: isPublic ?? false,
-      });
-      drainQueue().catch(() => {});
     }
   }
 
@@ -281,7 +256,7 @@ export default function AllowanceDungeonCard({
           </div>
 
           <button
-            onClick={() => setJournalModalOpen(true)}
+            onClick={journal.open}
             className="w-full px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
           >
             + Journal Entry
@@ -318,17 +293,7 @@ export default function AllowanceDungeonCard({
         onSubmit={handleLog}
         onCancel={() => setLogModalOpen(false)}
       />
-      <NoteModal
-        open={journalModalOpen}
-        title={`Journal — ${dungeon?.name ?? dungeonId}`}
-        placeholder="What's on your mind today?"
-        confirmLabel="Save Entry"
-        skipLabel="Cancel"
-        cancelOnSkip
-        showPublicToggle
-        onSubmit={handleJournal}
-        onCancel={() => setJournalModalOpen(false)}
-      />
+      <NoteModal {...journal.modalProps} />
     </div>
   );
 }
