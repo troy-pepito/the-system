@@ -15,9 +15,3 @@ export function writeCache<T>(key: string, value: T): void {
     localStorage.setItem(CACHE_PREFIX + key, JSON.stringify(value));
   } catch {}
 }
-
-export function clearCache(key: string): void {
-  try {
-    localStorage.removeItem(CACHE_PREFIX + key);
-  } catch {}
-}
