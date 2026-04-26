@@ -2,7 +2,6 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
-import { sendPushToUser } from "@/lib/push";
 
 export async function savePushSubscription(input: {
   endpoint: string;
@@ -42,19 +41,4 @@ export async function hasActivePushSubscription(
     select: { id: true },
   });
   return !!found;
-}
-
-export async function sendTestPushToSelf(): Promise<{
-  sent: number;
-  removed: number;
-  subscriptions: number;
-}> {
-  const userId = await requireUserId();
-  const subs = await prisma.pushSubscription.count({ where: { userId } });
-  const result = await sendPushToUser(userId, {
-    title: "✓ Test notification",
-    body: "If you see this, push is wired up correctly.",
-    url: "/profile",
-  });
-  return { ...result, subscriptions: subs };
 }

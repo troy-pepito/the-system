@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   removePushSubscription,
   savePushSubscription,
-  sendTestPushToSelf,
 } from "@/app/actions/push";
 
 type Status =
@@ -26,8 +25,6 @@ function urlBase64ToUint8Array(base64: string): Uint8Array {
 export default function NotificationSettings() {
   const [status, setStatus] = useState<Status>("loading");
   const [error, setError] = useState<string | null>(null);
-  const [testing, setTesting] = useState(false);
-  const [testResult, setTestResult] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -113,31 +110,6 @@ export default function NotificationSettings() {
     }
   }
 
-  async function sendTest() {
-    setTesting(true);
-    setTestResult(null);
-    try {
-      const r = await sendTestPushToSelf();
-      if (r.subscriptions === 0) {
-        setTestResult("No subscriptions on server — toggle off and on again.");
-      } else if (r.sent > 0) {
-        setTestResult(
-          `Sent to ${r.sent}/${r.subscriptions}. Notification should arrive in seconds.`
-        );
-      } else {
-        setTestResult(
-          `Server has ${r.subscriptions} subscription(s) but none accepted. Removed ${r.removed}.`
-        );
-      }
-    } catch (err) {
-      setTestResult(
-        err instanceof Error ? err.message : "Test push failed."
-      );
-    } finally {
-      setTesting(false);
-    }
-  }
-
   const enabled = status === "on";
   const working = status === "working" || status === "loading";
   const hardDisabled = status === "unsupported" || status === "denied";
@@ -180,23 +152,6 @@ export default function NotificationSettings() {
       </div>
       {error && (
         <p className="text-[10px] text-red-400 tracking-wider mt-2">{error}</p>
-      )}
-      {enabled && (
-        <div className="mt-3 pt-3 border-t border-slate-800">
-          <button
-            type="button"
-            onClick={sendTest}
-            disabled={testing}
-            className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/80 hover:text-cyan-200 disabled:opacity-50 transition-colors"
-          >
-            {testing ? "Sending…" : "Send test notification"}
-          </button>
-          {testResult && (
-            <p className="text-[10px] text-slate-400 tracking-wider mt-2 leading-relaxed">
-              {testResult}
-            </p>
-          )}
-        </div>
       )}
     </div>
   );
