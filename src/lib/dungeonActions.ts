@@ -115,6 +115,9 @@ interface EndRunActionOptions {
     title?: string;
     placeholder?: string;
     confirmLabel?: string;
+    skipLabel?: string;
+    /** When true, the skip button cancels the action instead of submitting. */
+    cancelOnSkip?: boolean;
   };
 }
 
@@ -179,9 +182,11 @@ export function useEndRunAction(opts: EndRunActionOptions): {
       title: opts.modalOverrides?.title ?? defaultTitle,
       placeholder: opts.modalOverrides?.placeholder ?? defaultPlaceholder,
       confirmLabel: opts.modalOverrides?.confirmLabel ?? defaultConfirm,
-      skipLabel: isRelapse ? "Cancel" : "Skip Note",
+      skipLabel:
+        opts.modalOverrides?.skipLabel ??
+        (isRelapse ? "Cancel" : "Skip Note"),
       tone: isRelapse ? "danger" : "neutral",
-      cancelOnSkip: isRelapse,
+      cancelOnSkip: opts.modalOverrides?.cancelOnSkip ?? isRelapse,
       showPublicToggle: true,
       onSubmit: handleSubmit,
       onCancel: () => setIsOpen(false),

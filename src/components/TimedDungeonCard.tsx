@@ -62,6 +62,8 @@ export default function TimedDungeonCard({
       title: `Exit — ${dungeonName}`,
       placeholder: "Why are you exiting? (optional)",
       confirmLabel: "Exit Dungeon",
+      skipLabel: "Cancel",
+      cancelOnSkip: true,
     },
     onLocalReset: () => {
       setStartDate(null);
