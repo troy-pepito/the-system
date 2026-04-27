@@ -34,7 +34,8 @@ const RULE_TYPES: {
 }[] = [
   {
     type: "continuous_streak",
-    summary: "Consecutive days from entry. Any relapse resets to 0.",
+    summary:
+      "A daily check-in. Confirm each day as cleared or relapsed in the calendar. Cleared days bank XP + dimensions permanently.",
     used_by: "NoFap",
   },
   {
@@ -52,7 +53,7 @@ const RULE_TYPES: {
   {
     type: "timed",
     summary:
-      "A fixed N-day target. Any slip resets. Claim Victory at the end to retire the run.",
+      "A daily check-in toward an N-day target. Same calendar mechanic as the streak dungeons. Claim Victory at the target to retire the run.",
     used_by: "No Doomscroll · Sound Sensitization",
   },
   {
@@ -232,7 +233,8 @@ export default function GuidePage() {
                 <span className="text-cyan-300 font-mono">
                   +{XP_PER_STREAK_DAY}
                 </span>{" "}
-                per streak day (auto, as long as you haven&apos;t relapsed)
+                each time you check in a cleared day on a streak/timed dungeon
+                — plus that dungeon&apos;s dimension points
               </span>
             </li>
             <li className="flex gap-3">

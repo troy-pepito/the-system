@@ -237,7 +237,7 @@ export const DUNGEONS: DungeonDef[] = [
     rules: [
       "Relapse = intentionally listening to songs (playlists, albums, concerts, background music you chose).",
       "Allowed: podcasts, audiobooks, film scores, nature sounds, and involuntary ambient music (stores, cafes, other people's speakers).",
-      "Reach day 30 to clear. Claim Victory to retire the run.",
+      "Confirm each day on the calendar. Hit 30 cleared days to unlock Claim Victory.",
     ],
     dimensions: { spirit: 2, mind: 1 },
   },
@@ -267,7 +267,7 @@ export const DUNGEONS: DungeonDef[] = [
     rules: [
       "Relapse = porn, masturbation, edging, or gooning (thirst traps, bot accounts, sensualized social feeds).",
       "Allowed: sex and orgasm with a partner — this dungeon is about compulsion, not abstinence.",
-      "Any relapse resets the streak to 0. Clear ranks E → S by hitting day milestones.",
+      "Check in each day on the calendar — Cleared or Relapsed. Cleared days bank XP + dimensions permanently. Relapses are markers, not resets.",
     ],
     dimensions: { emotion: 2, spirit: 1 },
   },
@@ -282,9 +282,9 @@ export function getDungeonRules(d: DungeonDef): string[] {
   switch (d.ruleType) {
     case "continuous_streak":
       return [
-        "Track consecutive days from your entry date.",
-        "Any relapse resets the streak to 0.",
-        "Clear ranks E → S by hitting each day milestone.",
+        "Confirm each day on the calendar as Cleared or Relapsed.",
+        "Cleared days bank XP + dimension points permanently. Relapses are calendar markers — they don't reset your progress.",
+        "Clear ranks E → S by accumulating cleared days. Run only ends when you tap Exit Dungeon.",
       ];
     case "allowance": {
       const a = d.allowance;
@@ -300,9 +300,9 @@ export function getDungeonRules(d: DungeonDef): string[] {
       const t = d.timed;
       if (!t) return [];
       return [
-        `Reach day ${t.targetDays} to clear the dungeon.`,
-        "Any slip before the target resets the run.",
-        "Claim Victory on day " + t.targetDays + " to complete and retire the run.",
+        `Confirm each day on the calendar — Cleared or Relapsed.`,
+        `Reach ${t.targetDays} cleared days to unlock Claim Victory.`,
+        "Cleared days bank XP + dimensions permanently. Relapses are calendar markers — Exit Dungeon is the only way to end the run early.",
       ];
     }
     case "cadence": {

@@ -240,6 +240,15 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     const run = runsByDungeon[d.id];
     if (!run) continue;
 
+    if (checkInDungeons.has(d.id)) {
+      const cleared = clearedDays[d.id] ?? 0;
+      dimensions.body += (dims.body ?? 0) * cleared;
+      dimensions.mind += (dims.mind ?? 0) * cleared;
+      dimensions.emotion += (dims.emotion ?? 0) * cleared;
+      dimensions.energy += (dims.energy ?? 0) * cleared;
+      dimensions.spirit += (dims.spirit ?? 0) * cleared;
+    }
+
     const tierCap =
       d.ruleType === "timed" && d.timed ? d.timed.targetDays : Infinity;
 

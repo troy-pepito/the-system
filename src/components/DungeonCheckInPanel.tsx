@@ -6,6 +6,7 @@ import {
   getCheckIns,
   type DayCheckIn,
 } from "@/app/actions/dungeons";
+import { getDungeon } from "@/lib/dungeons";
 import {
   notifyReward,
   notifyStatsUpdated,
@@ -112,7 +113,15 @@ export default function DungeonCheckInPanel({
       return result;
     });
     reportClearedCount(nextList);
-    notifyReward({ xp: XP_PER_STREAK_DAY });
+    const dims = getDungeon(dungeonId)?.dimensions ?? {};
+    notifyReward({
+      xp: XP_PER_STREAK_DAY,
+      body: dims.body,
+      mind: dims.mind,
+      emotion: dims.emotion,
+      energy: dims.energy,
+      spirit: dims.spirit,
+    });
     notifyStatsUpdated({ xpDelta: XP_PER_STREAK_DAY });
     track("day_confirmed_cleared", { dungeon_id: dungeonId, date });
 
