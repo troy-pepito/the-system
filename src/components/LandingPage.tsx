@@ -10,19 +10,19 @@ const STEPS = [
     num: "01",
     title: "Awaken",
     description:
-      "The System chooses you. Name your hunter. Enter the gate.",
+      "Name your hunter and enter the System. Your run begins the moment you accept.",
   },
   {
     num: "02",
-    title: "Dungeon",
+    title: "Pick Your Dungeons",
     description:
-      "Pick the battles that matter. Track them daily. No excuses.",
+      "A dungeon is a habit you're fighting — NoFap, no doomscroll, gym, diet, social anxiety. Pick the ones that matter.",
   },
   {
     num: "03",
-    title: "Rank Up",
+    title: "Check In Daily",
     description:
-      "E to S rank. Real progress across five human dimensions.",
+      "Confirm each day cleared or relapsed on the calendar. Banked progress stacks. Climb ranks E → S.",
   },
 ];
 
@@ -181,7 +181,7 @@ export default function LandingPage() {
           The quest remains open.
         </p>
         <p className="text-[10px] tracking-[0.4em] uppercase text-slate-500 mb-8">
-          Free for every hunter during launch
+          Free to play
         </p>
         <button
           onClick={handleAccept}
@@ -229,7 +229,7 @@ export default function LandingPage() {
 
 function StatusWindowPreview() {
   const entries: { label: string; xp: string; tone: "cyan" | "amber" }[] = [
-    { label: "NoFap · Day 21", xp: "+5 XP", tone: "cyan" },
+    { label: "NoFap · Day Cleared", xp: "+10 XP", tone: "cyan" },
     { label: "Daily Quest · Morning Walk", xp: "+15 XP", tone: "cyan" },
     { label: "Training Regimen · Full Body", xp: "+25 XP", tone: "cyan" },
     { label: "14-Day Combo", xp: "+100 XP", tone: "amber" },
