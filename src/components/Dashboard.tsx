@@ -166,7 +166,7 @@ export default function Dashboard() {
                   dungeonId={run.dungeonId}
                   initialRun={run}
                   onStreakChange={reload}
-                  onRelapse={handleEnded}
+                  onExit={handleEnded}
                 />
               );
             } else if (d.ruleType === "allowance") {
@@ -185,7 +185,8 @@ export default function Dashboard() {
                 <TimedDungeonCard
                   dungeonId={run.dungeonId}
                   initialRun={run}
-                  onRelapse={handleEnded}
+                  onStreakChange={reload}
+                  onExit={handleEnded}
                   onComplete={handleEnded}
                 />
               );

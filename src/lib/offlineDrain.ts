@@ -3,6 +3,7 @@ import {
   toggleQuestCompletion,
 } from "@/app/actions/quests";
 import {
+  confirmDay,
   endRun,
   enterDungeon,
   logAllowanceEvent,
@@ -79,6 +80,9 @@ async function applyMutation(m: Mutation): Promise<void> {
       return;
     case "dungeon:setStartDate":
       await setRunStartDate(m.dungeonId, m.dateIso);
+      return;
+    case "dungeon:confirmDay":
+      await confirmDay(m.dungeonId, m.dateIso, m.state, m.note, m.isPublic);
       return;
     case "clerk:updateHunterName":
     case "clerk:updateAvatar":

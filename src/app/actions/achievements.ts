@@ -42,7 +42,7 @@ export interface UnlockedAchievement {
 }
 
 async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
-  const [runs, events, quests] = await Promise.all([
+  const [runs, events, quests, clearedCheckIns] = await Promise.all([
     prisma.dungeonRun.findMany({
       where: { userId },
       select: {
@@ -62,7 +62,22 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       where: { userId },
       select: { questId: true, date: true },
     }),
+    prisma.dungeonDayCheckIn.groupBy({
+      by: ["dungeonId"],
+      where: { userId, state: "cleared" },
+      _count: { _all: true },
+    }),
   ]);
+
+  const checkInDungeons = new Set(
+    DUNGEONS.filter(
+      (d) => d.ruleType === "continuous_streak" || d.ruleType === "timed"
+    ).map((d) => d.id)
+  );
+  const clearedDays: Record<string, number> = {};
+  for (const row of clearedCheckIns) {
+    clearedDays[row.dungeonId] = row._count._all;
+  }
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -83,11 +98,12 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       maxStreak: 0,
       completed: false,
     };
+    const usesCheckIns = checkInDungeons.has(run.dungeonId);
 
     if (run.active) {
       activeRunCount++;
       existing.active = true;
-      if (run.startDate) {
+      if (run.startDate && !usesCheckIns) {
         const days = computeStreakDays(run.startDate.toISOString());
         existing.activeStreak = days;
         if (days > existing.maxStreak) existing.maxStreak = days;
@@ -97,7 +113,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     if (!run.active && run.endReason === "completed") {
       completedRunCount++;
       existing.completed = true;
-      if (run.startDate) {
+      if (run.startDate && !usesCheckIns) {
         const days = Math.floor(
           (run.updatedAt.getTime() - run.startDate.getTime()) /
             (1000 * 60 * 60 * 24)
@@ -110,6 +126,22 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
 
     runsByDungeon[run.dungeonId] = existing;
   }
+
+  for (const dungeonId of Object.keys(clearedDays)) {
+    const count = clearedDays[dungeonId];
+    const existing = runsByDungeon[dungeonId] ?? {
+      active: false,
+      activeStreak: 0,
+      maxStreak: 0,
+      completed: false,
+    };
+    if (count > existing.maxStreak) existing.maxStreak = count;
+    runsByDungeon[dungeonId] = existing;
+  }
+  const checkInXpDays = Object.entries(clearedDays).reduce(
+    (sum, [id, n]) => sum + (checkInDungeons.has(id) ? n : 0),
+    0
+  );
 
   const workoutIds = new Set(GYM_LIFE_WORKOUTS.map((w) => w.id));
   const exposureIds = new Set(SOCIAL_RECLAIM_RUNGS.map((r) => r.id));
@@ -240,6 +272,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   const totalXp =
     activeStreakTotal * XP_PER_STREAK_DAY +
     bankedStreakDays * XP_PER_STREAK_DAY +
+    checkInXpDays * XP_PER_STREAK_DAY +
     workoutTotal * XP_PER_WORKOUT +
     exposureTotal * XP_PER_EXPOSURE +
     completedRunCount * XP_PER_COMPLETION +

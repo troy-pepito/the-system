@@ -27,7 +27,9 @@ export type AnalyticsEvent =
   | "awakening_complete"
   | "dungeon_entered"
   | "quest_completed"
-  | "relapse";
+  | "relapse"
+  | "day_confirmed_cleared"
+  | "day_confirmed_relapsed";
 
 export function track(
   event: AnalyticsEvent,

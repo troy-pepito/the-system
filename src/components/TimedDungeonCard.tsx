@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { getDungeon } from "@/lib/dungeons";
-import { computeStreakDays, notifyStatsUpdated } from "@/lib/player";
+import { notifyStatsUpdated } from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import { type DungeonRunState } from "@/app/actions/dungeons";
 import {
@@ -14,12 +14,13 @@ import {
   useJournalAction,
 } from "@/lib/dungeonActions";
 import NoteModal from "@/components/NoteModal";
+import DungeonCheckInPanel from "@/components/DungeonCheckInPanel";
 
 interface TimedDungeonCardProps {
   dungeonId: string;
   initialRun: DungeonRunState;
   onStreakChange?: (days: number) => void;
-  onRelapse?: () => void;
+  onExit?: () => void;
   onComplete?: () => void;
 }
 
@@ -27,7 +28,7 @@ export default function TimedDungeonCard({
   dungeonId,
   initialRun,
   onStreakChange,
-  onRelapse,
+  onExit,
   onComplete,
 }: TimedDungeonCardProps) {
   const dungeon = getDungeon(dungeonId);
@@ -38,49 +39,63 @@ export default function TimedDungeonCard({
   const [startDate, setStartDate] = useState<string | null>(
     initialRun.startDate
   );
-  const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
+  const [clearedCount, setClearedCount] = useState(0);
 
   const journal = useJournalAction({ dungeonId, dungeonName });
-  const relapse = useEndRunAction({
-    dungeonId,
-    dungeonName,
-    reason: "relapse",
-    ruleType: "timed",
-    trackProperties: { streak_days: streak },
-    onLocalReset: () => {
-      setStartDate(null);
-      setStreak(0);
-      endRunInCache(dungeonId);
-      onStreakChange?.(0);
-      onRelapse?.();
-    },
-  });
   const victory = useEndRunAction({
     dungeonId,
     dungeonName,
     reason: "completed",
     onLocalReset: () => {
       setStartDate(null);
-      setStreak(0);
+      setClearedCount(0);
       endRunInCache(dungeonId);
       onStreakChange?.(0);
       onComplete?.();
     },
   });
+  const exitAction = useEndRunAction({
+    dungeonId,
+    dungeonName,
+    reason: "completed",
+    modalOverrides: {
+      title: `Exit — ${dungeonName}`,
+      placeholder: "Why are you exiting? (optional)",
+      confirmLabel: "Exit Dungeon",
+    },
+    onLocalReset: () => {
+      setStartDate(null);
+      setClearedCount(0);
+      endRunInCache(dungeonId);
+      onStreakChange?.(0);
+      onExit?.();
+    },
+  });
+
+  const handleClearedCountChange = useCallback(
+    (count: number) => {
+      setClearedCount(count);
+      onStreakChange?.(count);
+    },
+    [onStreakChange]
+  );
 
   async function handleDatePick(date: string) {
     setStartDate(date);
-    const days = computeStreakDays(date);
-    setStreak(days);
+    setClearedCount(0);
     setRunStartDateInCache(dungeonId, date);
-    onStreakChange?.(days);
+    onStreakChange?.(0);
     notifyStatsUpdated();
     await commitSetStartDate(dungeonId, date);
   }
 
-  const cleared = streak >= TARGET;
-  const progressPercent = Math.min(100, Math.round((streak / TARGET) * 100));
-  const highestClearedIndex = TIERS.filter((t) => streak >= t.days).length - 1;
+  const cleared = clearedCount >= TARGET;
+  const progressPercent = Math.min(
+    100,
+    Math.round((clearedCount / TARGET) * 100)
+  );
+  const highestClearedIndex =
+    TIERS.filter((t) => clearedCount >= t.days).length - 1;
 
   return (
     <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
@@ -95,10 +110,10 @@ export default function TimedDungeonCard({
                 cleared ? "text-amber-300" : "text-emerald-400"
               }`}
             >
-              {streak}
+              {clearedCount}
             </p>
             <p className="text-xs text-emerald-400/60 uppercase tracking-wider mt-1">
-              {streak === 1 ? "day" : "days"} reclaimed
+              {clearedCount === 1 ? "day" : "days"} cleared
             </p>
           </div>
 
@@ -124,7 +139,7 @@ export default function TimedDungeonCard({
             <div className="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
               <span>Target: {TARGET} days</span>
               <span>
-                {streak} / {TARGET}
+                {clearedCount} / {TARGET}
               </span>
             </div>
             <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
@@ -153,6 +168,13 @@ export default function TimedDungeonCard({
             </div>
           )}
 
+          <DungeonCheckInPanel
+            dungeonId={dungeonId}
+            dungeonName={dungeonName}
+            startDate={startDate}
+            onClearedCountChange={handleClearedCountChange}
+          />
+
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
           <div className="flex flex-col gap-2 items-stretch">
             <button
@@ -162,10 +184,10 @@ export default function TimedDungeonCard({
               + Journal Entry
             </button>
             <button
-              onClick={relapse.open}
-              className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
+              onClick={exitAction.open}
+              className="px-4 py-2 border border-slate-700 rounded text-slate-500 text-[11px] uppercase tracking-[0.3em] hover:text-amber-300/80 hover:border-amber-500/30 transition-colors"
             >
-              Relapse — Reset
+              Exit Dungeon
             </button>
           </div>
         </div>
@@ -179,8 +201,8 @@ export default function TimedDungeonCard({
         </div>
       )}
 
-      <NoteModal {...relapse.modalProps} />
       <NoteModal {...victory.modalProps} />
+      <NoteModal {...exitAction.modalProps} />
       <NoteModal {...journal.modalProps} />
     </div>
   );

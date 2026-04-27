@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { getDungeon } from "@/lib/dungeons";
-import { computeStreakDays, notifyStatsUpdated } from "@/lib/player";
+import { notifyStatsUpdated } from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import { type DungeonRunState } from "@/app/actions/dungeons";
 import {
@@ -14,19 +14,20 @@ import {
   useJournalAction,
 } from "@/lib/dungeonActions";
 import NoteModal from "@/components/NoteModal";
+import DungeonCheckInPanel from "@/components/DungeonCheckInPanel";
 
 interface StreakCardProps {
   dungeonId: string;
   initialRun: DungeonRunState;
   onStreakChange?: (days: number) => void;
-  onRelapse?: () => void;
+  onExit?: () => void;
 }
 
 export default function StreakCard({
   dungeonId,
   initialRun,
   onStreakChange,
-  onRelapse,
+  onExit,
 }: StreakCardProps) {
   const dungeon = getDungeon(dungeonId);
   const dungeonName = dungeon?.name ?? dungeonId;
@@ -35,39 +36,56 @@ export default function StreakCard({
   const [startDate, setStartDate] = useState<string | null>(
     initialRun.startDate
   );
-  const [streak, setStreak] = useState(computeStreakDays(initialRun.startDate));
+  const [clearedCount, setClearedCount] = useState(0);
 
   const journal = useJournalAction({ dungeonId, dungeonName });
-  const relapse = useEndRunAction({
+  const exitAction = useEndRunAction({
     dungeonId,
     dungeonName,
-    reason: "relapse",
-    ruleType: "continuous_streak",
-    trackProperties: { streak_days: streak },
+    reason: "completed",
+    modalOverrides: {
+      title: `Exit — ${dungeonName}`,
+      placeholder: "Why are you exiting? (optional)",
+      confirmLabel: "Exit Dungeon",
+    },
     onLocalReset: () => {
       setStartDate(null);
-      setStreak(0);
+      setClearedCount(0);
       endRunInCache(dungeonId);
       onStreakChange?.(0);
-      onRelapse?.();
+      onExit?.();
     },
   });
 
+  const handleClearedCountChange = useCallback(
+    (count: number) => {
+      setClearedCount(count);
+      onStreakChange?.(count);
+    },
+    [onStreakChange]
+  );
+
   async function handleDatePick(date: string) {
     setStartDate(date);
-    const days = computeStreakDays(date);
-    setStreak(days);
+    setClearedCount(0);
     setRunStartDateInCache(dungeonId, date);
-    onStreakChange?.(days);
+    onStreakChange?.(0);
     notifyStatsUpdated();
     await commitSetStartDate(dungeonId, date);
   }
 
-  const highestClearedIndex = TIERS.filter((t) => streak >= t.days).length - 1;
+  const highestClearedIndex =
+    TIERS.filter((t) => clearedCount >= t.days).length - 1;
   const nextTier = TIERS[highestClearedIndex + 1] ?? null;
-  const prevDays = highestClearedIndex >= 0 ? TIERS[highestClearedIndex].days : 0;
+  const prevDays =
+    highestClearedIndex >= 0 ? TIERS[highestClearedIndex].days : 0;
   const progressToNext = nextTier
-    ? Math.min(100, Math.round(((streak - prevDays) / (nextTier.days - prevDays)) * 100))
+    ? Math.min(
+        100,
+        Math.round(
+          ((clearedCount - prevDays) / (nextTier.days - prevDays)) * 100
+        )
+      )
     : 100;
 
   return (
@@ -79,10 +97,10 @@ export default function StreakCard({
         <div className="space-y-4">
           <div className="py-2">
             <p className="text-4xl font-bold text-emerald-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.8)]">
-              {streak}
+              {clearedCount}
             </p>
             <p className="text-xs text-emerald-400/60 uppercase tracking-wider mt-1">
-              {streak === 1 ? "day" : "days"} strong
+              {clearedCount === 1 ? "day" : "days"} cleared
             </p>
           </div>
 
@@ -111,7 +129,9 @@ export default function StreakCard({
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
                 <span>Next tier: {nextTier.rank}</span>
-                <span>{streak} / {nextTier.days} days</span>
+                <span>
+                  {clearedCount} / {nextTier.days} days
+                </span>
               </div>
               <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
                 <div
@@ -126,6 +146,13 @@ export default function StreakCard({
             </p>
           )}
 
+          <DungeonCheckInPanel
+            dungeonId={dungeonId}
+            dungeonName={dungeonName}
+            startDate={startDate}
+            onClearedCountChange={handleClearedCountChange}
+          />
+
           <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
           <div className="flex flex-col gap-2 items-stretch">
             <button
@@ -135,10 +162,10 @@ export default function StreakCard({
               + Journal Entry
             </button>
             <button
-              onClick={relapse.open}
-              className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
+              onClick={exitAction.open}
+              className="px-4 py-2 border border-slate-700 rounded text-slate-500 text-[11px] uppercase tracking-[0.3em] hover:text-amber-300/80 hover:border-amber-500/30 transition-colors"
             >
-              Relapse — Reset
+              Exit Dungeon
             </button>
           </div>
         </div>
@@ -152,8 +179,8 @@ export default function StreakCard({
         </div>
       )}
 
-      <NoteModal {...relapse.modalProps} />
       <NoteModal {...journal.modalProps} />
+      <NoteModal {...exitAction.modalProps} />
     </div>
   );
 }

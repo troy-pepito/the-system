@@ -660,6 +660,154 @@ export async function undoAllowanceEvent(
   return { count };
 }
 
+export interface DayCheckIn {
+  date: string;
+  state: "cleared" | "relapsed";
+  count: number;
+}
+
+const getCheckInsCached = unstable_cache(
+  async (userId: string, dungeonId: string) => {
+    const run = await prisma.dungeonRun.findFirst({
+      where: { userId, dungeonId, active: true },
+      orderBy: { createdAt: "desc" },
+    });
+    if (!run) return [] as DayCheckIn[];
+    const checkIns = await prisma.dungeonDayCheckIn.findMany({
+      where: { runId: run.id },
+      orderBy: { date: "asc" },
+      select: { date: true, state: true, count: true },
+    });
+    return checkIns.map((c) => ({
+      date: c.date.toISOString().split("T")[0],
+      state: c.state as "cleared" | "relapsed",
+      count: c.count,
+    }));
+  },
+  ["dungeon-checkins"],
+  { tags: [TAG] }
+);
+
+export async function getCheckIns(dungeonId: string): Promise<DayCheckIn[]> {
+  const userId = await requireUserId();
+  return getCheckInsCached(userId, dungeonId);
+}
+
+function todayDateOnly(): Date {
+  const now = new Date();
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  );
+}
+
+export async function clearCheckIn(
+  dungeonId: string,
+  dateIso: string
+): Promise<void> {
+  const userId = await requireUserId();
+  const run = await prisma.dungeonRun.findFirst({
+    where: { userId, dungeonId, active: true },
+    orderBy: { createdAt: "desc" },
+  });
+  if (!run) throw new Error(`No active run for ${dungeonId}`);
+  const date = new Date(`${dateIso}T00:00:00.000Z`);
+  await prisma.dungeonDayCheckIn.deleteMany({
+    where: { runId: run.id, date },
+  });
+  updateTag(TAG);
+}
+
+async function findActiveStreakRun(userId: string, dungeonId: string) {
+  const dungeon = getDungeon(dungeonId);
+  if (!dungeon) throw new Error(`Unknown dungeon ${dungeonId}`);
+  if (
+    dungeon.ruleType !== "continuous_streak" &&
+    dungeon.ruleType !== "timed"
+  ) {
+    throw new Error(`Dungeon ${dungeonId} doesn't support day check-ins`);
+  }
+  const run = await prisma.dungeonRun.findFirst({
+    where: { userId, dungeonId, active: true },
+    orderBy: { createdAt: "desc" },
+  });
+  if (!run) throw new Error(`No active run for ${dungeonId}`);
+  return run;
+}
+
+function validateCheckInDate(
+  dateIso: string,
+  startDate: Date | null
+): Date {
+  const date = new Date(`${dateIso}T00:00:00.000Z`);
+  const today = todayDateOnly();
+  if (date.getTime() > today.getTime()) {
+    throw new Error("Cannot confirm a future date");
+  }
+  if (startDate && date.getTime() < startDate.getTime()) {
+    throw new Error("Date is before the run started");
+  }
+  return date;
+}
+
+export async function confirmDay(
+  dungeonId: string,
+  dateIso: string,
+  state: "cleared" | "relapsed",
+  note?: string,
+  isPublic = false
+): Promise<void> {
+  const userId = await requireUserId();
+  const run = await findActiveStreakRun(userId, dungeonId);
+  const date = validateCheckInDate(dateIso, run.startDate);
+
+  if (state === "relapsed") {
+    const trimmedNote = note?.trim();
+    const existing = await prisma.dungeonDayCheckIn.findUnique({
+      where: { runId_date: { runId: run.id, date } },
+    });
+    const nextCount =
+      existing && existing.state === "relapsed" ? existing.count + 1 : 1;
+    await prisma.dungeonDayCheckIn.upsert({
+      where: { runId_date: { runId: run.id, date } },
+      create: {
+        runId: run.id,
+        userId,
+        dungeonId,
+        date,
+        state: "relapsed",
+        count: nextCount,
+      },
+      update: { state: "relapsed", count: nextCount, confirmedAt: new Date() },
+    });
+    if (trimmedNote) {
+      await prisma.dungeonEvent.create({
+        data: {
+          runId: run.id,
+          type: "relapse",
+          date,
+          note: trimmedNote,
+          isPublic,
+        },
+      });
+    }
+  } else {
+    await prisma.dungeonDayCheckIn.upsert({
+      where: { runId_date: { runId: run.id, date } },
+      create: {
+        runId: run.id,
+        userId,
+        dungeonId,
+        date,
+        state: "cleared",
+        count: 1,
+      },
+      update: { state: "cleared", count: 1, confirmedAt: new Date() },
+    });
+  }
+
+  updateTag(TAG);
+}
+
 export async function logJournalEntry(
   dungeonId: string,
   note: string,

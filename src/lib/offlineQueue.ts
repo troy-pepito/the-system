@@ -78,6 +78,16 @@ export type DungeonSetStartDateMutation = {
   dateIso: string;
 };
 
+export type DungeonConfirmDayMutation = {
+  id: string;
+  type: "dungeon:confirmDay";
+  dungeonId: string;
+  dateIso: string;
+  state: "cleared" | "relapsed";
+  note?: string;
+  isPublic?: boolean;
+};
+
 export type ClerkUpdateHunterNameMutation = {
   id: string;
   type: "clerk:updateHunterName";
@@ -99,6 +109,7 @@ export type Mutation =
   | DungeonUndoExposureMutation
   | DungeonEnterMutation
   | DungeonSetStartDateMutation
+  | DungeonConfirmDayMutation
   | DungeonJournalLogMutation
   | ClerkUpdateHunterNameMutation
   | ClerkUpdateAvatarMutation;
