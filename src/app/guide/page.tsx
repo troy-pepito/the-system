@@ -380,20 +380,60 @@ export default function GuidePage() {
         <Section title="9. Reach & Reliability">
           <p>
             <span className="text-cyan-300 font-bold">Daily Reminders.</span>{" "}
-            On your profile, flip on the Daily Reminder toggle. The System
-            sends a morning push if your day went unused yesterday and an
-            evening push if today is slipping away. The message is
-            state-aware — relapsed yesterday gets a comeback nudge, fell
-            behind gets a pattern-break, on track gets a keep-going reset.
+            On by default. The first time you sign in, your browser asks
+            once for notification permission — say yes and you&apos;re
+            enrolled. The System sends a morning push if your day went
+            unused yesterday and an evening push if today is slipping away.
+            The message is state-aware — relapsed yesterday gets a comeback
+            nudge, fell behind gets a pattern-break, on track gets a
+            keep-going reset.
           </p>
-          <p className="mt-3">
-            On iPhone, push only works if you&apos;ve installed the app to
-            your home screen via Safari&apos;s{" "}
-            <span className="text-cyan-300 font-mono">Share → Add to Home Screen</span>{" "}
-            (iOS 16.4+). On Android Chrome, just installing the PWA is
-            enough.
+          <p className="mt-3 text-xs text-slate-500">
+            To turn reminders off, either toggle them off on your profile
+            or block notifications for the app at the OS level
+            (iOS Settings → Notifications, Android app info, browser site
+            settings on desktop).
           </p>
-          <p className="mt-3">
+
+          <p className="mt-5">
+            <span className="text-cyan-300 font-bold">Install the App.</span>{" "}
+            Pushes only work if the app is installed. The flow is different
+            on every platform:
+          </p>
+          <ul className="mt-3 space-y-2 text-xs text-slate-400">
+            <li className="flex gap-3">
+              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span>
+                <span className="text-slate-300 font-semibold">iPhone / iPad:</span>{" "}
+                open the site in Safari →{" "}
+                <span className="text-cyan-300 font-mono">Share → Add to Home Screen</span>.
+                Requires iOS 16.4+. Pushes won&apos;t fire from a regular
+                Safari tab.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span>
+                <span className="text-slate-300 font-semibold">Android:</span>{" "}
+                open in Chrome → tap the install banner that appears, or
+                use Chrome&apos;s ⋮ menu →{" "}
+                <span className="text-cyan-300 font-mono">Install app</span>.
+                Pushes work either way once installed.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span>
+                <span className="text-slate-300 font-semibold">Desktop (Chrome, Edge, Brave):</span>{" "}
+                look for the install icon in the address bar, or use the
+                browser menu →{" "}
+                <span className="text-cyan-300 font-mono">Install Shivaliva Leveling</span>.
+                The app then opens in its own window.
+              </span>
+            </li>
+          </ul>
+
+          <p className="mt-5">
             <span className="text-cyan-300 font-bold">Offline.</span> The app
             works without a connection. On a plane, in the subway, in
             bad-signal zones — complete quests, log relapses, write journal

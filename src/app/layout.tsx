@@ -19,6 +19,7 @@ import BackToTop from "@/components/BackToTop";
 import OfflineBanner from "@/components/OfflineBanner";
 import CacheWarmer from "@/components/CacheWarmer";
 import OfflineSyncManager from "@/components/OfflineSyncManager";
+import DailyReminderAutoEnroll from "@/components/DailyReminderAutoEnroll";
 import { SignedIn, SignedOut } from "@/components/AuthGate";
 
 const geistSans = Geist({
@@ -96,6 +97,7 @@ export default function RootLayout({
             <SignedIn>
               <CacheWarmer />
               <OfflineSyncManager />
+              <DailyReminderAutoEnroll />
               <AchievementToast />
               <GainToast />
               <RankUpGlitch />
