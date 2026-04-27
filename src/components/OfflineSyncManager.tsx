@@ -9,11 +9,31 @@ import {
 } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
 import { clearPendingAvatar, getPendingAvatar } from "@/lib/pendingAvatar";
+import { notifyStatsUpdated } from "@/lib/player";
 
 export default function OfflineSyncManager() {
   const online = useOnline();
   const queueCount = useQueueCount();
   const { user, isLoaded } = useUser();
+
+  useEffect(() => {
+    let lastFired = 0;
+    const refresh = () => {
+      const now = Date.now();
+      if (now - lastFired < 1000) return;
+      lastFired = now;
+      notifyStatsUpdated();
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("focus", refresh);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("focus", refresh);
+    };
+  }, []);
 
   useEffect(() => {
     if (online && queueCount > 0) {

@@ -9,6 +9,7 @@ import {
 import {
   notifyReward,
   notifyStatsUpdated,
+  STATS_UPDATED_EVENT,
   XP_PER_STREAK_DAY,
 } from "@/lib/player";
 import { drainQueue } from "@/lib/offlineDrain";
@@ -63,22 +64,31 @@ export default function DungeonCheckInPanel({
         cached.filter((c) => c.state === "cleared").length
       );
     }
-    getCheckIns(dungeonId)
-      .then((c) => {
-        if (!cancelled) {
+    const fetchFromServer = () => {
+      getCheckIns(dungeonId)
+        .then((c) => {
+          if (cancelled) return;
           setCheckIns(c);
           writeCache(checkInCacheKey(dungeonId), c);
           onClearedCountChangeRef.current(
             c.filter((x) => x.state === "cleared").length
           );
-        }
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+        })
+        .catch(() => {})
+        .finally(() => {
+          if (!cancelled) setLoading(false);
+        });
+    };
+    fetchFromServer();
+    const onStats = (e: Event) => {
+      const delta = (e as CustomEvent<{ xpDelta?: number }>).detail?.xpDelta;
+      if (typeof delta === "number") return;
+      fetchFromServer();
+    };
+    window.addEventListener(STATS_UPDATED_EVENT, onStats);
     return () => {
       cancelled = true;
+      window.removeEventListener(STATS_UPDATED_EVENT, onStats);
     };
   }, [dungeonId]);
 
