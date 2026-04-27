@@ -13,9 +13,12 @@ import {
 } from "@/lib/player";
 import { drainQueue } from "@/lib/offlineDrain";
 import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
+import { readCache, writeCache } from "@/lib/offlineCache";
 import { track } from "@/lib/analytics";
 import DungeonCalendar from "@/components/DungeonCalendar";
 import NoteModal from "@/components/NoteModal";
+
+const checkInCacheKey = (dungeonId: string) => `checkins:${dungeonId}`;
 
 interface DungeonCheckInPanelProps {
   dungeonId: string;
@@ -39,7 +42,10 @@ export default function DungeonCheckInPanel({
   startDate,
   onClearedCountChange,
 }: DungeonCheckInPanelProps) {
-  const [checkIns, setCheckIns] = useState<DayCheckIn[]>([]);
+  const [checkIns, setCheckIns] = useState<DayCheckIn[]>(() => {
+    if (typeof window === "undefined") return [];
+    return readCache<DayCheckIn[]>(checkInCacheKey(dungeonId)) ?? [];
+  });
   const [pending, setPending] = useState<string | null>(null);
   const [relapseNoteOpen, setRelapseNoteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -51,10 +57,17 @@ export default function DungeonCheckInPanel({
 
   useEffect(() => {
     let cancelled = false;
+    const cached = readCache<DayCheckIn[]>(checkInCacheKey(dungeonId));
+    if (cached) {
+      onClearedCountChangeRef.current(
+        cached.filter((c) => c.state === "cleared").length
+      );
+    }
     getCheckIns(dungeonId)
       .then((c) => {
         if (!cancelled) {
           setCheckIns(c);
+          writeCache(checkInCacheKey(dungeonId), c);
           onClearedCountChangeRef.current(
             c.filter((x) => x.state === "cleared").length
           );
@@ -76,6 +89,7 @@ export default function DungeonCheckInPanel({
     onClearedCountChangeRef.current(
       list.filter((c) => c.state === "cleared").length
     );
+    writeCache(checkInCacheKey(dungeonId), list);
   }
 
   async function commitCleared(date: string) {
