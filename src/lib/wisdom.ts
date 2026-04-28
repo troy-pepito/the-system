@@ -1,19 +1,22 @@
 /**
- * Curated daily-wisdom pool. Drawn from Troy's actual influences:
- *   - Sadhguru (primary)
- *   - Osho (full corpus — books, talks, commentaries)
- *   - Bhagavad Gita / Mahabharata / Krishna
- *   - Shiva — 112 methods of meditation (Vigyan Bhairav Tantra,
- *     via Osho's Book of Secrets)
- *   - Kevin Trudeau (Wish Is Your Command, Natural Cures, Mega Memory)
- *   - Jason Capital (introduced Troy to Osho)
- *   - Buddha, Krishna, Khalil Gibran, Zig Ziglar, Jesus Christ,
- *     Confucius, Lao Tzu
- *   - Original Hunter-coded lines that match the System's voice
+ * Curated daily-wisdom pool. Drawn from Troy's actual influences plus
+ * the most relevant timeless voices for an app focused on discipline,
+ * presence, recovery, and mastery.
  *
- * Each entry fits a push-notification body (~120 chars). Add freely.
- * pickWisdomQuote() picks deterministically by date so all users see
- * the same line on the same day.
+ * Lineages:
+ *   Sadhguru (primary) · Osho · Bhagavad Gita / Krishna · Shiva 112
+ *   Kevin Trudeau · Jason Capital · Buddha · Lao Tzu · Confucius
+ *   Jesus Christ · Khalil Gibran · Zig Ziglar · Marcus Aurelius
+ *   Seneca · Epictetus · Carl Jung · Naval Ravikant · David Goggins
+ *   Jocko Willink · Bruce Lee · Rumi · Ramana Maharshi · Vivekananda
+ *   Thich Nhat Hanh · Eckhart Tolle · J. Krishnamurti · Musashi
+ *   Patanjali · Hunter-coded originals
+ *
+ * Pool is sized at exactly 112 — matching Shiva's 112 methods of
+ * meditation. pickWisdomQuote() rotates deterministically by date so
+ * all users see the same line on the same day.
+ *
+ * Each entry stays under ~120 chars so it fits a push notification body.
  */
 
 export interface WisdomQuote {
@@ -22,7 +25,7 @@ export interface WisdomQuote {
 }
 
 const QUOTES: WisdomQuote[] = [
-  // — Sadhguru
+  // — Sadhguru (12)
   {
     title: "✦ Sadhguru",
     body: "If you do not know how to keep yourself joyful, you will become a source of misery to yourself and to others.",
@@ -72,7 +75,7 @@ const QUOTES: WisdomQuote[] = [
     body: "You are the only one stopping you. You are the only one who can move you.",
   },
 
-  // — Osho
+  // — Osho (12)
   {
     title: "✦ Osho",
     body: "Drop the idea of becoming someone, because you are already a masterpiece. You only need to discover it.",
@@ -111,7 +114,7 @@ const QUOTES: WisdomQuote[] = [
   },
   {
     title: "✦ Osho",
-    body: "The real question is not whether life exists after death. The real question is whether you are alive before death.",
+    body: "The real question is not whether life exists after death. It is whether you are alive before death.",
   },
   {
     title: "✦ Osho",
@@ -122,7 +125,7 @@ const QUOTES: WisdomQuote[] = [
     body: "The moment you become aware you have been carrying a cross, the cross will fall away.",
   },
 
-  // — Bhagavad Gita / Krishna
+  // — Bhagavad Gita / Krishna (6)
   {
     title: "✦ Krishna · Gita",
     body: "Better one's own duty done imperfectly than another's done well. — BG 3.35",
@@ -148,7 +151,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Whenever righteousness declines and evil rises, I manifest myself. — BG 4.7",
   },
 
-  // — Shiva · 112 methods (Vigyan Bhairav Tantra / Book of Secrets)
+  // — Shiva · 112 methods (Vigyan Bhairav Tantra / Book of Secrets) (5)
   {
     title: "✦ Shiva · 112",
     body: "Watch the gap between two breaths. There, find the Self.",
@@ -170,7 +173,7 @@ const QUOTES: WisdomQuote[] = [
     body: "On the in-breath, on the out-breath — between them lies the eternal.",
   },
 
-  // — Kevin Trudeau
+  // — Kevin Trudeau (4)
   {
     title: "✦ Trudeau",
     body: "Decide what you want. Decide it firmly. Then move toward it without explaining yourself.",
@@ -188,7 +191,7 @@ const QUOTES: WisdomQuote[] = [
     body: "The wish is the command. Not the wishing — the certainty behind it.",
   },
 
-  // — Jason Capital
+  // — Jason Capital (4)
   {
     title: "✦ Capital",
     body: "Speak less. Speak slower. Speak with finality. The frame you set is the reality others enter.",
@@ -206,7 +209,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Master yourself first. The world conforms to a mastered man, never to a scattered one.",
   },
 
-  // — Buddha
+  // — Buddha (5)
   {
     title: "✦ Buddha",
     body: "What we think, we become. Watch the thoughts before they harden into action.",
@@ -228,7 +231,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Peace comes from within. Do not seek it without.",
   },
 
-  // — Lao Tzu
+  // — Lao Tzu (6)
   {
     title: "✦ Lao Tzu",
     body: "A journey of a thousand miles begins beneath your feet.",
@@ -254,7 +257,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Silence is a source of great strength.",
   },
 
-  // — Confucius
+  // — Confucius (3)
   {
     title: "✦ Confucius",
     body: "The man who moves a mountain begins by carrying away small stones.",
@@ -267,12 +270,8 @@ const QUOTES: WisdomQuote[] = [
     title: "✦ Confucius",
     body: "Wherever you go, go with all your heart.",
   },
-  {
-    title: "✦ Confucius",
-    body: "Real knowledge is to know the extent of one's ignorance.",
-  },
 
-  // — Jesus Christ
+  // — Jesus Christ (4)
   {
     title: "✦ Christ",
     body: "The kingdom of God is within you. — Luke 17:21",
@@ -290,7 +289,7 @@ const QUOTES: WisdomQuote[] = [
     body: "What does it profit a man to gain the whole world and lose his soul?",
   },
 
-  // — Khalil Gibran
+  // — Khalil Gibran (4)
   {
     title: "✦ Gibran",
     body: "Out of suffering have emerged the strongest souls. The most massive characters are seared with scars.",
@@ -308,7 +307,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Yesterday is but today's memory, and tomorrow is today's dream.",
   },
 
-  // — Zig Ziglar
+  // — Zig Ziglar (3)
   {
     title: "✦ Ziglar",
     body: "You don't have to be great to start, but you have to start to be great.",
@@ -321,12 +320,196 @@ const QUOTES: WisdomQuote[] = [
     title: "✦ Ziglar",
     body: "Your attitude, not your aptitude, will determine your altitude.",
   },
+
+  // — Marcus Aurelius (4)
   {
-    title: "✦ Ziglar",
-    body: "If you can dream it, you can achieve it. Belief is the first foothold.",
+    title: "✦ Aurelius",
+    body: "You have power over your mind — not outside events. Realize this, and you will find strength.",
+  },
+  {
+    title: "✦ Aurelius",
+    body: "Waste no more time arguing what a good man should be. Be one.",
+  },
+  {
+    title: "✦ Aurelius",
+    body: "Confine yourself to the present.",
+  },
+  {
+    title: "✦ Aurelius",
+    body: "When you arise in the morning, think of what a precious privilege it is to be alive.",
   },
 
-  // — Hunter / System-coded originals
+  // — Seneca (3)
+  {
+    title: "✦ Seneca",
+    body: "We suffer more in imagination than in reality.",
+  },
+  {
+    title: "✦ Seneca",
+    body: "It is not that we have a short time to live, but that we waste much of it.",
+  },
+  {
+    title: "✦ Seneca",
+    body: "Difficulties strengthen the mind, as labor does the body.",
+  },
+
+  // — Epictetus (2)
+  {
+    title: "✦ Epictetus",
+    body: "It's not what happens to you, but how you react to it that matters.",
+  },
+  {
+    title: "✦ Epictetus",
+    body: "First say to yourself what you would be — then do what you have to do.",
+  },
+
+  // — Carl Jung (4) — direct fit for compulsion / shadow work
+  {
+    title: "✦ Jung",
+    body: "Until you make the unconscious conscious, it will direct your life and you will call it fate.",
+  },
+  {
+    title: "✦ Jung",
+    body: "What you resist not only persists, but will grow in size.",
+  },
+  {
+    title: "✦ Jung",
+    body: "The privilege of a lifetime is to become who you truly are.",
+  },
+  {
+    title: "✦ Jung",
+    body: "There is no coming to consciousness without pain.",
+  },
+
+  // — Naval Ravikant (2)
+  {
+    title: "✦ Naval",
+    body: "Read what you love until you love to read.",
+  },
+  {
+    title: "✦ Naval",
+    body: "Desire is a contract you make with yourself to be unhappy until you get what you want.",
+  },
+
+  // — David Goggins (3)
+  {
+    title: "✦ Goggins",
+    body: "The only person you've got to beat is who you were yesterday.",
+  },
+  {
+    title: "✦ Goggins",
+    body: "Suffer now and live the rest of your life as a champion.",
+  },
+  {
+    title: "✦ Goggins",
+    body: "We live in a world where mediocrity is praised. Refuse to be average.",
+  },
+
+  // — Jocko Willink (2)
+  {
+    title: "✦ Jocko",
+    body: "Discipline equals freedom.",
+  },
+  {
+    title: "✦ Jocko",
+    body: "Don't count on motivation. Count on discipline.",
+  },
+
+  // — Bruce Lee (3)
+  {
+    title: "✦ Bruce Lee",
+    body: "Long-term consistency beats short-term intensity.",
+  },
+  {
+    title: "✦ Bruce Lee",
+    body: "Knowing is not enough; we must apply. Willing is not enough; we must do.",
+  },
+  {
+    title: "✦ Bruce Lee",
+    body: "Absorb what is useful, discard what is useless, add what is essentially your own.",
+  },
+
+  // — Rumi (3)
+  {
+    title: "✦ Rumi",
+    body: "The wound is the place where the light enters you.",
+  },
+  {
+    title: "✦ Rumi",
+    body: "What you seek is seeking you.",
+  },
+  {
+    title: "✦ Rumi",
+    body: "Don't grieve. Anything you lose comes round in another form.",
+  },
+
+  // — Ramana Maharshi (2)
+  {
+    title: "✦ Ramana",
+    body: "Your own Self-realization is the greatest service you can render the world.",
+  },
+  {
+    title: "✦ Ramana",
+    body: "Silence is never-ending speech. Vocal speech obstructs the other.",
+  },
+
+  // — Swami Vivekananda (2)
+  {
+    title: "✦ Vivekananda",
+    body: "Arise, awake, and stop not until the goal is reached.",
+  },
+  {
+    title: "✦ Vivekananda",
+    body: "All the powers in the universe are already ours. We put our hands before our eyes and cry that it is dark.",
+  },
+
+  // — Thich Nhat Hanh (2)
+  {
+    title: "✦ Thich Nhat Hanh",
+    body: "Walk as if you are kissing the Earth with your feet.",
+  },
+  {
+    title: "✦ Thich Nhat Hanh",
+    body: "Smile, breathe and go slowly.",
+  },
+
+  // — Eckhart Tolle (2)
+  {
+    title: "✦ Tolle",
+    body: "Realize deeply that the present moment is all you ever have.",
+  },
+  {
+    title: "✦ Tolle",
+    body: "The voice in your head is not who you are. Awareness of it — that is who you are.",
+  },
+
+  // — J. Krishnamurti (2)
+  {
+    title: "✦ Krishnamurti",
+    body: "It is no measure of health to be well-adjusted to a profoundly sick society.",
+  },
+  {
+    title: "✦ Krishnamurti",
+    body: "Freedom is found in the choiceless awareness of our daily existence.",
+  },
+
+  // — Miyamoto Musashi (2)
+  {
+    title: "✦ Musashi",
+    body: "Today is victory over yourself of yesterday. Tomorrow is your victory over lesser men.",
+  },
+  {
+    title: "✦ Musashi",
+    body: "Do nothing that is of no use.",
+  },
+
+  // — Patanjali · Yoga Sutras (1)
+  {
+    title: "✦ Patanjali",
+    body: "Yoga is the cessation of the fluctuations of the mind. — Yoga Sutra 1.2",
+  },
+
+  // — Hunter / System-coded originals (5)
   {
     title: "✦ Hunter's Code",
     body: "An E-rank Hunter who shows up daily becomes an S-rank in the only way it's ever happened — slowly, then suddenly.",
