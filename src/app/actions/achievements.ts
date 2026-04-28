@@ -11,6 +11,7 @@ import {
 } from "@/lib/dungeons";
 import {
   QUESTS,
+  SIDE_QUESTS,
   COMBO_THRESHOLD,
   computeComboRuns,
   totalMilestoneXp,
@@ -172,7 +173,10 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     }
   }
 
-  // Perfect quest days: any date where every quest was completed
+  // Perfect quest days: any date where every quest was completed.
+  // Side quests are excluded from these sets so they don't fake-inflate
+  // perfect-day or combo counts on rare-quest days.
+  const sideQuestIds = new Set(SIDE_QUESTS.map((q) => q.id));
   const byDate: Record<string, Set<string>> = {};
   const weekByDate: Record<string, Set<string>> = {};
   const monthByDate: Record<string, Set<string>> = {};
@@ -180,17 +184,24 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   let monthQuestTotal = 0;
   for (const q of quests) {
     const key = q.date.toISOString().split("T")[0];
-    if (!byDate[key]) byDate[key] = new Set();
-    byDate[key].add(q.questId);
+    const isDaily = !sideQuestIds.has(q.questId);
+    if (isDaily) {
+      if (!byDate[key]) byDate[key] = new Set();
+      byDate[key].add(q.questId);
+    }
     if (q.date >= monthCutoff) {
       monthQuestTotal++;
-      if (!monthByDate[key]) monthByDate[key] = new Set();
-      monthByDate[key].add(q.questId);
+      if (isDaily) {
+        if (!monthByDate[key]) monthByDate[key] = new Set();
+        monthByDate[key].add(q.questId);
+      }
     }
     if (q.date >= weekCutoff) {
       weekQuestTotal++;
-      if (!weekByDate[key]) weekByDate[key] = new Set();
-      weekByDate[key].add(q.questId);
+      if (isDaily) {
+        if (!weekByDate[key]) weekByDate[key] = new Set();
+        weekByDate[key].add(q.questId);
+      }
     }
   }
 
@@ -224,7 +235,9 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   let questXpTotal = 0;
   const dimensions = { body: 0, mind: 0, emotion: 0, energy: 0, spirit: 0 };
   for (const q of quests) {
-    const def = QUESTS.find((x) => x.id === q.questId);
+    const def =
+      QUESTS.find((x) => x.id === q.questId) ??
+      SIDE_QUESTS.find((x) => x.id === q.questId);
     if (!def) continue;
     questXpTotal += def.xp;
     dimensions.body += def.body ?? 0;

@@ -4,6 +4,7 @@ import Link from "next/link";
 import StreakCard from "@/components/StreakCard";
 import AllowanceDungeonCard from "@/components/AllowanceDungeonCard";
 import DailyQuests from "@/components/DailyQuests";
+import SideQuests from "@/components/SideQuests";
 import {
   STATS_UPDATED_EVENT,
   hasPendingMutations,
@@ -13,7 +14,7 @@ import {
   getDashboardData,
   type DashboardData,
 } from "@/app/actions/dungeons";
-import { todayLocalISO } from "@/lib/quests";
+import { todayLocalISO, availableSideQuests, SIDE_QUESTS } from "@/lib/quests";
 import TimedDungeonCard from "@/components/TimedDungeonCard";
 import CadenceDungeonCard from "@/components/CadenceDungeonCard";
 import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
@@ -133,6 +134,25 @@ export default function Dashboard() {
             priorComboDays={dashboard.priorComboDays}
           />
         )}
+
+        {dashboard &&
+          (() => {
+            const today = todayLocalISO();
+            const offered = availableSideQuests(today);
+            if (offered.length === 0) return null;
+            const sideQuestIds = new Set(SIDE_QUESTS.map((q) => q.id));
+            const completedSide = dashboard.todayQuestIds.filter((id) =>
+              sideQuestIds.has(id)
+            );
+            return (
+              <SideQuests
+                key={`side-${today}`}
+                quests={offered}
+                initialCompletedIds={completedSide}
+                initialLifetime={dashboard.lifetimeRewards}
+              />
+            );
+          })()}
 
         {dashboard && activeRuns.length === 0 && (
           <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.2),inset_0_0_20px_rgba(34,211,238,0.05)] p-6 text-center">

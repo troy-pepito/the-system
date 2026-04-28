@@ -37,6 +37,50 @@ export const QUESTS: Quest[] = [
   { id: "clean-room", name: "Clean Room", xp: 10, mind: 1, emotion: 1, spirit: 1 },
 ];
 
+export interface SideQuest extends Quest {
+  /** Short tagline shown in the collapsed card. */
+  tagline: string;
+  /** Detailed rules shown when the card is expanded. */
+  rules: string[];
+  /** Returns true if this side quest is offered today. */
+  isAvailable: (dateIso: string) => boolean;
+}
+
+// Ekadashi dates aligned with Sadhguru / Isha calendar.
+// Refresh annually — extend as new dates are released.
+export const EKADASHI_DATES = new Set<string>([
+  "2026-03-15",
+  "2026-03-28",
+  "2026-04-13",
+  "2026-04-27",
+]);
+
+export function isEkadashi(dateIso: string): boolean {
+  return EKADASHI_DATES.has(dateIso);
+}
+
+export const SIDE_QUESTS: SideQuest[] = [
+  {
+    id: "ekadashi-fast",
+    name: "Ekadashi Fast",
+    tagline: "Give the digestive fire a rest. Detoxify before sundown.",
+    xp: 200,
+    body: 5,
+    spirit: 3,
+    rules: [
+      "No cooked food for the entire day — break the fast at sundown.",
+      "Allowed during the day: water, juice, tea, coffee.",
+      "If a full fast is too much, fruit is okay — keep it light, raw, non-grain.",
+      "Sadhguru frames this as letting the digestive 'Agni' settle so the body cleanses itself.",
+    ],
+    isAvailable: isEkadashi,
+  },
+];
+
+export function availableSideQuests(dateIso: string): SideQuest[] {
+  return SIDE_QUESTS.filter((q) => q.isAvailable(dateIso));
+}
+
 export function applyQuest(
   current: QuestRewards,
   q: Quest,
