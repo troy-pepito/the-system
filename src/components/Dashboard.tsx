@@ -20,22 +20,25 @@ import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
 import { readCache, writeCache } from "@/lib/offlineCache";
 import { drainQueue } from "@/lib/offlineDrain";
 
-const DASHBOARD_CACHE_KEY = "dashboard";
+const dashboardCacheKey = (date: string) => `dashboard:${date}`;
 
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(() =>
     typeof window === "undefined"
       ? null
-      : readCache<DashboardData>(DASHBOARD_CACHE_KEY)
+      : readCache<DashboardData>(dashboardCacheKey(todayLocalISO()))
   );
 
   const reload = () => {
     drainQueue()
       .catch(() => {})
-      .then(() => getDashboardData(todayLocalISO()))
-      .then((d) => {
+      .then(() => {
+        const today = todayLocalISO();
+        return getDashboardData(today).then((d) => ({ d, today }));
+      })
+      .then(({ d, today }) => {
         if (hasPendingMutations()) return;
-        writeCache(DASHBOARD_CACHE_KEY, d);
+        writeCache(dashboardCacheKey(today), d);
         setDashboard(d);
       })
       .catch(() => {});
@@ -125,6 +128,7 @@ export default function Dashboard() {
 
         {dashboard && (
           <DailyQuests
+            key={todayLocalISO()}
             initialTodayIds={dashboard.todayQuestIds}
             initialLifetime={dashboard.lifetimeRewards}
             priorComboDays={dashboard.priorComboDays}
