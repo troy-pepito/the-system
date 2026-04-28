@@ -16,21 +16,44 @@ const KEY = "system:gains-log";
 const EVENT = "system:gains-log-changed";
 const MAX_ENTRIES = 10;
 
+const EMPTY: GainEntry[] = [];
+
+// Cache the latest parsed snapshot so useSyncExternalStore sees a stable
+// reference while nothing has changed. Returning a fresh array on every
+// call (which JSON.parse would do) makes React infinite-loop.
+let cachedRaw: string | null = null;
+let cachedSnapshot: GainEntry[] = EMPTY;
+
 function read(): GainEntry[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === "undefined") return EMPTY;
+  let raw: string | null = null;
   try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    raw = localStorage.getItem(KEY);
   } catch {
-    return [];
+    return cachedSnapshot;
   }
+  if (raw === cachedRaw) return cachedSnapshot;
+  cachedRaw = raw;
+  if (!raw) {
+    cachedSnapshot = EMPTY;
+    return cachedSnapshot;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    cachedSnapshot = Array.isArray(parsed) ? parsed : EMPTY;
+  } catch {
+    cachedSnapshot = EMPTY;
+  }
+  return cachedSnapshot;
 }
 
 function write(entries: GainEntry[]): void {
   try {
-    localStorage.setItem(KEY, JSON.stringify(entries));
+    const serialized = JSON.stringify(entries);
+    localStorage.setItem(KEY, serialized);
+    // Pre-warm the cache so the next read() returns this exact array.
+    cachedRaw = serialized;
+    cachedSnapshot = entries;
     window.dispatchEvent(new Event(EVENT));
   } catch {
     // Quota or serialization failure — skip; the toast already fired.
@@ -56,5 +79,5 @@ function subscribe(cb: () => void): () => void {
 }
 
 export function useGains(): GainEntry[] {
-  return useSyncExternalStore(subscribe, read, () => []);
+  return useSyncExternalStore(subscribe, read, () => EMPTY);
 }
