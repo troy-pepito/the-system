@@ -22,7 +22,6 @@ import {
 } from "@/app/actions/dungeons";
 import { getDungeon } from "@/lib/dungeons";
 import NotificationSettings from "@/components/NotificationSettings";
-import SideQuestDebugToggle from "@/components/SideQuestDebugToggle";
 import FriendsSection from "@/components/FriendsSection";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
 import {
@@ -225,7 +224,6 @@ export default function ProfilePage() {
           <div className="space-y-5">
             <AtmosphereToggle />
             <NotificationSettings />
-            <SideQuestDebugToggle />
           </div>
         </Card>
       </div>

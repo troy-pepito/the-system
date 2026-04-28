@@ -5,7 +5,6 @@ import StreakCard from "@/components/StreakCard";
 import AllowanceDungeonCard from "@/components/AllowanceDungeonCard";
 import DailyQuests from "@/components/DailyQuests";
 import SideQuests from "@/components/SideQuests";
-import { isForceEkadashi } from "@/components/SideQuestDebugToggle";
 import {
   STATS_UPDATED_EVENT,
   hasPendingMutations,
@@ -139,8 +138,7 @@ export default function Dashboard() {
         {dashboard &&
           (() => {
             const today = todayLocalISO();
-            const forced = isForceEkadashi();
-            const offered = forced ? SIDE_QUESTS : availableSideQuests(today);
+            const offered = availableSideQuests(today);
             if (offered.length === 0) return null;
             const sideQuestIds = new Set(SIDE_QUESTS.map((q) => q.id));
             const completedSide = dashboard.todayQuestIds.filter((id) =>
@@ -148,7 +146,7 @@ export default function Dashboard() {
             );
             return (
               <SideQuests
-                key={`side-${today}-${forced ? "forced" : "real"}`}
+                key={`side-${today}`}
                 quests={offered}
                 initialCompletedIds={completedSide}
                 initialLifetime={dashboard.lifetimeRewards}
