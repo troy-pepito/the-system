@@ -121,6 +121,8 @@ export default function ProfilePage() {
 
         <HunterCard totalXp={stats.totalXp} scattered={stats.scattered} />
 
+        <RecentGains />
+
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
@@ -147,8 +149,6 @@ export default function ProfilePage() {
             Earned from daily quests and dungeon ranks cleared.
           </p>
         </Card>
-
-        <RecentGains />
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
