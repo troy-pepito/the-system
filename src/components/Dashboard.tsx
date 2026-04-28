@@ -219,7 +219,8 @@ export default function Dashboard() {
                   dungeonId={run.dungeonId}
                   initialRun={run}
                   initialWeekWorkouts={detail.weekWorkouts ?? []}
-                  onRelapse={handleEnded}
+                  onStreakChange={reload}
+                  onExit={handleEnded}
                 />
               );
             } else if (d.ruleType === "progressive") {

@@ -33,7 +33,7 @@ interface CadenceDungeonCardProps {
   initialRun: DungeonRunState;
   initialWeekWorkouts: string[];
   onStreakChange?: (days: number) => void;
-  onRelapse?: () => void;
+  onExit?: () => void;
 }
 
 export default function CadenceDungeonCard({
@@ -41,7 +41,7 @@ export default function CadenceDungeonCard({
   initialRun,
   initialWeekWorkouts,
   onStreakChange,
-  onRelapse,
+  onExit,
 }: CadenceDungeonCardProps) {
   const dungeon = getDungeon(dungeonId);
   const dungeonName = dungeon?.name ?? dungeonId;
@@ -57,14 +57,16 @@ export default function CadenceDungeonCard({
   const [completed, setCompleted] = useState<string[]>(initialWeekWorkouts);
 
   const journal = useJournalAction({ dungeonId, dungeonName });
-  const relapse = useEndRunAction({
+  const exitAction = useEndRunAction({
     dungeonId,
     dungeonName,
-    reason: "relapse",
-    ruleType: "cadence",
-    trackProperties: { streak_days: streak },
+    reason: "completed",
     modalOverrides: {
-      placeholder: "What threw the rhythm off? (optional)",
+      title: `Exit — ${dungeonName}`,
+      placeholder: "Why are you exiting? (optional)",
+      confirmLabel: "Exit Dungeon",
+      skipLabel: "Cancel",
+      cancelOnSkip: true,
     },
     onLocalReset: () => {
       setStartDate(null);
@@ -72,7 +74,7 @@ export default function CadenceDungeonCard({
       setCompleted([]);
       endRunInCache(dungeonId);
       onStreakChange?.(0);
-      onRelapse?.();
+      onExit?.();
     },
   });
 
@@ -254,10 +256,10 @@ export default function CadenceDungeonCard({
               + Journal Entry
             </button>
             <button
-              onClick={relapse.open}
-              className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
+              onClick={exitAction.open}
+              className="px-4 py-2 border border-slate-700 rounded text-slate-500 text-[11px] uppercase tracking-[0.3em] hover:text-amber-300/80 hover:border-amber-500/30 transition-colors"
             >
-              Relapse — Reset
+              Exit Dungeon
             </button>
           </div>
         </div>
@@ -271,7 +273,7 @@ export default function CadenceDungeonCard({
         </div>
       )}
 
-      <NoteModal {...relapse.modalProps} />
+      <NoteModal {...exitAction.modalProps} />
       <NoteModal {...journal.modalProps} />
     </div>
   );
