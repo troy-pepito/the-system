@@ -46,17 +46,29 @@ export interface SideQuest extends Quest {
   isAvailable: (dateIso: string) => boolean;
 }
 
-// Ekadashi dates aligned with Sadhguru / Isha calendar.
-// Refresh annually — extend as new dates are released.
-export const EKADASHI_DATES = new Set<string>([
-  "2026-03-15",
-  "2026-03-28",
-  "2026-04-13",
-  "2026-04-27",
-]);
+import { MoonPhase } from "astronomy-engine";
 
+/**
+ * Returns the lunar tithi (1–30) at sunrise (~06:00 IST = 00:30 UTC) of the
+ * given calendar date. Tithi 1 = day after new moon, tithi 16 = day after
+ * full moon. Tithi spans roughly 19–26 hours, so sampling at a fixed time
+ * tracks the tithi present at sunrise — matching the convention most
+ * Hindu calendars (incl. Sadhguru/Isha) use to assign a tithi to a day.
+ */
+function tithiAt(dateIso: string): number {
+  const date = new Date(`${dateIso}T00:30:00Z`);
+  const phase = MoonPhase(date); // 0–360°: moon ecliptic lng minus sun's
+  return Math.floor(phase / 12) + 1;
+}
+
+/**
+ * True when the date is an Ekadashi — tithi 11 (Shukla Ekadashi, 11th day
+ * after new moon) or tithi 26 (Krishna Ekadashi, 11th day after full moon).
+ * Computed astronomically, no annual list to maintain.
+ */
 export function isEkadashi(dateIso: string): boolean {
-  return EKADASHI_DATES.has(dateIso);
+  const t = tithiAt(dateIso);
+  return t === 11 || t === 26;
 }
 
 export const SIDE_QUESTS: SideQuest[] = [
