@@ -121,6 +121,7 @@ export default function DungeonCheckInPanel({
       emotion: dims.emotion,
       energy: dims.energy,
       spirit: dims.spirit,
+      source: `${dungeonName} · Day Cleared`,
     });
     notifyStatsUpdated({ xpDelta: XP_PER_STREAK_DAY });
     track("day_confirmed_cleared", { dungeon_id: dungeonId, date });

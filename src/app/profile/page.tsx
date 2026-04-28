@@ -22,6 +22,7 @@ import {
 } from "@/app/actions/dungeons";
 import { getDungeon } from "@/lib/dungeons";
 import NotificationSettings from "@/components/NotificationSettings";
+import RecentGains from "@/components/RecentGains";
 import FriendsSection from "@/components/FriendsSection";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
 import {
@@ -146,6 +147,8 @@ export default function ProfilePage() {
             Earned from daily quests and dungeon ranks cleared.
           </p>
         </Card>
+
+        <RecentGains />
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">

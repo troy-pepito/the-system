@@ -56,6 +56,8 @@ export interface RewardDelta {
   emotion?: number;
   energy?: number;
   spirit?: number;
+  /** Optional human-readable source label, e.g. "Cold Shower" or "NoFap · Day Cleared". */
+  source?: string;
 }
 
 export function notifyReward(delta: RewardDelta) {

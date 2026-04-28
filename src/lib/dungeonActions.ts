@@ -143,7 +143,10 @@ export function useEndRunAction(opts: EndRunActionOptions): {
       });
     }
     if (!isRelapse) {
-      notifyReward({ xp: XP_PER_COMPLETION });
+      notifyReward({
+        xp: XP_PER_COMPLETION,
+        source: `${opts.dungeonName} · Victory`,
+      });
     }
     opts.onLocalReset();
     notifyStatsUpdated();

@@ -95,6 +95,7 @@ export default function DailyQuests({
         emotion: quest.emotion,
         energy: quest.energy,
         spirit: quest.spirit,
+        source: quest.name,
       });
     }
 
