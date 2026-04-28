@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendPushToUser, type PushPayload } from "@/lib/push";
+import { pickWisdomQuote } from "@/lib/wisdom";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,11 @@ export async function GET(request: Request) {
   const now = new Date();
   const todayUtc = startOfUtcDay(now);
   const yesterdayUtc = new Date(todayUtc.getTime() - 24 * 60 * 60 * 1000);
+  const todayIso = todayUtc.toISOString().split("T")[0];
+  const wisdomFallback: PushPayload = {
+    ...pickWisdomQuote(todayIso),
+    url: "/",
+  };
 
   const userIds = (
     await prisma.pushSubscription.findMany({
@@ -65,8 +71,7 @@ export async function GET(request: Request) {
     users: userIds.length,
     sent: 0,
     removed: 0,
-    skipped: 0,
-    byType: { relapse: 0, scattered: 0, reset: 0, none: 0 },
+    byType: { relapse: 0, scattered: 0, reset: 0, wisdom: 0 },
   };
 
   for (const userId of userIds) {
@@ -85,19 +90,18 @@ export async function GET(request: Request) {
         prisma.questCompletion.count({ where: { userId } }),
       ]);
 
-    const payload = pickMessage({
+    const stateMessage = pickMessage({
       relapsedYesterday,
       questsYesterday,
       totalQuestsEver,
     });
 
-    if (!payload) {
-      summary.skipped++;
-      summary.byType.none++;
-      continue;
-    }
+    // Default to today's wisdom quote when no state-specific nudge applies —
+    // every push-subscribed user now gets at least one daily push.
+    const payload = stateMessage ?? wisdomFallback;
 
-    if (payload.title.startsWith("⚡")) summary.byType.relapse++;
+    if (payload === wisdomFallback) summary.byType.wisdom++;
+    else if (payload.title.startsWith("⚡")) summary.byType.relapse++;
     else if (payload.title.startsWith("⚠")) summary.byType.scattered++;
     else summary.byType.reset++;
 
