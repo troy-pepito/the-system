@@ -1,12 +1,14 @@
 import { readCache, writeCache } from "@/lib/offlineCache";
+import { todayLocalISO } from "@/lib/quests";
 import type { DashboardData, RunDetail } from "@/app/actions/dungeons";
 
-const KEY = "dashboard";
+export const dashboardCacheKey = (date: string) => `dashboard:${date}`;
 
 function mutate(fn: (d: DashboardData) => DashboardData): void {
-  const current = readCache<DashboardData>(KEY);
+  const key = dashboardCacheKey(todayLocalISO());
+  const current = readCache<DashboardData>(key);
   if (!current) return;
-  writeCache(KEY, fn(current));
+  writeCache(key, fn(current));
 }
 
 function withDetail(

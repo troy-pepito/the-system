@@ -16,6 +16,7 @@ import {
 import { toggleQuestCompletion } from "@/app/actions/quests";
 import { track } from "@/lib/analytics";
 import { readCache, writeCache } from "@/lib/offlineCache";
+import { dashboardCacheKey } from "@/lib/dashboardCacheOps";
 import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
 import type { DashboardData } from "@/app/actions/dungeons";
@@ -69,9 +70,10 @@ export default function DailyQuests({
     onRewardsChange?.(nextLifetime);
     setBusyIds((prev) => new Set(prev).add(id));
 
-    const cached = readCache<DashboardData>("dashboard");
+    const key = dashboardCacheKey(date);
+    const cached = readCache<DashboardData>(key);
     if (cached) {
-      writeCache("dashboard", {
+      writeCache(key, {
         ...cached,
         todayQuestIds: nextCompleted,
         lifetimeRewards: nextLifetime,

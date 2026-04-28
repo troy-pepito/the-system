@@ -18,9 +18,8 @@ import TimedDungeonCard from "@/components/TimedDungeonCard";
 import CadenceDungeonCard from "@/components/CadenceDungeonCard";
 import ProgressiveDungeonCard from "@/components/ProgressiveDungeonCard";
 import { readCache, writeCache } from "@/lib/offlineCache";
+import { dashboardCacheKey } from "@/lib/dashboardCacheOps";
 import { drainQueue } from "@/lib/offlineDrain";
-
-const dashboardCacheKey = (date: string) => `dashboard:${date}`;
 
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(() =>

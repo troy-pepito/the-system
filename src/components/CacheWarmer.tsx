@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { readCache, writeCache } from "@/lib/offlineCache";
+import { dashboardCacheKey } from "@/lib/dashboardCacheOps";
 import { useOnline } from "@/lib/offline";
 import {
   getAllActiveRuns,
@@ -16,9 +17,11 @@ export default function CacheWarmer() {
   useEffect(() => {
     if (!online) return;
 
-    if (!readCache("dashboard")) {
-      getDashboardData(todayLocalISO())
-        .then((d) => writeCache("dashboard", d))
+    const today = todayLocalISO();
+    const dashKey = dashboardCacheKey(today);
+    if (!readCache(dashKey)) {
+      getDashboardData(today)
+        .then((d) => writeCache(dashKey, d))
         .catch(() => {});
     }
     if (!readCache("profile")) {
