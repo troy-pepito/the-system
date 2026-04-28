@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/evening-nudge",
       "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/cron/ekadashi-reminder",
+      "schedule": "0 * * * *"
     }
   ]
 }

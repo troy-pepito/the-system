@@ -50,10 +50,13 @@ export default function DailyReminderAutoEnroll() {
         const p256dh = json.keys?.p256dh;
         const auth = json.keys?.auth;
         if (!p256dh || !auth || !sub.endpoint) return;
+        const timezone =
+          Intl.DateTimeFormat().resolvedOptions().timeZone || undefined;
         await savePushSubscription({
           endpoint: sub.endpoint,
           p256dh,
           auth,
+          timezone,
         });
       } catch {
         // Silent — toggle in profile is the recovery path.

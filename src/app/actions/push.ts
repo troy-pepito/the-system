@@ -7,6 +7,7 @@ export async function savePushSubscription(input: {
   endpoint: string;
   p256dh: string;
   auth: string;
+  timezone?: string;
 }): Promise<void> {
   const userId = await requireUserId();
   await prisma.pushSubscription.upsert({
@@ -16,11 +17,13 @@ export async function savePushSubscription(input: {
       endpoint: input.endpoint,
       p256dh: input.p256dh,
       auth: input.auth,
+      timezone: input.timezone,
     },
     update: {
       userId,
       p256dh: input.p256dh,
       auth: input.auth,
+      ...(input.timezone ? { timezone: input.timezone } : {}),
     },
   });
 }

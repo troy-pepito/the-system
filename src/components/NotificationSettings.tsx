@@ -85,7 +85,14 @@ export default function NotificationSettings() {
       if (!p256dh || !auth || !sub.endpoint) {
         throw new Error("Incomplete subscription");
       }
-      await savePushSubscription({ endpoint: sub.endpoint, p256dh, auth });
+      const timezone =
+        Intl.DateTimeFormat().resolvedOptions().timeZone || undefined;
+      await savePushSubscription({
+        endpoint: sub.endpoint,
+        p256dh,
+        auth,
+        timezone,
+      });
       setStatus("on");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not enable");

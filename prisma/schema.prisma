@@ -88,6 +88,7 @@ model PushSubscription {
   endpoint  String   @unique
   p256dh    String
   auth      String
+  timezone  String?
   createdAt DateTime @default(now())
 
   @@index([userId])
