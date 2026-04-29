@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
 import Paywall from "@/components/Paywall";
+import WhatsNewBadge from "@/components/WhatsNewBadge";
 import { isPricingEnabled, isUserPro } from "@/lib/pricing";
 import {
   STATS_UPDATED_EVENT,
@@ -120,6 +121,7 @@ export default function Navbar() {
             )}
             <span className="text-amber-400">Rank {rank}</span>
             <span className="text-emerald-400">Lv {level}</span>
+            <WhatsNewBadge />
             <UserButton
               appearance={{
                 elements: {
