@@ -146,6 +146,11 @@ export default function DungeonCheckInPanel({
     note?: string,
     isPublic = false
   ) {
+    // Compute XP delta BEFORE we mutate state — if the day was cleared,
+    // marking it relapsed wipes that day's XP.
+    const prevState = checkIns.find((c) => c.date === date)?.state;
+    const xpDelta = prevState === "cleared" ? -XP_PER_STREAK_DAY : 0;
+
     let nextList: DayCheckIn[] = [];
     setCheckIns((prev) => {
       const existing = prev.find((c) => c.date === date);
@@ -161,7 +166,11 @@ export default function DungeonCheckInPanel({
     });
     reportClearedCount(nextList);
     track("day_confirmed_relapsed", { dungeon_id: dungeonId, date });
-    notifyStatsUpdated();
+    // Pass an explicit xpDelta (even 0) so the panel's own
+    // STATS_UPDATED_EVENT listener skips its refetch — otherwise it
+    // races with the server write below and clobbers our optimistic
+    // update with a stale read.
+    notifyStatsUpdated({ xpDelta });
 
     try {
       await confirmDay(
@@ -185,6 +194,12 @@ export default function DungeonCheckInPanel({
   }
 
   async function commitUndo(date: string) {
+    // Same race-fix as commitRelapsed: figure out the XP impact before
+    // we drop the entry, then notify with an explicit delta so the
+    // refetch listener stays out of our way.
+    const removed = checkIns.find((c) => c.date === date);
+    const xpDelta = removed?.state === "cleared" ? -XP_PER_STREAK_DAY : 0;
+
     let nextList: DayCheckIn[] = [];
     setCheckIns((prev) => {
       const result = prev.filter((c) => c.date !== date);
@@ -192,7 +207,7 @@ export default function DungeonCheckInPanel({
       return result;
     });
     reportClearedCount(nextList);
-    notifyStatsUpdated();
+    notifyStatsUpdated({ xpDelta });
     try {
       await clearCheckIn(dungeonId, date);
     } catch {
