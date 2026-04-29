@@ -38,19 +38,19 @@ const JOURNAL_CACHE_KEY = "journal";
 type Range = "week" | "month" | "all";
 
 export default function ProfilePage() {
-  const [data, setData] = useState<ProfilePageData | null>(() =>
-    typeof window === "undefined"
-      ? null
-      : readCache<ProfilePageData>(PROFILE_CACHE_KEY)
-  );
-  const [journal, setJournal] = useState<JournalEntry[]>(() =>
-    typeof window === "undefined"
-      ? []
-      : readCache<JournalEntry[]>(JOURNAL_CACHE_KEY) ?? []
-  );
+  // Important: initialize to null/[] both server- and client-side so the
+  // first render matches between SSR and hydration. Cache is read inside
+  // useEffect AFTER the initial render commits.
+  const [data, setData] = useState<ProfilePageData | null>(null);
+  const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [range, setRange] = useState<Range>("all");
 
   useEffect(() => {
+    const cachedData = readCache<ProfilePageData>(PROFILE_CACHE_KEY);
+    if (cachedData) setData(cachedData);
+    const cachedJournal = readCache<JournalEntry[]>(JOURNAL_CACHE_KEY);
+    if (cachedJournal && cachedJournal.length > 0) setJournal(cachedJournal);
+
     const load = () => {
       getProfilePageData()
         .then((d) => {
