@@ -82,6 +82,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${chakraPetch.variable} h-full antialiased`}
       >
         <body className="min-h-full flex flex-col">
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[300] focus:px-4 focus:py-2 focus:bg-cyan-400 focus:text-slate-950 focus:text-xs focus:font-bold focus:uppercase focus:tracking-[0.3em] focus:rounded focus:shadow-[0_0_24px_rgba(34,211,238,0.7)]"
+          >
+            Skip to content
+          </a>
           <PostHogProvider>
             <ServiceWorkerRegistration />
             <OfflineBanner />

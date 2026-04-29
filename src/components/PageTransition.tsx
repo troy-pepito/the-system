@@ -8,7 +8,12 @@ export default function PageTransition({
 }) {
   const pathname = usePathname();
   return (
-    <div key={pathname} className="relative animate-fade-in-up">
+    <div
+      key={pathname}
+      id="main-content"
+      tabIndex={-1}
+      className="relative animate-fade-in-up focus:outline-none"
+    >
       <div
         aria-hidden
         className="fixed left-0 right-0 top-0 h-px z-[197] pointer-events-none animate-sweep-in"
