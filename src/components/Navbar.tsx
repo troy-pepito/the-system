@@ -19,11 +19,9 @@ import { readCache, writeCache } from "@/lib/offlineCache";
 const TOTAL_XP_CACHE_KEY = "totalXp";
 
 export default function Navbar() {
-  const [totalXp, setTotalXp] = useState<number>(() =>
-    typeof window === "undefined"
-      ? 0
-      : readCache<number>(TOTAL_XP_CACHE_KEY) ?? 0
-  );
+  // Initialize 0 on both server and client so the SSR'd HTML matches
+  // the first client render. Cache hydration happens in the useEffect.
+  const [totalXp, setTotalXp] = useState<number>(0);
   const pathname = usePathname();
 
   const navLink = (href: string, label: string) => {
@@ -44,6 +42,11 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    // Hydrate XP from cache after mount so the bar fills in instantly,
+    // then fetch fresh from the server.
+    const cached = readCache<number>(TOTAL_XP_CACHE_KEY);
+    if (typeof cached === "number") setTotalXp(cached);
+
     const recompute = async () => {
       try {
         const stats = await getProfileStats();

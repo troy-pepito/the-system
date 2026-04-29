@@ -23,11 +23,10 @@ import { dashboardCacheKey } from "@/lib/dashboardCacheOps";
 import { drainQueue } from "@/lib/offlineDrain";
 
 export default function Dashboard() {
-  const [dashboard, setDashboard] = useState<DashboardData | null>(() =>
-    typeof window === "undefined"
-      ? null
-      : readCache<DashboardData>(dashboardCacheKey(todayLocalISO()))
-  );
+  // Initialize null both server- and client-side to keep SSR and first
+  // client render identical. Cache hydration happens in the useEffect
+  // below before the server fetch completes.
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
 
   const reload = () => {
     drainQueue()
@@ -60,6 +59,12 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    // Hydrate from cache first so the dashboard pops in instantly,
+    // then fetch fresh from server.
+    const cached = readCache<DashboardData>(
+      dashboardCacheKey(todayLocalISO())
+    );
+    if (cached) setDashboard(cached);
     reload();
     const onEvent = (e: Event) => {
       const delta = (e as CustomEvent<{ xpDelta?: number }>).detail?.xpDelta;

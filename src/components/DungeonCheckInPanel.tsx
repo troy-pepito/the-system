@@ -44,10 +44,10 @@ export default function DungeonCheckInPanel({
   startDate,
   onClearedCountChange,
 }: DungeonCheckInPanelProps) {
-  const [checkIns, setCheckIns] = useState<DayCheckIn[]>(() => {
-    if (typeof window === "undefined") return [];
-    return readCache<DayCheckIn[]>(checkInCacheKey(dungeonId)) ?? [];
-  });
+  // Initialize empty on both server and client so SSR HTML matches
+  // first-client render. Cache hydration runs in the useEffect below
+  // before the server fetch settles.
+  const [checkIns, setCheckIns] = useState<DayCheckIn[]>([]);
   const [pending, setPending] = useState<string | null>(null);
   const [relapseNoteOpen, setRelapseNoteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -61,6 +61,7 @@ export default function DungeonCheckInPanel({
     let cancelled = false;
     const cached = readCache<DayCheckIn[]>(checkInCacheKey(dungeonId));
     if (cached) {
+      setCheckIns(cached);
       onClearedCountChangeRef.current(
         cached.filter((c) => c.state === "cleared").length
       );
