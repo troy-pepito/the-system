@@ -22,6 +22,10 @@ interface NoteModalProps {
    * textarea. The chosen value is passed to onSubmit as the second arg.
    */
   showPublicToggle?: boolean;
+  /** Pre-fills the textarea — used by the journal edit flow. */
+  initialNote?: string;
+  /** Pre-checks the public toggle when showPublicToggle is true. */
+  initialIsPublic?: boolean;
 }
 
 export default function NoteModal(props: NoteModalProps) {
@@ -40,9 +44,11 @@ function NoteModalInner({
   tone = "neutral",
   cancelOnSkip = false,
   showPublicToggle = false,
+  initialNote = "",
+  initialIsPublic = false,
 }: NoteModalProps) {
-  const [note, setNote] = useState("");
-  const [isPublic, setIsPublic] = useState(false);
+  const [note, setNote] = useState(initialNote);
+  const [isPublic, setIsPublic] = useState(initialIsPublic);
   const taRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {

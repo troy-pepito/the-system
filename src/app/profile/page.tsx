@@ -17,9 +17,12 @@ import {
   type ProfilePageData,
 } from "@/app/actions/achievements";
 import {
+  deleteJournalEntry,
   getJournalEntries,
+  updateJournalEntry,
   type JournalEntry,
 } from "@/app/actions/dungeons";
+import NoteModal from "@/components/NoteModal";
 import { getDungeon } from "@/lib/dungeons";
 import NotificationSettings from "@/components/NotificationSettings";
 import InstallAppButton from "@/components/InstallAppButton";
@@ -160,7 +163,13 @@ export default function ProfilePage() {
 
         <FriendsSection />
 
-        <JournalSection entries={journal} />
+        <JournalSection
+          entries={journal}
+          onEntriesChange={(next) => {
+            setJournal(next);
+            writeCache(JOURNAL_CACHE_KEY, next);
+          }}
+        />
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
@@ -448,8 +457,50 @@ function groupEntriesByDate(
   return Array.from(map.entries());
 }
 
-function JournalSection({ entries }: { entries: JournalEntry[] }) {
+function JournalSection({
+  entries,
+  onEntriesChange,
+}: {
+  entries: JournalEntry[];
+  onEntriesChange: (next: JournalEntry[]) => void;
+}) {
   const groups = groupEntriesByDate(entries);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState<number | null>(
+    null
+  );
+
+  const editingEntry = entries.find((e) => e.id === editingId) ?? null;
+
+  async function handleEditSubmit(note: string | null, isPublic?: boolean) {
+    setEditingId(null);
+    if (!editingEntry || !note) return;
+    const trimmed = note.trim();
+    if (!trimmed) return;
+    const nextIsPublic = isPublic ?? false;
+    onEntriesChange(
+      entries.map((e) =>
+        e.id === editingEntry.id
+          ? { ...e, note: trimmed, isPublic: nextIsPublic }
+          : e
+      )
+    );
+    try {
+      await updateJournalEntry(editingEntry.id, trimmed, nextIsPublic);
+    } catch {
+      // Best-effort — server is the source of truth on next refresh.
+    }
+  }
+
+  async function handleConfirmDelete(id: number) {
+    setConfirmingDeleteId(null);
+    onEntriesChange(entries.filter((e) => e.id !== id));
+    try {
+      await deleteJournalEntry(id);
+    } catch {
+      // Best-effort — entry restored on next refresh if server fails.
+    }
+  }
 
   return (
     <Card className="p-6">
@@ -468,7 +519,7 @@ function JournalSection({ entries }: { entries: JournalEntry[] }) {
       {entries.length === 0 ? (
         <p className="text-xs text-slate-500 leading-relaxed">
           No entries yet. When you relapse, log a coffee, or mark an exposure,
-          you'll be asked if you want to write a note — skip or save, your call.
+          you&apos;ll be asked if you want to write a note — skip or save, your call.
         </p>
       ) : (
         <div className="space-y-6">
@@ -484,10 +535,11 @@ function JournalSection({ entries }: { entries: JournalEntry[] }) {
               <ul className="space-y-3">
                 {dayEntries.map((e) => {
                   const dungeon = getDungeon(e.dungeonId);
+                  const isConfirmingDelete = confirmingDeleteId === e.id;
                   return (
                     <li
                       key={e.id}
-                      className="border-l-2 border-cyan-500/30 pl-3 py-0.5"
+                      className="border-l-2 border-cyan-500/30 pl-3 py-0.5 group"
                     >
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
@@ -507,6 +559,47 @@ function JournalSection({ entries }: { entries: JournalEntry[] }) {
                       <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
                         {e.note}
                       </p>
+                      <div className="flex items-center gap-3 mt-1.5">
+                        {isConfirmingDelete ? (
+                          <>
+                            <span className="text-[10px] tracking-widest uppercase text-red-400/80">
+                              Delete this entry?
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleConfirmDelete(e.id)}
+                              className="text-[10px] tracking-widest uppercase text-red-300 hover:text-red-200 transition-colors"
+                            >
+                              Yes
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setConfirmingDeleteId(null)}
+                              className="text-[10px] tracking-widest uppercase text-slate-500 hover:text-slate-300 transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => setEditingId(e.id)}
+                              className="text-[10px] tracking-widest uppercase text-slate-500 hover:text-cyan-300 transition-colors"
+                            >
+                              Edit
+                            </button>
+                            <span className="text-slate-700 text-[10px]">·</span>
+                            <button
+                              type="button"
+                              onClick={() => setConfirmingDeleteId(e.id)}
+                              className="text-[10px] tracking-widest uppercase text-slate-500 hover:text-red-300 transition-colors"
+                            >
+                              Delete
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </li>
                   );
                 })}
@@ -515,6 +608,20 @@ function JournalSection({ entries }: { entries: JournalEntry[] }) {
           ))}
         </div>
       )}
+
+      <NoteModal
+        open={editingEntry !== null}
+        title={`Edit Journal — ${getDungeon(editingEntry?.dungeonId ?? "")?.name ?? ""}`}
+        placeholder="Edit your reflection…"
+        confirmLabel="Save"
+        skipLabel="Cancel"
+        cancelOnSkip
+        showPublicToggle
+        initialNote={editingEntry?.note ?? ""}
+        initialIsPublic={editingEntry?.isPublic ?? false}
+        onSubmit={handleEditSubmit}
+        onCancel={() => setEditingId(null)}
+      />
     </Card>
   );
 }

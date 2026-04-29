@@ -832,3 +832,34 @@ export async function logJournalEntry(
   });
   updateTag(TAG);
 }
+
+/**
+ * Updates a journal-style entry's note text and isPublic flag. The
+ * caller must own the underlying run; otherwise the update is a no-op.
+ */
+export async function updateJournalEntry(
+  eventId: number,
+  note: string,
+  isPublic: boolean
+): Promise<void> {
+  const userId = await requireUserId();
+  const trimmed = note.trim();
+  if (!trimmed) return;
+  // Update only when the event belongs to a run owned by the caller.
+  await prisma.dungeonEvent.updateMany({
+    where: { id: eventId, run: { userId } },
+    data: { note: trimmed, isPublic },
+  });
+  updateTag(TAG);
+}
+
+/**
+ * Deletes a journal-style entry. Caller must own the underlying run.
+ */
+export async function deleteJournalEntry(eventId: number): Promise<void> {
+  const userId = await requireUserId();
+  await prisma.dungeonEvent.deleteMany({
+    where: { id: eventId, run: { userId } },
+  });
+  updateTag(TAG);
+}
