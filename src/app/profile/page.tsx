@@ -22,6 +22,7 @@ import {
 } from "@/app/actions/dungeons";
 import { getDungeon } from "@/lib/dungeons";
 import NotificationSettings from "@/components/NotificationSettings";
+import InstallAppButton from "@/components/InstallAppButton";
 import RecentGains from "@/components/RecentGains";
 import FriendsSection from "@/components/FriendsSection";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
@@ -227,6 +228,7 @@ export default function ProfilePage() {
           <div className="space-y-5">
             <AtmosphereToggle />
             <NotificationSettings />
+            <InstallAppButton />
           </div>
         </Card>
       </div>
