@@ -188,7 +188,7 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
                       {d?.name ?? run.dungeonId}
                     </span>
                     <span className="text-sm text-emerald-400 font-bold tabular-nums">
-                      {run.streakDays}d
+                      {run.displayValue}
                     </span>
                   </li>
                 );

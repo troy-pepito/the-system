@@ -538,7 +538,87 @@ export interface PublicDungeonRunSummary {
   dungeonId: string;
   startDate: string | null;
   active: boolean;
-  streakDays: number;
+  /** Pre-computed ruleType-aware display, e.g. "12d cleared",
+   *  "3/5 this week", "Acknowledge 4/7", "1/4 sweets". */
+  displayValue: string;
+}
+
+function startOfUtcMonth(d: Date): Date {
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
+}
+
+function startOfUtcWeekMonday(d: Date): Date {
+  const today = new Date(
+    Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
+  );
+  const day = today.getUTCDay();
+  const offset = (day + 6) % 7;
+  return new Date(today.getTime() - offset * 24 * 60 * 60 * 1000);
+}
+
+async function computeRunDisplayValue(run: {
+  id: number;
+  dungeonId: string;
+  startDate: Date | null;
+}): Promise<string> {
+  const d = DUNGEONS.find((x) => x.id === run.dungeonId);
+  if (!d) return "—";
+  const now = new Date();
+
+  if (d.ruleType === "continuous_streak" || d.ruleType === "timed") {
+    const cleared = await prisma.dungeonDayCheckIn.count({
+      where: { runId: run.id, state: "cleared" },
+    });
+    return `${cleared}d cleared`;
+  }
+
+  if (d.ruleType === "cadence") {
+    const target = d.cadence?.weeklyTarget ?? 5;
+    const weekStart = startOfUtcWeekMonday(now);
+    const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const count = await prisma.dungeonEvent.count({
+      where: {
+        runId: run.id,
+        date: { gte: weekStart, lt: weekEnd },
+      },
+    });
+    return `${count}/${target} this week`;
+  }
+
+  if (d.ruleType === "progressive" && d.progressive) {
+    const rungs = d.progressive.rungs;
+    const counts = await prisma.dungeonEvent.groupBy({
+      by: ["type"],
+      where: { runId: run.id },
+      _count: { type: true },
+    });
+    const countMap: Record<string, number> = {};
+    for (const c of counts) countMap[c.type] = c._count.type;
+    const currentRung =
+      rungs.find((r) => (countMap[r.id] ?? 0) < r.target) ??
+      rungs[rungs.length - 1];
+    const c = countMap[currentRung.id] ?? 0;
+    return `${currentRung.name} ${Math.min(c, currentRung.target)}/${currentRung.target}`;
+  }
+
+  if (d.ruleType === "allowance" && d.allowance) {
+    const monthStart = startOfUtcMonth(now);
+    const monthEnd = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1)
+    );
+    const count = await prisma.dungeonEvent.count({
+      where: {
+        runId: run.id,
+        type: d.allowance.unitLabel,
+        date: { gte: monthStart, lt: monthEnd },
+      },
+    });
+    const unit =
+      count === 1 ? d.allowance.unitLabel : d.allowance.unitLabelPlural;
+    return `${count}/${d.allowance.limit} ${unit}`;
+  }
+
+  return "—";
 }
 
 export interface PublicJournalEntry {
@@ -602,7 +682,7 @@ export async function getPublicHunterData(
       prisma.dungeonRun.findMany({
         where: { userId: hunterId, active: true },
         orderBy: { createdAt: "desc" },
-        select: { dungeonId: true, startDate: true, active: true },
+        select: { id: true, dungeonId: true, startDate: true, active: true },
       }),
       prisma.dungeonEvent.findMany({
         where: {
@@ -616,14 +696,14 @@ export async function getPublicHunterData(
       }),
     ]);
 
-  const activeRuns: PublicDungeonRunSummary[] = runs.map((r) => ({
-    dungeonId: r.dungeonId,
-    startDate: r.startDate ? r.startDate.toISOString().split("T")[0] : null,
-    active: r.active,
-    streakDays: r.startDate
-      ? computeStreakDays(r.startDate.toISOString())
-      : 0,
-  }));
+  const activeRuns: PublicDungeonRunSummary[] = await Promise.all(
+    runs.map(async (r) => ({
+      dungeonId: r.dungeonId,
+      startDate: r.startDate ? r.startDate.toISOString().split("T")[0] : null,
+      active: r.active,
+      displayValue: await computeRunDisplayValue(r),
+    }))
+  );
 
   return {
     hunterId,
