@@ -740,7 +740,13 @@ function validateCheckInDate(
 ): Date {
   const date = new Date(`${dateIso}T00:00:00.000Z`);
   const today = todayDateOnly();
-  if (date.getTime() > today.getTime()) {
+  // Clients send "today" in their local timezone. Users east of UTC
+  // (e.g. UAE +4, PHT +8) cross midnight before UTC does, so their
+  // "today" can legitimately be UTC tomorrow. Allow up to +1 day
+  // from UTC today — covers every timezone from UTC-12 to UTC+14
+  // while still rejecting actual-future dates.
+  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+  if (date.getTime() > tomorrow.getTime()) {
     throw new Error("Cannot confirm a future date");
   }
   if (startDate && date.getTime() < startDate.getTime()) {
