@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
+import { sendPushToUser } from "@/lib/push";
 
 export async function savePushSubscription(input: {
   endpoint: string;
@@ -44,4 +45,24 @@ export async function hasActivePushSubscription(
     select: { id: true },
   });
   return !!found;
+}
+
+/**
+ * Dev-only: fire a test push to the calling user's own subscriptions.
+ * Returns counts so the UI can show how many devices got it (and how
+ * many were silently removed because they expired).
+ */
+export async function sendTestPush(): Promise<{
+  sent: number;
+  removed: number;
+}> {
+  if (process.env.NODE_ENV !== "development") {
+    throw new Error("sendTestPush is dev-only");
+  }
+  const userId = await requireUserId();
+  return sendPushToUser(userId, {
+    title: "🧪 Test push",
+    body: "If you're seeing this, the push pipeline works end-to-end.",
+    url: "/",
+  });
 }

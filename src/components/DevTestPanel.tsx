@@ -1,9 +1,13 @@
 "use client";
+import { useState } from "react";
 import { notifyRankUp, notifyReward } from "@/lib/player";
+import { sendTestPush } from "@/app/actions/push";
 
 const RANKS = ["E", "D", "C", "B", "A", "S"];
 
 export default function DevTestPanel() {
+  const [pushStatus, setPushStatus] = useState<string | null>(null);
+
   if (process.env.NODE_ENV !== "development") return null;
 
   function fireRankUp() {
@@ -18,6 +22,21 @@ export default function DevTestPanel() {
       mind: 1,
       energy: 1,
     });
+  }
+
+  async function firePush() {
+    setPushStatus("sending…");
+    try {
+      const result = await sendTestPush();
+      if (result.sent === 0) {
+        setPushStatus("0 devices — subscribe first");
+      } else {
+        setPushStatus(`sent → ${result.sent} device${result.sent === 1 ? "" : "s"}`);
+      }
+    } catch (err) {
+      setPushStatus(err instanceof Error ? err.message : "failed");
+    }
+    setTimeout(() => setPushStatus(null), 3500);
   }
 
   return (
@@ -37,6 +56,17 @@ export default function DevTestPanel() {
       >
         + Gain Pop
       </button>
+      <button
+        onClick={firePush}
+        className="px-3 py-1.5 bg-amber-500/15 border border-amber-400/50 text-amber-200 text-[10px] uppercase tracking-[0.25em] hover:bg-amber-500/25 transition-colors"
+      >
+        🧪 Test Push
+      </button>
+      {pushStatus && (
+        <p className="text-[9px] tracking-widest text-amber-300/80">
+          {pushStatus}
+        </p>
+      )}
     </div>
   );
 }
