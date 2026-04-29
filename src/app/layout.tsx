@@ -14,6 +14,7 @@ import GrainOverlay from "@/components/GrainOverlay";
 import PageTransition from "@/components/PageTransition";
 import GainToast from "@/components/GainToast";
 import RankUpGlitch from "@/components/RankUpGlitch";
+import RankUpShare from "@/components/RankUpShare";
 import DevTestPanel from "@/components/DevTestPanel";
 import BackToTop from "@/components/BackToTop";
 import OfflineBanner from "@/components/OfflineBanner";
@@ -109,6 +110,7 @@ export default function RootLayout({
               <AchievementToast />
               <GainToast />
               <RankUpGlitch />
+              <RankUpShare />
               <BackToTop />
               <PwaInstallPrompt />
               <DevTestPanel />

@@ -126,6 +126,26 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
   async function handleShare() {
     if (!user || typeof window === "undefined") return;
     const url = `${window.location.origin}/h/${user.id}`;
+    const shareText = `Rank ${rank} · Lv ${level} · Hunter on Shivaliva Leveling. Building real-life discipline through The System.`;
+
+    // Prefer the native share sheet (mobile / desktop browsers that
+    // support it). Falls back to clipboard copy if not available
+    // (Firefox desktop, older browsers).
+    const nav = navigator as Navigator & {
+      share?: (data: { title?: string; text?: string; url?: string }) => Promise<void>;
+    };
+    if (typeof nav.share === "function") {
+      try {
+        await nav.share({
+          title: "Shivaliva Leveling: The System",
+          text: shareText,
+          url,
+        });
+        return;
+      } catch {
+        // User cancelled or share failed — fall through to clipboard.
+      }
+    }
     try {
       await navigator.clipboard.writeText(url);
       setShareCopied(true);

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { notifyRankUp, notifyReward } from "@/lib/player";
 import { sendTestPush } from "@/app/actions/push";
+import { fireRankUpSharePrompt } from "@/components/RankUpShare";
 
 const RANKS = ["E", "D", "C", "B", "A", "S"];
 
@@ -13,6 +14,14 @@ export default function DevTestPanel() {
   function fireRankUp() {
     const fromIdx = Math.floor(Math.random() * (RANKS.length - 1));
     notifyRankUp({ from: RANKS[fromIdx], to: RANKS[fromIdx + 1] });
+  }
+
+  function fireSharePrompt() {
+    const fromIdx = Math.floor(Math.random() * (RANKS.length - 1));
+    fireRankUpSharePrompt({
+      from: RANKS[fromIdx],
+      to: RANKS[fromIdx + 1],
+    });
   }
 
   function fireGain() {
@@ -55,6 +64,12 @@ export default function DevTestPanel() {
         className="px-3 py-1.5 bg-cyan-500/15 border border-cyan-400/50 text-cyan-200 text-[10px] uppercase tracking-[0.25em] hover:bg-cyan-500/25 transition-colors"
       >
         + Gain Pop
+      </button>
+      <button
+        onClick={fireSharePrompt}
+        className="px-3 py-1.5 bg-amber-500/15 border border-amber-400/50 text-amber-200 text-[10px] uppercase tracking-[0.25em] hover:bg-amber-500/25 transition-colors"
+      >
+        ★ Share Prompt
       </button>
       <button
         onClick={firePush}
