@@ -105,14 +105,16 @@ export default function DungeonCheckInPanel({
   }
 
   async function commitCleared(date: string) {
-    let nextList: DayCheckIn[] = [];
-    setCheckIns((prev) => {
-      const filtered = prev.filter((c) => c.date !== date);
-      const result = [...filtered, { date, state: "cleared" as const, count: 1 }]
-        .sort((a, b) => a.date.localeCompare(b.date));
-      nextList = result;
-      return result;
-    });
+    // Compute next list from the closure synchronously — using the
+    // functional updater + outer variable mutation was unreliable in
+    // React 18 (the updater can run after the next line, leaving
+    // nextList as the initial empty array → cleared count rendered as 0).
+    const filtered = checkIns.filter((c) => c.date !== date);
+    const nextList: DayCheckIn[] = [
+      ...filtered,
+      { date, state: "cleared" as const, count: 1 },
+    ].sort((a, b) => a.date.localeCompare(b.date));
+    setCheckIns(nextList);
     reportClearedCount(nextList);
     const dims = getDungeon(dungeonId)?.dimensions ?? {};
     notifyReward({
@@ -148,22 +150,18 @@ export default function DungeonCheckInPanel({
   ) {
     // Compute XP delta BEFORE we mutate state — if the day was cleared,
     // marking it relapsed wipes that day's XP.
-    const prevState = checkIns.find((c) => c.date === date)?.state;
+    const existing = checkIns.find((c) => c.date === date);
+    const prevState = existing?.state;
     const xpDelta = prevState === "cleared" ? -XP_PER_STREAK_DAY : 0;
 
-    let nextList: DayCheckIn[] = [];
-    setCheckIns((prev) => {
-      const existing = prev.find((c) => c.date === date);
-      const nextCount =
-        existing && existing.state === "relapsed" ? existing.count + 1 : 1;
-      const filtered = prev.filter((c) => c.date !== date);
-      const result = [
-        ...filtered,
-        { date, state: "relapsed" as const, count: nextCount },
-      ].sort((a, b) => a.date.localeCompare(b.date));
-      nextList = result;
-      return result;
-    });
+    const nextCount =
+      existing && existing.state === "relapsed" ? existing.count + 1 : 1;
+    const filtered = checkIns.filter((c) => c.date !== date);
+    const nextList: DayCheckIn[] = [
+      ...filtered,
+      { date, state: "relapsed" as const, count: nextCount },
+    ].sort((a, b) => a.date.localeCompare(b.date));
+    setCheckIns(nextList);
     reportClearedCount(nextList);
     track("day_confirmed_relapsed", { dungeon_id: dungeonId, date });
     // Pass an explicit xpDelta (even 0) so the panel's own
@@ -200,12 +198,8 @@ export default function DungeonCheckInPanel({
     const removed = checkIns.find((c) => c.date === date);
     const xpDelta = removed?.state === "cleared" ? -XP_PER_STREAK_DAY : 0;
 
-    let nextList: DayCheckIn[] = [];
-    setCheckIns((prev) => {
-      const result = prev.filter((c) => c.date !== date);
-      nextList = result;
-      return result;
-    });
+    const nextList: DayCheckIn[] = checkIns.filter((c) => c.date !== date);
+    setCheckIns(nextList);
     reportClearedCount(nextList);
     notifyStatsUpdated({ xpDelta });
     try {
