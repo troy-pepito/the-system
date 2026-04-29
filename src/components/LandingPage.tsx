@@ -1,9 +1,16 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { DUNGEONS, dungeonDims, DIM_STYLE } from "@/lib/dungeons";
 import LandingShaderBg from "@/components/LandingShaderBg";
+import {
+  detectInstallState,
+  subscribeInstallState,
+  triggerInstall,
+  type InstallState,
+} from "@/lib/pwaInstall";
 
 const STEPS = [
   {
@@ -214,6 +221,7 @@ export default function LandingPage() {
             >
               Terms
             </Link>
+            <InstallFooterLink />
             <a
               href="mailto:trojanato@gmail.com"
               className="hover:text-cyan-300 transition-colors"
@@ -224,6 +232,32 @@ export default function LandingPage() {
         </div>
       </footer>
     </main>
+  );
+}
+
+function InstallFooterLink() {
+  const [state, setState] = useState<InstallState>("loading");
+
+  useEffect(() => {
+    const update = () => setState(detectInstallState());
+    update();
+    return subscribeInstallState(update);
+  }, []);
+
+  // Only render when programmatic install is actually available — for
+  // iOS / unsupported / already-installed users, the link in the footer
+  // would be confusing or redundant. iOS users find install steps via
+  // the Guide link already in the same footer row.
+  if (state !== "available") return null;
+
+  return (
+    <button
+      type="button"
+      onClick={() => triggerInstall()}
+      className="hover:text-cyan-300 transition-colors uppercase tracking-[0.3em]"
+    >
+      Install App
+    </button>
   );
 }
 
