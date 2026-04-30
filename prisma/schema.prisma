@@ -38,8 +38,11 @@ model DungeonDayCheckIn {
   count       Int        @default(1)
   confirmedAt DateTime   @default(now())
 
-  @@unique([runId, date])
-  @@index([userId, dungeonId, date])
+  // A check-in is a fact about (user, dungeon, calendar day), not
+  // about a specific run. Scoping the unique here closes the
+  // exit-and-re-clear-the-same-day XP exploit at the schema level
+  // and lets confirmDay upsert across runs.
+  @@unique([userId, dungeonId, date])
 }
 
 model DungeonEvent {
