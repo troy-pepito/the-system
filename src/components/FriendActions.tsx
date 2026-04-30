@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   acceptFriend,
   declineFriend,
@@ -16,6 +16,8 @@ interface Props {
 export default function FriendActions({ hunterId }: Props) {
   const [status, setStatus] = useState<FriendStatus | "loading">("loading");
   const [busy, setBusy] = useState(false);
+  const [confirmingUnfriend, setConfirmingUnfriend] = useState(false);
+  const confirmTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -31,11 +33,24 @@ export default function FriendActions({ hunterId }: Props) {
     };
   }, [hunterId]);
 
+  // Auto-revert the unfriend confirm if the user wanders off — five
+  // seconds of indecision is a strong "I didn't mean it" signal.
+  useEffect(() => {
+    if (!confirmingUnfriend) return;
+    confirmTimer.current = setTimeout(() => {
+      setConfirmingUnfriend(false);
+    }, 5000);
+    return () => {
+      if (confirmTimer.current) clearTimeout(confirmTimer.current);
+    };
+  }, [confirmingUnfriend]);
+
   async function run<T>(fn: () => Promise<T>, next: FriendStatus) {
     setBusy(true);
     try {
       await fn();
       setStatus(next);
+      setConfirmingUnfriend(false);
     } catch {
       // leave status as-is
     } finally {
@@ -46,12 +61,34 @@ export default function FriendActions({ hunterId }: Props) {
   if (status === "loading" || status === "self") return null;
 
   if (status === "friends") {
+    if (confirmingUnfriend) {
+      return (
+        <div className="flex gap-2">
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => run(() => removeFriend(hunterId), "none")}
+            className="px-4 py-2 border border-red-500/50 bg-red-500/15 text-red-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-red-500/25 transition-colors disabled:opacity-50"
+          >
+            Unfriend
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => setConfirmingUnfriend(false)}
+            className="px-4 py-2 border border-slate-700 text-slate-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-slate-800/60 transition-colors disabled:opacity-50"
+          >
+            Cancel
+          </button>
+        </div>
+      );
+    }
     return (
       <button
         type="button"
         disabled={busy}
-        onClick={() => run(() => removeFriend(hunterId), "none")}
-        className="px-4 py-2 border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-red-500/20 hover:border-red-500/40 hover:text-red-300 transition-colors disabled:opacity-50"
+        onClick={() => setConfirmingUnfriend(true)}
+        className="px-4 py-2 border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
       >
         ✓ Friends
       </button>
