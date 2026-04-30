@@ -299,13 +299,15 @@ function currentWeekBounds(): { start: Date; end: Date } {
 
 const getWeekWorkoutsCached = unstable_cache(
   async (userId: string, dungeonId: string) => {
-    const run = await prisma.dungeonRun.findFirst({
-      where: { userId, dungeonId, active: true },
-    });
-    if (!run) return [];
+    // Cross-run scope: re-entering Gym mid-week shouldn't blank out
+    // workouts you already did this week. Match the same dedup the
+    // snapshot uses so XP and the UI agree.
     const { start, end } = currentWeekBounds();
     const events = await prisma.dungeonEvent.findMany({
-      where: { runId: run.id, date: { gte: start, lt: end } },
+      where: {
+        run: { userId, dungeonId },
+        date: { gte: start, lt: end },
+      },
       select: { type: true },
       distinct: ["type"],
     });
@@ -331,9 +333,13 @@ export async function toggleWorkout(
   if (!run) throw new Error(`No active run for ${dungeonId}`);
 
   const { start, end } = currentWeekBounds();
+  // Look across all of the user's runs of this dungeon, not just the
+  // active one. Otherwise: log a workout → exit → re-enter → toggle
+  // shows the workout as undone (different runId), creating a duplicate
+  // event in the new run for the same week.
   const existing = await prisma.dungeonEvent.findFirst({
     where: {
-      runId: run.id,
+      run: { userId, dungeonId },
       type: workoutType,
       date: { gte: start, lt: end },
     },
@@ -342,7 +348,7 @@ export async function toggleWorkout(
   if (existing) {
     await prisma.dungeonEvent.deleteMany({
       where: {
-        runId: run.id,
+        run: { userId, dungeonId },
         type: workoutType,
         date: { gte: start, lt: end },
       },
@@ -480,13 +486,14 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
 
 const getRungCountsCached = unstable_cache(
   async (userId: string, dungeonId: string) => {
-    const run = await prisma.dungeonRun.findFirst({
-      where: { userId, dungeonId, active: true },
-    });
-    if (!run) return {} as Record<string, number>;
+    // Cross-run scope so re-entering Exposure Therapy preserves the
+    // ladder progress. The UI reads this to find currentRungIndex; if
+    // we scoped to active run only, every re-entry would offer Rung 1
+    // (count=0) again — closes the same exit/re-enter exploit pattern
+    // we fixed for the calendar dungeons.
     const events = await prisma.dungeonEvent.groupBy({
       by: ["type"],
-      where: { runId: run.id },
+      where: { run: { userId, dungeonId } },
       _count: { type: true },
     });
     const counts: Record<string, number> = {};
@@ -536,8 +543,11 @@ export async function logRungExposure(
     },
   });
 
+  // Count across all of the user's runs for this dungeon — matches what
+  // getRungCounts returns to the client, so the UI's optimistic count
+  // and the server's confirmation stay in sync after exit/re-enter.
   const count = await prisma.dungeonEvent.count({
-    where: { runId: run.id, type: rungId },
+    where: { run: { userId, dungeonId }, type: rungId },
   });
   const rungCleared = count >= rung.target;
 
@@ -545,7 +555,7 @@ export async function logRungExposure(
   if (rungCleared) {
     const allCounts = await prisma.dungeonEvent.groupBy({
       by: ["type"],
-      where: { runId: run.id },
+      where: { run: { userId, dungeonId } },
       _count: { type: true },
     });
     const countMap: Record<string, number> = {};
@@ -570,20 +580,20 @@ export async function undoRungExposure(
   rungId: string
 ): Promise<{ count: number }> {
   const userId = await requireUserId();
-  const run = await prisma.dungeonRun.findFirst({
-    where: { userId, dungeonId, active: true },
-  });
-  if (!run) throw new Error(`No active run for ${dungeonId}`);
 
+  // Delete the most recent event for this rung across all the user's
+  // runs of this dungeon. If we scoped to active run only, undo on a
+  // freshly re-entered run wouldn't be able to walk back exposures
+  // logged in a prior run, leaving the cross-run count stuck.
   const last = await prisma.dungeonEvent.findFirst({
-    where: { runId: run.id, type: rungId },
+    where: { run: { userId, dungeonId }, type: rungId },
     orderBy: { createdAt: "desc" },
   });
   if (last) {
     await prisma.dungeonEvent.delete({ where: { id: last.id } });
   }
   const count = await prisma.dungeonEvent.count({
-    where: { runId: run.id, type: rungId },
+    where: { run: { userId, dungeonId }, type: rungId },
   });
   updateTag(TAG);
   return { count };

@@ -181,12 +181,19 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   let weekExposure = 0;
   let monthWorkout = 0;
   let monthExposure = 0;
+  // Dedupe workouts by (type, date) so duplicate events left over from
+  // exit/re-enter cycles (where the same workout type was logged in
+  // separate runIds for the same calendar day) don't double-count XP.
+  const seenWorkoutDay = new Set<string>();
 
   for (const e of events) {
     eventCounts[e.type] = (eventCounts[e.type] ?? 0) + 1;
     const inWeek = e.date >= weekCutoff;
     const inMonth = e.date >= monthCutoff;
     if (workoutIds.has(e.type)) {
+      const dayKey = `${e.type}|${e.date.toISOString().split("T")[0]}`;
+      if (seenWorkoutDay.has(dayKey)) continue;
+      seenWorkoutDay.add(dayKey);
       workoutTotal++;
       if (inWeek) weekWorkout++;
       if (inMonth) monthWorkout++;
