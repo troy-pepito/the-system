@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "status": "状态",
+    "portals": "传送门",
+    "feed": "社区",
+    "profile": "个人资料"
+  },
+  "settings": {
+    "title": "设置",
+    "appearance": "外观",
+    "notifications": "通知",
+    "install": "安装",
+    "language": "语言",
+    "languageHint": "选择系统对你说话的语言。翻译还在持续添加中 — 英语是最完整的。"
+  }
+}

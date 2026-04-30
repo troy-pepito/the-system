@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "status": "상태",
+    "portals": "포털",
+    "feed": "커뮤니티",
+    "profile": "프로필"
+  },
+  "settings": {
+    "title": "설정",
+    "appearance": "외관",
+    "notifications": "알림",
+    "install": "설치",
+    "language": "언어",
+    "languageHint": "시스템이 당신에게 말하는 언어를 선택하세요. 번역은 계속 추가되고 있습니다 — 영어가 가장 완성도가 높습니다."
+  }
+}

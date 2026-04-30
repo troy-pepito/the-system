@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "status": "ステータス",
+    "portals": "ポータル",
+    "feed": "コミュニティ",
+    "profile": "プロフィール"
+  },
+  "settings": {
+    "title": "設定",
+    "appearance": "外観",
+    "notifications": "通知",
+    "install": "インストール",
+    "language": "言語",
+    "languageHint": "システムがあなたに話しかける言語を選んでください。翻訳は順次追加中です — 英語が最も充実しています。"
+  }
+}

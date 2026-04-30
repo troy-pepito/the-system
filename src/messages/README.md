@@ -30,12 +30,27 @@ User-facing strings that vary by locale live here. One JSON file per locale, key
 
 ## Status
 
-- **`en`** — source of truth, fully populated.
-- **`es`** — placeholder translations for the keys that exist; broader copy still hardcoded in English. Expand as keying spreads.
+Source of truth is `en.json`. The other locales are AI-translated for
+the small set of keyed strings — accurate enough for navigation
+labels, but worth a native-speaker pass before any of these go in
+brand-critical copy.
+
+- `en` — English (source)
+- `es` — Español
+- `pt` — Português
+- `fr` — Français
+- `de` — Deutsch
+- `ja` — 日本語
+- `ko` — 한국어
+- `zh` — 中文 (Simplified)
+- `hi` — हिन्दी
 
 ## What's keyed today
 
 - Navbar (`nav.*`)
 - Settings page section labels + language picker (`settings.*`)
 
-Most copy is still hardcoded English. Key new strings as you add them.
+Most copy (dungeon names + descriptions, quest names, achievement
+flavor text, push notifications, landing copy) is still hardcoded
+English. Key new strings as you add them; backfill old ones when
+there's reason.

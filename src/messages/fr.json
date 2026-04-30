@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "status": "Statut",
+    "portals": "Portails",
+    "feed": "Communauté",
+    "profile": "Profil"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "appearance": "Apparence",
+    "notifications": "Notifications",
+    "install": "Installer",
+    "language": "Langue",
+    "languageHint": "Choisis la langue dans laquelle le Système te parle. Les traductions arrivent encore — l'anglais est le plus complet."
+  }
+}
