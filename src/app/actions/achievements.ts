@@ -8,6 +8,8 @@ import {
   GYM_LIFE_WORKOUTS,
   DUNGEONS,
   DIMENSION_RANK_MULTIPLIERS,
+  TIER_BONUS_XP,
+  TIER_PER_ACTION_BONUS,
 } from "@/lib/dungeons";
 import {
   QUESTS,
@@ -291,6 +293,69 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     }
   }
 
+  // Dungeon tier scaling: every dungeon gets the same shape of reward.
+  //   - Tier crossing bonus: a one-time XP credit for each tier the
+  //     player has reached in this dungeon (cumulative E → S, capped
+  //     at S = +3200).
+  //   - Per-action scaling: existing per-action XP gets a bonus added,
+  //     scaled by the highest tier currently reached. Capped at +30
+  //     per action at S rank.
+  // Allowance dungeons get tier bonuses only (no positive action — the
+  // user earns by NOT consuming, so per-action scaling doesn't apply).
+  let dungeonTierBonusTotal = 0;
+  let dungeonPerActionBonusTotal = 0;
+
+  for (const d of DUNGEONS) {
+    const run = runsByDungeon[d.id];
+    if (!run) continue;
+
+    let tierIdx = -1;
+    let actionCount = 0;
+
+    if (d.ruleType === "continuous_streak" || d.ruleType === "timed") {
+      const cleared = clearedDays[d.id] ?? 0;
+      if (d.tiers) {
+        const tierCap =
+          d.ruleType === "timed" && d.timed ? d.timed.targetDays : Infinity;
+        const validTiers = d.tiers.filter((t) => t.days <= tierCap);
+        tierIdx = validTiers.filter((t) => cleared >= t.days).length - 1;
+      }
+      actionCount = cleared;
+    } else if (d.ruleType === "cadence") {
+      if (d.tiers) {
+        tierIdx =
+          d.tiers.filter((t) => run.maxStreak >= t.days).length - 1;
+      }
+      // Single cadence dungeon today (Training Regimen) — workouts ≈
+      // workoutTotal. Update if multiple cadence dungeons are added.
+      actionCount = workoutTotal;
+    } else if (d.ruleType === "allowance") {
+      if (d.tiers) {
+        tierIdx =
+          d.tiers.filter((t) => run.maxStreak >= t.days).length - 1;
+      }
+      // Passive — no per-action XP.
+      actionCount = 0;
+    } else if (d.ruleType === "progressive" && d.progressive) {
+      let clearedRungs = 0;
+      for (const rung of d.progressive.rungs) {
+        if ((rungCounts[rung.id] ?? 0) >= rung.target) clearedRungs++;
+      }
+      tierIdx = clearedRungs - 1;
+      // Single progressive dungeon (Exposure Therapy) — exposures ≈
+      // exposureTotal. Update if multiple progressive dungeons added.
+      actionCount = exposureTotal;
+    }
+
+    for (let i = 0; i <= tierIdx; i++) {
+      dungeonTierBonusTotal += TIER_BONUS_XP[i] ?? 0;
+    }
+    if (tierIdx >= 0 && actionCount > 0) {
+      const scale = TIER_PER_ACTION_BONUS[tierIdx] ?? 0;
+      dungeonPerActionBonusTotal += actionCount * scale;
+    }
+  }
+
   const totalXp =
     activeStreakTotal * XP_PER_STREAK_DAY +
     bankedStreakDays * XP_PER_STREAK_DAY +
@@ -299,7 +364,9 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     exposureTotal * XP_PER_EXPOSURE +
     completedRunCount * XP_PER_COMPLETION +
     questXpTotal +
-    comboMilestoneXp;
+    comboMilestoneXp +
+    dungeonTierBonusTotal +
+    dungeonPerActionBonusTotal;
 
   const { level } = getLevelFromXp(totalXp);
 

@@ -5,6 +5,7 @@ import {
   applyQuest,
   todayLocalISO,
   COMBO_THRESHOLD,
+  COMBO_MILESTONES,
   type QuestRewards,
 } from "@/lib/quests";
 import {
@@ -97,6 +98,37 @@ export default function DailyQuests({
         spirit: quest.spirit,
         source: quest.name,
       });
+
+      // Combo-milestone celebration: when this completion is the one
+      // that pushes today over the COMBO_THRESHOLD AND the resulting
+      // combo length lands on a milestone day count (7/14/30/...),
+      // fire a second toast a beat later so it lands as its own moment.
+      const oldQualifies = completed.length >= COMBO_THRESHOLD;
+      const newQualifies = nextCompleted.length >= COMBO_THRESHOLD;
+      if (!oldQualifies && newQualifies) {
+        const newComboDays = priorComboDays > 0 ? priorComboDays + 1 : 1;
+        const milestone = COMBO_MILESTONES.find(
+          (m) => m.days === newComboDays
+        );
+        if (milestone) {
+          const celebKey = `combo-celebrated:${date}:${milestone.days}`;
+          if (
+            typeof window !== "undefined" &&
+            !localStorage.getItem(celebKey)
+          ) {
+            try {
+              localStorage.setItem(celebKey, "1");
+            } catch {}
+            setTimeout(() => {
+              notifyReward({
+                xp: milestone.xp,
+                source: `🔥 ${milestone.days}-Day Combo`,
+              });
+              notifyStatsUpdated({ xpDelta: milestone.xp });
+            }, 900);
+          }
+        }
+      }
     }
 
     beginMutation();

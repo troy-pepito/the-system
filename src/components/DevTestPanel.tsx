@@ -1,8 +1,12 @@
 "use client";
 import { useState } from "react";
-import { notifyRankUp, notifyReward } from "@/lib/player";
+import { notifyRankUp, notifyReward, notifyStatsUpdated } from "@/lib/player";
 import { sendTestPush } from "@/app/actions/push";
 import { fireRankUpSharePrompt } from "@/components/RankUpShare";
+import { COMBO_MILESTONES } from "@/lib/quests";
+import { TIER_BONUS_XP } from "@/lib/dungeons";
+
+const TIER_RANKS = ["E", "D", "C", "B", "A", "S"];
 
 const RANKS = ["E", "D", "C", "B", "A", "S"];
 
@@ -22,6 +26,28 @@ export default function DevTestPanel() {
       from: RANKS[fromIdx],
       to: RANKS[fromIdx + 1],
     });
+  }
+
+  function fireComboCelebration() {
+    // Pick a random milestone so successive clicks cycle through tiers.
+    const milestone =
+      COMBO_MILESTONES[Math.floor(Math.random() * COMBO_MILESTONES.length)];
+    notifyReward({
+      xp: milestone.xp,
+      source: `🔥 ${milestone.days}-Day Combo`,
+    });
+    notifyStatsUpdated({ xpDelta: milestone.xp });
+  }
+
+  function fireTierCelebration() {
+    const idx = Math.floor(Math.random() * TIER_RANKS.length);
+    const rank = TIER_RANKS[idx];
+    const bonus = TIER_BONUS_XP[idx] ?? 0;
+    notifyReward({
+      xp: bonus,
+      source: `🏆 Rank ${rank} · NoFap`,
+    });
+    notifyStatsUpdated({ xpDelta: bonus });
   }
 
   function fireGain() {
@@ -70,6 +96,18 @@ export default function DevTestPanel() {
         className="px-3 py-1.5 bg-amber-500/15 border border-amber-400/50 text-amber-200 text-[10px] uppercase tracking-[0.25em] hover:bg-amber-500/25 transition-colors"
       >
         ★ Share Prompt
+      </button>
+      <button
+        onClick={fireComboCelebration}
+        className="px-3 py-1.5 bg-orange-500/15 border border-orange-400/50 text-orange-200 text-[10px] uppercase tracking-[0.25em] hover:bg-orange-500/25 transition-colors"
+      >
+        🔥 Combo Pop
+      </button>
+      <button
+        onClick={fireTierCelebration}
+        className="px-3 py-1.5 bg-yellow-500/15 border border-yellow-400/50 text-yellow-200 text-[10px] uppercase tracking-[0.25em] hover:bg-yellow-500/25 transition-colors"
+      >
+        🏆 Tier Pop
       </button>
       <button
         onClick={firePush}

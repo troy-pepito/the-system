@@ -25,6 +25,7 @@ import {
   commitSetStartDate,
   useJournalAction,
 } from "@/lib/dungeonActions";
+import { useTierCrossingCelebration } from "@/lib/tierCelebration";
 import NoteModal from "@/components/NoteModal";
 
 interface AllowanceDungeonCardProps {
@@ -59,6 +60,17 @@ export default function AllowanceDungeonCard({
   const [monthCount, setMonthCount] = useState(initialMonthCount);
   const [logModalOpen, setLogModalOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+
+  const tierIdxForHook = TIERS.filter((t) => streak >= t.days).length - 1;
+  const tierRankForHook =
+    tierIdxForHook >= 0 ? TIERS[tierIdxForHook].rank : null;
+  useTierCrossingCelebration({
+    dungeonId,
+    dungeonName,
+    startDate,
+    tierIdx: tierIdxForHook,
+    tierRank: tierRankForHook,
+  });
 
   const journal = useJournalAction({ dungeonId, dungeonName });
 

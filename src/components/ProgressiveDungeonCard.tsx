@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { getDungeon } from "@/lib/dungeons";
+import { getDungeon, TIER_BONUS_XP } from "@/lib/dungeons";
 import {
   notifyStatsUpdated,
   notifyReward,
@@ -102,6 +102,23 @@ export default function ProgressiveDungeonCard({
     }
     notifyStatsUpdated({ xpDelta: XP_PER_EXPOSURE });
     notifyReward({ xp: XP_PER_EXPOSURE });
+
+    // Tier crossing: rung cleared for the first time this run.
+    // No localStorage gate — counts reset to 0 on relapse, so re-clearing
+    // a rung after a fresh climb correctly fires again.
+    const justClearedRung =
+      prevCount < currentRung.target && prevCount + 1 >= currentRung.target;
+    if (justClearedRung) {
+      const tierIdx = currentRungIndex;
+      const bonus = TIER_BONUS_XP[tierIdx] ?? 0;
+      setTimeout(() => {
+        notifyReward({
+          xp: bonus,
+          source: `🏆 Rank ${currentRung.rank} · ${dungeonName}`,
+        });
+        notifyStatsUpdated({ xpDelta: bonus });
+      }, 1100);
+    }
 
     const allCleared =
       RUNGS.length > 0 && RUNGS.every((r) => (nextCounts[r.id] ?? 0) >= r.target);

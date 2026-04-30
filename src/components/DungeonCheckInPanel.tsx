@@ -6,7 +6,7 @@ import {
   getCheckIns,
   type DayCheckIn,
 } from "@/app/actions/dungeons";
-import { getDungeon } from "@/lib/dungeons";
+import { getDungeon, TIER_BONUS_XP } from "@/lib/dungeons";
 import {
   notifyReward,
   notifyStatsUpdated,
@@ -109,6 +109,8 @@ export default function DungeonCheckInPanel({
     // functional updater + outer variable mutation was unreliable in
     // React 18 (the updater can run after the next line, leaving
     // nextList as the initial empty array → cleared count rendered as 0).
+    const wasAlreadyCleared =
+      checkIns.find((c) => c.date === date)?.state === "cleared";
     const filtered = checkIns.filter((c) => c.date !== date);
     const nextList: DayCheckIn[] = [
       ...filtered,
@@ -128,6 +130,46 @@ export default function DungeonCheckInPanel({
     });
     notifyStatsUpdated({ xpDelta: XP_PER_STREAK_DAY });
     track("day_confirmed_cleared", { dungeon_id: dungeonId, date });
+
+    // Tier crossing celebration: if this commit moves the cleared count
+    // onto a tier's day threshold for the first time, fire a second
+    // toast a beat after the per-day one so the milestone lands as its
+    // own moment.
+    if (!wasAlreadyCleared) {
+      const newClearedCount = nextList.filter(
+        (c) => c.state === "cleared"
+      ).length;
+      const def = getDungeon(dungeonId);
+      if (def?.tiers) {
+        const tierCap =
+          def.ruleType === "timed" && def.timed
+            ? def.timed.targetDays
+            : Infinity;
+        const tierIdx = def.tiers.findIndex(
+          (t) => t.days === newClearedCount && t.days <= tierCap
+        );
+        if (tierIdx >= 0) {
+          const tier = def.tiers[tierIdx];
+          const bonus = TIER_BONUS_XP[tierIdx] ?? 0;
+          const celebKey = `tier-celebrated:${dungeonId}:${startDate ?? "x"}:${tier.rank}`;
+          if (
+            typeof window !== "undefined" &&
+            !localStorage.getItem(celebKey)
+          ) {
+            try {
+              localStorage.setItem(celebKey, "1");
+            } catch {}
+            setTimeout(() => {
+              notifyReward({
+                xp: bonus,
+                source: `🏆 Rank ${tier.rank} · ${dungeonName}`,
+              });
+              notifyStatsUpdated({ xpDelta: bonus });
+            }, 1100);
+          }
+        }
+      }
+    }
 
     try {
       await confirmDay(dungeonId, date, "cleared");

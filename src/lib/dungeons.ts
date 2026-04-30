@@ -72,6 +72,17 @@ export interface DungeonDef {
 // Each rank cleared adds base × multiplier to the mapped dimensions.
 export const DIMENSION_RANK_MULTIPLIERS = [1, 2, 4, 8, 16, 32];
 
+// One-time XP bonus credited the moment a player crosses a dungeon tier
+// (E → D → ... → S). Cumulative across tiers — reaching S earns the full
+// 100 + 200 + 400 + 800 + 1600 + 3200 = 6300 XP from that dungeon's
+// tier ladder alone.
+export const TIER_BONUS_XP = [100, 200, 400, 800, 1600, 3200];
+
+// Per-action scaling bonus added on top of the base XP rate, indexed by
+// the highest tier the player has cleared in that dungeon. Caps at +30
+// at S rank — this is the system's hard ceiling on per-action XP.
+export const TIER_PER_ACTION_BONUS = [5, 10, 15, 20, 25, 30];
+
 export const DIM_ORDER = ["body", "mind", "emotion", "energy", "spirit"] as const;
 export type DimKey = (typeof DIM_ORDER)[number];
 
