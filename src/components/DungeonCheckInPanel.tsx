@@ -50,7 +50,7 @@ export default function DungeonCheckInPanel({
   const [checkIns, setCheckIns] = useState<DayCheckIn[]>([]);
   const [pending, setPending] = useState<string | null>(null);
   const [relapseNoteOpen, setRelapseNoteOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [hasData, setHasData] = useState(false);
 
   const onClearedCountChangeRef = useRef(onClearedCountChange);
   useEffect(() => {
@@ -62,6 +62,7 @@ export default function DungeonCheckInPanel({
     const cached = readCache<DayCheckIn[]>(checkInCacheKey(dungeonId));
     if (cached) {
       setCheckIns(cached);
+      setHasData(true);
       onClearedCountChangeRef.current(
         cached.filter((c) => c.state === "cleared").length
       );
@@ -71,15 +72,13 @@ export default function DungeonCheckInPanel({
         .then((c) => {
           if (cancelled) return;
           setCheckIns(c);
+          setHasData(true);
           writeCache(checkInCacheKey(dungeonId), c);
           onClearedCountChangeRef.current(
             c.filter((x) => x.state === "cleared").length
           );
         })
-        .catch(() => {})
-        .finally(() => {
-          if (!cancelled) setLoading(false);
-        });
+        .catch(() => {});
     };
     fetchFromServer();
     const onStats = (e: Event) => {
@@ -336,7 +335,7 @@ export default function DungeonCheckInPanel({
         </div>
       )}
 
-      {!loading && (
+      {hasData && (
         <DungeonCalendar
           startDate={startDate}
           checkIns={checkIns}

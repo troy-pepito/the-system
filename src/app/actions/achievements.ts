@@ -45,7 +45,7 @@ export interface UnlockedAchievement {
 }
 
 async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
-  const [runs, events, quests, clearedCheckIns] = await Promise.all([
+  const [runs, events, quests, allCheckIns] = await Promise.all([
     prisma.dungeonRun.findMany({
       where: { userId },
       select: {
@@ -65,10 +65,10 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       where: { userId },
       select: { questId: true, date: true },
     }),
-    prisma.dungeonDayCheckIn.groupBy({
-      by: ["dungeonId"],
-      where: { userId, state: "cleared" },
-      _count: { _all: true },
+    prisma.dungeonDayCheckIn.findMany({
+      where: { userId },
+      select: { dungeonId: true, date: true, state: true, confirmedAt: true },
+      orderBy: { confirmedAt: "desc" },
     }),
   ]);
 
@@ -77,9 +77,20 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       (d) => d.ruleType === "continuous_streak" || d.ruleType === "timed"
     ).map((d) => d.id)
   );
+  // Dedupe by (dungeonId, date) so re-entering a dungeon and re-clearing
+  // the same calendar day doesn't double-count XP. Latest confirmedAt
+  // wins (records are ordered desc) → most recent state per date is the
+  // source of truth.
+  const latestState = new Map<string, string>();
+  for (const c of allCheckIns) {
+    const key = `${c.dungeonId}|${c.date.toISOString().split("T")[0]}`;
+    if (!latestState.has(key)) latestState.set(key, c.state);
+  }
   const clearedDays: Record<string, number> = {};
-  for (const row of clearedCheckIns) {
-    clearedDays[row.dungeonId] = row._count._all;
+  for (const [key, state] of latestState) {
+    if (state !== "cleared") continue;
+    const dungeonId = key.split("|")[0];
+    clearedDays[dungeonId] = (clearedDays[dungeonId] ?? 0) + 1;
   }
 
   // Only timed (Claim Victory after target days) and progressive

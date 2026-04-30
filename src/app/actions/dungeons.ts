@@ -668,21 +668,29 @@ export interface DayCheckIn {
 
 const getCheckInsCached = unstable_cache(
   async (userId: string, dungeonId: string) => {
-    const run = await prisma.dungeonRun.findFirst({
-      where: { userId, dungeonId, active: true },
-      orderBy: { createdAt: "desc" },
-    });
-    if (!run) return [] as DayCheckIn[];
+    // Pull check-ins across ALL runs of this dungeon (active and
+    // historical) so re-entering the dungeon doesn't wipe the user's
+    // calendar history. Dedupe by date — most recent confirmedAt wins,
+    // matching what the snapshot uses for XP.
     const checkIns = await prisma.dungeonDayCheckIn.findMany({
-      where: { runId: run.id },
-      orderBy: { date: "asc" },
+      where: { userId, dungeonId },
+      orderBy: { confirmedAt: "desc" },
       select: { date: true, state: true, count: true },
     });
-    return checkIns.map((c) => ({
-      date: c.date.toISOString().split("T")[0],
-      state: c.state as "cleared" | "relapsed",
-      count: c.count,
-    }));
+    const seen = new Set<string>();
+    const deduped: DayCheckIn[] = [];
+    for (const c of checkIns) {
+      const dateIso = c.date.toISOString().split("T")[0];
+      if (seen.has(dateIso)) continue;
+      seen.add(dateIso);
+      deduped.push({
+        date: dateIso,
+        state: c.state as "cleared" | "relapsed",
+        count: c.count,
+      });
+    }
+    deduped.sort((a, b) => a.date.localeCompare(b.date));
+    return deduped;
   },
   ["dungeon-checkins"],
   { tags: [TAG] }
