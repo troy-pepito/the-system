@@ -17,6 +17,11 @@ import {
   savePendingAvatar,
   usePendingAvatarUrl,
 } from "@/lib/pendingAvatar";
+import {
+  HUNTER_TYPE_DEFS,
+  isHunterType,
+  type HunterType,
+} from "@/lib/hunterType";
 
 const RANKS = ["E", "D", "C", "B", "A", "S"] as const;
 const LEVELS_PER_RANK = 10;
@@ -57,8 +62,15 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
     return (fractionalLevelIntoRank / LEVELS_PER_RANK) * 100;
   };
 
-  const hunterName =
-    (user?.unsafeMetadata as { hunterName?: string } | undefined)?.hunterName;
+  const meta = user?.unsafeMetadata as
+    | { hunterName?: string; hunterType?: string }
+    | undefined;
+  const hunterName = meta?.hunterName;
+  const hunterType: HunterType | null =
+    typeof meta?.hunterType === "string" && isHunterType(meta.hunterType)
+      ? meta.hunterType
+      : null;
+  const hunterTypeDef = hunterType ? HUNTER_TYPE_DEFS[hunterType] : null;
   const pendingName = usePendingHunterName();
   const pendingAvatarUrl = usePendingAvatarUrl();
   const avatarSrc = pendingAvatarUrl || (isLoaded ? user?.imageUrl : null);
@@ -310,6 +322,23 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                   Edit
                 </span>
               </button>
+            )}
+            {hunterTypeDef && (
+              <Link
+                href="/settings"
+                title="Change path"
+                className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${hunterTypeDef.badgeStyle}`}
+              >
+                <span>{hunterTypeDef.label}</span>
+              </Link>
+            )}
+            {!hunterTypeDef && isLoaded && user && (
+              <Link
+                href="/settings"
+                className="inline-block mt-2 text-[9px] tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-300 border-b border-slate-700 hover:border-cyan-400/50 transition-colors pb-0.5"
+              >
+                + Choose your path
+              </Link>
             )}
             <div className="flex items-center gap-5 mt-5">
               <div>

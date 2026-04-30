@@ -707,6 +707,7 @@ export interface PublicHunterData {
   unlocked: UnlockedAchievement[];
   heatmap: Record<string, number>;
   publicJournal: PublicJournalEntry[];
+  hunterType: string | null;
 }
 
 export async function getPublicHunterData(
@@ -722,13 +723,17 @@ export async function getPublicHunterData(
     return null;
   }
 
-  const meta = user.unsafeMetadata as { hunterName?: string } | undefined;
+  const meta = user.unsafeMetadata as
+    | { hunterName?: string; hunterType?: unknown }
+    | undefined;
   const hunterName =
     meta?.hunterName ||
     user.firstName ||
     user.username ||
     user.primaryEmailAddress?.emailAddress.split("@")[0] ||
     "Hunter";
+  const hunterType =
+    typeof meta?.hunterType === "string" ? meta.hunterType : null;
 
   const [snapshot, achievementRows, heatmap, runs, publicEvents] =
     await Promise.all([
@@ -792,5 +797,6 @@ export async function getPublicHunterData(
       note: e.note ?? "",
       createdAt: e.createdAt.toISOString(),
     })),
+    hunterType,
   };
 }

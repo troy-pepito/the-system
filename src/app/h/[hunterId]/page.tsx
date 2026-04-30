@@ -12,6 +12,7 @@ import {
   type AchievementDef,
 } from "@/lib/achievements";
 import { DUNGEONS, getDungeon } from "@/lib/dungeons";
+import { HUNTER_TYPE_DEFS, isHunterType } from "@/lib/hunterType";
 import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
 import Heatmap from "@/components/Heatmap";
@@ -111,6 +112,13 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
                 <p className="font-display text-lg sm:text-xl font-bold text-cyan-100 truncate tracking-wider">
                   {data.hunterName}
                 </p>
+                {data.hunterType && isHunterType(data.hunterType) && (
+                  <span
+                    className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${HUNTER_TYPE_DEFS[data.hunterType].badgeStyle}`}
+                  >
+                    {HUNTER_TYPE_DEFS[data.hunterType].label}
+                  </span>
+                )}
                 <div className="flex items-center gap-5 mt-5">
                   <div>
                     <p className="text-[9px] text-slate-500 tracking-widest uppercase">
