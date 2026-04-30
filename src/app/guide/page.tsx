@@ -24,6 +24,7 @@ const RULE_LABEL: Record<DungeonRuleType, string> = {
   cadence: "Weekly Cadence",
   timed: "Timed Run",
   progressive: "Progressive Ladder",
+  training_program: "Training Program",
 };
 
 const RULE_TYPES: {
@@ -54,6 +55,12 @@ const RULE_TYPES: {
     summary:
       "An escalating ladder. Clear a rung to unlock the next. No skipping.",
     used_by: "Exposure Therapy",
+  },
+  {
+    type: "training_program",
+    summary:
+      "A daily rep target that scales with each tier you clear. Hit the count to clear the day; miss it, no shame, try tomorrow. Gated by Hunter Path.",
+    used_by: "Pushup / Pullup / Squat Ladders (Body Hunter)",
   },
 ];
 

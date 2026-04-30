@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Card from "@/components/Card";
 import Paywall from "@/components/Paywall";
@@ -10,6 +11,7 @@ import {
   dungeonDims,
   DIM_STYLE,
 } from "@/lib/dungeons";
+import { HUNTER_TYPE_DEFS, isHunterType } from "@/lib/hunterType";
 import { enterDungeon, getAllActiveRuns } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
 import { readCache, writeCache } from "@/lib/offlineCache";
@@ -23,6 +25,12 @@ type CachedRun = { dungeonId: string };
 
 export default function PortalsPage() {
   const router = useRouter();
+  const { user } = useUser();
+  const meta = user?.unsafeMetadata as { hunterType?: string } | undefined;
+  const viewerHunterType =
+    typeof meta?.hunterType === "string" && isHunterType(meta.hunterType)
+      ? meta.hunterType
+      : null;
   // Initialize null on both server and client to keep SSR and first
   // client render identical. Cache and server fetch happen in useEffect.
   const [activeIds, setActiveIds] = useState<Set<string> | null>(null);
@@ -85,6 +93,11 @@ export default function PortalsPage() {
           const loaded = activeIds !== null;
           const rules = getDungeonRules(d);
           const isExpanded = expandedId === d.id;
+          const pathLocked =
+            !!d.hunterType && d.hunterType !== viewerHunterType;
+          const pathDef = d.hunterType
+            ? HUNTER_TYPE_DEFS[d.hunterType]
+            : null;
           return (
             <Card
               key={d.id}
@@ -104,6 +117,13 @@ export default function PortalsPage() {
                         {dim}
                       </span>
                     ))}
+                    {pathDef && (
+                      <span
+                        className={`text-[9px] font-bold uppercase tracking-[0.25em] px-1.5 py-0.5 border rounded-sm ${pathDef.badgeStyle}`}
+                      >
+                        {pathDef.label}
+                      </span>
+                    )}
                   </div>
                   <h2 className="font-display text-xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] uppercase tracking-wider">
                     {d.name}
@@ -165,6 +185,14 @@ export default function PortalsPage() {
                     className="block w-full text-center px-4 py-3 bg-slate-800/60 border border-cyan-500/30 rounded text-cyan-300 text-xs uppercase tracking-widest hover:bg-cyan-500/20 transition-colors"
                   >
                     View in Status Window
+                  </Link>
+                ) : pathLocked && pathDef ? (
+                  <Link
+                    href="/settings"
+                    onClick={(e) => e.stopPropagation()}
+                    className={`block w-full text-center px-4 py-3 border rounded text-xs uppercase tracking-widest transition-colors ${pathDef.badgeStyle} hover:brightness-125`}
+                  >
+                    🔒 Path Required: {pathDef.label}
                   </Link>
                 ) : (
                   <button

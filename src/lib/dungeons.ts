@@ -1,3 +1,5 @@
+import type { HunterType } from "@/lib/hunterType";
+
 export interface DungeonTier {
   rank: string;
   days: number;
@@ -7,7 +9,31 @@ export type DungeonRuleType =
   | "continuous_streak"
   | "cadence"
   | "timed"
-  | "progressive";
+  | "progressive"
+  | "training_program";
+
+/**
+ * Each tier in a training program lifts the daily rep target. `days` is
+ * the cumulative cleared-day threshold to *earn* this rank — same
+ * convention as the existing tier ladders. While cleared days < the
+ * earned tier's threshold, the player is grinding toward the next
+ * tier and the daily target equals that next tier's reps.
+ */
+export interface TrainingProgramTier {
+  rank: string;
+  reps: number;
+  days: number;
+}
+
+export interface TrainingProgramConfig {
+  /** Singular noun for the unit — "pushup", "minute", "second". */
+  unit: string;
+  /** Plural form. */
+  unitPlural: string;
+  /** Verb shown on the log button — "Log pushups", "Log minutes". */
+  actionVerb: string;
+  tiers: TrainingProgramTier[];
+}
 
 export interface TimedConfig {
   targetDays: number;
@@ -55,6 +81,9 @@ export interface DungeonDef {
   timed?: TimedConfig;
   cadence?: CadenceConfig;
   progressive?: ProgressiveConfig;
+  trainingProgram?: TrainingProgramConfig;
+  /** Hunter Type gate — only players matching this type can enter. */
+  hunterType?: HunterType;
   rules?: string[];
   dimensions?: DungeonDimensions;
 }
@@ -157,6 +186,58 @@ export const NOFAP_TIERS: DungeonTier[] = [
   { rank: "A", days: 90 },
   { rank: "S", days: 180 },
 ];
+
+// Cumulative cleared-day thresholds shared by every training program —
+// keeps the cadence of "rank up" predictable across exercises so a
+// player tracking pushups + pullups feels them advance in sync. The
+// per-tier rep target is what varies.
+const TRAINING_DAY_THRESHOLDS = [7, 21, 51, 111, 201, 381];
+
+const PUSHUP_TIERS: TrainingProgramTier[] = [
+  { rank: "E", reps: 5, days: TRAINING_DAY_THRESHOLDS[0] },
+  { rank: "D", reps: 10, days: TRAINING_DAY_THRESHOLDS[1] },
+  { rank: "C", reps: 20, days: TRAINING_DAY_THRESHOLDS[2] },
+  { rank: "B", reps: 40, days: TRAINING_DAY_THRESHOLDS[3] },
+  { rank: "A", reps: 70, days: TRAINING_DAY_THRESHOLDS[4] },
+  { rank: "S", reps: 100, days: TRAINING_DAY_THRESHOLDS[5] },
+];
+
+const PULLUP_TIERS: TrainingProgramTier[] = [
+  { rank: "E", reps: 2, days: TRAINING_DAY_THRESHOLDS[0] },
+  { rank: "D", reps: 4, days: TRAINING_DAY_THRESHOLDS[1] },
+  { rank: "C", reps: 8, days: TRAINING_DAY_THRESHOLDS[2] },
+  { rank: "B", reps: 15, days: TRAINING_DAY_THRESHOLDS[3] },
+  { rank: "A", reps: 25, days: TRAINING_DAY_THRESHOLDS[4] },
+  { rank: "S", reps: 40, days: TRAINING_DAY_THRESHOLDS[5] },
+];
+
+const SQUAT_TIERS: TrainingProgramTier[] = [
+  { rank: "E", reps: 10, days: TRAINING_DAY_THRESHOLDS[0] },
+  { rank: "D", reps: 20, days: TRAINING_DAY_THRESHOLDS[1] },
+  { rank: "C", reps: 40, days: TRAINING_DAY_THRESHOLDS[2] },
+  { rank: "B", reps: 70, days: TRAINING_DAY_THRESHOLDS[3] },
+  { rank: "A", reps: 100, days: TRAINING_DAY_THRESHOLDS[4] },
+  { rank: "S", reps: 150, days: TRAINING_DAY_THRESHOLDS[5] },
+];
+
+/**
+ * Resolves the player's current rep target for a training program based
+ * on how many days they've cleared so far. Convention matches the
+ * existing tier ladders: `tier.days` is the cumulative-cleared threshold
+ * to *earn* that rank. Until a player crosses that threshold, the daily
+ * target is the reps of that next tier they're working toward.
+ *
+ * Once the final tier (S) is earned, the target stays at S — players who
+ * want to keep going just maintain the S-rank reps daily.
+ */
+export function trainingProgramTarget(
+  tiers: TrainingProgramTier[],
+  clearedDays: number
+): { earnedTierIdx: number; nextTier: TrainingProgramTier; target: number } {
+  const earnedTierIdx = tiers.filter((t) => clearedDays >= t.days).length - 1;
+  const nextTier = tiers[earnedTierIdx + 1] ?? tiers[tiers.length - 1];
+  return { earnedTierIdx, nextTier, target: nextTier.reps };
+}
 
 export const DUNGEONS: DungeonDef[] = [
   {
@@ -267,6 +348,54 @@ export const DUNGEONS: DungeonDef[] = [
     ],
     dimensions: { emotion: 2, spirit: 1 },
   },
+  {
+    id: "training-pushups",
+    name: "Pushup Ladder",
+    rank: "E",
+    ruleType: "training_program",
+    hunterType: "body",
+    description:
+      "Daily pushup target rises with every tier you clear. E starts at 5/day; S asks for 100. Each cleared day banks the rep count and the discipline.",
+    trainingProgram: {
+      unit: "pushup",
+      unitPlural: "pushups",
+      actionVerb: "Log Pushups",
+      tiers: PUSHUP_TIERS,
+    },
+    dimensions: { body: 3 },
+  },
+  {
+    id: "training-pullups",
+    name: "Pullup Ladder",
+    rank: "E",
+    ruleType: "training_program",
+    hunterType: "body",
+    description:
+      "The hardest body-weight ladder. E asks for 2/day; S asks for 40. Pace yourself — pullups punish the impatient.",
+    trainingProgram: {
+      unit: "pullup",
+      unitPlural: "pullups",
+      actionVerb: "Log Pullups",
+      tiers: PULLUP_TIERS,
+    },
+    dimensions: { body: 3 },
+  },
+  {
+    id: "training-squats",
+    name: "Squat Ladder",
+    rank: "E",
+    ruleType: "training_program",
+    hunterType: "body",
+    description:
+      "Legs forge the foundation. E starts at 10/day; S asks for 150. Bodyweight squats — go deep, breathe, stack the days.",
+    trainingProgram: {
+      unit: "squat",
+      unitPlural: "squats",
+      actionVerb: "Log Squats",
+      tiers: SQUAT_TIERS,
+    },
+    dimensions: { body: 2, energy: 1 },
+  },
 ];
 
 export function getDungeon(id: string): DungeonDef | undefined {
@@ -307,6 +436,17 @@ export function getDungeonRules(d: DungeonDef): string[] {
         `Climb a ${p.rungs.length}-rung ladder of escalating exposures.`,
         "Log an exposure each time you complete the current rung's action in real life.",
         "Clear the rung's target to unlock the next. Dungeon cleared when the final rung is complete.",
+      ];
+    }
+    case "training_program": {
+      const tp = d.trainingProgram;
+      if (!tp) return [];
+      const first = tp.tiers[0];
+      const last = tp.tiers[tp.tiers.length - 1];
+      return [
+        `Daily ${tp.unit} target rises with every tier cleared. E starts at ${first.reps} ${tp.unitPlural}; S asks for ${last.reps}.`,
+        `Hit today's target to clear the day. Miss it — no shame, just try again tomorrow.`,
+        "Cleared days bank XP and advance you toward the next tier. Reaching S puts you in maintenance — keep the daily rep count alive.",
       ];
     }
     default:
