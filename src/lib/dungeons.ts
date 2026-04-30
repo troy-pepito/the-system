@@ -5,17 +5,9 @@ export interface DungeonTier {
 
 export type DungeonRuleType =
   | "continuous_streak"
-  | "allowance"
   | "cadence"
   | "timed"
   | "progressive";
-
-export interface AllowanceConfig {
-  limit: number;
-  window: "month";
-  unitLabel: string;
-  unitLabelPlural: string;
-}
 
 export interface TimedConfig {
   targetDays: number;
@@ -59,7 +51,6 @@ export interface DungeonDef {
   rank: string;
   ruleType: DungeonRuleType;
   tiers?: DungeonTier[];
-  allowance?: AllowanceConfig;
   description: string;
   timed?: TimedConfig;
   cadence?: CadenceConfig;
@@ -291,16 +282,6 @@ export function getDungeonRules(d: DungeonDef): string[] {
         "Cleared days bank XP + dimension points permanently. Relapses are calendar markers — they don't reset your progress.",
         "Clear ranks E → S by accumulating cleared days. Run only ends when you tap Exit Dungeon.",
       ];
-    case "allowance": {
-      const a = d.allowance;
-      if (!a) return [];
-      const limitLabel = `${a.limit} ${a.limit === 1 ? a.unitLabel : a.unitLabelPlural}`;
-      return [
-        `Up to ${limitLabel} per ${a.window} is allowed.`,
-        `The ${a.limit + 1}${ordinalSuffix(a.limit + 1)} ${a.unitLabel} logged in a ${a.window} ends the run as a relapse.`,
-        "Streak days continue growing as long as you stay under the limit.",
-      ];
-    }
     case "timed": {
       const t = d.timed;
       if (!t) return [];
@@ -331,11 +312,5 @@ export function getDungeonRules(d: DungeonDef): string[] {
     default:
       return [];
   }
-}
-
-function ordinalSuffix(n: number): string {
-  const s = ["th", "st", "nd", "rd"];
-  const v = n % 100;
-  return s[(v - 20) % 10] || s[v] || s[0];
 }
 

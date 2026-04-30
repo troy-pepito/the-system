@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import StreakCard from "@/components/StreakCard";
-import AllowanceDungeonCard from "@/components/AllowanceDungeonCard";
 import DailyQuests from "@/components/DailyQuests";
 import SideQuests from "@/components/SideQuests";
 import {
@@ -217,17 +216,6 @@ export default function Dashboard() {
                   initialRun={run}
                   onStreakChange={reload}
                   onExit={handleEnded}
-                />
-              );
-            } else if (d.ruleType === "allowance") {
-              card = (
-                <AllowanceDungeonCard
-                  dungeonId={run.dungeonId}
-                  eventType={d.allowance?.unitLabel ?? "consume"}
-                  initialRun={run}
-                  initialMonthCount={detail.monthCount ?? 0}
-                  onStreakChange={reload}
-                  onRelapse={handleEnded}
                 />
               );
             } else if (d.ruleType === "timed") {

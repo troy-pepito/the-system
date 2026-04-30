@@ -25,22 +25,6 @@ export type DungeonWorkoutToggleMutation = {
   desiredCompleted: boolean;
 };
 
-export type DungeonLogAllowanceMutation = {
-  id: string;
-  type: "dungeon:logAllowance";
-  dungeonId: string;
-  eventType: string;
-  note?: string;
-  isPublic?: boolean;
-};
-
-export type DungeonUndoAllowanceMutation = {
-  id: string;
-  type: "dungeon:undoAllowance";
-  dungeonId: string;
-  eventType: string;
-};
-
 export type DungeonJournalLogMutation = {
   id: string;
   type: "dungeon:journalLog";
@@ -103,8 +87,6 @@ export type Mutation =
   | QuestToggleMutation
   | DungeonEndRunMutation
   | DungeonWorkoutToggleMutation
-  | DungeonLogAllowanceMutation
-  | DungeonUndoAllowanceMutation
   | DungeonLogExposureMutation
   | DungeonUndoExposureMutation
   | DungeonEnterMutation

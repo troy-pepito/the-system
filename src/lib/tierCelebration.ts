@@ -4,9 +4,9 @@ import { notifyReward, notifyStatsUpdated } from "@/lib/player";
 import { TIER_BONUS_XP } from "@/lib/dungeons";
 
 /**
- * Detects time-based tier crossings (cadence + allowance dungeons,
- * where the tier ladder advances passively with calendar days from
- * startDate, not by user action).
+ * Detects time-based tier crossings (cadence dungeons, where the tier
+ * ladder advances passively with calendar days from startDate, not by
+ * user action).
  *
  * On first detection per (dungeonId, startDate), the current tier is
  * silently recorded — no retro-celebration for tiers earned before

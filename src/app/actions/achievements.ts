@@ -331,8 +331,6 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   //   - Per-action scaling: existing per-action XP gets a bonus added,
   //     scaled by the highest tier currently reached. Capped at +30
   //     per action at S rank.
-  // Allowance dungeons get tier bonuses only (no positive action — the
-  // user earns by NOT consuming, so per-action scaling doesn't apply).
   let dungeonTierBonusTotal = 0;
   let dungeonPerActionBonusTotal = 0;
 
@@ -360,13 +358,6 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       // Single cadence dungeon today (Training Regimen) — workouts ≈
       // workoutTotal. Update if multiple cadence dungeons are added.
       actionCount = workoutTotal;
-    } else if (d.ruleType === "allowance") {
-      if (d.tiers) {
-        tierIdx =
-          d.tiers.filter((t) => run.maxStreak >= t.days).length - 1;
-      }
-      // Passive — no per-action XP.
-      actionCount = 0;
     } else if (d.ruleType === "progressive" && d.progressive) {
       let clearedRungs = 0;
       for (const rung of d.progressive.rungs) {
@@ -641,10 +632,6 @@ export interface PublicDungeonRunSummary {
   displayValue: string;
 }
 
-function startOfUtcMonth(d: Date): Date {
-  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
-}
-
 function startOfUtcWeekMonday(d: Date): Date {
   const today = new Date(
     Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
@@ -697,23 +684,6 @@ async function computeRunDisplayValue(run: {
       rungs[rungs.length - 1];
     const c = countMap[currentRung.id] ?? 0;
     return `${currentRung.name} ${Math.min(c, currentRung.target)}/${currentRung.target}`;
-  }
-
-  if (d.ruleType === "allowance" && d.allowance) {
-    const monthStart = startOfUtcMonth(now);
-    const monthEnd = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1)
-    );
-    const count = await prisma.dungeonEvent.count({
-      where: {
-        runId: run.id,
-        type: d.allowance.unitLabel,
-        date: { gte: monthStart, lt: monthEnd },
-      },
-    });
-    const unit =
-      count === 1 ? d.allowance.unitLabel : d.allowance.unitLabelPlural;
-    return `${count}/${d.allowance.limit} ${unit}`;
   }
 
   return "—";

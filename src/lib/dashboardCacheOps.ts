@@ -84,15 +84,6 @@ export function setWorkoutInCache(
   );
 }
 
-export function bumpAllowanceInCache(dungeonId: string, delta: number): void {
-  mutate((d) =>
-    withDetail(d, dungeonId, (detail) => ({
-      ...detail,
-      monthCount: Math.max(0, (detail.monthCount ?? 0) + delta),
-    }))
-  );
-}
-
 export function adjustRungCountInCache(
   dungeonId: string,
   rungId: string,

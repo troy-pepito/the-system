@@ -32,7 +32,6 @@ export interface DungeonRunState {
 export interface RunDetail {
   weekWorkouts?: string[];
   rungCounts?: Record<string, number>;
-  monthCount?: number;
 }
 
 export interface DashboardData {
@@ -166,11 +165,6 @@ export async function getDashboardData(
         detail.weekWorkouts = await getWeekWorkouts(run.dungeonId);
       } else if (d.ruleType === "progressive") {
         detail.rungCounts = await getRungCounts(run.dungeonId);
-      } else if (d.ruleType === "allowance" && d.allowance) {
-        detail.monthCount = await getMonthEventCount(
-          run.dungeonId,
-          d.allowance.unitLabel
-        );
       }
       return [run.dungeonId, detail];
     })
@@ -273,15 +267,6 @@ export async function endRun(
   updateTag(TAG);
 }
 
-function currentMonthBounds(): { start: Date; end: Date } {
-  const now = new Date();
-  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-  const end = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1)
-  );
-  return { start, end };
-}
-
 function currentWeekBounds(): { start: Date; end: Date } {
   const now = new Date();
   const day = now.getUTCDay();
@@ -362,29 +347,6 @@ export async function toggleWorkout(
   });
   updateTag(TAG);
   return { completed: true };
-}
-
-const getMonthEventCountCached = unstable_cache(
-  async (userId: string, dungeonId: string, type: string) => {
-    const run = await prisma.dungeonRun.findFirst({
-      where: { userId, dungeonId, active: true },
-    });
-    if (!run) return 0;
-    const { start, end } = currentMonthBounds();
-    return prisma.dungeonEvent.count({
-      where: { runId: run.id, type, date: { gte: start, lt: end } },
-    });
-  },
-  ["month-event-count"],
-  { tags: [TAG] }
-);
-
-export async function getMonthEventCount(
-  dungeonId: string,
-  type: string
-): Promise<number> {
-  const userId = await requireUserId();
-  return getMonthEventCountCached(userId, dungeonId, type);
 }
 
 const getBonusXpCached = unstable_cache(
@@ -594,77 +556,6 @@ export async function undoRungExposure(
   }
   const count = await prisma.dungeonEvent.count({
     where: { run: { userId, dungeonId }, type: rungId },
-  });
-  updateTag(TAG);
-  return { count };
-}
-
-export async function logAllowanceEvent(
-  dungeonId: string,
-  type: string,
-  note?: string,
-  isPublic = false
-): Promise<{ count: number; relapsed: boolean }> {
-  const userId = await requireUserId();
-  const dungeon = getDungeon(dungeonId);
-  if (!dungeon?.allowance) {
-    throw new Error(`Dungeon ${dungeonId} has no allowance config`);
-  }
-  const run = await prisma.dungeonRun.findFirst({
-    where: { userId, dungeonId, active: true },
-  });
-  if (!run) throw new Error(`No active run for ${dungeonId}`);
-
-  const now = new Date();
-  const trimmedNote = note?.trim();
-  await prisma.dungeonEvent.create({
-    data: {
-      runId: run.id,
-      type,
-      date: now,
-      value: 1,
-      ...(trimmedNote ? { note: trimmedNote, isPublic } : {}),
-    },
-  });
-
-  const { start, end } = currentMonthBounds();
-  const count = await prisma.dungeonEvent.count({
-    where: { runId: run.id, type, date: { gte: start, lt: end } },
-  });
-
-  if (count > dungeon.allowance.limit) {
-    await prisma.dungeonRun.update({
-      where: { id: run.id },
-      data: { active: false, endReason: "relapse" },
-    });
-    updateTag(TAG);
-    return { count, relapsed: true };
-  }
-  updateTag(TAG);
-  return { count, relapsed: false };
-}
-
-export async function undoAllowanceEvent(
-  dungeonId: string,
-  type: string
-): Promise<{ count: number }> {
-  const userId = await requireUserId();
-  const run = await prisma.dungeonRun.findFirst({
-    where: { userId, dungeonId, active: true },
-  });
-  if (!run) throw new Error(`No active run for ${dungeonId}`);
-
-  const last = await prisma.dungeonEvent.findFirst({
-    where: { runId: run.id, type },
-    orderBy: { createdAt: "desc" },
-  });
-  if (last) {
-    await prisma.dungeonEvent.delete({ where: { id: last.id } });
-  }
-
-  const { start, end } = currentMonthBounds();
-  const count = await prisma.dungeonEvent.count({
-    where: { runId: run.id, type, date: { gte: start, lt: end } },
   });
   updateTag(TAG);
   return { count };

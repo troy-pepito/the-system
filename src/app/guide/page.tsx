@@ -21,7 +21,6 @@ export const metadata = {
 
 const RULE_LABEL: Record<DungeonRuleType, string> = {
   continuous_streak: "Continuous Streak",
-  allowance: "Monthly Allowance",
   cadence: "Weekly Cadence",
   timed: "Timed Run",
   progressive: "Progressive Ladder",
@@ -36,13 +35,7 @@ const RULE_TYPES: {
     type: "continuous_streak",
     summary:
       "A daily check-in. Confirm each day as cleared or relapsed in the calendar. Cleared days bank XP + dimensions permanently.",
-    used_by: "NoFap",
-  },
-  {
-    type: "allowance",
-    summary:
-      "A budget per month. Stay under the limit; exceed it and the run resets.",
-    used_by: "Caffeine Reboot · Diet Challenge",
+    used_by: "NoFap · Caffeine Reboot · Diet Challenge",
   },
   {
     type: "cadence",
