@@ -108,6 +108,7 @@ export default function Navbar() {
           <div className="hidden sm:flex gap-5 text-[10px] uppercase tracking-widest">
             {navLink("/", "Status")}
             {navLink("/portals", "Portals")}
+            {navLink("/feed", "Feed")}
             {navLink("/profile", "Profile")}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
@@ -146,6 +147,7 @@ export default function Navbar() {
         <div className="sm:hidden flex justify-center gap-5 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
           {navLink("/", "Status")}
           {navLink("/portals", "Portals")}
+          {navLink("/feed", "Feed")}
           {navLink("/profile", "Profile")}
         </div>
       </div>
