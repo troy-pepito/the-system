@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 import Paywall from "@/components/Paywall";
 import WhatsNewBadge from "@/components/WhatsNewBadge";
 import { isPricingEnabled, isUserPro } from "@/lib/pricing";
@@ -24,6 +25,7 @@ export default function Navbar() {
   // the first client render. Cache hydration happens in the useEffect.
   const [totalXp, setTotalXp] = useState<number>(0);
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   const navLink = (href: string, label: string) => {
     const isActive =
@@ -106,10 +108,10 @@ export default function Navbar() {
             The System
           </Link>
           <div className="hidden sm:flex gap-5 text-[10px] uppercase tracking-widest">
-            {navLink("/", "Status")}
-            {navLink("/portals", "Portals")}
-            {navLink("/feed", "Feed")}
-            {navLink("/profile", "Profile")}
+            {navLink("/", t("status"))}
+            {navLink("/portals", t("portals"))}
+            {navLink("/feed", t("feed"))}
+            {navLink("/profile", t("profile"))}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
             {showUpgrade && (
@@ -168,10 +170,10 @@ export default function Navbar() {
           </p>
         </div>
         <div className="sm:hidden flex justify-center gap-5 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
-          {navLink("/", "Status")}
-          {navLink("/portals", "Portals")}
-          {navLink("/feed", "Feed")}
-          {navLink("/profile", "Profile")}
+          {navLink("/", t("status"))}
+          {navLink("/portals", t("portals"))}
+          {navLink("/feed", t("feed"))}
+          {navLink("/profile", t("profile"))}
         </div>
       </div>
       <Paywall open={paywallOpen} onClose={() => setPaywallOpen(false)} />

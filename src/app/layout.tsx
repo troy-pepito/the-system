@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Chakra_Petch } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -71,15 +73,18 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
     <ClerkProvider>
       <html
-        lang="en"
+        lang={locale}
         className={`${geistSans.variable} ${geistMono.variable} ${chakraPetch.variable} h-full antialiased`}
       >
         <body className="min-h-full flex flex-col">
@@ -89,33 +94,35 @@ export default function RootLayout({
           >
             Skip to content
           </a>
-          <PostHogProvider>
-            <ServiceWorkerRegistration />
-            <OfflineBanner />
-            <GrainOverlay />
-            <AwakeningOverlay />
-            <SignedOut>
-              <SignInGate />
-            </SignedOut>
-            <SignedIn>
-              <Navbar />
-            </SignedIn>
-            <PageTransition>{children}</PageTransition>
-            <Footer />
-            <SignedIn>
-              <CacheWarmer />
-              <OfflineSyncManager />
-              <DailyReminderAutoEnroll />
-              <GainsLogger />
-              <AchievementToast />
-              <GainToast />
-              <RankUpGlitch />
-              <RankUpShare />
-              <BackToTop />
-              <PwaInstallPrompt />
-              <DevTestPanel />
-            </SignedIn>
-          </PostHogProvider>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <PostHogProvider>
+              <ServiceWorkerRegistration />
+              <OfflineBanner />
+              <GrainOverlay />
+              <AwakeningOverlay />
+              <SignedOut>
+                <SignInGate />
+              </SignedOut>
+              <SignedIn>
+                <Navbar />
+              </SignedIn>
+              <PageTransition>{children}</PageTransition>
+              <Footer />
+              <SignedIn>
+                <CacheWarmer />
+                <OfflineSyncManager />
+                <DailyReminderAutoEnroll />
+                <GainsLogger />
+                <AchievementToast />
+                <GainToast />
+                <RankUpGlitch />
+                <RankUpShare />
+                <BackToTop />
+                <PwaInstallPrompt />
+                <DevTestPanel />
+              </SignedIn>
+            </PostHogProvider>
+          </NextIntlClientProvider>
         </body>
       </html>
     </ClerkProvider>
