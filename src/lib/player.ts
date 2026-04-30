@@ -65,6 +65,28 @@ export function notifyReward(delta: RewardDelta) {
   window.dispatchEvent(new CustomEvent(REWARD_EVENT, { detail: delta }));
 }
 
+export const NOTICE_EVENT = "system:notice";
+
+export interface SystemNotice {
+  /** Bracket-text headline — keep short, all-caps friendly. */
+  headline: string;
+  /** Optional one-line body under the headline. */
+  body?: string;
+  /** Optional CTA — renders as a link styled like a System callout. */
+  link?: { href: string; label: string };
+}
+
+/**
+ * Player-facing System message — the in-world "[Quest Complete]"-flavored
+ * announcement, distinct from the mechanical XP/dim toast (REWARD_EVENT).
+ * Use sparingly: confirms that something the player did is now durable
+ * and points them toward where it lives.
+ */
+export function notifySystemMessage(detail: SystemNotice) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(NOTICE_EVENT, { detail }));
+}
+
 let pendingMutations = 0;
 
 export function beginMutation() {

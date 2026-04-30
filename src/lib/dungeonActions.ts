@@ -11,6 +11,7 @@ import { track } from "@/lib/analytics";
 import {
   notifyReward,
   notifyStatsUpdated,
+  notifySystemMessage,
   XP_PER_COMPLETION,
 } from "@/lib/player";
 
@@ -82,6 +83,15 @@ export function useJournalAction({
       });
       drainQueue().catch(() => {});
     }
+    // Confirm the save with a [System]-flavored notice + jumping-off
+    // point to the archive. Fires whether the save went to the server
+    // directly or got queued for offline drain — the entry exists
+    // locally either way.
+    notifySystemMessage({
+      headline: "Reflection Recorded",
+      body: `Logged to ${dungeonName}. The System remembers.`,
+      link: { href: "/journal", label: "Open Journal" },
+    });
   }
 
   return {
