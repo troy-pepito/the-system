@@ -102,7 +102,10 @@ export default function Dashboard() {
       const target = document.getElementById(hash.slice(1));
       if (target) {
         initialHashScrollDone.current = true;
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        // "center" so the action area inside the card (check-in prompt
+        // or DateEntryPicker) sits in the middle of the viewport
+        // instead of way below the fold on tall cards.
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
       attempts++;
