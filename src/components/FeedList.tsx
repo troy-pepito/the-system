@@ -2,7 +2,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { getDungeon } from "@/lib/dungeons";
-import { getPublicFeed, type FeedEntry } from "@/app/actions/feed";
+import {
+  getPublicFeed,
+  toggleReaction,
+  type FeedEntry,
+} from "@/app/actions/feed";
+import { REACTION_EMOJIS, type ReactionSummary } from "@/lib/reactions";
 
 interface FeedListProps {
   initialEntries: FeedEntry[];
@@ -29,6 +34,15 @@ export default function FeedList({
     }
   }
 
+  function applyReaction(entryId: number, emoji: string, active: boolean) {
+    setEntries((prev) =>
+      prev.map((e) => {
+        if (e.id !== entryId) return e;
+        return { ...e, reactions: nextReactions(e.reactions, emoji, active) };
+      })
+    );
+  }
+
   if (entries.length === 0) {
     return (
       <div className="border border-slate-800 rounded-lg p-8 text-center">
@@ -47,7 +61,11 @@ export default function FeedList({
     <div className="space-y-4">
       <ul className="space-y-3">
         {entries.map((e) => (
-          <FeedCard key={e.id} entry={e} />
+          <FeedCard
+            key={e.id}
+            entry={e}
+            onReact={(emoji, active) => applyReaction(e.id, emoji, active)}
+          />
         ))}
       </ul>
 
@@ -70,8 +88,31 @@ export default function FeedList({
   );
 }
 
-function FeedCard({ entry }: { entry: FeedEntry }) {
+interface FeedCardProps {
+  entry: FeedEntry;
+  onReact: (emoji: string, active: boolean) => void;
+}
+
+function FeedCard({ entry, onReact }: FeedCardProps) {
   const dungeon = getDungeon(entry.dungeonId);
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  async function handleToggle(emoji: string) {
+    setPickerOpen(false);
+    const wasActive =
+      entry.reactions.find((r) => r.emoji === emoji)?.userReacted ?? false;
+    // Optimistic flip first so the tap feels instant.
+    onReact(emoji, !wasActive);
+    try {
+      const { active } = await toggleReaction(entry.id, emoji);
+      // Server may disagree (e.g. row already existed in another tab).
+      // Reconcile only if it differs from our optimistic guess.
+      if (active !== !wasActive) onReact(emoji, active);
+    } catch {
+      // Revert on failure.
+      onReact(emoji, wasActive);
+    }
+  }
 
   return (
     <li className="bg-slate-900/60 border border-slate-800 rounded-lg p-4 hover:border-cyan-500/30 transition-colors">
@@ -117,10 +158,101 @@ function FeedCard({ entry }: { entry: FeedEntry }) {
           <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
             {entry.note}
           </p>
+
+          <div className="flex flex-wrap items-center gap-1.5 mt-3">
+            {entry.reactions.map((r) => (
+              <button
+                key={r.emoji}
+                onClick={() => handleToggle(r.emoji)}
+                className={`flex items-center gap-1 px-2 py-0.5 border rounded-full text-[11px] tabular-nums transition-colors ${
+                  r.userReacted
+                    ? "bg-cyan-500/15 border-cyan-400/50 text-cyan-200"
+                    : "bg-slate-800/40 border-slate-700 text-slate-300 hover:border-cyan-500/40"
+                }`}
+              >
+                <span>{r.emoji}</span>
+                <span>{r.count}</span>
+              </button>
+            ))}
+            <ReactionPicker
+              open={pickerOpen}
+              onOpenChange={setPickerOpen}
+              onPick={handleToggle}
+            />
+          </div>
         </div>
       </div>
     </li>
   );
+}
+
+interface ReactionPickerProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onPick: (emoji: string) => void;
+}
+
+function ReactionPicker({ open, onOpenChange, onPick }: ReactionPickerProps) {
+  return (
+    <div className="relative">
+      <button
+        onClick={() => onOpenChange(!open)}
+        aria-label="Add reaction"
+        className="px-2 py-0.5 border border-slate-700 rounded-full text-slate-400 text-[11px] hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
+      >
+        +
+      </button>
+      {open && (
+        <>
+          {/* Click-outside backdrop */}
+          <div
+            onClick={() => onOpenChange(false)}
+            className="fixed inset-0 z-30"
+          />
+          <div className="absolute bottom-full left-0 mb-1 z-40 flex gap-1 bg-slate-900 border border-cyan-500/30 rounded-full px-2 py-1 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+            {REACTION_EMOJIS.map((r) => (
+              <button
+                key={r.emoji}
+                onClick={() => onPick(r.emoji)}
+                title={r.label}
+                className="px-1.5 py-1 hover:scale-125 transition-transform text-base"
+              >
+                {r.emoji}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function nextReactions(
+  current: ReactionSummary[],
+  emoji: string,
+  active: boolean
+): ReactionSummary[] {
+  const existing = current.find((r) => r.emoji === emoji);
+  if (!existing) {
+    return active
+      ? [...current, { emoji, count: 1, userReacted: true }]
+      : current;
+  }
+  // Only the viewer's own toggle moves the count — other hunters'
+  // reactions are immutable from the client's perspective.
+  const delta =
+    active && !existing.userReacted
+      ? 1
+      : !active && existing.userReacted
+      ? -1
+      : 0;
+  return current
+    .map((r) =>
+      r.emoji === emoji
+        ? { ...r, count: r.count + delta, userReacted: active }
+        : r
+    )
+    .filter((r) => r.count > 0);
 }
 
 function entryLabel(type: string): string {

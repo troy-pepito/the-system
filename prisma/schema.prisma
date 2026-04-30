@@ -46,15 +46,30 @@ model DungeonDayCheckIn {
 }
 
 model DungeonEvent {
-  id        Int        @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   runId     Int
-  run       DungeonRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  run       DungeonRun   @relation(fields: [runId], references: [id], onDelete: Cascade)
   type      String
-  date      DateTime   @db.Date
+  date      DateTime     @db.Date
   value     Float?
   note      String?
-  isPublic  Boolean    @default(false)
-  createdAt DateTime   @default(now())
+  isPublic  Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  reactions Reaction[]
+}
+
+model Reaction {
+  id        Int          @id @default(autoincrement())
+  eventId   Int
+  event     DungeonEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId    String
+  emoji     String
+  createdAt DateTime     @default(now())
+
+  // One row per (event, user, emoji) — clicking the same emoji twice
+  // toggles the reaction off rather than stacking.
+  @@unique([eventId, userId, emoji])
+  @@index([eventId])
 }
 
 model QuestCompletion {
