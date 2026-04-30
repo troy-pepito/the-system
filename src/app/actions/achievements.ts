@@ -82,6 +82,15 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     clearedDays[row.dungeonId] = row._count._all;
   }
 
+  // Only timed (Claim Victory after target days) and progressive
+  // (final rung cleared) dungeons can legitimately complete. Anything
+  // else with endReason="completed" is a leftover from when Exit Dungeon
+  // mistakenly used reason:"completed" — count those as walk-aways.
+  const canTrulyComplete = (dungeonId: string): boolean => {
+    const d = DUNGEONS.find((x) => x.id === dungeonId);
+    return d?.ruleType === "timed" || d?.ruleType === "progressive";
+  };
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const weekCutoff = new Date(today);
@@ -113,7 +122,11 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       }
     }
 
-    if (!run.active && run.endReason === "completed") {
+    if (
+      !run.active &&
+      run.endReason === "completed" &&
+      canTrulyComplete(run.dungeonId)
+    ) {
       completedRunCount++;
       existing.completed = true;
       if (run.startDate && !usesCheckIns) {

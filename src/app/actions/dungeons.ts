@@ -244,7 +244,7 @@ export async function setRunStartDate(
 
 export async function endRun(
   dungeonId: string,
-  reason: "relapse" | "completed",
+  reason: "relapse" | "completed" | "exited",
   note?: string,
   isPublic = false
 ): Promise<void> {

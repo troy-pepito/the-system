@@ -12,7 +12,7 @@ export type DungeonEndRunMutation = {
   id: string;
   type: "dungeon:endRun";
   dungeonId: string;
-  reason: "relapse" | "completed";
+  reason: "relapse" | "completed" | "exited";
   note?: string;
   isPublic?: boolean;
 };

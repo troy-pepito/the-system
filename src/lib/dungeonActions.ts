@@ -104,7 +104,7 @@ export function useJournalAction({
 interface EndRunActionOptions {
   dungeonId: string;
   dungeonName: string;
-  reason: "relapse" | "completed";
+  reason: "relapse" | "completed" | "exited";
   /** For analytics — passed through to the relapse track event. */
   ruleType?: string;
   trackProperties?: Record<string, unknown>;
@@ -122,9 +122,11 @@ interface EndRunActionOptions {
 }
 
 /**
- * Owns the relapse / claim-victory modal flow. Cards pass their own
- * optimistic-UI-reset callback. Hook handles modal state, analytics,
- * notify events, server call, offline enqueue.
+ * Owns the relapse / claim-victory / exit modal flow. Only `completed`
+ * (true victory after reaching the dungeon's target) banks the
+ * +XP_PER_COMPLETION bonus — `exited` is a graceful walk-away, no
+ * bonus, while `relapse` is the failure path. Cards pass their own
+ * optimistic-UI-reset callback.
  */
 export function useEndRunAction(opts: EndRunActionOptions): {
   open: () => void;
@@ -132,6 +134,7 @@ export function useEndRunAction(opts: EndRunActionOptions): {
 } {
   const [isOpen, setIsOpen] = useState(false);
   const isRelapse = opts.reason === "relapse";
+  const isVictory = opts.reason === "completed";
 
   async function handleSubmit(note: string | null, isPublic?: boolean) {
     setIsOpen(false);
@@ -142,7 +145,7 @@ export function useEndRunAction(opts: EndRunActionOptions): {
         ...(opts.trackProperties ?? {}),
       });
     }
-    if (!isRelapse) {
+    if (isVictory) {
       notifyReward({
         xp: XP_PER_COMPLETION,
         source: `${opts.dungeonName} · Victory`,
@@ -172,11 +175,19 @@ export function useEndRunAction(opts: EndRunActionOptions): {
 
   const defaultTitle = isRelapse
     ? `Relapse — ${opts.dungeonName}`
-    : `Victory — ${opts.dungeonName}`;
+    : isVictory
+    ? `Victory — ${opts.dungeonName}`
+    : `Exit — ${opts.dungeonName}`;
   const defaultPlaceholder = isRelapse
     ? "What triggered it? How are you feeling? (optional)"
-    : "How did this run change you? (optional)";
-  const defaultConfirm = isRelapse ? "Confirm Relapse" : "Claim Victory";
+    : isVictory
+    ? "How did this run change you? (optional)"
+    : "Why are you exiting? (optional)";
+  const defaultConfirm = isRelapse
+    ? "Confirm Relapse"
+    : isVictory
+    ? "Claim Victory"
+    : "Exit Dungeon";
 
   return {
     open: () => setIsOpen(true),
@@ -187,9 +198,9 @@ export function useEndRunAction(opts: EndRunActionOptions): {
       confirmLabel: opts.modalOverrides?.confirmLabel ?? defaultConfirm,
       skipLabel:
         opts.modalOverrides?.skipLabel ??
-        (isRelapse ? "Cancel" : "Skip Note"),
+        (isVictory ? "Skip Note" : "Cancel"),
       tone: isRelapse ? "danger" : "neutral",
-      cancelOnSkip: opts.modalOverrides?.cancelOnSkip ?? isRelapse,
+      cancelOnSkip: opts.modalOverrides?.cancelOnSkip ?? !isVictory,
       showPublicToggle: true,
       onSubmit: handleSubmit,
       onCancel: () => setIsOpen(false),

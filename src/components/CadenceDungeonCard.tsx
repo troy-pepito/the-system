@@ -72,14 +72,7 @@ export default function CadenceDungeonCard({
   const exitAction = useEndRunAction({
     dungeonId,
     dungeonName,
-    reason: "completed",
-    modalOverrides: {
-      title: `Exit — ${dungeonName}`,
-      placeholder: "Why are you exiting? (optional)",
-      confirmLabel: "Exit Dungeon",
-      skipLabel: "Cancel",
-      cancelOnSkip: true,
-    },
+    reason: "exited",
     onLocalReset: () => {
       setStartDate(null);
       setStreak(0);

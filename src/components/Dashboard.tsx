@@ -92,20 +92,38 @@ export default function Dashboard() {
       initialHashScrollDone.current = true;
       return;
     }
-    // Retry up to 5 times — the dungeon card might not be in the DOM
-    // yet when this effect first fires (especially on first nav from
-    // /portals → /#dungeon-X with a freshly entered run).
     let attempts = 0;
     let cancelled = false;
-    const tryScroll = () => {
-      if (cancelled) return;
+    let recenterTimer: ReturnType<typeof setTimeout> | null = null;
+    let lastAutoY = -1;
+
+    const scrollToTarget = () => {
       const target = document.getElementById(hash.slice(1));
       if (target) {
-        initialHashScrollDone.current = true;
-        // "center" so the action area inside the card (check-in prompt
-        // or DateEntryPicker) sits in the middle of the viewport
-        // instead of way below the fold on tall cards.
         target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return target;
+    };
+
+    const tryScroll = () => {
+      if (cancelled) return;
+      const target = scrollToTarget();
+      if (target) {
+        // Snapshot the auto-scroll Y after smooth scroll settles, then
+        // re-center once more after 1.8s. The cache→server fetch can
+        // shift content above the card and push it out of view; the
+        // recenter pulls it back, but only if the user hasn't scrolled
+        // away in the interim.
+        setTimeout(() => {
+          if (!cancelled) lastAutoY = window.scrollY;
+        }, 600);
+        recenterTimer = setTimeout(() => {
+          if (cancelled) return;
+          const userMoved =
+            lastAutoY >= 0 && Math.abs(window.scrollY - lastAutoY) > 80;
+          if (!userMoved) scrollToTarget();
+          initialHashScrollDone.current = true;
+        }, 1800);
         return;
       }
       attempts++;
@@ -118,6 +136,7 @@ export default function Dashboard() {
     tryScroll();
     return () => {
       cancelled = true;
+      if (recenterTimer) clearTimeout(recenterTimer);
     };
   }, [dashboard]);
 
