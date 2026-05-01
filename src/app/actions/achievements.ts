@@ -4,8 +4,6 @@ import { unstable_cache, updateTag } from "next/cache";
 import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import {
-  SOCIAL_RECLAIM_RUNGS,
-  GYM_LIFE_WORKOUTS,
   DUNGEONS,
   DIMENSION_RANK_MULTIPLIERS,
   TIER_BONUS_XP,
@@ -59,7 +57,11 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     }),
     prisma.dungeonEvent.findMany({
       where: { run: { userId } },
-      select: { type: true, date: true },
+      select: {
+        type: true,
+        date: true,
+        run: { select: { dungeonId: true } },
+      },
     }),
     prisma.questCompletion.findMany({
       where: { userId },
@@ -161,11 +163,32 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     0
   );
 
-  const workoutIds = new Set(GYM_LIFE_WORKOUTS.map((w) => w.id));
-  const exposureIds = new Set(SOCIAL_RECLAIM_RUNGS.map((r) => r.id));
+  // Sourced from DUNGEONS so any new cadence/progressive dungeon
+  // automatically participates in workout/exposure XP. Hardcoding to a
+  // single dungeon's task list silently dropped XP for the starter
+  // routines that landed alongside Hunter Types.
+  const workoutIds = new Set<string>(
+    DUNGEONS.flatMap((d) =>
+      d.ruleType === "cadence"
+        ? d.cadence?.workouts.map((w) => w.id) ?? []
+        : []
+    )
+  );
+  const exposureIds = new Set<string>(
+    DUNGEONS.flatMap((d) =>
+      d.ruleType === "progressive"
+        ? d.progressive?.rungs.map((r) => r.id) ?? []
+        : []
+    )
+  );
 
   const eventCounts: Record<string, number> = {};
   const rungCounts: Record<string, number> = {};
+  // Per-dungeon action counts. Tier per-action bonus reads from these
+  // so multiple cadence/progressive dungeons each scale on their own
+  // event volume, not the global total (which 6×-counted before).
+  const workoutsByDungeon: Record<string, number> = {};
+  const exposuresByDungeon: Record<string, number> = {};
   let workoutTotal = 0;
   let exposureTotal = 0;
   let weekWorkout = 0;
@@ -181,16 +204,20 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     eventCounts[e.type] = (eventCounts[e.type] ?? 0) + 1;
     const inWeek = e.date >= weekCutoff;
     const inMonth = e.date >= monthCutoff;
+    const dungeonId = e.run.dungeonId;
     if (workoutIds.has(e.type)) {
       const dayKey = `${e.type}|${e.date.toISOString().split("T")[0]}`;
       if (seenWorkoutDay.has(dayKey)) continue;
       seenWorkoutDay.add(dayKey);
       workoutTotal++;
+      workoutsByDungeon[dungeonId] = (workoutsByDungeon[dungeonId] ?? 0) + 1;
       if (inWeek) weekWorkout++;
       if (inMonth) monthWorkout++;
     }
     if (exposureIds.has(e.type)) {
       exposureTotal++;
+      exposuresByDungeon[dungeonId] =
+        (exposuresByDungeon[dungeonId] ?? 0) + 1;
       rungCounts[e.type] = (rungCounts[e.type] ?? 0) + 1;
       if (inWeek) weekExposure++;
       if (inMonth) monthExposure++;
@@ -346,18 +373,16 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
         tierIdx =
           d.tiers.filter((t) => run.maxStreak >= t.days).length - 1;
       }
-      // Single cadence dungeon today (Training Regimen) — workouts ≈
-      // workoutTotal. Update if multiple cadence dungeons are added.
-      actionCount = workoutTotal;
+      // Per-dungeon — the Hunter-Type starter dungeons each have their
+      // own task volume, distinct from Training Regimen's.
+      actionCount = workoutsByDungeon[d.id] ?? 0;
     } else if (d.ruleType === "progressive" && d.progressive) {
       let clearedRungs = 0;
       for (const rung of d.progressive.rungs) {
         if ((rungCounts[rung.id] ?? 0) >= rung.target) clearedRungs++;
       }
       tierIdx = clearedRungs - 1;
-      // Single progressive dungeon (Exposure Therapy) — exposures ≈
-      // exposureTotal. Update if multiple progressive dungeons added.
-      actionCount = exposureTotal;
+      actionCount = exposuresByDungeon[d.id] ?? 0;
     } else if (d.ruleType === "training_program" && d.trainingProgram) {
       const cleared = clearedDays[d.id] ?? 0;
       tierIdx =
@@ -556,13 +581,20 @@ async function _buildHeatmap(userId: string): Promise<Record<string, number>> {
   cutoff.setHours(0, 0, 0, 0);
   cutoff.setDate(cutoff.getDate() - 91);
 
-  const [quests, events] = await Promise.all([
+  const [quests, events, checkIns] = await Promise.all([
     prisma.questCompletion.findMany({
       where: { userId, date: { gte: cutoff } },
       select: { date: true },
     }),
     prisma.dungeonEvent.findMany({
       where: { run: { userId }, date: { gte: cutoff } },
+      select: { date: true },
+    }),
+    // Cleared day check-ins from streak / timed / training-program
+    // dungeons. Without this, a player whose activity is calendar-
+    // taps (NoFap, Doomscroll, etc.) has a permanently empty heatmap.
+    prisma.dungeonDayCheckIn.findMany({
+      where: { userId, state: "cleared", date: { gte: cutoff } },
       select: { date: true },
     }),
   ]);
@@ -574,6 +606,10 @@ async function _buildHeatmap(userId: string): Promise<Record<string, number>> {
   }
   for (const e of events) {
     const key = e.date.toISOString().split("T")[0];
+    bucket[key] = (bucket[key] ?? 0) + 1;
+  }
+  for (const c of checkIns) {
+    const key = c.date.toISOString().split("T")[0];
     bucket[key] = (bucket[key] ?? 0) + 1;
   }
   return bucket;
