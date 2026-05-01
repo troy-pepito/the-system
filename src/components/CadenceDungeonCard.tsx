@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { getDungeon } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 import {
   computeStreakDays,
   notifyStatsUpdated,
@@ -45,8 +47,11 @@ export default function CadenceDungeonCard({
   onStreakChange,
   onExit,
 }: CadenceDungeonCardProps) {
+  const tDungeons = useTranslations("dungeons");
   const dungeon = getDungeon(dungeonId);
-  const dungeonName = dungeon?.name ?? dungeonId;
+  const dungeonName = dungeon
+    ? tDungeons(`${dungeonKey(dungeonId)}.name`)
+    : dungeonId;
   const TIERS = dungeon?.tiers ?? [];
   const cadence = dungeon?.cadence;
   const WORKOUTS = cadence?.workouts ?? [];
@@ -159,7 +164,7 @@ export default function CadenceDungeonCard({
   return (
     <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
       <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">
-        {dungeon?.name ?? dungeonId}
+        {dungeonName}
       </p>
       {startDate ? (
         <div className="space-y-4">

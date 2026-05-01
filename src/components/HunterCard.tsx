@@ -35,6 +35,7 @@ interface HunterCardProps {
 
 export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
   const t = useTranslations("hunterCard");
+  const tHunterTypes = useTranslations("hunterTypes");
   const tweenedXp = useTweenNumber(totalXp, 700);
   const { level, currentXp, xpToNext } = getLevelFromXp(
     Math.round(tweenedXp)
@@ -344,7 +345,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 title="Change path"
                 className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${hunterTypeDef.badgeStyle}`}
               >
-                <span>{hunterTypeDef.label}</span>
+                <span>{tHunterTypes(`${hunterTypeDef.id}.label`)}</span>
               </Link>
             )}
             {!hunterTypeDef && isLoaded && user && (

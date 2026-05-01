@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Card from "@/components/Card";
 import NoteModal from "@/components/NoteModal";
 import {
@@ -9,6 +10,7 @@ import {
   type JournalEntry,
 } from "@/app/actions/dungeons";
 import { getDungeon } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 
 interface JournalSectionProps {
   entries: JournalEntry[];
@@ -30,6 +32,7 @@ export default function JournalSection({
   seeAllHref,
   title = "Journal",
 }: JournalSectionProps) {
+  const tDungeons = useTranslations("dungeons");
   const visible =
     typeof previewLimit === "number"
       ? entries.slice(0, previewLimit)
@@ -45,6 +48,12 @@ export default function JournalSection({
   );
 
   const editingEntry = entries.find((e) => e.id === editingId) ?? null;
+  const editingDungeon = editingEntry
+    ? getDungeon(editingEntry.dungeonId)
+    : null;
+  const editingDungeonName = editingDungeon
+    ? tDungeons(`${dungeonKey(editingEntry!.dungeonId)}.name`)
+    : "";
 
   async function handleEditSubmit(note: string | null, isPublic?: boolean) {
     setEditingId(null);
@@ -111,6 +120,9 @@ export default function JournalSection({
               <ul className="space-y-3">
                 {dayEntries.map((e) => {
                   const dungeon = getDungeon(e.dungeonId);
+                  const dungeonName = dungeon
+                    ? tDungeons(`${dungeonKey(e.dungeonId)}.name`)
+                    : e.dungeonId;
                   const isConfirmingDelete = confirmingDeleteId === e.id;
                   return (
                     <li
@@ -119,7 +131,7 @@ export default function JournalSection({
                     >
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
-                          {dungeon?.name ?? e.dungeonId}
+                          {dungeonName}
                         </span>
                         <span
                           className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${eventTone(e.type)}`}
@@ -198,7 +210,7 @@ export default function JournalSection({
 
       <NoteModal
         open={editingEntry !== null}
-        title={`Edit Journal — ${getDungeon(editingEntry?.dungeonId ?? "")?.name ?? ""}`}
+        title={`Edit Journal — ${editingDungeonName}`}
         placeholder="Edit your reflection…"
         confirmLabel="Save"
         skipLabel="Cancel"

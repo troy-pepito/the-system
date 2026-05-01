@@ -1,6 +1,8 @@
 "use client";
 import { useCallback, useState } from "react";
+import { useTranslations } from "next-intl";
 import { getDungeon } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 import { notifyStatsUpdated } from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
 import { type DungeonRunState } from "@/app/actions/dungeons";
@@ -30,8 +32,11 @@ export default function StreakCard({
   onStreakChange,
   onExit,
 }: StreakCardProps) {
+  const tDungeons = useTranslations("dungeons");
   const dungeon = getDungeon(dungeonId);
-  const dungeonName = dungeon?.name ?? dungeonId;
+  const dungeonName = dungeon
+    ? tDungeons(`${dungeonKey(dungeonId)}.name`)
+    : dungeonId;
   const TIERS = dungeon?.tiers ?? [];
 
   const [startDate, setStartDate] = useState<string | null>(

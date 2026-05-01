@@ -1,6 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 import {
   HUNTER_TYPE_LIST,
   isHunterType,
@@ -8,6 +9,7 @@ import {
 } from "@/lib/hunterType";
 
 export default function HunterTypePicker() {
+  const tHunterTypes = useTranslations("hunterTypes");
   const { user, isLoaded } = useUser();
   const meta = user?.unsafeMetadata as { hunterType?: unknown } | undefined;
   const persisted: HunterType | null =
@@ -57,24 +59,24 @@ export default function HunterTypePicker() {
         path again to revert to Unaffiliated. Switching is free — explore.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {HUNTER_TYPE_LIST.map((t) => {
-          const active = current === t.id;
+        {HUNTER_TYPE_LIST.map((def) => {
+          const active = current === def.id;
           return (
             <button
-              key={t.id}
+              key={def.id}
               type="button"
-              onClick={() => pick(t.id)}
+              onClick={() => pick(def.id)}
               disabled={pending}
               aria-pressed={active}
               className={`relative text-left p-3 border rounded-lg transition-all disabled:opacity-50 ${
                 active
-                  ? `${t.badgeStyle} ${t.glow}`
+                  ? `${def.badgeStyle} ${def.glow}`
                   : "bg-slate-900/40 border-slate-800 text-slate-300 hover:border-slate-600"
               }`}
             >
               <div className="flex items-center justify-between gap-2 mb-1">
                 <p className="text-sm font-bold uppercase tracking-wider">
-                  {t.label}
+                  {tHunterTypes(`${def.id}.label`)}
                 </p>
                 {active && (
                   <span className="text-[9px] tracking-[0.3em] uppercase opacity-80">
@@ -83,14 +85,14 @@ export default function HunterTypePicker() {
                 )}
               </div>
               <p className="text-[11px] italic opacity-80 mb-1.5">
-                {t.tagline}
+                {tHunterTypes(`${def.id}.tagline`)}
               </p>
               <p
                 className={`text-[11px] leading-relaxed ${
                   active ? "" : "text-slate-500"
                 }`}
               >
-                {t.description}
+                {def.description}
               </p>
             </button>
           );

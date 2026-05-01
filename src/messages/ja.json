@@ -41,6 +41,27 @@
     "quest_read": "学習 / 読書(10ページ以上)",
     "quest_clean_room": "部屋の掃除"
   },
+  "dungeons": {
+    "caffeine": { "name": "カフェイン・リブート" },
+    "sensible_diet": { "name": "食生活チャレンジ" },
+    "gym_life": { "name": "トレーニング・レジメン" },
+    "attention_reclaim": { "name": "ドゥームスクロール断ち" },
+    "music_sensitization": { "name": "音感の再覚醒" },
+    "social_reclaim": { "name": "曝露療法" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "毎日の鍛錬" },
+    "starter_mind": { "name": "毎日の研鑽" },
+    "starter_emotion": { "name": "毎日の絆" },
+    "starter_energy": { "name": "毎日の閃光" },
+    "starter_spirit": { "name": "毎日の静寂" }
+  },
+  "hunterTypes": {
+    "body": { "label": "身体のハンター", "tagline": "器を鍛えよ。" },
+    "mind": { "label": "精神のハンター", "tagline": "刃を研げ。" },
+    "emotion": { "label": "情動のハンター", "tagline": "炎を護れ。" },
+    "energy": { "label": "気力のハンター", "tagline": "閃光を制せよ。" },
+    "spirit": { "label": "魂のハンター", "tagline": "静寂に触れよ。" }
+  },
   "portals": {
     "header": "ポータル・レジストリ",
     "yourPath": "◆ あなたの道",

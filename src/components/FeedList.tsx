@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { getDungeon } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 import {
   getPublicFeed,
   toggleReaction,
@@ -94,7 +96,10 @@ interface FeedCardProps {
 }
 
 function FeedCard({ entry, onReact }: FeedCardProps) {
-  const dungeon = getDungeon(entry.dungeonId);
+  const tDungeons = useTranslations("dungeons");
+  const dungeonName = getDungeon(entry.dungeonId)
+    ? tDungeons(`${dungeonKey(entry.dungeonId)}.name`)
+    : entry.dungeonId;
   const [pickerOpen, setPickerOpen] = useState(false);
 
   async function handleToggle(emoji: string) {
@@ -147,7 +152,7 @@ function FeedCard({ entry, onReact }: FeedCardProps) {
               {entry.date}
             </span>
             <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
-              {dungeon?.name ?? entry.dungeonId}
+              {dungeonName}
             </span>
             <span
               className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${entryTone(entry.type)}`}

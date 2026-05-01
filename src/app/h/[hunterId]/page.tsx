@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
+import { getTranslations } from "next-intl/server";
 import {
   getPublicHunterData,
   type PublicHunterData,
@@ -13,6 +14,7 @@ import {
 } from "@/lib/achievements";
 import { DUNGEONS, getDungeon } from "@/lib/dungeons";
 import { HUNTER_TYPE_DEFS, isHunterType } from "@/lib/hunterType";
+import { dungeonKey } from "@/lib/i18nKeys";
 import { getRankStyle } from "@/lib/rankStyle";
 import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
@@ -36,7 +38,8 @@ export default async function PublicHunterPage({ params }: Props) {
   return <PublicProfile data={data} />;
 }
 
-function PublicProfile({ data }: { data: PublicHunterData }) {
+async function PublicProfile({ data }: { data: PublicHunterData }) {
+  const tDungeons = await getTranslations("dungeons");
   const rankFrame = getRankStyle(data.rank);
   const trophyUnlocked = data.unlocked.filter(
     (u) => !isComboAchievementId(u.id)
@@ -205,13 +208,16 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
             <ul className="space-y-2">
               {data.activeRuns.map((run) => {
                 const d = getDungeon(run.dungeonId);
+                const name = d
+                  ? tDungeons(`${dungeonKey(run.dungeonId)}.name`)
+                  : run.dungeonId;
                 return (
                   <li
                     key={run.dungeonId}
                     className="flex items-center justify-between border border-slate-800 rounded-lg p-3"
                   >
                     <span className="text-sm text-cyan-200 uppercase tracking-wider">
-                      {d?.name ?? run.dungeonId}
+                      {name}
                     </span>
                     <span className="text-sm text-emerald-400 font-bold tabular-nums">
                       {run.displayValue}
@@ -255,7 +261,9 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
                         {e.date}
                       </span>
                       <span className="text-[10px] tracking-widest uppercase text-cyan-300/80">
-                        {dungeon?.name ?? e.dungeonId}
+                        {dungeon
+                          ? tDungeons(`${dungeonKey(e.dungeonId)}.name`)
+                          : e.dungeonId}
                       </span>
                       <span
                         className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${publicEntryTone(e.type)}`}

@@ -41,6 +41,27 @@
     "quest_read": "Estudiar / Leer (10+ páginas)",
     "quest_clean_room": "Limpiar la Habitación"
   },
+  "dungeons": {
+    "caffeine": { "name": "Reinicio de Cafeína" },
+    "sensible_diet": { "name": "Desafío de Dieta" },
+    "gym_life": { "name": "Régimen de Entrenamiento" },
+    "attention_reclaim": { "name": "Sin Doomscroll" },
+    "music_sensitization": { "name": "Sensibilización del Oído" },
+    "social_reclaim": { "name": "Terapia de Exposición" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "Forja Diaria" },
+    "starter_mind": { "name": "Afilar Diario" },
+    "starter_emotion": { "name": "Vínculos Diarios" },
+    "starter_energy": { "name": "Chispa Diaria" },
+    "starter_spirit": { "name": "Quietud Diaria" }
+  },
+  "hunterTypes": {
+    "body": { "label": "Cazador del Cuerpo", "tagline": "Forja el vehículo." },
+    "mind": { "label": "Cazador de la Mente", "tagline": "Afila la hoja." },
+    "emotion": { "label": "Cazador de la Emoción", "tagline": "Cuida la llama." },
+    "energy": { "label": "Cazador de la Energía", "tagline": "Domina la chispa." },
+    "spirit": { "label": "Cazador del Espíritu", "tagline": "Toca lo silente." }
+  },
   "portals": {
     "header": "Registro de Portales",
     "yourPath": "◆ Tu Camino",

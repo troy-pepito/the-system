@@ -41,6 +41,27 @@
     "quest_read": "공부 / 독서 (10쪽 이상)",
     "quest_clean_room": "방 청소"
   },
+  "dungeons": {
+    "caffeine": { "name": "카페인 리부트" },
+    "sensible_diet": { "name": "식단 챌린지" },
+    "gym_life": { "name": "훈련 루틴" },
+    "attention_reclaim": { "name": "둠스크롤 금지" },
+    "music_sensitization": { "name": "소리 재민감화" },
+    "social_reclaim": { "name": "노출 치료" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "매일의 단련" },
+    "starter_mind": { "name": "매일의 연마" },
+    "starter_emotion": { "name": "매일의 유대" },
+    "starter_energy": { "name": "매일의 불꽃" },
+    "starter_spirit": { "name": "매일의 고요" }
+  },
+  "hunterTypes": {
+    "body": { "label": "육체 헌터", "tagline": "그릇을 단련하라." },
+    "mind": { "label": "정신 헌터", "tagline": "칼날을 갈아라." },
+    "emotion": { "label": "감정 헌터", "tagline": "불꽃을 지켜라." },
+    "energy": { "label": "기운 헌터", "tagline": "불꽃을 다스려라." },
+    "spirit": { "label": "영혼 헌터", "tagline": "고요를 만져라." }
+  },
   "portals": {
     "header": "포털 레지스트리",
     "yourPath": "◆ 당신의 길",

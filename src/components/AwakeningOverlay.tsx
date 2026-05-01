@@ -2,6 +2,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { track } from "@/lib/analytics";
 import {
   HUNTER_TYPE_LIST,
@@ -56,6 +57,7 @@ function getAwakenedServerSnapshot() {
 }
 
 export default function AwakeningOverlay() {
+  const tHunterTypes = useTranslations("hunterTypes");
   const awakened = useSyncExternalStore(
     subscribeAwakened,
     getAwakenedSnapshot,
@@ -255,20 +257,20 @@ export default function AwakeningOverlay() {
                     : "opacity-0 translate-y-2 pointer-events-none"
                 }`}
               >
-                {HUNTER_TYPE_LIST.map((t) => (
+                {HUNTER_TYPE_LIST.map((def) => (
                   <button
-                    key={t.id}
+                    key={def.id}
                     type="button"
-                    onClick={() => handlePathChoice(t.id)}
+                    onClick={() => handlePathChoice(def.id)}
                     disabled={submitting}
-                    className={`w-full text-left p-3 border rounded transition-all disabled:opacity-50 ${t.badgeStyle} hover:brightness-125 ${t.glow}`}
+                    className={`w-full text-left p-3 border rounded transition-all disabled:opacity-50 ${def.badgeStyle} hover:brightness-125 ${def.glow}`}
                   >
                     <div className="flex items-baseline justify-between gap-3 mb-0.5">
                       <span className="text-xs font-bold uppercase tracking-widest">
-                        {t.label}
+                        {tHunterTypes(`${def.id}.label`)}
                       </span>
                       <span className="text-[9px] italic opacity-80 truncate">
-                        {t.tagline}
+                        {tHunterTypes(`${def.id}.tagline`)}
                       </span>
                     </div>
                   </button>

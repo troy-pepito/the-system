@@ -41,6 +41,27 @@
     "quest_read": "Lernen / Lesen (10+ Seiten)",
     "quest_clean_room": "Zimmer Aufräumen"
   },
+  "dungeons": {
+    "caffeine": { "name": "Koffein-Reset" },
+    "sensible_diet": { "name": "Diät-Herausforderung" },
+    "gym_life": { "name": "Trainingsplan" },
+    "attention_reclaim": { "name": "Kein Doomscroll" },
+    "music_sensitization": { "name": "Klang-Sensibilisierung" },
+    "social_reclaim": { "name": "Expositionstherapie" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "Tägliche Schmiede" },
+    "starter_mind": { "name": "Tägliches Schärfen" },
+    "starter_emotion": { "name": "Tägliche Bande" },
+    "starter_energy": { "name": "Täglicher Funke" },
+    "starter_spirit": { "name": "Tägliche Stille" }
+  },
+  "hunterTypes": {
+    "body": { "label": "Körper-Jäger", "tagline": "Schmiede das Gefäß." },
+    "mind": { "label": "Geist-Jäger", "tagline": "Schärfe die Klinge." },
+    "emotion": { "label": "Emotion-Jäger", "tagline": "Hüte die Flamme." },
+    "energy": { "label": "Energie-Jäger", "tagline": "Beherrsche den Funken." },
+    "spirit": { "label": "Seele-Jäger", "tagline": "Berühre die Stille." }
+  },
   "portals": {
     "header": "Portal-Register",
     "yourPath": "◆ Dein Pfad",

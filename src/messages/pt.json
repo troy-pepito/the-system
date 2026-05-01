@@ -41,6 +41,27 @@
     "quest_read": "Estudar / Ler (10+ páginas)",
     "quest_clean_room": "Limpar o Quarto"
   },
+  "dungeons": {
+    "caffeine": { "name": "Reset da Cafeína" },
+    "sensible_diet": { "name": "Desafio da Dieta" },
+    "gym_life": { "name": "Regime de Treino" },
+    "attention_reclaim": { "name": "Sem Doomscroll" },
+    "music_sensitization": { "name": "Sensibilização ao Som" },
+    "social_reclaim": { "name": "Terapia de Exposição" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "Forja Diária" },
+    "starter_mind": { "name": "Afiar Diário" },
+    "starter_emotion": { "name": "Laços Diários" },
+    "starter_energy": { "name": "Faísca Diária" },
+    "starter_spirit": { "name": "Quietude Diária" }
+  },
+  "hunterTypes": {
+    "body": { "label": "Caçador do Corpo", "tagline": "Forje o veículo." },
+    "mind": { "label": "Caçador da Mente", "tagline": "Afie a lâmina." },
+    "emotion": { "label": "Caçador da Emoção", "tagline": "Cuide da chama." },
+    "energy": { "label": "Caçador da Energia", "tagline": "Domine a faísca." },
+    "spirit": { "label": "Caçador do Espírito", "tagline": "Toque o silêncio." }
+  },
   "portals": {
     "header": "Registro de Portais",
     "yourPath": "◆ Seu Caminho",

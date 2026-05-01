@@ -41,6 +41,27 @@
     "quest_read": "Étudier / Lire (10+ pages)",
     "quest_clean_room": "Ranger la Chambre"
   },
+  "dungeons": {
+    "caffeine": { "name": "Réinitialisation Caféine" },
+    "sensible_diet": { "name": "Défi Diète" },
+    "gym_life": { "name": "Régime d'Entraînement" },
+    "attention_reclaim": { "name": "Anti-Doomscroll" },
+    "music_sensitization": { "name": "Sensibilisation Sonore" },
+    "social_reclaim": { "name": "Thérapie d'Exposition" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "Forge Quotidienne" },
+    "starter_mind": { "name": "Aiguisage Quotidien" },
+    "starter_emotion": { "name": "Liens Quotidiens" },
+    "starter_energy": { "name": "Étincelle Quotidienne" },
+    "starter_spirit": { "name": "Silence Quotidien" }
+  },
+  "hunterTypes": {
+    "body": { "label": "Chasseur du Corps", "tagline": "Forge la coque." },
+    "mind": { "label": "Chasseur de l'Esprit", "tagline": "Aiguise la lame." },
+    "emotion": { "label": "Chasseur de l'Émotion", "tagline": "Veille sur la flamme." },
+    "energy": { "label": "Chasseur de l'Énergie", "tagline": "Maîtrise l'étincelle." },
+    "spirit": { "label": "Chasseur de l'Âme", "tagline": "Touche le silence." }
+  },
   "portals": {
     "header": "Registre des Portails",
     "yourPath": "◆ Ta Voie",

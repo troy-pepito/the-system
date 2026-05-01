@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { getDungeon, TIER_BONUS_XP } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 import {
   notifyStatsUpdated,
   notifyReward,
@@ -41,8 +43,11 @@ export default function ProgressiveDungeonCard({
   onRelapse,
   onComplete,
 }: ProgressiveDungeonCardProps) {
+  const tDungeons = useTranslations("dungeons");
   const dungeon = getDungeon(dungeonId);
-  const dungeonName = dungeon?.name ?? dungeonId;
+  const dungeonName = dungeon
+    ? tDungeons(`${dungeonKey(dungeonId)}.name`)
+    : dungeonId;
   const RUNGS = dungeon?.progressive?.rungs ?? [];
 
   const [active, setActive] = useState<boolean>(initialActive);

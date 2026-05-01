@@ -13,6 +13,7 @@ import {
   DIM_STYLE,
 } from "@/lib/dungeons";
 import { HUNTER_TYPE_DEFS, isHunterType } from "@/lib/hunterType";
+import { dungeonKey } from "@/lib/i18nKeys";
 import { enterDungeon, getAllActiveRuns } from "@/app/actions/dungeons";
 import { track } from "@/lib/analytics";
 import { readCache, writeCache } from "@/lib/offlineCache";
@@ -26,6 +27,8 @@ type CachedRun = { dungeonId: string };
 
 export default function PortalsPage() {
   const t = useTranslations("portals");
+  const tDungeons = useTranslations("dungeons");
+  const tHunterTypes = useTranslations("hunterTypes");
   const router = useRouter();
   const { user } = useUser();
   const meta = user?.unsafeMetadata as { hunterType?: string } | undefined;
@@ -132,7 +135,7 @@ export default function PortalsPage() {
                 <span
                   className={`text-[9px] font-bold uppercase tracking-[0.25em] px-1.5 py-0.5 border rounded-sm ${pathDef.badgeStyle}`}
                 >
-                  {pathDef.label}
+                  {tHunterTypes(`${pathDef.id}.label`)}
                 </span>
               )}
             </div>
@@ -143,7 +146,7 @@ export default function PortalsPage() {
                   : "text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"
               }`}
             >
-              {d.name}
+              {tDungeons(`${dungeonKey(d.id)}.name`)}
             </h2>
           </div>
           {isActive && (
@@ -213,7 +216,9 @@ export default function PortalsPage() {
               onClick={(e) => e.stopPropagation()}
               className="block w-full text-center px-4 py-3 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-widest hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
             >
-              {t("switchTo", { label: pathDef.label })}
+              {t("switchTo", {
+                label: tHunterTypes(`${pathDef.id}.label`),
+              })}
             </Link>
           ) : (
             <button
@@ -274,7 +279,7 @@ export default function PortalsPage() {
             subtitle={
               viewerHunterType
                 ? t("yourPathSubtitleSet", {
-                    label: HUNTER_TYPE_DEFS[viewerHunterType].label,
+                    label: tHunterTypes(`${viewerHunterType}.label`),
                   })
                 : t("yourPathSubtitleUnset")
             }

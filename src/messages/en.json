@@ -41,6 +41,27 @@
     "quest_read": "Study / Read (10+ pages)",
     "quest_clean_room": "Clean Room"
   },
+  "dungeons": {
+    "caffeine": { "name": "Caffeine Reboot" },
+    "sensible_diet": { "name": "Diet Challenge" },
+    "gym_life": { "name": "Training Regimen" },
+    "attention_reclaim": { "name": "No Doomscroll" },
+    "music_sensitization": { "name": "Sound Sensitization" },
+    "social_reclaim": { "name": "Exposure Therapy" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "Daily Forge" },
+    "starter_mind": { "name": "Daily Sharpening" },
+    "starter_emotion": { "name": "Daily Bonds" },
+    "starter_energy": { "name": "Daily Spark" },
+    "starter_spirit": { "name": "Daily Stillness" }
+  },
+  "hunterTypes": {
+    "body": { "label": "Body Hunter", "tagline": "Forge the vessel." },
+    "mind": { "label": "Mind Hunter", "tagline": "Sharpen the blade." },
+    "emotion": { "label": "Emotion Hunter", "tagline": "Tend the flame." },
+    "energy": { "label": "Energy Hunter", "tagline": "Master the spark." },
+    "spirit": { "label": "Spirit Hunter", "tagline": "Touch the silent." }
+  },
   "portals": {
     "header": "Portal Registry",
     "yourPath": "◆ Your Path",

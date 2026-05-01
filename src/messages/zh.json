@@ -41,6 +41,27 @@
     "quest_read": "学习 / 阅读(10页以上)",
     "quest_clean_room": "整理房间"
   },
+  "dungeons": {
+    "caffeine": { "name": "咖啡因重启" },
+    "sensible_diet": { "name": "饮食挑战" },
+    "gym_life": { "name": "训练计划" },
+    "attention_reclaim": { "name": "戒末日刷屏" },
+    "music_sensitization": { "name": "声音感知重塑" },
+    "social_reclaim": { "name": "暴露疗法" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "每日锻造" },
+    "starter_mind": { "name": "每日磨砺" },
+    "starter_emotion": { "name": "每日联结" },
+    "starter_energy": { "name": "每日火花" },
+    "starter_spirit": { "name": "每日静寂" }
+  },
+  "hunterTypes": {
+    "body": { "label": "身体猎人", "tagline": "锻造容器。" },
+    "mind": { "label": "心智猎人", "tagline": "磨利刀锋。" },
+    "emotion": { "label": "情感猎人", "tagline": "守护火焰。" },
+    "energy": { "label": "活力猎人", "tagline": "驾驭火花。" },
+    "spirit": { "label": "灵魂猎人", "tagline": "触及静寂。" }
+  },
   "portals": {
     "header": "传送门登记处",
     "yourPath": "◆ 你的道路",

@@ -41,6 +41,27 @@
     "quest_read": "अध्ययन / पढ़ें (10+ पृष्ठ)",
     "quest_clean_room": "कमरा साफ़ करें"
   },
+  "dungeons": {
+    "caffeine": { "name": "कैफीन रीबूट" },
+    "sensible_diet": { "name": "आहार चुनौती" },
+    "gym_life": { "name": "प्रशिक्षण दिनचर्या" },
+    "attention_reclaim": { "name": "डूमस्क्रॉल बंद" },
+    "music_sensitization": { "name": "ध्वनि संवेदन" },
+    "social_reclaim": { "name": "एक्सपोज़र थेरेपी" },
+    "nofap": { "name": "NoFap" },
+    "starter_body": { "name": "दैनिक गढ़न" },
+    "starter_mind": { "name": "दैनिक धार" },
+    "starter_emotion": { "name": "दैनिक संबंध" },
+    "starter_energy": { "name": "दैनिक चिंगारी" },
+    "starter_spirit": { "name": "दैनिक मौन" }
+  },
+  "hunterTypes": {
+    "body": { "label": "शरीर हंटर", "tagline": "देह को गढ़ो।" },
+    "mind": { "label": "मन हंटर", "tagline": "धार को तेज़ करो।" },
+    "emotion": { "label": "भाव हंटर", "tagline": "लौ की रक्षा करो।" },
+    "energy": { "label": "ऊर्जा हंटर", "tagline": "चिंगारी को साधो।" },
+    "spirit": { "label": "आत्मा हंटर", "tagline": "मौन को छुओ।" }
+  },
   "portals": {
     "header": "पोर्टल रजिस्ट्री",
     "yourPath": "◆ आपका पथ",
