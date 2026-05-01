@@ -9,31 +9,7 @@ export type DungeonRuleType =
   | "continuous_streak"
   | "cadence"
   | "timed"
-  | "progressive"
-  | "training_program";
-
-/**
- * Each tier in a training program lifts the daily rep target. `days` is
- * the cumulative cleared-day threshold to *earn* this rank — same
- * convention as the existing tier ladders. While cleared days < the
- * earned tier's threshold, the player is grinding toward the next
- * tier and the daily target equals that next tier's reps.
- */
-export interface TrainingProgramTier {
-  rank: string;
-  reps: number;
-  days: number;
-}
-
-export interface TrainingProgramConfig {
-  /** Singular noun for the unit — "pushup", "minute", "second". */
-  unit: string;
-  /** Plural form. */
-  unitPlural: string;
-  /** Verb shown on the log button — "Log pushups", "Log minutes". */
-  actionVerb: string;
-  tiers: TrainingProgramTier[];
-}
+  | "progressive";
 
 export interface TimedConfig {
   targetDays: number;
@@ -100,7 +76,6 @@ export interface DungeonDef {
   timed?: TimedConfig;
   cadence?: CadenceConfig;
   progressive?: ProgressiveConfig;
-  trainingProgram?: TrainingProgramConfig;
   /** Hunter Type gate — only players matching this type can enter. */
   hunterType?: HunterType;
   rules?: string[];
@@ -205,25 +180,6 @@ export const NOFAP_TIERS: DungeonTier[] = [
   { rank: "A", days: 90 },
   { rank: "S", days: 180 },
 ];
-
-/**
- * Resolves the player's current rep target for a training program based
- * on how many days they've cleared so far. Convention matches the
- * existing tier ladders: `tier.days` is the cumulative-cleared threshold
- * to *earn* that rank. Until a player crosses that threshold, the daily
- * target is the reps of that next tier they're working toward.
- *
- * Once the final tier (S) is earned, the target stays at S — players who
- * want to keep going just maintain the S-rank reps daily.
- */
-export function trainingProgramTarget(
-  tiers: TrainingProgramTier[],
-  clearedDays: number
-): { earnedTierIdx: number; nextTier: TrainingProgramTier; target: number } {
-  const earnedTierIdx = tiers.filter((t) => clearedDays >= t.days).length - 1;
-  const nextTier = tiers[earnedTierIdx + 1] ?? tiers[tiers.length - 1];
-  return { earnedTierIdx, nextTier, target: nextTier.reps };
-}
 
 export const DUNGEONS: DungeonDef[] = [
   {
@@ -505,17 +461,6 @@ export function getDungeonRules(d: DungeonDef): string[] {
         `Climb a ${p.rungs.length}-rung ladder of escalating exposures.`,
         "Log an exposure each time you complete the current rung's action in real life.",
         "Clear the rung's target to unlock the next. Dungeon cleared when the final rung is complete.",
-      ];
-    }
-    case "training_program": {
-      const tp = d.trainingProgram;
-      if (!tp) return [];
-      const first = tp.tiers[0];
-      const last = tp.tiers[tp.tiers.length - 1];
-      return [
-        `Daily ${tp.unit} target rises with every tier cleared. E starts at ${first.reps} ${tp.unitPlural}; S asks for ${last.reps}.`,
-        `Hit today's target to clear the day. Miss it — no shame, just try again tomorrow.`,
-        "Cleared days bank XP and advance you toward the next tier. Reaching S puts you in maintenance — keep the daily rep count alive.",
       ];
     }
     default:

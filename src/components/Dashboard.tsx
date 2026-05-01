@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import StreakCard from "@/components/StreakCard";
-import TrainingProgramCard from "@/components/TrainingProgramCard";
 import DailyQuests from "@/components/DailyQuests";
 import SideQuests from "@/components/SideQuests";
 import {
@@ -247,15 +246,6 @@ export default function Dashboard() {
                   initialRungCounts={detail.rungCounts ?? {}}
                   onRelapse={handleEnded}
                   onComplete={handleEnded}
-                />
-              );
-            } else if (d.ruleType === "training_program") {
-              card = (
-                <TrainingProgramCard
-                  dungeonId={run.dungeonId}
-                  initialRun={run}
-                  onStreakChange={reload}
-                  onExit={handleEnded}
                 />
               );
             }

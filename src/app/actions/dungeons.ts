@@ -2,11 +2,7 @@
 
 import { unstable_cache, updateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import {
-  getDungeon,
-  DUNGEONS,
-  trainingProgramTarget,
-} from "@/lib/dungeons";
+import { getDungeon, DUNGEONS } from "@/lib/dungeons";
 import { getTodayCompletions, getLifetimeRewards } from "@/app/actions/quests";
 import {
   type QuestRewards,
@@ -740,68 +736,6 @@ export async function confirmDay(
   }
 
   updateTag(TAG);
-}
-
-/**
- * Logs a daily rep attempt on a training program. State is computed
- * server-side: state = "cleared" if reps meet the day's tier target,
- * else "relapsed" (think of it as a missed-day marker, not a punishment
- * — you can come back tomorrow). Count stores the actual reps logged.
- *
- * Returns the resolved state + target so the client can confirm the
- * optimistic update without recomputing.
- */
-export async function logTrainingAttempt(
-  dungeonId: string,
-  dateIso: string,
-  reps: number
-): Promise<{ state: "cleared" | "relapsed"; target: number }> {
-  const userId = await requireUserId();
-  const dungeon = getDungeon(dungeonId);
-  if (!dungeon || dungeon.ruleType !== "training_program") {
-    throw new Error(`Dungeon ${dungeonId} is not a training program`);
-  }
-  const tp = dungeon.trainingProgram;
-  if (!tp) throw new Error(`Training program config missing on ${dungeonId}`);
-
-  const run = await prisma.dungeonRun.findFirst({
-    where: { userId, dungeonId, active: true },
-    orderBy: { createdAt: "desc" },
-  });
-  if (!run) throw new Error(`No active run for ${dungeonId}`);
-
-  const date = validateCheckInDate(dateIso, run.startDate);
-  const safeReps = Math.max(0, Math.floor(reps));
-
-  // Today's target depends on how many days the player has *already*
-  // cleared on this dungeon — fetch before the upsert so re-logging
-  // today doesn't double-count this attempt.
-  const priorCleared = await prisma.dungeonDayCheckIn.count({
-    where: { userId, dungeonId, state: "cleared", date: { not: date } },
-  });
-  const { target } = trainingProgramTarget(tp.tiers, priorCleared);
-  const state: "cleared" | "relapsed" = safeReps >= target ? "cleared" : "relapsed";
-
-  await prisma.dungeonDayCheckIn.upsert({
-    where: { userId_dungeonId_date: { userId, dungeonId, date } },
-    create: {
-      runId: run.id,
-      userId,
-      dungeonId,
-      date,
-      state,
-      count: safeReps,
-    },
-    update: {
-      runId: run.id,
-      state,
-      count: safeReps,
-      confirmedAt: new Date(),
-    },
-  });
-
-  updateTag(TAG);
-  return { state, target };
 }
 
 export async function logJournalEntry(

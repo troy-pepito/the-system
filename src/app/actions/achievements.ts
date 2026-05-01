@@ -383,11 +383,6 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       }
       tierIdx = clearedRungs - 1;
       actionCount = exposuresByDungeon[d.id] ?? 0;
-    } else if (d.ruleType === "training_program" && d.trainingProgram) {
-      const cleared = clearedDays[d.id] ?? 0;
-      tierIdx =
-        d.trainingProgram.tiers.filter((t) => cleared >= t.days).length - 1;
-      actionCount = cleared;
     }
 
     for (let i = 0; i <= tierIdx; i++) {
@@ -683,13 +678,6 @@ async function computeRunDisplayValue(run: {
   const now = new Date();
 
   if (d.ruleType === "continuous_streak" || d.ruleType === "timed") {
-    const cleared = await prisma.dungeonDayCheckIn.count({
-      where: { runId: run.id, state: "cleared" },
-    });
-    return `${cleared}d cleared`;
-  }
-
-  if (d.ruleType === "training_program" && d.trainingProgram) {
     const cleared = await prisma.dungeonDayCheckIn.count({
       where: { runId: run.id, state: "cleared" },
     });

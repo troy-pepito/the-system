@@ -21,10 +21,9 @@ export const metadata = {
 
 const RULE_LABEL: Record<DungeonRuleType, string> = {
   continuous_streak: "Continuous Streak",
-  cadence: "Weekly Cadence",
+  cadence: "Cadence",
   timed: "Timed Run",
   progressive: "Progressive Ladder",
-  training_program: "Training Program",
 };
 
 const RULE_TYPES: {
@@ -41,8 +40,9 @@ const RULE_TYPES: {
   {
     type: "cadence",
     summary:
-      "A weekly pattern. Hit your target each week. Miss the cadence and you manually relapse.",
-    used_by: "Training Regimen",
+      "A checklist pattern. Tick boxes within a window — daily for the Hunter-Type starters (clear any one), weekly for Training Regimen (5 of 5).",
+    used_by:
+      "Training Regimen · Daily Forge · Daily Sharpening · Daily Bonds · Daily Spark · Daily Stillness",
   },
   {
     type: "timed",
@@ -55,12 +55,6 @@ const RULE_TYPES: {
     summary:
       "An escalating ladder. Clear a rung to unlock the next. No skipping.",
     used_by: "Exposure Therapy",
-  },
-  {
-    type: "training_program",
-    summary:
-      "A daily rep target that scales with each tier you clear. Hit the count to clear the day; miss it, no shame, try tomorrow. Gated by Hunter Path.",
-    used_by: "(reserved for future long-arc rep ladders)",
   },
 ];
 

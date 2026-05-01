@@ -26,6 +26,41 @@ export interface ChangelogChange {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "0.8.0",
+    date: "2026-05-01",
+    title: "Hunter Path",
+    changes: [
+      {
+        kind: "feature",
+        text: "Pick a Hunter Path in Settings — Body, Mind, Emotion, Energy, or Spirit. Each path mirrors one of the five dimensions and unlocks its own daily routine.",
+      },
+      {
+        kind: "feature",
+        text: "Five new Daily dungeons, one per path: Daily Forge (Body), Daily Sharpening (Mind), Daily Bonds (Emotion), Daily Spark (Energy), Daily Stillness (Spirit). Three small tasks each — clear any one to bank the day.",
+      },
+      {
+        kind: "feature",
+        text: "Daily Forge ramps with your rank — pushups, pullups, and squats grow tier-by-tier from 5/1/10 at the start to 100/40/150 at S.",
+      },
+      {
+        kind: "feature",
+        text: "Your Hunter Path now shows as a badge under your name, on your own card and on public profiles.",
+      },
+      {
+        kind: "feature",
+        text: "Path-locked dungeons in /portals show \"🔒 Path Required\" with a link to Settings — so you can see what each path unlocks before committing.",
+      },
+      {
+        kind: "fix",
+        text: "Heatmap now includes cleared calendar check-ins. Hunters whose activity was mostly NoFap / Doomscroll / Sound Sensitization had a permanently empty heatmap before.",
+      },
+      {
+        kind: "fix",
+        text: "Cadence task ticks now drop their dimension reward in the gain toast — only XP showed before.",
+      },
+    ],
+  },
+  {
     version: "0.7.0",
     date: "2026-04-30",
     title: "The Feed + Settings + Languages",
