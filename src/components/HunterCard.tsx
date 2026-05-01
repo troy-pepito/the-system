@@ -199,14 +199,26 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
     }
   }
 
+  const rankFrame = getRankStyle(rank);
+
   return (
     <div className="relative">
-      <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-400 z-10 pointer-events-none" />
-      <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-cyan-400 z-10 pointer-events-none" />
-      <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-400 z-10 pointer-events-none" />
-      <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-400 z-10 pointer-events-none" />
+      <div
+        className={`absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 z-10 pointer-events-none ${rankFrame.cornerBorder}`}
+      />
+      <div
+        className={`absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 z-10 pointer-events-none ${rankFrame.cornerBorder}`}
+      />
+      <div
+        className={`absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 z-10 pointer-events-none ${rankFrame.cornerBorder}`}
+      />
+      <div
+        className={`absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 z-10 pointer-events-none ${rankFrame.cornerBorder}`}
+      />
 
-      <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.2),inset_0_0_20px_rgba(34,211,238,0.05)] p-5 sm:p-6">
+      <div
+        className={`relative bg-slate-950/80 border p-5 sm:p-6 transition-shadow duration-700 ${rankFrame.cardBorder} ${rankFrame.cardGlow}`}
+      >
         <div className="flex items-center justify-between mb-4 gap-3">
           <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
             Hunter ID

@@ -146,7 +146,16 @@ export default function Navbar() {
                 {rank}
               </span>
             </span>
-            <span className="text-emerald-400">Lv {level}</span>
+            <span className="flex items-center gap-1">
+              <span className="text-slate-500">Lv</span>
+              <span
+                className={`font-bold ${getRankStyle(rank).text} ${
+                  getRankStyle(rank).textClass
+                } ${getRankStyle(rank).glow}`}
+              >
+                {level}
+              </span>
+            </span>
             <WhatsNewBadge />
             <Link
               href="/settings"

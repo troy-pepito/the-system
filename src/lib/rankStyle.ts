@@ -22,6 +22,15 @@ export interface RankStyle {
   textClass: string;
   /** Short, in-world flavor name. */
   flavor: string;
+  /**
+   * Box-shadow + inset glow for the hunter-ID card frame. Intensity
+   * scales with rank — E sits subdued, S radiates dramatically.
+   */
+  cardGlow: string;
+  /** Border color for the hunter-ID card frame's outer border. */
+  cardBorder: string;
+  /** Border color for the four corner brackets on the hunter-ID frame. */
+  cornerBorder: string;
 }
 
 export const RANK_STYLES: Record<string, RankStyle> = {
@@ -32,6 +41,10 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     glow: "drop-shadow-[0_0_8px_rgba(251,146,60,0.55)]",
     textClass: "",
     flavor: "Bronze",
+    cardGlow:
+      "shadow-[0_0_25px_rgba(251,146,60,0.20),inset_0_0_18px_rgba(251,146,60,0.05)]",
+    cardBorder: "border-orange-500/40",
+    cornerBorder: "border-orange-400",
   },
   D: {
     text: "text-slate-200",
@@ -40,6 +53,10 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     glow: "drop-shadow-[0_0_9px_rgba(203,213,225,0.55)]",
     textClass: "",
     flavor: "Iron",
+    cardGlow:
+      "shadow-[0_0_28px_rgba(203,213,225,0.22),inset_0_0_18px_rgba(203,213,225,0.06)]",
+    cardBorder: "border-slate-300/50",
+    cornerBorder: "border-slate-200",
   },
   C: {
     text: "text-zinc-100",
@@ -48,6 +65,10 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     glow: "drop-shadow-[0_0_11px_rgba(244,244,245,0.65)]",
     textClass: "",
     flavor: "Silver",
+    cardGlow:
+      "shadow-[0_0_34px_rgba(244,244,245,0.26),inset_0_0_20px_rgba(244,244,245,0.07)]",
+    cardBorder: "border-zinc-200/55",
+    cornerBorder: "border-zinc-100",
   },
   B: {
     text: "text-amber-300",
@@ -56,6 +77,10 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     glow: "drop-shadow-[0_0_12px_rgba(251,191,36,0.75)]",
     textClass: "",
     flavor: "Gold",
+    cardGlow:
+      "shadow-[0_0_40px_rgba(251,191,36,0.32),inset_0_0_22px_rgba(251,191,36,0.08)]",
+    cardBorder: "border-amber-400/55",
+    cornerBorder: "border-amber-300",
   },
   A: {
     text: "text-cyan-200",
@@ -64,6 +89,10 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     glow: "drop-shadow-[0_0_15px_rgba(103,232,249,0.75)]",
     textClass: "",
     flavor: "Platinum",
+    cardGlow:
+      "shadow-[0_0_46px_rgba(103,232,249,0.38),inset_0_0_24px_rgba(103,232,249,0.09)]",
+    cardBorder: "border-cyan-300/60",
+    cornerBorder: "border-cyan-200",
   },
   S: {
     // Holographic — see globals.css for the .rank-holo-text rule.
@@ -73,6 +102,10 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     glow: "drop-shadow-[0_0_18px_rgba(217,70,239,0.7)]",
     textClass: "rank-holo-text",
     flavor: "Holo",
+    cardGlow:
+      "shadow-[0_0_56px_rgba(217,70,239,0.45),inset_0_0_28px_rgba(217,70,239,0.10)]",
+    cardBorder: "border-fuchsia-300/60",
+    cornerBorder: "border-fuchsia-200",
   },
 };
 
