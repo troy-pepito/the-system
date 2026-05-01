@@ -19,6 +19,7 @@ import SystemNoticeToast from "@/components/SystemNoticeToast";
 import RankUpGlitch from "@/components/RankUpGlitch";
 import RankUpCelebration from "@/components/RankUpCelebration";
 import RankUpShare from "@/components/RankUpShare";
+import LevelUpToast from "@/components/LevelUpToast";
 import DevTestPanel from "@/components/DevTestPanel";
 import BackToTop from "@/components/BackToTop";
 import OfflineBanner from "@/components/OfflineBanner";
@@ -121,6 +122,7 @@ export default async function RootLayout({
                 <RankUpGlitch />
                 <RankUpCelebration />
                 <RankUpShare />
+                <LevelUpToast />
                 <BackToTop />
                 <PwaInstallPrompt />
                 <DevTestPanel />

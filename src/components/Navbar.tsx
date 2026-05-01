@@ -14,6 +14,7 @@ import {
   getRank,
   hasPendingMutations,
   notifyRankUp,
+  notifyLevelUp,
 } from "@/lib/player";
 import { useTweenNumber } from "@/lib/useTweenNumber";
 import { getProfileStats } from "@/app/actions/achievements";
@@ -84,14 +85,26 @@ export default function Navbar() {
   const percent = Math.round((currentXp / xpToNext) * 100);
 
   const prevRankRef = useRef<string | null>(null);
+  const prevLevelRef = useRef<number | null>(null);
   useEffect(() => {
     if (totalXp <= 0) return;
-    const prev = prevRankRef.current;
-    if (prev && prev !== rank) {
-      notifyRankUp({ from: prev, to: rank });
+    const prevRank = prevRankRef.current;
+    const prevLevel = prevLevelRef.current;
+    const rankChanged = !!(prevRank && prevRank !== rank);
+    const levelChanged = !!(prevLevel && prevLevel !== level);
+    if (rankChanged) {
+      notifyRankUp({ from: prevRank!, to: rank });
+    }
+    if (levelChanged) {
+      notifyLevelUp({
+        from: prevLevel!,
+        to: level,
+        alsoRankedUp: rankChanged,
+      });
     }
     prevRankRef.current = rank;
-  }, [rank, totalXp]);
+    prevLevelRef.current = level;
+  }, [rank, level, totalXp]);
 
   const { user } = useUser();
   const pricingOn = isPricingEnabled();

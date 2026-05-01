@@ -47,6 +47,20 @@ export function notifyRankUp(detail: { from: string; to: string }) {
   window.dispatchEvent(new CustomEvent(RANK_UP_EVENT, { detail }));
 }
 
+export const LEVEL_UP_EVENT = "system:level-up";
+
+export function notifyLevelUp(detail: {
+  from: number;
+  to: number;
+  /** True when this level-up also crossed a rank boundary — the toast
+   *  uses this to suppress itself, since the rank-up celebration is
+   *  the bigger moment and shouldn't be talked over. */
+  alsoRankedUp: boolean;
+}) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(LEVEL_UP_EVENT, { detail }));
+}
+
 export const REWARD_EVENT = "system:reward-granted";
 
 export interface RewardDelta {

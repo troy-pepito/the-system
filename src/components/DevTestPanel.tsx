@@ -1,6 +1,11 @@
 "use client";
 import { useState } from "react";
-import { notifyRankUp, notifyReward, notifyStatsUpdated } from "@/lib/player";
+import {
+  notifyRankUp,
+  notifyLevelUp,
+  notifyReward,
+  notifyStatsUpdated,
+} from "@/lib/player";
 import { sendTestPush } from "@/app/actions/push";
 import { fireRankUpSharePrompt } from "@/components/RankUpShare";
 import { COMBO_MILESTONES } from "@/lib/quests";
@@ -48,6 +53,11 @@ export default function DevTestPanel() {
       source: `🏆 Rank ${rank} · NoFap`,
     });
     notifyStatsUpdated({ xpDelta: bonus });
+  }
+
+  function fireLevel() {
+    const to = 2 + Math.floor(Math.random() * 49);
+    notifyLevelUp({ from: to - 1, to, alsoRankedUp: false });
   }
 
   function fireGain() {
@@ -108,6 +118,12 @@ export default function DevTestPanel() {
         className="px-3 py-1.5 bg-yellow-500/15 border border-yellow-400/50 text-yellow-200 text-[10px] uppercase tracking-[0.25em] hover:bg-yellow-500/25 transition-colors"
       >
         🏆 Tier Pop
+      </button>
+      <button
+        onClick={fireLevel}
+        className="px-3 py-1.5 bg-emerald-500/15 border border-emerald-400/50 text-emerald-200 text-[10px] uppercase tracking-[0.25em] hover:bg-emerald-500/25 transition-colors"
+      >
+        ↑ Level Pop
       </button>
       <button
         onClick={firePush}
