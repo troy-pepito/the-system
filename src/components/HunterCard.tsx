@@ -22,6 +22,7 @@ import {
   isHunterType,
   type HunterType,
 } from "@/lib/hunterType";
+import { getRankStyle } from "@/lib/rankStyle";
 
 const RANKS = ["E", "D", "C", "B", "A", "S"] as const;
 const LEVELS_PER_RANK = 10;
@@ -345,7 +346,11 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 <p className="text-[9px] text-slate-500 tracking-widest uppercase">
                   Rank
                 </p>
-                <p className="text-2xl font-bold text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] leading-none mt-1">
+                <p
+                  className={`text-2xl font-bold leading-none mt-1 ${
+                    getRankStyle(rank).text
+                  } ${getRankStyle(rank).textClass} ${getRankStyle(rank).glow}`}
+                >
                   {rank}
                 </p>
               </div>

@@ -4,7 +4,11 @@ import { useUser } from "@clerk/nextjs";
 import { RANK_UP_EVENT } from "@/lib/player";
 
 const SHARE_PROMPT_EVENT = "system:rank-up-share";
-const GLITCH_DURATION_MS = 1500; // give the rank-up glitch room to play first
+// Celebration overlay (RankUpCelebration) fires ~700ms after RANK_UP
+// and lingers up to 5s before auto-dismissing. Slip the share prompt
+// in just after that ceremony settles so it doesn't compete for the
+// player's attention while the rank letter is on screen.
+const PRE_SHARE_DELAY_MS = 6000;
 
 interface RankPair {
   from: string;
@@ -33,7 +37,7 @@ export default function RankUpShare() {
       if (!detail) return;
       timer = setTimeout(() => {
         setPair(detail);
-      }, GLITCH_DURATION_MS);
+      }, PRE_SHARE_DELAY_MS);
     };
 
     // Direct trigger for the dev test button — no delay.

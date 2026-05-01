@@ -13,6 +13,7 @@ import {
   useEndRunAction,
   useJournalAction,
 } from "@/lib/dungeonActions";
+import { getRankStyle } from "@/lib/rankStyle";
 import NoteModal from "@/components/NoteModal";
 import DungeonCheckInPanel from "@/components/DungeonCheckInPanel";
 
@@ -115,12 +116,13 @@ export default function TimedDungeonCard({
           <div className="flex justify-center gap-2">
             {TIERS.map((t, i) => {
               const clearedTier = i <= highestClearedIndex;
+              const style = getRankStyle(t.rank);
               return (
                 <span
                   key={t.rank}
                   className={`w-8 h-8 flex items-center justify-center rounded border text-xs font-bold transition-all ${
                     clearedTier
-                      ? "bg-amber-500/20 border-amber-400 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+                      ? `${style.bg} ${style.border} ${style.text} ${style.textClass} ${style.glow}`
                       : "bg-slate-800/50 border-slate-700 text-slate-600"
                   }`}
                 >

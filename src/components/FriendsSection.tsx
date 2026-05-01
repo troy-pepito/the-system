@@ -9,6 +9,7 @@ import {
   type FriendCard,
   type PendingRequest,
 } from "@/app/actions/friends";
+import { getRankStyle } from "@/lib/rankStyle";
 
 export default function FriendsSection() {
   const [friends, setFriends] = useState<FriendCard[] | null>(null);
@@ -161,7 +162,14 @@ export default function FriendsSection() {
                       {f.hunterName}
                     </p>
                     <p className="text-[10px] text-slate-500 tracking-widest uppercase">
-                      <span className="text-amber-400">Rank {f.rank}</span>
+                      <span>Rank </span>
+                      <span
+                        className={`font-bold ${getRankStyle(f.rank).text} ${
+                          getRankStyle(f.rank).textClass
+                        } ${getRankStyle(f.rank).glow}`}
+                      >
+                        {f.rank}
+                      </span>
                       <span className="text-slate-700"> · </span>
                       <span className="text-emerald-400">Lv {f.level}</span>
                     </p>

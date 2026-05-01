@@ -13,6 +13,7 @@ import {
 } from "@/lib/achievements";
 import { DUNGEONS, getDungeon } from "@/lib/dungeons";
 import { HUNTER_TYPE_DEFS, isHunterType } from "@/lib/hunterType";
+import { getRankStyle } from "@/lib/rankStyle";
 import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
 import Heatmap from "@/components/Heatmap";
@@ -124,7 +125,13 @@ function PublicProfile({ data }: { data: PublicHunterData }) {
                     <p className="text-[9px] text-slate-500 tracking-widest uppercase">
                       Rank
                     </p>
-                    <p className="text-2xl font-bold text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] leading-none mt-1">
+                    <p
+                      className={`text-2xl font-bold leading-none mt-1 ${
+                        getRankStyle(data.rank).text
+                      } ${getRankStyle(data.rank).textClass} ${
+                        getRankStyle(data.rank).glow
+                      }`}
+                    >
                       {data.rank}
                     </p>
                   </div>

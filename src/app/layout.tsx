@@ -17,6 +17,7 @@ import PageTransition from "@/components/PageTransition";
 import GainToast from "@/components/GainToast";
 import SystemNoticeToast from "@/components/SystemNoticeToast";
 import RankUpGlitch from "@/components/RankUpGlitch";
+import RankUpCelebration from "@/components/RankUpCelebration";
 import RankUpShare from "@/components/RankUpShare";
 import DevTestPanel from "@/components/DevTestPanel";
 import BackToTop from "@/components/BackToTop";
@@ -118,6 +119,7 @@ export default async function RootLayout({
                 <GainToast />
                 <SystemNoticeToast />
                 <RankUpGlitch />
+                <RankUpCelebration />
                 <RankUpShare />
                 <BackToTop />
                 <PwaInstallPrompt />

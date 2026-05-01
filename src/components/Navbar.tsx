@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import Paywall from "@/components/Paywall";
 import WhatsNewBadge from "@/components/WhatsNewBadge";
 import { isPricingEnabled, isUserPro } from "@/lib/pricing";
+import { getRankStyle } from "@/lib/rankStyle";
 import {
   STATS_UPDATED_EVENT,
   getLevelFromXp,
@@ -122,7 +123,16 @@ export default function Navbar() {
                 Pro
               </button>
             )}
-            <span className="text-amber-400">Rank {rank}</span>
+            <span className="flex items-center gap-1">
+              <span className="text-slate-500">Rank</span>
+              <span
+                className={`font-bold ${getRankStyle(rank).text} ${
+                  getRankStyle(rank).textClass
+                } ${getRankStyle(rank).glow}`}
+              >
+                {rank}
+              </span>
+            </span>
             <span className="text-emerald-400">Lv {level}</span>
             <WhatsNewBadge />
             <Link

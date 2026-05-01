@@ -146,6 +146,44 @@ body {
     1px 0 rgba(34, 211, 238, 0.35);
 }
 
+/* S-rank holographic text — animated rainbow gradient clipped to the
+ * glyph shape. Used wherever an S-rank player's rank letter shows.
+ * Reduced-motion users get a static gradient via the media query
+ * below. */
+@keyframes rank-holo-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.rank-holo-text {
+  background-image: linear-gradient(
+    90deg,
+    #f472b6 0%,
+    #c084fc 16%,
+    #67e8f9 33%,
+    #6ee7b7 50%,
+    #fde047 66%,
+    #fb923c 83%,
+    #f472b6 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: rank-holo-flow 5s linear infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@utility animate-fade-in {
+  animation: fade-in 320ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
