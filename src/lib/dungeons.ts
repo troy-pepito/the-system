@@ -356,21 +356,21 @@ export const DUNGEONS: DungeonDef[] = [
           // Indices match NOFAP_TIERS: [E, D, C, B, A, S].
           // Pre-E uses index 0; post-S stays on the last entry. The
           // card displays the next tier the player is working toward.
-          repsByTier: [5, 8, 15, 25, 35, 50],
+          repsByTier: [5, 10, 20, 40, 70, 100],
         },
         {
           id: "starter-pullups",
           name: "Pullups",
           unit: "pullup",
           unitPlural: "pullups",
-          repsByTier: [1, 2, 4, 7, 10, 15],
+          repsByTier: [1, 2, 5, 10, 20, 40],
         },
         {
           id: "starter-squats",
           name: "Squats",
           unit: "squat",
           unitPlural: "squats",
-          repsByTier: [10, 15, 25, 40, 55, 75],
+          repsByTier: [10, 20, 40, 70, 110, 150],
         },
       ],
     },
