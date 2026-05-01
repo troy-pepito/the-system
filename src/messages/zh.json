@@ -12,5 +12,50 @@
     "install": "安装",
     "language": "语言",
     "languageHint": "选择系统对你说话的语言。翻译还在持续添加中 — 英语是最完整的。"
+  },
+  "dashboard": {
+    "header": "玩家状态窗口",
+    "noActiveDungeons": "[ 传送门登记处等候 ]",
+    "noActiveDungeonsBody": "尚无激活的副本。选择你的第一个传送门,开始塑造猎人之路。",
+    "enterRegistry": "进入登记处 →"
+  },
+  "hunterCard": {
+    "id": "猎人 ID",
+    "name": "名称",
+    "rank": "等级",
+    "level": "级别",
+    "xp": "XP",
+    "edit": "编辑",
+    "scattered": "散乱",
+    "viewPublic": "查看公开",
+    "choosePath": "+ 选择你的道路"
+  },
+  "dailyQuests": {
+    "header": "(!) 每日任务",
+    "subheader": "锻造觉醒的自我",
+    "quest_cold_shower": "冷水浴",
+    "quest_supplements": "服用补剂",
+    "quest_meditation": "冥想 / 瑜伽",
+    "quest_cardio": "步行 / 跑步(10分钟以上)",
+    "quest_journal": "写日志",
+    "quest_read": "学习 / 阅读(10页以上)",
+    "quest_clean_room": "整理房间"
+  },
+  "portals": {
+    "header": "传送门登记处",
+    "yourPath": "◆ 你的道路",
+    "yourPathSubtitleSet": "{label} · 每日例行",
+    "yourPathSubtitleUnset": "尚未选择道路",
+    "yourPathEmpty": "在设置中选择一条猎人之路以解锁其每日例行 — 一个为最糟糕的日子也能完成而设计的小副本。",
+    "yourPathCta": "选择你的道路 →",
+    "universal": "◇ 通用副本",
+    "universalSubtitle": "对所有猎人开放",
+    "otherPaths": "🔒 其他道路",
+    "otherPathsSubtitle": "切换道路以解锁",
+    "switchTo": "切换至 {label} →",
+    "enter": "进入副本",
+    "active": "进行中",
+    "viewInStatus": "在状态窗口查看",
+    "rules": "战斗规则"
   }
 }

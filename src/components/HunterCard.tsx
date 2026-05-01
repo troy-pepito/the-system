@@ -3,6 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { getLevelFromXp, getRank } from "@/lib/player";
 import { useTweenNumber } from "@/lib/useTweenNumber";
 import {
@@ -33,6 +34,7 @@ interface HunterCardProps {
 }
 
 export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
+  const t = useTranslations("hunterCard");
   const tweenedXp = useTweenNumber(totalXp, 700);
   const { level, currentXp, xpToNext } = getLevelFromXp(
     Math.round(tweenedXp)
@@ -221,7 +223,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
       >
         <div className="flex items-center justify-between mb-4 gap-3">
           <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
-            Hunter ID
+            {t("id")}
           </p>
           {user && (
             <div className="flex items-center gap-3 text-[9px] tracking-[0.3em] uppercase shrink-0">
@@ -237,7 +239,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 href={`/h/${user.id}`}
                 className="text-slate-500 hover:text-cyan-300 transition-colors"
               >
-                View Public
+                {t("viewPublic")}
               </Link>
             </div>
           )}
@@ -289,7 +291,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap mb-1.5">
               <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
-                Name
+                {t("name")}
               </p>
               {scattered && (
                 <span
@@ -297,7 +299,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                   className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm"
                 >
                   <span aria-hidden>⚠</span>
-                  <span>Scattered</span>
+                  <span>{t("scattered")}</span>
                 </span>
               )}
             </div>
@@ -332,7 +334,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                   {displayName}
                 </span>
                 <span className="text-[9px] text-slate-600 tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                  Edit
+                  {t("edit")}
                 </span>
               </button>
             )}
@@ -350,7 +352,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 href="/settings"
                 className="inline-block mt-2 text-[9px] tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-300 border-b border-slate-700 hover:border-cyan-400/50 transition-colors pb-0.5"
               >
-                + Choose your path
+                {t("choosePath")}
               </Link>
             )}
             <div className="flex items-center gap-5 mt-5">
@@ -360,7 +362,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 title="View all ranks"
               >
                 <p className="text-[9px] text-slate-500 tracking-widest uppercase group-hover:text-slate-300 transition-colors">
-                  Rank
+                  {t("rank")}
                 </p>
                 <p
                   className={`text-2xl font-bold leading-none mt-1 ${
@@ -373,7 +375,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
               <div className="h-10 w-px bg-slate-700" />
               <div>
                 <p className="text-[9px] text-slate-500 tracking-widest uppercase">
-                  Level
+                  {t("level")}
                 </p>
                 <p className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)] leading-none mt-1">
                   {level}

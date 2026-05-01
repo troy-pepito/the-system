@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   QUESTS,
   applyQuest,
@@ -33,6 +34,13 @@ interface DailyQuestsProps {
   onRewardsChange?: (rewards: QuestRewards) => void;
 }
 
+/** Quest IDs use kebab-case in the data layer ("cold-shower"), but
+ *  message keys can't carry hyphens cleanly inside dot-paths, so we
+ *  store them snake-cased ("quest_cold_shower"). */
+function questKey(questId: string): string {
+  return `quest_${questId.replace(/-/g, "_")}`;
+}
+
 export default function DailyQuests({
   initialTodayIds,
   initialLifetime,
@@ -40,6 +48,7 @@ export default function DailyQuests({
   questBonus = 0,
   onRewardsChange,
 }: DailyQuestsProps) {
+  const t = useTranslations("dailyQuests");
   const [completed, setCompleted] = useState<string[]>(initialTodayIds);
   const [lifetime, setLifetime] = useState<QuestRewards>(initialLifetime);
   const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
@@ -100,7 +109,7 @@ export default function DailyQuests({
         emotion: quest.emotion,
         energy: quest.energy,
         spirit: quest.spirit,
-        source: quest.name,
+        source: t(questKey(quest.id)),
       });
 
       // Combo-milestone celebration: when this completion is the one
@@ -161,10 +170,10 @@ export default function DailyQuests({
   <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-6 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
     <div className="text-center mb-6">
       <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-2">
-        (!) Daily Quests
+        {t("header")}
       </p>
       <h2 className="font-display text-base font-bold uppercase tracking-wider text-cyan-100">
-        Forge the Awakened Self
+        {t("subheader")}
       </h2>
     </div>
 
@@ -182,7 +191,7 @@ export default function DailyQuests({
                 {done && <span className="text-cyan-300 text-xs">✓</span>}
               </span>
               <span className={`text-sm uppercase tracking-wider ${done ? "text-slate-500 line-through" : "text-slate-200"}`}>
-                - {quest.name}
+                - {t(questKey(quest.id))}
               </span>
             </button>
             <span

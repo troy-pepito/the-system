@@ -12,5 +12,50 @@
     "install": "Installer",
     "language": "Langue",
     "languageHint": "Choisis la langue dans laquelle le Système te parle. Les traductions arrivent encore — l'anglais est le plus complet."
+  },
+  "dashboard": {
+    "header": "Fenêtre de Statut du Joueur",
+    "noActiveDungeons": "[ Le Registre des Portails Attend ]",
+    "noActiveDungeonsBody": "Pas encore de donjons actifs. Choisis ton premier portail pour commencer à forger le chemin de ton chasseur.",
+    "enterRegistry": "Entrer dans le Registre →"
+  },
+  "hunterCard": {
+    "id": "ID du Chasseur",
+    "name": "Nom",
+    "rank": "Rang",
+    "level": "Niveau",
+    "xp": "XP",
+    "edit": "Modifier",
+    "scattered": "Dispersé",
+    "viewPublic": "Voir Public",
+    "choosePath": "+ Choisis ta voie"
+  },
+  "dailyQuests": {
+    "header": "(!) Quêtes Quotidiennes",
+    "subheader": "Forge le Soi Éveillé",
+    "quest_cold_shower": "Douche Froide",
+    "quest_supplements": "Prendre des Compléments",
+    "quest_meditation": "Méditation / Yoga",
+    "quest_cardio": "Marcher / Courir (10+ min)",
+    "quest_journal": "Note de Journal",
+    "quest_read": "Étudier / Lire (10+ pages)",
+    "quest_clean_room": "Ranger la Chambre"
+  },
+  "portals": {
+    "header": "Registre des Portails",
+    "yourPath": "◆ Ta Voie",
+    "yourPathSubtitleSet": "{label} · routine quotidienne",
+    "yourPathSubtitleUnset": "aucune voie choisie",
+    "yourPathEmpty": "Choisis une Voie de Chasseur dans les Paramètres pour débloquer sa routine quotidienne — un petit donjon conçu pour être faisable même les pires jours.",
+    "yourPathCta": "Choisis Ta Voie →",
+    "universal": "◇ Donjons Universels",
+    "universalSubtitle": "ouverts à tous les chasseurs",
+    "otherPaths": "🔒 Autres Voies",
+    "otherPathsSubtitle": "change de voie pour débloquer",
+    "switchTo": "Passer à {label} →",
+    "enter": "Entrer dans le Donjon",
+    "active": "Active",
+    "viewInStatus": "Voir dans la Fenêtre de Statut",
+    "rules": "Règles d'Engagement"
   }
 }

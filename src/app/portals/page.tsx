@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import Card from "@/components/Card";
 import Paywall from "@/components/Paywall";
@@ -24,6 +25,7 @@ const ACTIVE_RUNS_CACHE_KEY = "activeRuns";
 type CachedRun = { dungeonId: string };
 
 export default function PortalsPage() {
+  const t = useTranslations("portals");
   const router = useRouter();
   const { user } = useUser();
   const meta = user?.unsafeMetadata as { hunterType?: string } | undefined;
@@ -146,7 +148,7 @@ export default function PortalsPage() {
           </div>
           {isActive && (
             <span className="shrink-0 text-[10px] uppercase tracking-widest text-emerald-400 border border-emerald-400/40 rounded px-2 py-1">
-              Active
+              {t("active")}
             </span>
           )}
         </div>
@@ -180,7 +182,7 @@ export default function PortalsPage() {
         >
           <div className="mb-5 border-t border-cyan-500/20 pt-4">
             <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70 mb-2">
-              Rules of Engagement
+              {t("rules")}
             </p>
             <ul className="space-y-1.5">
               {rules.map((rule, i) => (
@@ -203,7 +205,7 @@ export default function PortalsPage() {
               onClick={(e) => e.stopPropagation()}
               className="block w-full text-center px-4 py-3 bg-slate-800/60 border border-cyan-500/30 rounded text-cyan-300 text-xs uppercase tracking-widest hover:bg-cyan-500/20 transition-colors"
             >
-              View in Status Window
+              {t("viewInStatus")}
             </Link>
           ) : locked && pathDef ? (
             <Link
@@ -211,7 +213,7 @@ export default function PortalsPage() {
               onClick={(e) => e.stopPropagation()}
               className="block w-full text-center px-4 py-3 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-widest hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
             >
-              Switch to {pathDef.label} →
+              {t("switchTo", { label: pathDef.label })}
             </Link>
           ) : (
             <button
@@ -221,7 +223,7 @@ export default function PortalsPage() {
               }}
               className="w-full px-4 py-3 bg-cyan-500/20 border border-cyan-500/40 rounded text-cyan-300 text-sm uppercase tracking-widest hover:bg-cyan-500/30 active:scale-[0.98] transition-all drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]"
             >
-              Enter Dungeon
+              {t("enter")}
             </button>
           ))}
       </Card>
@@ -260,7 +262,7 @@ export default function PortalsPage() {
       <div className="max-w-2xl mx-auto w-full space-y-10">
         <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
-            Portal Registry
+            {t("header")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
@@ -268,11 +270,13 @@ export default function PortalsPage() {
         {/* Your Path */}
         <section>
           <SectionHeader
-            title="◆ Your Path"
+            title={t("yourPath")}
             subtitle={
               viewerHunterType
-                ? `${HUNTER_TYPE_DEFS[viewerHunterType].label} · daily routine`
-                : "no path chosen yet"
+                ? t("yourPathSubtitleSet", {
+                    label: HUNTER_TYPE_DEFS[viewerHunterType].label,
+                  })
+                : t("yourPathSubtitleUnset")
             }
           />
           {yourPath.length > 0 ? (
@@ -280,14 +284,13 @@ export default function PortalsPage() {
           ) : (
             <Card className="p-5 text-center bg-slate-900/40 border-slate-800">
               <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                Pick a Hunter Path in Settings to unlock its daily routine —
-                one tiny dungeon designed to be doable on the worst day.
+                {t("yourPathEmpty")}
               </p>
               <Link
                 href="/settings"
                 className="inline-block px-4 py-2 border border-cyan-500/40 rounded text-cyan-300 text-[10px] uppercase tracking-[0.3em] hover:bg-cyan-500/15 transition-colors"
               >
-                Choose Your Path →
+                {t("yourPathCta")}
               </Link>
             </Card>
           )}
@@ -296,8 +299,8 @@ export default function PortalsPage() {
         {/* Universal */}
         <section>
           <SectionHeader
-            title="◇ Universal Dungeons"
-            subtitle="open to every hunter"
+            title={t("universal")}
+            subtitle={t("universalSubtitle")}
           />
           <div className="space-y-4">
             {universal.map((d) => renderDungeonCard(d))}
@@ -308,8 +311,8 @@ export default function PortalsPage() {
         {otherPaths.length > 0 && (
           <section>
             <SectionHeader
-              title="🔒 Other Paths"
-              subtitle="switch path to unlock"
+              title={t("otherPaths")}
+              subtitle={t("otherPathsSubtitle")}
               accent="text-slate-500"
             />
             <div className="space-y-4">

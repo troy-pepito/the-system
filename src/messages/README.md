@@ -49,8 +49,21 @@ brand-critical copy.
 
 - Navbar (`nav.*`)
 - Settings page section labels + language picker (`settings.*`)
+- Dashboard header + empty-state CTA (`dashboard.*`)
+- Hunter card stat labels — Hunter ID / Name / Rank / Level / XP /
+  Edit / Scattered / View Public / Choose your path (`hunterCard.*`)
+- Daily Quests header + 7 quest names (`dailyQuests.*`)
+- Portals page — section headers, subtitles, all action labels,
+  rules-of-engagement header, locked-path UX (`portals.*`)
 
-Most copy (dungeon names + descriptions, quest names, achievement
-flavor text, push notifications, landing copy) is still hardcoded
-English. Key new strings as you add them; backfill old ones when
-there's reason.
+Still hardcoded English (next sweep targets):
+- Dungeon names, descriptions, rules (DUNGEONS array — needs the
+  message-key refactor since strings live in code, not JSX)
+- Achievement names + descriptions
+- Push notification copy (cron route)
+- /feed page
+- /journal + /h/[hunterId] (public profile)
+- /guide
+- /ranks (rank gallery flavor copy)
+- Hunter Type names + descriptions
+- Various smaller modals (NoteModal, exit/relapse copy, etc.)

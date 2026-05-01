@@ -12,5 +12,50 @@
     "install": "Installieren",
     "language": "Sprache",
     "languageHint": "Wähle die Sprache, in der das System mit dir spricht. Übersetzungen kommen noch — Englisch ist am vollständigsten."
+  },
+  "dashboard": {
+    "header": "Status-Fenster des Spielers",
+    "noActiveDungeons": "[ Das Portal-Register Wartet ]",
+    "noActiveDungeonsBody": "Noch keine aktiven Dungeons. Wähle dein erstes Portal, um den Weg deines Jägers zu formen.",
+    "enterRegistry": "Register Betreten →"
+  },
+  "hunterCard": {
+    "id": "Jäger-ID",
+    "name": "Name",
+    "rank": "Rang",
+    "level": "Stufe",
+    "xp": "XP",
+    "edit": "Bearbeiten",
+    "scattered": "Zerstreut",
+    "viewPublic": "Öffentlich Ansehen",
+    "choosePath": "+ Wähle deinen Pfad"
+  },
+  "dailyQuests": {
+    "header": "(!) Tägliche Quests",
+    "subheader": "Forme das erwachte Selbst",
+    "quest_cold_shower": "Kalte Dusche",
+    "quest_supplements": "Nahrungsergänzung",
+    "quest_meditation": "Meditation / Yoga",
+    "quest_cardio": "Gehen / Laufen (10+ Min)",
+    "quest_journal": "Tagebuch-Eintrag",
+    "quest_read": "Lernen / Lesen (10+ Seiten)",
+    "quest_clean_room": "Zimmer Aufräumen"
+  },
+  "portals": {
+    "header": "Portal-Register",
+    "yourPath": "◆ Dein Pfad",
+    "yourPathSubtitleSet": "{label} · tägliche Routine",
+    "yourPathSubtitleUnset": "noch kein Pfad gewählt",
+    "yourPathEmpty": "Wähle einen Jäger-Pfad in den Einstellungen, um seine tägliche Routine freizuschalten — ein kleiner Dungeon, entworfen, um an den schlimmsten Tagen machbar zu sein.",
+    "yourPathCta": "Wähle Deinen Pfad →",
+    "universal": "◇ Universelle Dungeons",
+    "universalSubtitle": "offen für jeden Jäger",
+    "otherPaths": "🔒 Andere Pfade",
+    "otherPathsSubtitle": "wechsle den Pfad zum Freischalten",
+    "switchTo": "Wechseln zu {label} →",
+    "enter": "Dungeon Betreten",
+    "active": "Aktiv",
+    "viewInStatus": "Im Status-Fenster Ansehen",
+    "rules": "Kampfregeln"
   }
 }

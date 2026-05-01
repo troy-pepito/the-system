@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import StreakCard from "@/components/StreakCard";
 import DailyQuests from "@/components/DailyQuests";
 import SideQuests from "@/components/SideQuests";
@@ -22,6 +23,7 @@ import { dashboardCacheKey } from "@/lib/dashboardCacheOps";
 import { drainQueue } from "@/lib/offlineDrain";
 
 export default function Dashboard() {
+  const t = useTranslations("dashboard");
   // Initialize null both server- and client-side to keep SSR and first
   // client render identical. Cache hydration happens in the useEffect
   // below before the server fetch completes.
@@ -147,7 +149,7 @@ export default function Dashboard() {
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
-            Player Status Window
+            {t("header")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
@@ -188,17 +190,16 @@ export default function Dashboard() {
             <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
             <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
             <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-3">
-              [ Portal Registry Awaits ]
+              {t("noActiveDungeons")}
             </p>
             <p className="text-sm text-slate-300 leading-relaxed mb-5 max-w-sm mx-auto">
-              No active dungeons yet. Choose your first portal to begin
-              shaping your hunter&apos;s path.
+              {t("noActiveDungeonsBody")}
             </p>
             <Link
               href="/portals"
               className="inline-block px-6 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white transition-all shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:shadow-[0_0_30px_rgba(34,211,238,0.8)]"
             >
-              Enter Portal Registry →
+              {t("enterRegistry")}
             </Link>
           </div>
         )}

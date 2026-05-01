@@ -12,5 +12,50 @@
     "install": "설치",
     "language": "언어",
     "languageHint": "시스템이 당신에게 말하는 언어를 선택하세요. 번역은 계속 추가되고 있습니다 — 영어가 가장 완성도가 높습니다."
+  },
+  "dashboard": {
+    "header": "플레이어 상태 창",
+    "noActiveDungeons": "[ 포털 레지스트리가 기다리고 있다 ]",
+    "noActiveDungeonsBody": "아직 활성 던전이 없습니다. 첫 포털을 선택해 헌터의 길을 시작하세요.",
+    "enterRegistry": "레지스트리 입장 →"
+  },
+  "hunterCard": {
+    "id": "헌터 ID",
+    "name": "이름",
+    "rank": "랭크",
+    "level": "레벨",
+    "xp": "XP",
+    "edit": "수정",
+    "scattered": "흩어짐",
+    "viewPublic": "공개 보기",
+    "choosePath": "+ 경로 선택"
+  },
+  "dailyQuests": {
+    "header": "(!) 일일 퀘스트",
+    "subheader": "각성한 자아를 단련하라",
+    "quest_cold_shower": "찬물 샤워",
+    "quest_supplements": "영양제 복용",
+    "quest_meditation": "명상 / 요가",
+    "quest_cardio": "걷기 / 달리기 (10분 이상)",
+    "quest_journal": "일지 작성",
+    "quest_read": "공부 / 독서 (10쪽 이상)",
+    "quest_clean_room": "방 청소"
+  },
+  "portals": {
+    "header": "포털 레지스트리",
+    "yourPath": "◆ 당신의 길",
+    "yourPathSubtitleSet": "{label} · 일일 루틴",
+    "yourPathSubtitleUnset": "아직 경로를 선택하지 않음",
+    "yourPathEmpty": "설정에서 헌터 경로를 선택해 일일 루틴을 잠금 해제하세요 — 최악의 날에도 해낼 수 있도록 설계된 작은 던전입니다.",
+    "yourPathCta": "당신의 길을 선택하라 →",
+    "universal": "◇ 범용 던전",
+    "universalSubtitle": "모든 헌터에게 열려 있음",
+    "otherPaths": "🔒 다른 경로",
+    "otherPathsSubtitle": "경로를 바꿔 잠금 해제",
+    "switchTo": "{label} (으)로 전환 →",
+    "enter": "던전 입장",
+    "active": "활성",
+    "viewInStatus": "상태 창에서 보기",
+    "rules": "교전 규칙"
   }
 }

@@ -12,5 +12,50 @@
     "install": "Instalar",
     "language": "Idioma",
     "languageHint": "Escolha o idioma em que o Sistema fala com você. As traduções ainda estão chegando — o inglês é o mais completo."
+  },
+  "dashboard": {
+    "header": "Janela de Status do Jogador",
+    "noActiveDungeons": "[ O Registro de Portais Aguarda ]",
+    "noActiveDungeonsBody": "Ainda sem masmorras ativas. Escolha seu primeiro portal para começar a moldar o caminho do seu caçador.",
+    "enterRegistry": "Entrar no Registro →"
+  },
+  "hunterCard": {
+    "id": "ID do Caçador",
+    "name": "Nome",
+    "rank": "Rank",
+    "level": "Nível",
+    "xp": "XP",
+    "edit": "Editar",
+    "scattered": "Disperso",
+    "viewPublic": "Ver Público",
+    "choosePath": "+ Escolha seu caminho"
+  },
+  "dailyQuests": {
+    "header": "(!) Missões Diárias",
+    "subheader": "Forje o Eu Desperto",
+    "quest_cold_shower": "Banho Frio",
+    "quest_supplements": "Tomar Suplementos",
+    "quest_meditation": "Meditação / Ioga",
+    "quest_cardio": "Caminhar / Correr (10+ min)",
+    "quest_journal": "Anotação no Diário",
+    "quest_read": "Estudar / Ler (10+ páginas)",
+    "quest_clean_room": "Limpar o Quarto"
+  },
+  "portals": {
+    "header": "Registro de Portais",
+    "yourPath": "◆ Seu Caminho",
+    "yourPathSubtitleSet": "{label} · rotina diária",
+    "yourPathSubtitleUnset": "nenhum caminho escolhido ainda",
+    "yourPathEmpty": "Escolha um Caminho de Caçador nas Configurações para desbloquear sua rotina diária — uma pequena masmorra projetada para ser viável no pior dia.",
+    "yourPathCta": "Escolha Seu Caminho →",
+    "universal": "◇ Masmorras Universais",
+    "universalSubtitle": "abertas a todo caçador",
+    "otherPaths": "🔒 Outros Caminhos",
+    "otherPathsSubtitle": "troque de caminho para desbloquear",
+    "switchTo": "Mudar para {label} →",
+    "enter": "Entrar na Masmorra",
+    "active": "Ativa",
+    "viewInStatus": "Ver na Janela de Status",
+    "rules": "Regras de Combate"
   }
 }

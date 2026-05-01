@@ -12,5 +12,50 @@
     "install": "Install",
     "language": "Language",
     "languageHint": "Choose the language the System speaks to you in. Translations are still landing — English is the most complete."
+  },
+  "dashboard": {
+    "header": "Player Status Window",
+    "noActiveDungeons": "[ Portal Registry Awaits ]",
+    "noActiveDungeonsBody": "No active dungeons yet. Choose your first portal to begin shaping your hunter's path.",
+    "enterRegistry": "Enter Portal Registry →"
+  },
+  "hunterCard": {
+    "id": "Hunter ID",
+    "name": "Name",
+    "rank": "Rank",
+    "level": "Level",
+    "xp": "XP",
+    "edit": "Edit",
+    "scattered": "Scattered",
+    "viewPublic": "View Public",
+    "choosePath": "+ Choose your path"
+  },
+  "dailyQuests": {
+    "header": "(!) Daily Quests",
+    "subheader": "Forge the Awakened Self",
+    "quest_cold_shower": "Cold Shower",
+    "quest_supplements": "Take Supplements",
+    "quest_meditation": "Meditation / Yoga",
+    "quest_cardio": "Walk / Run (10+ min)",
+    "quest_journal": "Journal Entry",
+    "quest_read": "Study / Read (10+ pages)",
+    "quest_clean_room": "Clean Room"
+  },
+  "portals": {
+    "header": "Portal Registry",
+    "yourPath": "◆ Your Path",
+    "yourPathSubtitleSet": "{label} · daily routine",
+    "yourPathSubtitleUnset": "no path chosen yet",
+    "yourPathEmpty": "Pick a Hunter Path in Settings to unlock its daily routine — one tiny dungeon designed to be doable on the worst day.",
+    "yourPathCta": "Choose Your Path →",
+    "universal": "◇ Universal Dungeons",
+    "universalSubtitle": "open to every hunter",
+    "otherPaths": "🔒 Other Paths",
+    "otherPathsSubtitle": "switch path to unlock",
+    "switchTo": "Switch to {label} →",
+    "enter": "Enter Dungeon",
+    "active": "Active",
+    "viewInStatus": "View in Status Window",
+    "rules": "Rules of Engagement"
   }
 }

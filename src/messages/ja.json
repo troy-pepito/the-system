@@ -12,5 +12,50 @@
     "install": "インストール",
     "language": "言語",
     "languageHint": "システムがあなたに話しかける言語を選んでください。翻訳は順次追加中です — 英語が最も充実しています。"
+  },
+  "dashboard": {
+    "header": "プレイヤー・ステータス・ウィンドウ",
+    "noActiveDungeons": "[ ポータル・レジストリが待っている ]",
+    "noActiveDungeonsBody": "まだアクティブなダンジョンはありません。最初のポータルを選んで、ハンターの道を歩み始めましょう。",
+    "enterRegistry": "レジストリへ入る →"
+  },
+  "hunterCard": {
+    "id": "ハンターID",
+    "name": "名前",
+    "rank": "ランク",
+    "level": "レベル",
+    "xp": "XP",
+    "edit": "編集",
+    "scattered": "散漫",
+    "viewPublic": "公開ビュー",
+    "choosePath": "+ 道を選ぶ"
+  },
+  "dailyQuests": {
+    "header": "(!) デイリークエスト",
+    "subheader": "覚醒した自己を鍛える",
+    "quest_cold_shower": "冷水シャワー",
+    "quest_supplements": "サプリ摂取",
+    "quest_meditation": "瞑想 / ヨガ",
+    "quest_cardio": "ウォーキング / ランニング(10分以上)",
+    "quest_journal": "日記を書く",
+    "quest_read": "学習 / 読書(10ページ以上)",
+    "quest_clean_room": "部屋の掃除"
+  },
+  "portals": {
+    "header": "ポータル・レジストリ",
+    "yourPath": "◆ あなたの道",
+    "yourPathSubtitleSet": "{label} · 毎日のルーティン",
+    "yourPathSubtitleUnset": "まだ道を選んでいません",
+    "yourPathEmpty": "設定からハンターパスを選んで、毎日のルーティンを解放しましょう — 最悪の日でもこなせるように設計された小さなダンジョンです。",
+    "yourPathCta": "あなたの道を選ぶ →",
+    "universal": "◇ ユニバーサル・ダンジョン",
+    "universalSubtitle": "すべてのハンターに開かれている",
+    "otherPaths": "🔒 他の道",
+    "otherPathsSubtitle": "道を変えて解放する",
+    "switchTo": "{label} に切り替える →",
+    "enter": "ダンジョンに入る",
+    "active": "アクティブ",
+    "viewInStatus": "ステータスウィンドウで見る",
+    "rules": "戦闘規則"
   }
 }

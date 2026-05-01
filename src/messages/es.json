@@ -12,5 +12,50 @@
     "install": "Instalar",
     "language": "Idioma",
     "languageHint": "Elige el idioma en el que el Sistema te habla. Las traducciones siguen llegando — el inglés es el más completo."
+  },
+  "dashboard": {
+    "header": "Ventana de Estado del Jugador",
+    "noActiveDungeons": "[ El Registro de Portales Aguarda ]",
+    "noActiveDungeonsBody": "Aún no tienes mazmorras activas. Elige tu primer portal para comenzar a forjar el camino de tu cazador.",
+    "enterRegistry": "Entrar al Registro →"
+  },
+  "hunterCard": {
+    "id": "ID del Cazador",
+    "name": "Nombre",
+    "rank": "Rango",
+    "level": "Nivel",
+    "xp": "XP",
+    "edit": "Editar",
+    "scattered": "Disperso",
+    "viewPublic": "Ver Público",
+    "choosePath": "+ Elige tu camino"
+  },
+  "dailyQuests": {
+    "header": "(!) Misiones Diarias",
+    "subheader": "Forja el Yo Despierto",
+    "quest_cold_shower": "Ducha Fría",
+    "quest_supplements": "Tomar Suplementos",
+    "quest_meditation": "Meditación / Yoga",
+    "quest_cardio": "Caminar / Correr (10+ min)",
+    "quest_journal": "Entrada de Diario",
+    "quest_read": "Estudiar / Leer (10+ páginas)",
+    "quest_clean_room": "Limpiar la Habitación"
+  },
+  "portals": {
+    "header": "Registro de Portales",
+    "yourPath": "◆ Tu Camino",
+    "yourPathSubtitleSet": "{label} · rutina diaria",
+    "yourPathSubtitleUnset": "aún no has elegido camino",
+    "yourPathEmpty": "Elige un Camino de Cazador en Ajustes para desbloquear su rutina diaria — una pequeña mazmorra diseñada para ser factible en el peor día.",
+    "yourPathCta": "Elige Tu Camino →",
+    "universal": "◇ Mazmorras Universales",
+    "universalSubtitle": "abiertas para todo cazador",
+    "otherPaths": "🔒 Otros Caminos",
+    "otherPathsSubtitle": "cambia de camino para desbloquear",
+    "switchTo": "Cambiar a {label} →",
+    "enter": "Entrar a la Mazmorra",
+    "active": "Activa",
+    "viewInStatus": "Ver en Ventana de Estado",
+    "rules": "Reglas de Combate"
   }
 }

@@ -12,5 +12,50 @@
     "install": "इंस्टॉल करें",
     "language": "भाषा",
     "languageHint": "वह भाषा चुनें जिसमें सिस्टम आपसे बात करे। अनुवाद अभी आ रहे हैं — अंग्रेज़ी सबसे पूर्ण है।"
+  },
+  "dashboard": {
+    "header": "खिलाड़ी स्थिति विंडो",
+    "noActiveDungeons": "[ पोर्टल रजिस्ट्री प्रतीक्षा कर रही है ]",
+    "noActiveDungeonsBody": "अभी कोई सक्रिय डंजन नहीं। अपना पहला पोर्टल चुनें और हंटर के पथ पर कदम रखें।",
+    "enterRegistry": "रजिस्ट्री में प्रवेश करें →"
+  },
+  "hunterCard": {
+    "id": "हंटर आईडी",
+    "name": "नाम",
+    "rank": "रैंक",
+    "level": "स्तर",
+    "xp": "XP",
+    "edit": "संपादित",
+    "scattered": "बिखरा हुआ",
+    "viewPublic": "सार्वजनिक देखें",
+    "choosePath": "+ अपना पथ चुनें"
+  },
+  "dailyQuests": {
+    "header": "(!) दैनिक मिशन",
+    "subheader": "जागृत स्वयं को गढ़ें",
+    "quest_cold_shower": "ठंडा स्नान",
+    "quest_supplements": "सप्लीमेंट लें",
+    "quest_meditation": "ध्यान / योग",
+    "quest_cardio": "चलना / दौड़ना (10+ मिनट)",
+    "quest_journal": "डायरी प्रविष्टि",
+    "quest_read": "अध्ययन / पढ़ें (10+ पृष्ठ)",
+    "quest_clean_room": "कमरा साफ़ करें"
+  },
+  "portals": {
+    "header": "पोर्टल रजिस्ट्री",
+    "yourPath": "◆ आपका पथ",
+    "yourPathSubtitleSet": "{label} · दैनिक दिनचर्या",
+    "yourPathSubtitleUnset": "अभी कोई पथ नहीं चुना",
+    "yourPathEmpty": "अपनी दैनिक दिनचर्या को अनलॉक करने के लिए सेटिंग्स में हंटर पथ चुनें — सबसे ख़राब दिन में भी संभव होने के लिए डिज़ाइन किया गया एक छोटा डंजन।",
+    "yourPathCta": "अपना पथ चुनें →",
+    "universal": "◇ सार्वभौमिक डंजन",
+    "universalSubtitle": "हर हंटर के लिए खुले",
+    "otherPaths": "🔒 अन्य पथ",
+    "otherPathsSubtitle": "अनलॉक करने के लिए पथ बदलें",
+    "switchTo": "{label} पर स्विच करें →",
+    "enter": "डंजन में प्रवेश करें",
+    "active": "सक्रिय",
+    "viewInStatus": "स्थिति विंडो में देखें",
+    "rules": "सगाई के नियम"
   }
 }
