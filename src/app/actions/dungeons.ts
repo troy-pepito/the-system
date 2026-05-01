@@ -11,6 +11,8 @@ import {
   priorComboDays as computePriorComboDays,
   totalMilestoneXp,
   addDaysISO,
+  highestMilestoneIdx,
+  comboBonusPerQuest,
 } from "@/lib/quests";
 import { requireUserId } from "@/lib/auth";
 import { clerkClient } from "@clerk/nextjs/server";
@@ -48,6 +50,8 @@ export interface DashboardData {
   priorComboDays: number;
   milestoneXp: number;
   scattered: boolean;
+  /** Per-daily-quest XP bonus from the player's highest combo milestone. */
+  questBonus: number;
 }
 
 function toState(run: {
@@ -128,6 +132,7 @@ const getComboStateCached = unstable_cache(
       priorComboDays: computePriorComboDays(pastRuns, todayIso),
       milestoneXp: totalMilestoneXp(runs),
       scattered,
+      questBonus: comboBonusPerQuest(highestMilestoneIdx(runs)),
     };
   },
   ["combo-state"],
@@ -138,6 +143,7 @@ async function getComboState(todayIso: string): Promise<{
   priorComboDays: number;
   milestoneXp: number;
   scattered: boolean;
+  questBonus: number;
 }> {
   const userId = await requireUserId();
   return getComboStateCached(userId, todayIso);
@@ -179,6 +185,7 @@ export async function getDashboardData(
     priorComboDays: comboState.priorComboDays,
     milestoneXp: comboState.milestoneXp,
     scattered: comboState.scattered,
+    questBonus: comboState.questBonus,
   };
 }
 

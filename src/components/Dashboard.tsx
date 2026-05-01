@@ -158,6 +158,7 @@ export default function Dashboard() {
             initialTodayIds={dashboard.todayQuestIds}
             initialLifetime={dashboard.lifetimeRewards}
             priorComboDays={dashboard.priorComboDays}
+            questBonus={dashboard.questBonus}
           />
         )}
 

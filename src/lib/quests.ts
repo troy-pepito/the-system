@@ -125,6 +125,18 @@ export const COMBO_MILESTONES: ReadonlyArray<{ days: number; xp: number }> = [
   { days: 365, xp: 2500 },
 ];
 
+/**
+ * Per-quest XP bonus added once you've crossed each combo milestone.
+ * Indexed by milestone index — same order as COMBO_MILESTONES. Sticky
+ * (once earned, always applied) so a streak break doesn't yank the
+ * scaling away. Base daily-quest XP is 10; this caps a 365-day combo
+ * hunter at 50 XP per quest, matching the "S-rank max action XP"
+ * ceiling the dungeon tier scaling uses.
+ */
+export const COMBO_PER_QUEST_BONUS: ReadonlyArray<number> = [
+  5, 10, 15, 20, 25, 30, 40,
+];
+
 export interface ComboRun {
   startISO: string;
   endISO: string;
@@ -189,4 +201,30 @@ export function milestoneIdsForRuns(runs: ComboRun[]): string[] {
     }
   }
   return ids;
+}
+
+/**
+ * Highest combo milestone index ever reached across any run. -1 means
+ * no milestone earned yet. Sticky across runs — losing your current
+ * combo doesn't lose the per-quest scaling, same logic as the dungeon
+ * tier system preserving rank.
+ */
+export function highestMilestoneIdx(runs: ComboRun[]): number {
+  let best = -1;
+  for (const run of runs) {
+    for (let i = 0; i < COMBO_MILESTONES.length; i++) {
+      if (run.days >= COMBO_MILESTONES[i].days && i > best) best = i;
+    }
+  }
+  return best;
+}
+
+/**
+ * Per-quest XP bonus from the player's highest combo milestone. Returns
+ * 0 when the player hasn't earned any milestones yet.
+ */
+export function comboBonusPerQuest(highestIdx: number): number {
+  if (highestIdx < 0) return 0;
+  const i = Math.min(highestIdx, COMBO_PER_QUEST_BONUS.length - 1);
+  return COMBO_PER_QUEST_BONUS[i] ?? 0;
 }

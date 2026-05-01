@@ -18,6 +18,8 @@ import {
   milestoneIdsForRuns,
   addDaysISO,
   todayLocalISO,
+  highestMilestoneIdx,
+  comboBonusPerQuest,
 } from "@/lib/quests";
 import {
   ACHIEVEMENTS,
@@ -295,6 +297,13 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     0
   );
 
+  // Per-quest bonus from the player's highest combo milestone — sticky
+  // across runs, mirrors the dungeon tier-per-action scaling so a long
+  // habit streak makes every daily quest land harder. Side quests get
+  // the base xp only since they're already big special-event rewards.
+  const questBonus = comboBonusPerQuest(highestMilestoneIdx(comboRuns));
+  const dailyQuestIds = new Set(QUESTS.map((q) => q.id));
+
   let questXpTotal = 0;
   const dimensions = { body: 0, mind: 0, emotion: 0, energy: 0, spirit: 0 };
   for (const q of quests) {
@@ -302,7 +311,8 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       QUESTS.find((x) => x.id === q.questId) ??
       SIDE_QUESTS.find((x) => x.id === q.questId);
     if (!def) continue;
-    questXpTotal += def.xp;
+    const isDailyQuest = dailyQuestIds.has(q.questId);
+    questXpTotal += def.xp + (isDailyQuest ? questBonus : 0);
     dimensions.body += def.body ?? 0;
     dimensions.mind += def.mind ?? 0;
     dimensions.emotion += def.emotion ?? 0;

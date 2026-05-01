@@ -28,6 +28,8 @@ interface DailyQuestsProps {
   initialTodayIds: string[];
   initialLifetime: QuestRewards;
   priorComboDays: number;
+  /** Per-quest XP bonus from the player's highest combo milestone. */
+  questBonus?: number;
   onRewardsChange?: (rewards: QuestRewards) => void;
 }
 
@@ -35,6 +37,7 @@ export default function DailyQuests({
   initialTodayIds,
   initialLifetime,
   priorComboDays,
+  questBonus = 0,
   onRewardsChange,
 }: DailyQuestsProps) {
   const [completed, setCompleted] = useState<string[]>(initialTodayIds);
@@ -81,16 +84,17 @@ export default function DailyQuests({
       });
     }
 
-    const xpDelta = (isNowDone ? 1 : -1) * quest.xp;
+    const scaledQuestXp = quest.xp + questBonus;
+    const xpDelta = (isNowDone ? 1 : -1) * scaledQuestXp;
     notifyStatsUpdated({ xpDelta });
 
     if (isNowDone) {
       track("quest_completed", {
         quest_id: quest.id,
-        quest_xp: quest.xp,
+        quest_xp: scaledQuestXp,
       });
       notifyReward({
-        xp: quest.xp,
+        xp: scaledQuestXp,
         body: quest.body,
         mind: quest.mind,
         emotion: quest.emotion,
@@ -181,8 +185,17 @@ export default function DailyQuests({
                 - {quest.name}
               </span>
             </button>
-            <span className={`text-[10px] font-mono tracking-wider shrink-0 ${done ? "text-slate-600" : "text-cyan-400/80"}`}>
-              +{quest.xp} XP
+            <span
+              className={`text-[10px] font-mono tracking-wider shrink-0 ${
+                done ? "text-slate-600" : "text-cyan-400/80"
+              }`}
+              title={
+                questBonus > 0
+                  ? `Base ${quest.xp} + Combo bonus ${questBonus}`
+                  : undefined
+              }
+            >
+              +{quest.xp + questBonus} XP
             </span>
           </li>
         );
