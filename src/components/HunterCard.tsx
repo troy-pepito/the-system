@@ -354,8 +354,12 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
               </Link>
             )}
             <div className="flex items-center gap-5 mt-5">
-              <div>
-                <p className="text-[9px] text-slate-500 tracking-widest uppercase">
+              <Link
+                href="/ranks"
+                className="group cursor-pointer"
+                title="View all ranks"
+              >
+                <p className="text-[9px] text-slate-500 tracking-widest uppercase group-hover:text-slate-300 transition-colors">
                   Rank
                 </p>
                 <p
@@ -365,7 +369,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 >
                   {rank}
                 </p>
-              </div>
+              </Link>
               <div className="h-10 w-px bg-slate-700" />
               <div>
                 <p className="text-[9px] text-slate-500 tracking-widest uppercase">
