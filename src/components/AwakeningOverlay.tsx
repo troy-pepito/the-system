@@ -3,6 +3,10 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { track } from "@/lib/analytics";
+import {
+  HUNTER_TYPE_LIST,
+  type HunterType,
+} from "@/lib/hunterType";
 
 const AWAKENED_KEY = "system:awakened";
 const AWAKENED_EVENT = "system:awakened-changed";
@@ -27,7 +31,16 @@ const NAME_LINES = [
   "you shall be known by.",
 ];
 
-type Phase = "intro" | "naming";
+const PATH_LINES = [
+  "[ PATH SELECTION ]",
+  "",
+  "Every hunter walks a path.",
+  "",
+  "Choose what you want",
+  "to forge first.",
+];
+
+type Phase = "intro" | "naming" | "path";
 
 function subscribeAwakened(cb: () => void) {
   window.addEventListener(AWAKENED_EVENT, cb);
@@ -61,7 +74,12 @@ export default function AwakeningOverlay() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const activeLines = phase === "naming" ? NAME_LINES : INTRO_LINES;
+  const activeLines =
+    phase === "path"
+      ? PATH_LINES
+      : phase === "naming"
+        ? NAME_LINES
+        : INTRO_LINES;
 
   useEffect(() => {
     if (accepted && isSignedIn && phase === "intro") {
@@ -121,7 +139,32 @@ export default function AwakeningOverlay() {
       await user.update({
         unsafeMetadata: { ...user.unsafeMetadata, hunterName: name },
       });
-      track("awakening_complete", { hunter_name_length: name.length });
+      // Transition to path-selection rather than finishing awakening —
+      // gives the new player a chance to declare their identity before
+      // they hit the dashboard.
+      setPhase("path");
+      setLineIdx(0);
+      setCharIdx(0);
+      setSubmitting(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Registration failed");
+      setSubmitting(false);
+    }
+  }
+
+  async function handlePathChoice(type: HunterType | null) {
+    if (!user || submitting) return;
+    setError(null);
+    setSubmitting(true);
+    try {
+      if (type !== null) {
+        await user.update({
+          unsafeMetadata: { ...user.unsafeMetadata, hunterType: type },
+        });
+      }
+      track("awakening_complete", {
+        hunter_type: type ?? "unaffiliated",
+      });
       setAccepting(true);
       setTimeout(() => {
         localStorage.setItem(AWAKENED_KEY, "true");
@@ -129,7 +172,7 @@ export default function AwakeningOverlay() {
         router.push("/guide");
       }, 900);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      setError(err instanceof Error ? err.message : "Path selection failed");
       setSubmitting(false);
     }
   }
@@ -190,6 +233,61 @@ export default function AwakeningOverlay() {
                 ← Reconsider
               </button>
             </div>
+          ) : phase === "path" ? (
+            <>
+              <div className="min-h-[180px] space-y-3 font-mono text-center">
+                {PATH_LINES.slice(0, lineIdx).map((line, i) =>
+                  renderLine(line, i)
+                )}
+                {!complete &&
+                  lineIdx < PATH_LINES.length &&
+                  renderLine(
+                    PATH_LINES[lineIdx].slice(0, charIdx),
+                    "current",
+                    true
+                  )}
+              </div>
+
+              <div
+                className={`mt-6 space-y-2 transition-all duration-700 ${
+                  complete
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-2 pointer-events-none"
+                }`}
+              >
+                {HUNTER_TYPE_LIST.map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => handlePathChoice(t.id)}
+                    disabled={submitting}
+                    className={`w-full text-left p-3 border rounded transition-all disabled:opacity-50 ${t.badgeStyle} hover:brightness-125 ${t.glow}`}
+                  >
+                    <div className="flex items-baseline justify-between gap-3 mb-0.5">
+                      <span className="text-xs font-bold uppercase tracking-widest">
+                        {t.label}
+                      </span>
+                      <span className="text-[9px] italic opacity-80 truncate">
+                        {t.tagline}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => handlePathChoice(null)}
+                  disabled={submitting}
+                  className="w-full p-2 border border-slate-700 rounded text-slate-400 text-[10px] uppercase tracking-[0.3em] hover:border-slate-500 hover:text-slate-200 transition-colors disabled:opacity-50"
+                >
+                  Nothing in particular — decide later
+                </button>
+                {error && (
+                  <p className="text-[10px] text-red-400 tracking-wider text-center pt-1">
+                    {error}
+                  </p>
+                )}
+              </div>
+            </>
           ) : phase === "intro" ? (
             <>
               <div className="min-h-[260px] space-y-3 font-mono text-center">
