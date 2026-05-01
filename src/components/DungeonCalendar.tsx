@@ -27,6 +27,51 @@ function ymdToIso(y: number, m: number, d: number): string {
   return new Date(Date.UTC(y, m, d)).toISOString().split("T")[0];
 }
 
+function shiftIso(iso: string, days: number): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().split("T")[0];
+}
+
+function diffDays(aIso: string, bIso: string): number {
+  const a = new Date(`${aIso}T00:00:00Z`).getTime();
+  const b = new Date(`${bIso}T00:00:00Z`).getTime();
+  return Math.round((b - a) / (24 * 60 * 60 * 1000));
+}
+
+function computeStreaks(
+  cleared: Set<string>,
+  today: string
+): { current: number; longest: number } {
+  // Longest: walk sorted cleared dates, track the longest run of
+  // consecutive 1-day diffs.
+  const sorted = [...cleared].sort();
+  let longest = 0;
+  let runLen = 0;
+  let prev: string | null = null;
+  for (const date of sorted) {
+    if (prev !== null && diffDays(prev, date) === 1) {
+      runLen++;
+    } else {
+      runLen = 1;
+    }
+    if (runLen > longest) longest = runLen;
+    prev = date;
+  }
+
+  // Current: count back from today (or yesterday if today not cleared).
+  // A streak that ended more than 24h ago doesn't count as current.
+  let current = 0;
+  let cursor = today;
+  if (!cleared.has(cursor)) cursor = shiftIso(today, -1);
+  while (cleared.has(cursor)) {
+    current++;
+    cursor = shiftIso(cursor, -1);
+  }
+
+  return { current, longest };
+}
+
 export default function DungeonCalendar({
   startDate,
   checkIns,
@@ -44,6 +89,17 @@ export default function DungeonCalendar({
     for (const c of checkIns) map[c.date] = c;
     return map;
   }, [checkIns]);
+
+  const clearedSet = useMemo(() => {
+    const set = new Set<string>();
+    for (const c of checkIns) if (c.state === "cleared") set.add(c.date);
+    return set;
+  }, [checkIns]);
+
+  const streaks = useMemo(
+    () => computeStreaks(clearedSet, today),
+    [clearedSet, today]
+  );
 
   const firstDay = new Date(Date.UTC(view.year, view.month, 1));
   const startWeekday = firstDay.getUTCDay();
@@ -91,6 +147,25 @@ export default function DungeonCalendar({
         </button>
       </div>
 
+      {(streaks.current > 0 || streaks.longest > 0) && (
+        <div className="flex items-center justify-center gap-3 mb-3 text-[10px] tracking-widest uppercase">
+          <span className="flex items-center gap-1.5 text-orange-300">
+            <span className="text-sm leading-none">🔥</span>
+            <span className="text-slate-500">Current</span>
+            <span className="text-orange-300 font-bold tabular-nums">
+              {streaks.current}d
+            </span>
+          </span>
+          <span className="text-slate-700">·</span>
+          <span className="flex items-center gap-1.5 text-amber-300">
+            <span className="text-slate-500">Longest</span>
+            <span className="text-amber-300 font-bold tabular-nums">
+              {streaks.longest}d
+            </span>
+          </span>
+        </div>
+      )}
+
       <div className="grid grid-cols-7 gap-1 mb-1">
         {WEEKDAYS.map((w, i) => (
           <div
@@ -121,8 +196,15 @@ export default function DungeonCalendar({
             bg = "bg-slate-950/40 border-transparent text-slate-800";
             symbol = "—";
           } else if (state === "cleared") {
-            bg =
-              "bg-emerald-500/15 border-emerald-400/40 text-emerald-300 shadow-[0_0_6px_rgba(52,211,153,0.3)]";
+            // Cells with at least one cleared neighbor (prev or next day)
+            // get the brighter "in-chain" treatment so a long run reads
+            // as a single visual current rather than a row of dots.
+            const inChain =
+              clearedSet.has(shiftIso(iso, -1)) ||
+              clearedSet.has(shiftIso(iso, 1));
+            bg = inChain
+              ? "bg-emerald-500/30 border-emerald-400/70 text-emerald-200 shadow-[0_0_10px_rgba(52,211,153,0.55)]"
+              : "bg-emerald-500/15 border-emerald-400/40 text-emerald-300 shadow-[0_0_6px_rgba(52,211,153,0.3)]";
             symbol = "✓";
           } else if (state === "relapsed") {
             bg = "bg-red-500/15 border-red-400/40 text-red-300";
