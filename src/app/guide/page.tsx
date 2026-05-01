@@ -60,7 +60,7 @@ const RULE_TYPES: {
     type: "training_program",
     summary:
       "A daily rep target that scales with each tier you clear. Hit the count to clear the day; miss it, no shame, try tomorrow. Gated by Hunter Path.",
-    used_by: "Pushup / Pullup / Squat Ladders (Body Hunter)",
+    used_by: "(reserved for future long-arc rep ladders)",
   },
 ];
 
