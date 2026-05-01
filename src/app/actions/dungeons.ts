@@ -286,12 +286,31 @@ function currentWeekBounds(): { start: Date; end: Date } {
   return { start, end };
 }
 
+function currentDayBounds(): { start: Date; end: Date } {
+  const start = todayDateOnly();
+  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+  return { start, end };
+}
+
+/**
+ * Picks the right time range for a cadence dungeon based on its window
+ * config. Daily-cadence dungeons (the new starter routines) reset at
+ * UTC midnight; weekly-cadence dungeons (Training Regimen) reset on
+ * Mondays. Falls back to weekly when the dungeon isn't found so legacy
+ * callers don't break.
+ */
+function cadenceBoundsFor(dungeonId: string): { start: Date; end: Date } {
+  const def = getDungeon(dungeonId);
+  if (def?.cadence?.window === "day") return currentDayBounds();
+  return currentWeekBounds();
+}
+
 const getWeekWorkoutsCached = unstable_cache(
   async (userId: string, dungeonId: string) => {
-    // Cross-run scope: re-entering Gym mid-week shouldn't blank out
-    // workouts you already did this week. Match the same dedup the
-    // snapshot uses so XP and the UI agree.
-    const { start, end } = currentWeekBounds();
+    // Cross-run scope: re-entering mid-window shouldn't blank out tasks
+    // you already did. Match the same dedup the snapshot uses so XP and
+    // the UI agree.
+    const { start, end } = cadenceBoundsFor(dungeonId);
     const events = await prisma.dungeonEvent.findMany({
       where: {
         run: { userId, dungeonId },
@@ -321,7 +340,7 @@ export async function toggleWorkout(
   });
   if (!run) throw new Error(`No active run for ${dungeonId}`);
 
-  const { start, end } = currentWeekBounds();
+  const { start, end } = cadenceBoundsFor(dungeonId);
   // Look across all of the user's runs of this dungeon, not just the
   // active one. Otherwise: log a workout → exit → re-enter → toggle
   // shows the workout as undone (different runId), creating a duplicate

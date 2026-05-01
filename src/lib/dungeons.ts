@@ -45,8 +45,10 @@ export interface WorkoutType {
 }
 
 export interface CadenceConfig {
-  weeklyTarget: number;
-  window: "week";
+  /** How many of the listed tasks to clear per window. */
+  target: number;
+  /** "day" — resets at UTC midnight. "week" — Monday-Sunday UTC. */
+  window: "day" | "week";
   workouts: WorkoutType[];
 }
 
@@ -278,7 +280,7 @@ export const DUNGEONS: DungeonDef[] = [
     ruleType: "cadence",
     tiers: NOFAP_TIERS,
     cadence: {
-      weeklyTarget: 5,
+      target: 5,
       window: "week",
       workouts: GYM_LIFE_WORKOUTS,
     },
@@ -396,6 +398,109 @@ export const DUNGEONS: DungeonDef[] = [
     },
     dimensions: { body: 2, energy: 1 },
   },
+  // Starter routines — one per Hunter Type. Tiny daily floors, three
+  // boxes each, gated by Path. Designed to be doable on the worst day:
+  // the goal is the streak, not the volume.
+  {
+    id: "starter-body",
+    name: "Daily Forge",
+    rank: "E",
+    ruleType: "cadence",
+    hunterType: "body",
+    tiers: NOFAP_TIERS,
+    cadence: {
+      target: 3,
+      window: "day",
+      workouts: [
+        { id: "starter-pushups", name: "5 pushups" },
+        { id: "starter-pullups", name: "1 pullup" },
+        { id: "starter-squats", name: "10 squats" },
+      ],
+    },
+    description:
+      "The Body Hunter's daily floor. Three tiny reps to keep the body honest — anyone can hit them, but only the disciplined will daily.",
+    dimensions: { body: 1 },
+  },
+  {
+    id: "starter-mind",
+    name: "Daily Sharpening",
+    rank: "E",
+    ruleType: "cadence",
+    hunterType: "mind",
+    tiers: NOFAP_TIERS,
+    cadence: {
+      target: 3,
+      window: "day",
+      workouts: [
+        { id: "starter-read", name: "Read 5 pages" },
+        { id: "starter-learn", name: "Learn 1 new word or concept" },
+        { id: "starter-reflect", name: "Write 1 line of reflection" },
+      ],
+    },
+    description:
+      "The Mind Hunter's daily floor. A few pages, a new idea, a single honest sentence. Compounds across years.",
+    dimensions: { mind: 1 },
+  },
+  {
+    id: "starter-emotion",
+    name: "Daily Bonds",
+    rank: "E",
+    ruleType: "cadence",
+    hunterType: "emotion",
+    tiers: NOFAP_TIERS,
+    cadence: {
+      target: 3,
+      window: "day",
+      workouts: [
+        { id: "starter-reach", name: "Reach out to 1 person" },
+        { id: "starter-express", name: "Express 1 feeling honestly" },
+        { id: "starter-eyes", name: "Hold eye contact with someone" },
+      ],
+    },
+    description:
+      "The Emotion Hunter's daily floor. Small reps of being seen, heard, present. The relational muscles you forgot you had.",
+    dimensions: { emotion: 1 },
+  },
+  {
+    id: "starter-energy",
+    name: "Daily Spark",
+    rank: "E",
+    ruleType: "cadence",
+    hunterType: "energy",
+    tiers: NOFAP_TIERS,
+    cadence: {
+      target: 3,
+      window: "day",
+      workouts: [
+        { id: "starter-cold", name: "30s cold water on face or body" },
+        { id: "starter-walk", name: "5-min walk outdoors" },
+        { id: "starter-breath", name: "1-min deep breathing" },
+      ],
+    },
+    description:
+      "The Energy Hunter's daily floor. Cold, motion, breath — three small jolts to wake the nervous system from its scrolling sleep.",
+    dimensions: { energy: 1 },
+  },
+  {
+    id: "starter-spirit",
+    name: "Daily Stillness",
+    rank: "E",
+    ruleType: "cadence",
+    hunterType: "spirit",
+    tiers: NOFAP_TIERS,
+    cadence: {
+      target: 3,
+      window: "day",
+      workouts: [
+        { id: "starter-silence", name: "1-min silence" },
+        { id: "starter-gratitude", name: "Write 1 line of gratitude" },
+        { id: "starter-skip", name: "Skip one craving" },
+      ],
+    },
+    description:
+      "The Spirit Hunter's daily floor. A breath of silence, a sentence of thanks, one craving denied. The path beyond the self starts small.",
+    dimensions: { spirit: 1 },
+  },
 ];
 
 export function getDungeon(id: string): DungeonDef | undefined {
@@ -423,10 +528,17 @@ export function getDungeonRules(d: DungeonDef): string[] {
     case "cadence": {
       const c = d.cadence;
       if (!c) return [];
+      const windowLabel = c.window === "day" ? "day" : "week";
+      const resetLine =
+        c.window === "day"
+          ? "Day resets at midnight UTC. Manual relapse if you fall off."
+          : "Week resets Monday–Sunday UTC. Manual relapse if you fall off.";
       return [
-        `Complete ${c.weeklyTarget} workouts per ${c.window}.`,
-        "Check off each type as you do it. Uncheck to remove a log.",
-        "Week resets Monday–Sunday. Manual relapse if you fall off.",
+        `Complete ${c.target} ${
+          c.workouts.length === 1 ? "task" : "tasks"
+        } per ${windowLabel}.`,
+        "Check off each one as you do it. Uncheck to remove a log.",
+        resetLine,
       ];
     }
     case "progressive": {

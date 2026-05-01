@@ -661,16 +661,21 @@ async function computeRunDisplayValue(run: {
   }
 
   if (d.ruleType === "cadence") {
-    const target = d.cadence?.weeklyTarget ?? 5;
-    const weekStart = startOfUtcWeekMonday(now);
-    const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const target = d.cadence?.target ?? 5;
+    const isDaily = d.cadence?.window === "day";
+    const periodStart = isDaily
+      ? new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+      : startOfUtcWeekMonday(now);
+    const periodEnd = new Date(
+      periodStart.getTime() + (isDaily ? 1 : 7) * 24 * 60 * 60 * 1000
+    );
     const count = await prisma.dungeonEvent.count({
       where: {
         runId: run.id,
-        date: { gte: weekStart, lt: weekEnd },
+        date: { gte: periodStart, lt: periodEnd },
       },
     });
-    return `${count}/${target} this week`;
+    return `${count}/${target} ${isDaily ? "today" : "this week"}`;
   }
 
   if (d.ruleType === "progressive" && d.progressive) {

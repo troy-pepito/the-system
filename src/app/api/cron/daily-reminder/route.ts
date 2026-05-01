@@ -113,11 +113,16 @@ async function getOutstandingDungeons(
       });
       if (!checked) outstanding.push(def.name);
     } else if (def.ruleType === "cadence") {
-      const target = def.cadence?.weeklyTarget ?? 5;
-      const weekCount = await prisma.dungeonEvent.count({
-        where: { runId: run.id, date: { gte: weekStart, lt: weekEnd } },
+      const target = def.cadence?.target ?? 5;
+      const isDaily = def.cadence?.window === "day";
+      const rangeStart = isDaily ? todayUtc : weekStart;
+      const rangeEnd = isDaily
+        ? new Date(todayUtc.getTime() + 24 * 60 * 60 * 1000)
+        : weekEnd;
+      const periodCount = await prisma.dungeonEvent.count({
+        where: { runId: run.id, date: { gte: rangeStart, lt: rangeEnd } },
       });
-      if (weekCount < target) outstanding.push(def.name);
+      if (periodCount < target) outstanding.push(def.name);
     } else if (def.ruleType === "progressive") {
       const recent = await prisma.dungeonEvent.count({
         where: { runId: run.id, date: { gte: twoDaysAgo } },

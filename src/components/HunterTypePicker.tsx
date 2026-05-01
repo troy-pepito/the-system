@@ -1,52 +1,48 @@
 "use client";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
+import { useUser } from "@clerk/nextjs";
 import {
   HUNTER_TYPE_LIST,
+  isHunterType,
   type HunterType,
 } from "@/lib/hunterType";
-import { getHunterType, setHunterType } from "@/app/actions/hunterType";
 
 export default function HunterTypePicker() {
-  const [current, setCurrent] = useState<HunterType | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const { user, isLoaded } = useUser();
+  const meta = user?.unsafeMetadata as { hunterType?: unknown } | undefined;
+  const persisted: HunterType | null =
+    typeof meta?.hunterType === "string" && isHunterType(meta.hunterType)
+      ? meta.hunterType
+      : null;
+
+  const [optimistic, setOptimistic] = useState<HunterType | null>(null);
   const [pending, startTransition] = useTransition();
 
-  useEffect(() => {
-    let cancelled = false;
-    getHunterType()
-      .then((t) => {
-        if (!cancelled) {
-          setCurrent(t);
-          setLoaded(true);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setLoaded(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  // Optimistic value wins while a transition is in flight, otherwise
+  // we trust the live Clerk state. This way picking a type updates
+  // the active card instantly even before the API call settles.
+  const current = pending ? optimistic : persisted;
 
   function pick(next: HunterType | null) {
-    if (pending) return;
-    if (next === current) {
-      // Tapping the active card unsets — revert to Unaffiliated.
-      next = null;
-    }
-    const optimistic = next;
-    setCurrent(optimistic);
+    if (!user || pending) return;
+    // Tap the active card again to revert to Unaffiliated.
+    const target = next === persisted ? null : next;
+    setOptimistic(target);
     startTransition(async () => {
       try {
-        await setHunterType(optimistic);
+        await user.update({
+          unsafeMetadata: {
+            ...(user.unsafeMetadata ?? {}),
+            hunterType: target,
+          },
+        });
       } catch {
-        // Roll back if the server rejected.
-        setCurrent(current);
+        // useUser() will surface the persisted value on next render.
       }
     });
   }
 
-  if (!loaded) {
+  if (!isLoaded || !user) {
     return (
       <p className="text-xs text-slate-500 leading-relaxed">
         Reading your path…
@@ -100,10 +96,6 @@ export default function HunterTypePicker() {
           );
         })}
       </div>
-      <p className="text-[10px] text-slate-600 italic">
-        Training programs land in the next phase — picking a path now reserves
-        your identity, the daily routines follow.
-      </p>
     </div>
   );
 }

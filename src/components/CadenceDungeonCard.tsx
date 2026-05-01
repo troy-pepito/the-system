@@ -49,7 +49,7 @@ export default function CadenceDungeonCard({
   const TIERS = dungeon?.tiers ?? [];
   const cadence = dungeon?.cadence;
   const WORKOUTS = cadence?.workouts ?? [];
-  const TARGET = cadence?.weeklyTarget ?? WORKOUTS.length;
+  const TARGET = cadence?.target ?? WORKOUTS.length;
 
   const [startDate, setStartDate] = useState<string | null>(
     initialRun.startDate
@@ -192,7 +192,7 @@ export default function CadenceDungeonCard({
           <div className="border border-slate-700 rounded-lg p-4 space-y-3 text-left">
             <div className="flex justify-between items-center">
               <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70">
-                This Week
+                {cadence?.window === "day" ? "Today" : "This Week"}
               </p>
               <span
                 className={`text-xs font-bold ${
@@ -247,7 +247,7 @@ export default function CadenceDungeonCard({
 
             {weekCleared && (
               <p className="text-[10px] text-emerald-400 uppercase tracking-widest text-center pt-1 drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">
-                ✦ Week cleared ✦
+                ✦ {cadence?.window === "day" ? "Day" : "Week"} cleared ✦
               </p>
             )}
           </div>
