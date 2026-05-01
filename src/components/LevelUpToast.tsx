@@ -9,10 +9,13 @@ interface ActiveLevelUp {
 
 let nextId = 1;
 
+const VISIBLE_MS = 2200;
+const FADE_MS = 420;
+
 /**
  * Small ceremonial moment for each level-up — distinct from rank-up
  * (which gets the fullscreen RankUpCelebration). Top-center bracket
- * toast, lingers ~2.5s, doesn't take over the screen.
+ * toast, fades in, lingers, fades out.
  *
  * Suppresses itself when a rank-up also fired this tick — the rank
  * celebration is the bigger moment and the level pop would just talk
@@ -20,6 +23,7 @@ let nextId = 1;
  */
 export default function LevelUpToast() {
   const [active, setActive] = useState<ActiveLevelUp | null>(null);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -27,15 +31,28 @@ export default function LevelUpToast() {
         e as CustomEvent<{ from: number; to: number; alsoRankedUp: boolean }>
       ).detail;
       if (!detail || detail.alsoRankedUp) return;
-      const change = { id: nextId++, to: detail.to };
-      setActive(change);
-      setTimeout(() => {
-        setActive((prev) => (prev?.id === change.id ? null : prev));
-      }, 2500);
+      setLeaving(false);
+      setActive({ id: nextId++, to: detail.to });
     };
     window.addEventListener(LEVEL_UP_EVENT, handler);
     return () => window.removeEventListener(LEVEL_UP_EVENT, handler);
   }, []);
+
+  // Schedule the leaving animation, then the unmount, whenever a fresh
+  // toast lands. Cleanup cancels both timers if a new toast supersedes
+  // this one before it finishes.
+  useEffect(() => {
+    if (!active) return;
+    const fadeAt = setTimeout(() => setLeaving(true), VISIBLE_MS);
+    const unmountAt = setTimeout(() => {
+      setActive((prev) => (prev?.id === active.id ? null : prev));
+      setLeaving(false);
+    }, VISIBLE_MS + FADE_MS);
+    return () => {
+      clearTimeout(fadeAt);
+      clearTimeout(unmountAt);
+    };
+  }, [active]);
 
   if (!active) return null;
 
@@ -43,7 +60,9 @@ export default function LevelUpToast() {
     <div
       key={active.id}
       aria-live="polite"
-      className="fixed top-[20vh] left-1/2 -translate-x-1/2 z-[170] pointer-events-none animate-fade-in"
+      className={`fixed top-[20vh] left-1/2 -translate-x-1/2 z-[170] pointer-events-none ${
+        leaving ? "animate-fade-out" : "animate-fade-in"
+      }`}
     >
       <div className="relative bg-slate-950/85 border border-emerald-400/60 px-6 py-3 shadow-[0_0_20px_rgba(52,211,153,0.45),inset_0_0_14px_rgba(52,211,153,0.08)]">
         <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-emerald-300" />

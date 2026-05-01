@@ -84,27 +84,33 @@ export default function Navbar() {
   const rank = getRank(level);
   const percent = Math.round((currentXp / xpToNext) * 100);
 
+  // Change detection runs against the *raw* totalXp, not the tweened
+  // display value. Without this, the boot-time tween from 0 → cached
+  // scrubs through every intermediate level and fires a level-up
+  // event for each frame on first load.
+  const rawLevel = getLevelFromXp(totalXp).level;
+  const rawRank = getRank(rawLevel);
   const prevRankRef = useRef<string | null>(null);
   const prevLevelRef = useRef<number | null>(null);
   useEffect(() => {
     if (totalXp <= 0) return;
     const prevRank = prevRankRef.current;
     const prevLevel = prevLevelRef.current;
-    const rankChanged = !!(prevRank && prevRank !== rank);
-    const levelChanged = !!(prevLevel && prevLevel !== level);
+    const rankChanged = !!(prevRank && prevRank !== rawRank);
+    const levelChanged = !!(prevLevel && prevLevel !== rawLevel);
     if (rankChanged) {
-      notifyRankUp({ from: prevRank!, to: rank });
+      notifyRankUp({ from: prevRank!, to: rawRank });
     }
     if (levelChanged) {
       notifyLevelUp({
         from: prevLevel!,
-        to: level,
+        to: rawLevel,
         alsoRankedUp: rankChanged,
       });
     }
-    prevRankRef.current = rank;
-    prevLevelRef.current = level;
-  }, [rank, level, totalXp]);
+    prevRankRef.current = rawRank;
+    prevLevelRef.current = rawLevel;
+  }, [rawRank, rawLevel, totalXp]);
 
   const { user } = useUser();
   const pricingOn = isPricingEnabled();
