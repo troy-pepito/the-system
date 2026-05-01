@@ -207,13 +207,23 @@ export async function GET(request: Request) {
     let payload: PushPayload;
     let kind: keyof typeof pushSummary.byType;
 
-    // Priority: ekadashi (rare, special) > relapse > outstanding > scattered > reset > wisdom
+    // Sundays are wisdom day — without this slot, active hunters with
+    // outstanding dungeons every day never reach the wisdom-fallback
+    // branch at the bottom of the chain. Ekadashi + relapse still
+    // override Sunday since those carry urgent context the player
+    // shouldn't miss.
+    const isSundayUtc = todayUtc.getUTCDay() === 0;
+
+    // Priority: ekadashi (rare, special) > relapse > Sunday wisdom > outstanding > scattered > reset > wisdom (fallback)
     if (ekadashiToday && ekadashiCompletedToday === 0) {
       payload = ekadashiPayload();
       kind = "ekadashi";
     } else if (relapsedYesterday > 0) {
       payload = relapsePayload();
       kind = "relapse";
+    } else if (isSundayUtc) {
+      payload = wisdomFallback;
+      kind = "wisdom";
     } else if (outstandingDungeons.length > 0) {
       payload = outstandingPayload(outstandingDungeons);
       kind = "outstanding";
