@@ -126,6 +126,20 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       }
     }
 
+    // For non-checkIn dungeons (cadence + progressive), maxStreak
+    // tracks the longest calendar-day streak the player has held.
+    // Bumping it on EVERY non-active run preserves tier rank across
+    // exits and relapses — without this, exiting Training Regimen at
+    // day 60 (B rank) wipes the tier bonus on the next snapshot.
+    if (!run.active && run.startDate && !usesCheckIns) {
+      const days = Math.floor(
+        (run.updatedAt.getTime() - run.startDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
+      const safe = Math.max(0, days);
+      if (safe > existing.maxStreak) existing.maxStreak = safe;
+    }
+
     if (
       !run.active &&
       run.endReason === "completed" &&
@@ -138,9 +152,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
           (run.updatedAt.getTime() - run.startDate.getTime()) /
             (1000 * 60 * 60 * 24)
         );
-        const safe = Math.max(0, days);
-        bankedStreakDays += safe;
-        if (safe > existing.maxStreak) existing.maxStreak = safe;
+        bankedStreakDays += Math.max(0, days);
       }
     }
 
