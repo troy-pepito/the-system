@@ -103,7 +103,18 @@ export default function CadenceDungeonCard({
     setWorkoutInCache(dungeonId, workoutId, isNowDone);
     const xpDelta = (isNowDone ? 1 : -1) * XP_PER_WORKOUT;
     notifyStatsUpdated({ xpDelta });
-    if (isNowDone) notifyReward({ xp: XP_PER_WORKOUT });
+    if (isNowDone) {
+      const dims = dungeon?.dimensions ?? {};
+      notifyReward({
+        xp: XP_PER_WORKOUT,
+        body: dims.body,
+        mind: dims.mind,
+        emotion: dims.emotion,
+        energy: dims.energy,
+        spirit: dims.spirit,
+        source: `${dungeonName} · Task Cleared`,
+      });
+    }
 
     beginMutation();
     try {
@@ -128,6 +139,17 @@ export default function CadenceDungeonCard({
   const progressToNext = nextTier
     ? Math.min(100, Math.round(((streak - prevDays) / (nextTier.days - prevDays)) * 100))
     : 100;
+  // For ramping tasks: index into repsByTier of the target the player
+  // is currently working toward. Pre-E uses 0; post-S clamps to last.
+  const rampIdx = Math.min(
+    Math.max(highestClearedIndex + 1, 0),
+    Math.max(TIERS.length - 1, 0)
+  );
+  const taskLabel = (w: typeof WORKOUTS[number]): string => {
+    if (!w.repsByTier || !w.unit) return w.name;
+    const reps = w.repsByTier[Math.min(rampIdx, w.repsByTier.length - 1)];
+    return `${reps} ${reps === 1 ? w.unit : w.unitPlural ?? w.unit}`;
+  };
 
   const weekCount = completed.length;
   const weekPercent = Math.min(100, Math.round((weekCount / TARGET) * 100));
@@ -237,7 +259,7 @@ export default function CadenceDungeonCard({
                           done ? "text-slate-500 line-through" : "text-slate-200"
                         }`}
                       >
-                        {w.name}
+                        {taskLabel(w)}
                       </span>
                     </button>
                   </li>

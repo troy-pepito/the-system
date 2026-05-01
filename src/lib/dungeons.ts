@@ -41,7 +41,24 @@ export interface TimedConfig {
 
 export interface WorkoutType {
   id: string;
+  /**
+   * Default display name. Used as-is for qualitative tasks (e.g.
+   * "Hold eye contact"). For ramping rep tasks, the card overrides
+   * this with `${reps} ${unitPlural}` resolved from `repsByTier`.
+   */
   name: string;
+  /**
+   * Optional per-tier rep target. Indices align with the dungeon's
+   * `tiers` array (E=0, D=1, ..., S=last). The card reads the *next*
+   * tier the player is working toward — pre-E uses index 0, post-S
+   * stays on the last entry (maintenance). Omit for non-ramping
+   * tasks.
+   */
+  repsByTier?: number[];
+  /** Singular noun. Required when repsByTier is set. */
+  unit?: string;
+  /** Plural noun. Required when repsByTier is set. */
+  unitPlural?: string;
 }
 
 export interface CadenceConfig {
@@ -328,16 +345,37 @@ export const DUNGEONS: DungeonDef[] = [
     hunterType: "body",
     tiers: NOFAP_TIERS,
     cadence: {
-      target: 3,
+      target: 1,
       window: "day",
       workouts: [
-        { id: "starter-pushups", name: "5 pushups" },
-        { id: "starter-pullups", name: "1 pullup" },
-        { id: "starter-squats", name: "10 squats" },
+        {
+          id: "starter-pushups",
+          name: "Pushups",
+          unit: "pushup",
+          unitPlural: "pushups",
+          // Indices match NOFAP_TIERS: [E, D, C, B, A, S].
+          // Pre-E uses index 0; post-S stays on the last entry. The
+          // card displays the next tier the player is working toward.
+          repsByTier: [5, 8, 15, 25, 35, 50],
+        },
+        {
+          id: "starter-pullups",
+          name: "Pullups",
+          unit: "pullup",
+          unitPlural: "pullups",
+          repsByTier: [1, 2, 4, 7, 10, 15],
+        },
+        {
+          id: "starter-squats",
+          name: "Squats",
+          unit: "squat",
+          unitPlural: "squats",
+          repsByTier: [10, 15, 25, 40, 55, 75],
+        },
       ],
     },
     description:
-      "The Body Hunter's daily floor. Three tiny reps to keep the body honest — anyone can hit them, but only the disciplined will daily.",
+      "The Body Hunter's daily floor. Three reps that ramp with your rank — clear any one to bank the day. Pushups, pullups, squats grow as your streak climbs E → S.",
     dimensions: { body: 1 },
   },
   {
@@ -348,7 +386,7 @@ export const DUNGEONS: DungeonDef[] = [
     hunterType: "mind",
     tiers: NOFAP_TIERS,
     cadence: {
-      target: 3,
+      target: 1,
       window: "day",
       workouts: [
         { id: "starter-read", name: "Read 5 pages" },
@@ -357,7 +395,7 @@ export const DUNGEONS: DungeonDef[] = [
       ],
     },
     description:
-      "The Mind Hunter's daily floor. A few pages, a new idea, a single honest sentence. Compounds across years.",
+      "The Mind Hunter's daily floor. A few pages, a new idea, a single honest sentence. Clear any one to bank the day.",
     dimensions: { mind: 1 },
   },
   {
@@ -368,7 +406,7 @@ export const DUNGEONS: DungeonDef[] = [
     hunterType: "emotion",
     tiers: NOFAP_TIERS,
     cadence: {
-      target: 3,
+      target: 1,
       window: "day",
       workouts: [
         { id: "starter-reach", name: "Reach out to 1 person" },
@@ -377,7 +415,7 @@ export const DUNGEONS: DungeonDef[] = [
       ],
     },
     description:
-      "The Emotion Hunter's daily floor. Small reps of being seen, heard, present. The relational muscles you forgot you had.",
+      "The Emotion Hunter's daily floor. Small reps of being seen, heard, present. Clear any one to bank the day.",
     dimensions: { emotion: 1 },
   },
   {
@@ -388,7 +426,7 @@ export const DUNGEONS: DungeonDef[] = [
     hunterType: "energy",
     tiers: NOFAP_TIERS,
     cadence: {
-      target: 3,
+      target: 1,
       window: "day",
       workouts: [
         { id: "starter-cold", name: "30s cold water on face or body" },
@@ -397,7 +435,7 @@ export const DUNGEONS: DungeonDef[] = [
       ],
     },
     description:
-      "The Energy Hunter's daily floor. Cold, motion, breath — three small jolts to wake the nervous system from its scrolling sleep.",
+      "The Energy Hunter's daily floor. Cold, motion, breath — three small jolts to wake the nervous system. Clear any one to bank the day.",
     dimensions: { energy: 1 },
   },
   {
@@ -408,7 +446,7 @@ export const DUNGEONS: DungeonDef[] = [
     hunterType: "spirit",
     tiers: NOFAP_TIERS,
     cadence: {
-      target: 3,
+      target: 1,
       window: "day",
       workouts: [
         { id: "starter-silence", name: "1-min silence" },
@@ -417,7 +455,7 @@ export const DUNGEONS: DungeonDef[] = [
       ],
     },
     description:
-      "The Spirit Hunter's daily floor. A breath of silence, a sentence of thanks, one craving denied. The path beyond the self starts small.",
+      "The Spirit Hunter's daily floor. A breath of silence, a sentence of thanks, one craving denied. Clear any one to bank the day.",
     dimensions: { spirit: 1 },
   },
 ];
