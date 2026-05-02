@@ -50,6 +50,10 @@ export default function AwakeningOverlay() {
   const [nameInput, setNameInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Brief fade between phases. Without it the card snaps to a new
+  // height + restarts the typing animation in the same frame, which
+  // reads as a flicker.
+  const [phaseTransitioning, setPhaseTransitioning] = useState(false);
 
   const activeLines =
     phase === "path"
@@ -87,9 +91,13 @@ export default function AwakeningOverlay() {
   function handleAccept() {
     setAccepted(true);
     if (isSignedIn) {
-      setPhase("naming");
-      setLineIdx(0);
-      setCharIdx(0);
+      setPhaseTransitioning(true);
+      setTimeout(() => {
+        setPhase("naming");
+        setLineIdx(0);
+        setCharIdx(0);
+        setPhaseTransitioning(false);
+      }, 300);
     } else {
       openSignIn();
     }
@@ -119,10 +127,14 @@ export default function AwakeningOverlay() {
       // Transition to path-selection rather than finishing awakening —
       // gives the new player a chance to declare their identity before
       // they hit the dashboard.
-      setPhase("path");
-      setLineIdx(0);
-      setCharIdx(0);
-      setSubmitting(false);
+      setPhaseTransitioning(true);
+      setTimeout(() => {
+        setPhase("path");
+        setLineIdx(0);
+        setCharIdx(0);
+        setSubmitting(false);
+        setPhaseTransitioning(false);
+      }, 300);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("registrationFailed"));
       setSubmitting(false);
@@ -193,7 +205,11 @@ export default function AwakeningOverlay() {
         <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300" />
         <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300" />
 
-        <div className="relative bg-slate-950/80 p-10 sm:p-12">
+        <div
+          className={`relative bg-slate-950/80 p-10 sm:p-12 transition-opacity duration-300 ${
+            phaseTransitioning ? "opacity-0" : "opacity-100"
+          }`}
+        >
           {declined ? (
             <div className="min-h-[260px] flex flex-col items-center justify-center space-y-6 font-mono text-center">
               <p className="text-[10px] tracking-[0.5em] text-slate-500">{t("standbyHeader")}</p>
@@ -212,7 +228,7 @@ export default function AwakeningOverlay() {
             </div>
           ) : phase === "path" ? (
             <>
-              <div className="min-h-[180px] space-y-3 font-mono text-center">
+              <div className="min-h-[260px] space-y-3 font-mono text-center">
                 {PATH_LINES.slice(0, lineIdx).map((line, i) =>
                   renderLine(line, i)
                 )}
@@ -296,7 +312,7 @@ export default function AwakeningOverlay() {
             </>
           ) : (
             <>
-              <div className="min-h-[220px] space-y-3 font-mono text-center">
+              <div className="min-h-[260px] space-y-3 font-mono text-center">
                 {NAME_LINES.slice(0, lineIdx).map((line, i) => renderLine(line, i))}
                 {!complete &&
                   lineIdx < NAME_LINES.length &&

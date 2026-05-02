@@ -1,12 +1,14 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { DUNGEONS, dungeonDims, DIM_STYLE } from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
 import LandingShaderBg from "@/components/LandingShaderBg";
+import { setLocale } from "@/app/actions/locale";
+import { LOCALE_OPTIONS, type Locale } from "@/i18n/config";
 import {
   detectInstallState,
   subscribeInstallState,
@@ -51,6 +53,9 @@ export default function LandingPage() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-200">
+      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
+        <LandingLanguagePicker />
+      </div>
       <section className="relative overflow-hidden border-b border-cyan-500/20">
         <LandingShaderBg />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(34,211,238,0.12)_0%,transparent_60%)]" />
@@ -237,6 +242,35 @@ export default function LandingPage() {
         </div>
       </footer>
     </main>
+  );
+}
+
+function LandingLanguagePicker() {
+  const current = useLocale() as Locale;
+  const [pending, startTransition] = useTransition();
+
+  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const next = e.target.value;
+    if (next === current) return;
+    startTransition(async () => {
+      await setLocale(next);
+    });
+  }
+
+  return (
+    <select
+      value={current}
+      onChange={handleChange}
+      disabled={pending}
+      aria-label="Language"
+      className="bg-slate-900/80 backdrop-blur-sm border border-cyan-500/30 rounded text-cyan-200 text-[10px] uppercase tracking-wider px-2 py-1.5 hover:border-cyan-400/60 focus:border-cyan-400 focus:outline-none transition-colors disabled:opacity-50 cursor-pointer"
+    >
+      {LOCALE_OPTIONS.map((opt) => (
+        <option key={opt.value} value={opt.value} className="bg-slate-900">
+          {opt.native}
+        </option>
+      ))}
+    </select>
   );
 }
 
