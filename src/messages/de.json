@@ -422,6 +422,31 @@
     "notConfigured": "Checkout ist noch nicht konfiguriert.",
     "checkoutFailed": "Checkout konnte nicht geöffnet werden. Versuche es gleich noch einmal."
   },
+  "publicProfile": {
+    "title": "Jäger-Profil",
+    "recordLifetime": "Bilanz — Lebenszeit",
+    "activeDungeons": "Aktive Dungeons",
+    "dimensions": "Dimensionen",
+    "activityHeader": "Aktivität — Letzte 8 Wochen",
+    "reflections": "Reflexionen",
+    "trophies": "Trophäen",
+    "earned": "verdient",
+    "noTrophies": "Noch keine Trophäen — dieser Jäger fängt gerade erst an.",
+    "stats": {
+      "activeDungeons": "Aktive Dungeons",
+      "dungeonsCleared": "Bestandene Dungeons",
+      "workoutsLogged": "Geloggte Workouts",
+      "exposuresLogged": "Geloggte Expositionen",
+      "questsCompleted": "Abgeschlossene Quests",
+      "perfectDays": "Perfekte Tage"
+    },
+    "categories": {
+      "foundations": "Grundlagen",
+      "progression": "Jäger-Fortschritt",
+      "training": "Training",
+      "dungeonMastery": "Dungeon-Meisterschaft"
+    }
+  },
   "ranksPage": {
     "title": "Jäger-Pfad",
     "subtitle": "Sechs Ränge. Sechs Versionen deiner selbst. Jede verdient, nicht gekauft.",

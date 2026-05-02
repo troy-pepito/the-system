@@ -41,6 +41,10 @@ export default async function PublicHunterPage({ params }: Props) {
 
 async function PublicProfile({ data }: { data: PublicHunterData }) {
   const tDungeons = await getTranslations("dungeons");
+  const tHunterCard = await getTranslations("hunterCard");
+  const tHunterTypes = await getTranslations("hunterTypes");
+  const tProfile = await getTranslations("publicProfile");
+  const tEntryTypes = await getTranslations("entryTypes");
   const rankFrame = getRankStyle(data.rank);
   const trophyUnlocked = data.unlocked.filter(
     (u) => !isComboAchievementId(u.id)
@@ -73,7 +77,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
-            Hunter Profile
+            {tProfile("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
@@ -96,7 +100,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
             className={`relative bg-slate-950/80 border p-5 sm:p-6 ${rankFrame.cardBorder} ${rankFrame.cardGlow}`}
               >
             <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase mb-4">
-              Hunter ID
+              {tHunterCard("id")}
             </p>
             <div className="flex items-center gap-5">
               <div className="shrink-0 w-24 h-24 sm:w-28 sm:h-28 overflow-hidden border border-cyan-400/50 bg-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.25)]">
@@ -116,12 +120,12 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 flex-wrap mb-1.5">
                   <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
-                    Name
+                    {tHunterCard("name")}
                   </p>
                   {data.scattered && (
                     <span className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm">
                       <span aria-hidden>⚠</span>
-                      <span>Scattered</span>
+                      <span>{tHunterCard("scattered")}</span>
                     </span>
                   )}
                 </div>
@@ -132,13 +136,13 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                   <span
                     className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${HUNTER_TYPE_DEFS[data.hunterType].badgeStyle}`}
                   >
-                    {HUNTER_TYPE_DEFS[data.hunterType].label}
+                    {tHunterTypes(`${data.hunterType}.label`)}
                   </span>
                 )}
                 <div className="flex items-center gap-5 mt-5">
                   <div>
                     <p className="text-[9px] text-slate-500 tracking-widest uppercase">
-                      Rank
+                      {tHunterCard("rank")}
                     </p>
                     <p
                       className={`text-2xl font-bold leading-none mt-1 ${
@@ -153,7 +157,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                   <div className="h-10 w-px bg-slate-700" />
                   <div>
                     <p className="text-[9px] text-slate-500 tracking-widest uppercase">
-                      Level
+                      {tHunterCard("level")}
                     </p>
                     <p className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)] leading-none mt-1">
                       {data.level}
@@ -162,7 +166,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                   <div className="h-10 w-px bg-slate-700" />
                   <div>
                     <p className="text-[9px] text-slate-500 tracking-widest uppercase">
-                      XP
+                      {tHunterCard("xp")}
                     </p>
                     <p className="text-2xl font-bold text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] leading-none mt-1 tabular-nums">
                       {data.totalXp}
@@ -180,22 +184,22 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-            Record — Lifetime
+            {tProfile("recordLifetime")}
           </p>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <StatLine
-              label="Active Dungeons"
+              label={tProfile("stats.activeDungeons")}
               value={data.activeRuns.length}
             />
             <StatLine
-              label="Dungeons Cleared"
+              label={tProfile("stats.dungeonsCleared")}
               value={data.completedRunCount}
             />
-            <StatLine label="Workouts Logged" value={data.workoutTotal} />
-            <StatLine label="Exposures Logged" value={data.exposureTotal} />
-            <StatLine label="Quests Completed" value={data.questTotal} />
+            <StatLine label={tProfile("stats.workoutsLogged")} value={data.workoutTotal} />
+            <StatLine label={tProfile("stats.exposuresLogged")} value={data.exposureTotal} />
+            <StatLine label={tProfile("stats.questsCompleted")} value={data.questTotal} />
             <StatLine
-              label="Perfect Days"
+              label={tProfile("stats.perfectDays")}
               value={data.perfectQuestDays}
             />
           </div>
@@ -204,7 +208,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
         {data.activeRuns.length > 0 && (
           <Card className="p-6">
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-              Active Dungeons
+              {tProfile("activeDungeons")}
             </p>
             <ul className="space-y-2">
               {data.activeRuns.map((run) => {
@@ -232,14 +236,14 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-            Dimensions
+            {tProfile("dimensions")}
           </p>
           <StatRadar values={data.dimensions} />
         </Card>
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-            Activity — Last 8 Weeks
+            {tProfile("activityHeader")}
           </p>
           <Heatmap activity={data.heatmap} />
         </Card>
@@ -247,7 +251,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
         {data.publicJournal.length > 0 && (
           <Card className="p-6">
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-              Reflections
+              {tProfile("reflections")}
             </p>
             <ul className="space-y-4">
               {data.publicJournal.map((e) => {
@@ -269,7 +273,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                       <span
                         className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${publicEntryTone(e.type)}`}
                       >
-                        {publicEntryLabel(e.type)}
+                        {publicEntryLabel(e.type, tEntryTypes)}
                       </span>
                     </div>
                     <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
@@ -285,43 +289,40 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-5">
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
-              Trophies
+              {tProfile("trophies")}
             </p>
             <p className="text-xs text-slate-400">
               <span className="text-amber-300 font-bold">
                 {unlockedCount}
               </span>
-              <span className="text-slate-500 ml-1">earned</span>
+              <span className="text-slate-500 ml-1">{tProfile("earned")}</span>
             </p>
           </div>
 
           {unlockedCount === 0 && (
             <p className="text-xs text-slate-500 leading-relaxed">
-              No trophies yet — this hunter is just starting out.
+              {tProfile("noTrophies")}
             </p>
           )}
 
           <TrophyList
-            label="Foundations"
+            label={tProfile("categories.foundations")}
             defs={foundations}
-            unlockedMap={unlockedMap}
           />
           <TrophyList
-            label="Hunter Progression"
+            label={tProfile("categories.progression")}
             defs={progression}
-            unlockedMap={unlockedMap}
           />
           <TrophyList
-            label="Training"
+            label={tProfile("categories.training")}
             defs={training}
-            unlockedMap={unlockedMap}
           />
           {byDungeon.size > 0 && (
             <div className="mt-8">
               <div className="flex items-center gap-4 mb-5">
                 <div className="flex-1 h-px bg-gradient-to-r from-transparent to-cyan-500/40" />
                 <p className="font-display text-[10px] tracking-[0.4em] uppercase text-cyan-300/80 shrink-0">
-                  Dungeon Mastery
+                  {tProfile("categories.dungeonMastery")}
                 </p>
                 <div className="flex-1 h-px bg-gradient-to-l from-transparent to-cyan-500/40" />
               </div>
@@ -332,9 +333,8 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                   return (
                     <TrophyList
                       key={d.id}
-                      label={d.name}
+                      label={tDungeons(`${dungeonKey(d.id)}.name`)}
                       defs={defs}
-                      unlockedMap={unlockedMap}
                       nested
                     />
                   );
@@ -348,10 +348,13 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
   );
 }
 
-function publicEntryLabel(type: string): string {
-  if (type === "relapse") return "Relapse";
-  if (type === "completed") return "Completed";
-  if (type === "journal") return "Journal";
+function publicEntryLabel(
+  type: string,
+  t: (key: string) => string
+): string {
+  if (type === "relapse" || type === "completed" || type === "journal") {
+    return t(type);
+  }
   return type.replace(/-/g, " ");
 }
 
@@ -382,7 +385,6 @@ async function TrophyList({
 }: {
   label: string;
   defs: AchievementDef[];
-  unlockedMap: Map<string, unknown>;
   nested?: boolean;
 }) {
   if (defs.length === 0) return null;

@@ -422,6 +422,31 @@
     "notConfigured": "Checkout ainda não está configurado.",
     "checkoutFailed": "Não foi possível abrir o checkout. Tente novamente em um momento."
   },
+  "publicProfile": {
+    "title": "Perfil do Caçador",
+    "recordLifetime": "Registro — Tempo total",
+    "activeDungeons": "Masmorras ativas",
+    "dimensions": "Dimensões",
+    "activityHeader": "Atividade — Últimas 8 semanas",
+    "reflections": "Reflexões",
+    "trophies": "Troféus",
+    "earned": "conquistados",
+    "noTrophies": "Ainda sem troféus — este caçador está apenas começando.",
+    "stats": {
+      "activeDungeons": "Masmorras ativas",
+      "dungeonsCleared": "Masmorras concluídas",
+      "workoutsLogged": "Treinos registrados",
+      "exposuresLogged": "Exposições registradas",
+      "questsCompleted": "Quests concluídas",
+      "perfectDays": "Dias perfeitos"
+    },
+    "categories": {
+      "foundations": "Fundamentos",
+      "progression": "Progressão do caçador",
+      "training": "Treinamento",
+      "dungeonMastery": "Maestria de masmorras"
+    }
+  },
   "ranksPage": {
     "title": "Caminho do Caçador",
     "subtitle": "Seis ranks. Seis versões de você mesmo. Cada uma conquistada, não comprada.",

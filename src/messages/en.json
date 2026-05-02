@@ -224,6 +224,31 @@
     "notConfigured": "Checkout is not configured yet.",
     "checkoutFailed": "Could not open checkout. Try again in a moment."
   },
+  "publicProfile": {
+    "title": "Hunter Profile",
+    "recordLifetime": "Record — Lifetime",
+    "activeDungeons": "Active Dungeons",
+    "dimensions": "Dimensions",
+    "activityHeader": "Activity — Last 8 Weeks",
+    "reflections": "Reflections",
+    "trophies": "Trophies",
+    "earned": "earned",
+    "noTrophies": "No trophies yet — this hunter is just starting out.",
+    "stats": {
+      "activeDungeons": "Active Dungeons",
+      "dungeonsCleared": "Dungeons Cleared",
+      "workoutsLogged": "Workouts Logged",
+      "exposuresLogged": "Exposures Logged",
+      "questsCompleted": "Quests Completed",
+      "perfectDays": "Perfect Days"
+    },
+    "categories": {
+      "foundations": "Foundations",
+      "progression": "Hunter Progression",
+      "training": "Training",
+      "dungeonMastery": "Dungeon Mastery"
+    }
+  },
   "ranksPage": {
     "title": "Hunter Path",
     "subtitle": "Six ranks. Six versions of yourself. Each one earned, not bought.",

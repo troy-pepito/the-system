@@ -223,7 +223,7 @@
     "title": "日誌",
     "backToProfile": "← プロフィールに戻る",
     "empty": "まだ記入はありません。再発、コーヒー記録、曝露の記録の際に、ノートを書くか聞かれます — スキップでも保存でもあなた次第。",
-    "summary": "{entries, plural, one {# 件} other {# 件}} · {days, plural, one {# 日} other {# 日}}",
+    "summary": "{entries, plural, other {# 件}} · {days, plural, other {# 日}}",
     "today": "今日",
     "yesterday": "昨日",
     "daysAgo": "{count} 日前",
@@ -421,6 +421,31 @@
     "closeLabel": "閉じる",
     "notConfigured": "チェックアウトはまだ設定されていません。",
     "checkoutFailed": "チェックアウトを開けませんでした。少ししてからもう一度試してください。"
+  },
+  "publicProfile": {
+    "title": "ハンター・プロフィール",
+    "recordLifetime": "記録 — 通算",
+    "activeDungeons": "アクティブなダンジョン",
+    "dimensions": "ディメンション",
+    "activityHeader": "アクティビティ — 直近8週間",
+    "reflections": "省察",
+    "trophies": "トロフィー",
+    "earned": "獲得",
+    "noTrophies": "まだトロフィーはありません — このハンターは始まったばかりだ。",
+    "stats": {
+      "activeDungeons": "アクティブなダンジョン",
+      "dungeonsCleared": "達成したダンジョン",
+      "workoutsLogged": "記録したワークアウト",
+      "exposuresLogged": "記録した曝露",
+      "questsCompleted": "完了したクエスト",
+      "perfectDays": "完璧な日"
+    },
+    "categories": {
+      "foundations": "基礎",
+      "progression": "ハンターの進歩",
+      "training": "鍛錬",
+      "dungeonMastery": "ダンジョン制覇"
+    }
   },
   "ranksPage": {
     "title": "ハンターの道",

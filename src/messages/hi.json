@@ -422,6 +422,31 @@
     "notConfigured": "चेकआउट अभी कॉन्फ़िगर नहीं है।",
     "checkoutFailed": "चेकआउट नहीं खुल सका। एक क्षण में पुनः प्रयास करें।"
   },
+  "publicProfile": {
+    "title": "हंटर प्रोफ़ाइल",
+    "recordLifetime": "रिकॉर्ड — आजीवन",
+    "activeDungeons": "सक्रिय डंजन",
+    "dimensions": "आयाम",
+    "activityHeader": "गतिविधि — पिछले 8 सप्ताह",
+    "reflections": "प्रतिबिंब",
+    "trophies": "ट्रॉफियाँ",
+    "earned": "अर्जित",
+    "noTrophies": "अभी तक कोई ट्रॉफी नहीं — यह हंटर अभी शुरुआत में है।",
+    "stats": {
+      "activeDungeons": "सक्रिय डंजन",
+      "dungeonsCleared": "पूर्ण डंजन",
+      "workoutsLogged": "लॉग किए गए वर्कआउट",
+      "exposuresLogged": "लॉग किए गए एक्सपोज़र",
+      "questsCompleted": "पूर्ण क्वेस्ट",
+      "perfectDays": "एकदम सही दिन"
+    },
+    "categories": {
+      "foundations": "आधार",
+      "progression": "हंटर प्रगति",
+      "training": "प्रशिक्षण",
+      "dungeonMastery": "डंजन में महारत"
+    }
+  },
   "ranksPage": {
     "title": "हंटर पथ",
     "subtitle": "छह रैंक। अपने आप के छह संस्करण। हर एक कमाया गया है, खरीदा नहीं।",

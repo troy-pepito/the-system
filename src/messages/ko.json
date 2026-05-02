@@ -223,7 +223,7 @@
     "title": "일지",
     "backToProfile": "← 프로필로 돌아가기",
     "empty": "아직 항목이 없습니다. 리랩스하거나 커피를 기록하거나 노출을 표시할 때 노트를 작성할지 묻게 됩니다 — 건너뛰거나 저장하거나, 당신의 선택입니다.",
-    "summary": "{entries, plural, one {# 항목} other {# 항목}} · {days, plural, one {# 일} other {# 일}}",
+    "summary": "{entries, plural, other {# 항목}} · {days, plural, other {# 일}}",
     "today": "오늘",
     "yesterday": "어제",
     "daysAgo": "{count}일 전",
@@ -421,6 +421,31 @@
     "closeLabel": "닫기",
     "notConfigured": "결제가 아직 설정되지 않았습니다.",
     "checkoutFailed": "결제를 열 수 없습니다. 잠시 후 다시 시도하세요."
+  },
+  "publicProfile": {
+    "title": "헌터 프로필",
+    "recordLifetime": "기록 — 전체",
+    "activeDungeons": "활성 던전",
+    "dimensions": "차원",
+    "activityHeader": "활동 — 지난 8주",
+    "reflections": "성찰",
+    "trophies": "트로피",
+    "earned": "획득",
+    "noTrophies": "아직 트로피가 없습니다 — 이 헌터는 막 시작했다.",
+    "stats": {
+      "activeDungeons": "활성 던전",
+      "dungeonsCleared": "클리어한 던전",
+      "workoutsLogged": "기록된 운동",
+      "exposuresLogged": "기록된 노출",
+      "questsCompleted": "완료한 퀘스트",
+      "perfectDays": "완벽한 하루"
+    },
+    "categories": {
+      "foundations": "기반",
+      "progression": "헌터 진행",
+      "training": "훈련",
+      "dungeonMastery": "던전 정복"
+    }
   },
   "ranksPage": {
     "title": "헌터의 길",

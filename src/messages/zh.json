@@ -223,7 +223,7 @@
     "title": "日志",
     "backToProfile": "← 返回个人主页",
     "empty": "暂无条目。当你破戒、记录咖啡或标记暴露时,系统会询问你是否要写一条笔记 — 跳过或保存,由你决定。",
-    "summary": "{entries, plural, one {# 条} other {# 条}} · {days, plural, one {# 天} other {# 天}}",
+    "summary": "{entries, plural, other {# 条}} · {days, plural, other {# 天}}",
     "today": "今天",
     "yesterday": "昨天",
     "daysAgo": "{count} 天前",
@@ -421,6 +421,31 @@
     "closeLabel": "关闭",
     "notConfigured": "结账尚未配置。",
     "checkoutFailed": "无法打开结账。请稍后重试。"
+  },
+  "publicProfile": {
+    "title": "猎人主页",
+    "recordLifetime": "记录 — 终身",
+    "activeDungeons": "活跃副本",
+    "dimensions": "维度",
+    "activityHeader": "活动 — 最近 8 周",
+    "reflections": "反思",
+    "trophies": "奖杯",
+    "earned": "已获得",
+    "noTrophies": "暂无奖杯 — 这位猎人才刚刚开始。",
+    "stats": {
+      "activeDungeons": "活跃副本",
+      "dungeonsCleared": "通关副本",
+      "workoutsLogged": "记录的训练",
+      "exposuresLogged": "记录的暴露",
+      "questsCompleted": "完成的任务",
+      "perfectDays": "完美一日"
+    },
+    "categories": {
+      "foundations": "根基",
+      "progression": "猎人进阶",
+      "training": "训练",
+      "dungeonMastery": "副本精通"
+    }
   },
   "ranksPage": {
     "title": "猎人之路",

@@ -160,18 +160,3 @@ export function resolveRankLabels(
   }
 }
 
-/**
- * Convenience: combined "badge"-shaped class string for a small chip
- * containing a rank letter. Compose with surrounding layout classes.
- */
-export function rankBadgeClass(rank: string): string {
-  const s = getRankStyle(rank);
-  return [
-    s.bg,
-    s.border,
-    s.text,
-    s.glow,
-    s.textClass,
-    "border rounded font-bold",
-  ].join(" ");
-}

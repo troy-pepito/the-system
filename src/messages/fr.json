@@ -422,6 +422,31 @@
     "notConfigured": "Le checkout n'est pas encore configuré.",
     "checkoutFailed": "Impossible d'ouvrir le checkout. Réessaie dans un instant."
   },
+  "publicProfile": {
+    "title": "Profil du Chasseur",
+    "recordLifetime": "Bilan — À vie",
+    "activeDungeons": "Donjons actifs",
+    "dimensions": "Dimensions",
+    "activityHeader": "Activité — 8 dernières semaines",
+    "reflections": "Réflexions",
+    "trophies": "Trophées",
+    "earned": "gagnés",
+    "noTrophies": "Pas encore de trophées — ce chasseur ne fait que commencer.",
+    "stats": {
+      "activeDungeons": "Donjons actifs",
+      "dungeonsCleared": "Donjons terminés",
+      "workoutsLogged": "Séances loggées",
+      "exposuresLogged": "Expositions loggées",
+      "questsCompleted": "Quêtes terminées",
+      "perfectDays": "Jours parfaits"
+    },
+    "categories": {
+      "foundations": "Fondations",
+      "progression": "Progression du chasseur",
+      "training": "Entraînement",
+      "dungeonMastery": "Maîtrise des donjons"
+    }
+  },
   "ranksPage": {
     "title": "Voie du Chasseur",
     "subtitle": "Six rangs. Six versions de toi-même. Chacun gagné, pas acheté.",
