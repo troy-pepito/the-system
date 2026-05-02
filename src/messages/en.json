@@ -587,11 +587,19 @@
     "rangeWeek": "Past 7 Days",
     "rangeMonth": "Past 30 Days",
     "rangeAll": "Lifetime",
+    "range7d": "7D",
+    "range30d": "30D",
+    "rangeAllShort": "ALL",
     "earnedFromQuests": "Earned from daily quests and dungeon ranks cleared."
   },
   "heatmap": {
     "less": "less",
     "more": "more"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · Task Cleared",
+    "dayCleared": "{dungeon} · Day Cleared",
+    "victory": "{dungeon} · Victory"
   },
   "dungeons": {
     "caffeine": {

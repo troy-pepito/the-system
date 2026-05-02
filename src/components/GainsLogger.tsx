@@ -18,7 +18,9 @@ export default function GainsLogger() {
       if (!hasAnything) return;
       appendGain({
         ts: Date.now(),
-        source: detail.source ?? "Gain",
+        sourceKey: detail.sourceKey,
+        sourceValues: detail.sourceValues,
+        source: detail.sourceKey ? undefined : (detail.source ?? "Gain"),
         xp: detail.xp,
         body: detail.body,
         mind: detail.mind,

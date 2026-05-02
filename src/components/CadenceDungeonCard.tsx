@@ -69,7 +69,6 @@ export default function CadenceDungeonCard({
     tierIdxForHook >= 0 ? TIERS[tierIdxForHook].rank : null;
   useTierCrossingCelebration({
     dungeonId,
-    dungeonName,
     startDate,
     tierIdx: tierIdxForHook,
     tierRank: tierRankForHook,
@@ -119,7 +118,8 @@ export default function CadenceDungeonCard({
         emotion: dims.emotion,
         energy: dims.energy,
         spirit: dims.spirit,
-        source: `${dungeonName} · ${tRun("taskCleared")}`,
+        sourceKey: "gainSources.taskCleared",
+        sourceValues: { dungeonId },
       });
     }
 

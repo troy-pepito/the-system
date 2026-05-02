@@ -88,11 +88,19 @@
     "rangeWeek": "पिछले 7 दिन",
     "rangeMonth": "पिछले 30 दिन",
     "rangeAll": "आजीवन",
+    "range7d": "7दि",
+    "range30d": "30दि",
+    "rangeAllShort": "सभी",
     "earnedFromQuests": "दैनिक क्वेस्ट और पूर्ण किए गए डंजन रैंकों से अर्जित।"
   },
   "heatmap": {
     "less": "कम",
     "more": "अधिक"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · कार्य पूर्ण",
+    "dayCleared": "{dungeon} · दिन पूर्ण",
+    "victory": "{dungeon} · विजय"
   },
   "dungeons": {
     "caffeine": {

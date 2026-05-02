@@ -88,11 +88,19 @@
     "rangeWeek": "最近 7 天",
     "rangeMonth": "最近 30 天",
     "rangeAll": "终身",
+    "range7d": "7天",
+    "range30d": "30天",
+    "rangeAllShort": "全部",
     "earnedFromQuests": "通过每日任务和已通过的副本等级获得。"
   },
   "heatmap": {
     "less": "少",
     "more": "多"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · 任务完成",
+    "dayCleared": "{dungeon} · 当日通过",
+    "victory": "{dungeon} · 胜利"
   },
   "dungeons": {
     "caffeine": {

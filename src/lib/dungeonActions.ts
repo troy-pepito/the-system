@@ -158,7 +158,8 @@ export function useEndRunAction(opts: EndRunActionOptions): {
     if (isVictory) {
       notifyReward({
         xp: XP_PER_COMPLETION,
-        source: `${opts.dungeonName} · Victory`,
+        sourceKey: "gainSources.victory",
+        sourceValues: { dungeonId: opts.dungeonId },
       });
     }
     opts.onLocalReset();

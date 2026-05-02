@@ -88,11 +88,19 @@
     "rangeWeek": "7 derniers jours",
     "rangeMonth": "30 derniers jours",
     "rangeAll": "À vie",
+    "range7d": "7J",
+    "range30d": "30J",
+    "rangeAllShort": "TOUT",
     "earnedFromQuests": "Gagné via les quêtes quotidiennes et les rangs de donjon validés."
   },
   "heatmap": {
     "less": "moins",
     "more": "plus"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · Tâche Validée",
+    "dayCleared": "{dungeon} · Jour Validé",
+    "victory": "{dungeon} · Victoire"
   },
   "dungeons": {
     "caffeine": {

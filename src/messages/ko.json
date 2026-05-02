@@ -88,11 +88,19 @@
     "rangeWeek": "최근 7일",
     "rangeMonth": "최근 30일",
     "rangeAll": "전체",
+    "range7d": "7일",
+    "range30d": "30일",
+    "rangeAllShort": "전체",
     "earnedFromQuests": "일일 퀘스트와 클리어한 던전 등급에서 획득."
   },
   "heatmap": {
     "less": "적음",
     "more": "많음"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · 과제 완료",
+    "dayCleared": "{dungeon} · 하루 달성",
+    "victory": "{dungeon} · 승리"
   },
   "dungeons": {
     "caffeine": {

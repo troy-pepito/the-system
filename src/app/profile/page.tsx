@@ -369,10 +369,11 @@ function RangeToggle({
   value: Range;
   onChange: (r: Range) => void;
 }) {
+  const t = useTranslations("profile");
   const options: { id: Range; label: string }[] = [
-    { id: "week", label: "7D" },
-    { id: "month", label: "30D" },
-    { id: "all", label: "ALL" },
+    { id: "week", label: t("range7d") },
+    { id: "month", label: t("range30d") },
+    { id: "all", label: t("rangeAllShort") },
   ];
   return (
     <div className="inline-flex items-center gap-1 p-1 bg-slate-900/60 border border-slate-800 rounded-md">

@@ -2,8 +2,13 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Card from "@/components/Card";
-import { useGains, type GainEntry } from "@/lib/gainsLog";
+import {
+  resolveGainSource,
+  useGains,
+  type GainEntry,
+} from "@/lib/gainsLog";
 import { DIM_STYLE } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 
 const DIM_KEYS: Array<keyof GainEntry & ("body" | "mind" | "emotion" | "energy" | "spirit")> = [
   "body",
@@ -28,9 +33,19 @@ function relativeTime(ts: number, t: RelativeT): string {
 
 export default function RecentGains() {
   const t = useTranslations("recentGains");
+  const tRoot = useTranslations();
+  const tDungeons = useTranslations("dungeons");
   const tDimensions = useTranslations("guide.dimensions");
   const gains = useGains();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  const dungeonNameLookup = (id: string): string => {
+    try {
+      return tDungeons(`${dungeonKey(id)}.name`);
+    } catch {
+      return id;
+    }
+  };
 
   if (gains.length === 0) {
     return (
@@ -81,7 +96,7 @@ export default function RecentGains() {
                       isOpen ? "whitespace-normal break-words" : "truncate"
                     }`}
                   >
-                    {g.source}
+                    {resolveGainSource(g, tRoot, dungeonNameLookup)}
                   </p>
                   <p className="text-[9px] text-slate-600 tracking-widest uppercase mt-0.5">
                     {relativeTime(g.ts, t)}

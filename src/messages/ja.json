@@ -88,11 +88,19 @@
     "rangeWeek": "直近7日間",
     "rangeMonth": "直近30日間",
     "rangeAll": "通算",
+    "range7d": "7日",
+    "range30d": "30日",
+    "rangeAllShort": "全期間",
     "earnedFromQuests": "デイリークエストとダンジョン・ランクの達成で獲得。"
   },
   "heatmap": {
     "less": "少",
     "more": "多"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · タスク達成",
+    "dayCleared": "{dungeon} · 1日達成",
+    "victory": "{dungeon} · 勝利"
   },
   "dungeons": {
     "caffeine": {

@@ -46,7 +46,6 @@ export default function DungeonCheckInPanel({
   onClearedCountChange,
 }: DungeonCheckInPanelProps) {
   const t = useTranslations("checkIn");
-  const tRun = useTranslations("dungeonRun");
   // Initialize empty on both server and client so SSR HTML matches
   // first-client render. Cache hydration runs in the useEffect below
   // before the server fetch settles.
@@ -128,7 +127,8 @@ export default function DungeonCheckInPanel({
       emotion: dims.emotion,
       energy: dims.energy,
       spirit: dims.spirit,
-      source: `${dungeonName} · ${tRun("dayClearedSource")}`,
+      sourceKey: "gainSources.dayCleared",
+      sourceValues: { dungeonId },
     });
     notifyStatsUpdated({ xpDelta: XP_PER_STREAK_DAY });
     track("day_confirmed_cleared", { dungeon_id: dungeonId, date });
@@ -164,10 +164,8 @@ export default function DungeonCheckInPanel({
             setTimeout(() => {
               notifyReward({
                 xp: bonus,
-                source: tRun("tierBonusSource", {
-                  rank: tier.rank,
-                  dungeon: dungeonName,
-                }),
+                sourceKey: "dungeonRun.tierBonusSource",
+                sourceValues: { rank: tier.rank, dungeonId },
               });
               notifyStatsUpdated({ xpDelta: bonus });
             }, 1100);

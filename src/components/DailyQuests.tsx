@@ -109,7 +109,7 @@ export default function DailyQuests({
         emotion: quest.emotion,
         energy: quest.energy,
         spirit: quest.spirit,
-        source: t(questKey(quest.id)),
+        sourceKey: `dailyQuests.${questKey(quest.id)}`,
       });
 
       // Combo-milestone celebration: when this completion is the one
@@ -135,7 +135,8 @@ export default function DailyQuests({
             setTimeout(() => {
               notifyReward({
                 xp: milestone.xp,
-                source: t("comboSource", { days: milestone.days }),
+                sourceKey: "dailyQuests.comboSource",
+                sourceValues: { days: milestone.days },
               });
               notifyStatsUpdated({ xpDelta: milestone.xp });
             }, 900);

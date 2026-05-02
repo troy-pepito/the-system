@@ -88,11 +88,19 @@
     "rangeWeek": "Últimos 7 dias",
     "rangeMonth": "Últimos 30 dias",
     "rangeAll": "Tempo total",
+    "range7d": "7D",
+    "range30d": "30D",
+    "rangeAllShort": "TUDO",
     "earnedFromQuests": "Conquistado em quests diárias e ranks de masmorra concluídos."
   },
   "heatmap": {
     "less": "menos",
     "more": "mais"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · Tarefa Cumprida",
+    "dayCleared": "{dungeon} · Dia Cumprido",
+    "victory": "{dungeon} · Vitória"
   },
   "dungeons": {
     "caffeine": {

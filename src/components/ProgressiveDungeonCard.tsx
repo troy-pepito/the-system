@@ -135,10 +135,8 @@ export default function ProgressiveDungeonCard({
       setTimeout(() => {
         notifyReward({
           xp: bonus,
-          source: tRun("tierBonusSource", {
-            rank: currentRung.rank,
-            dungeon: dungeonName,
-          }),
+          sourceKey: "dungeonRun.tierBonusSource",
+          sourceValues: { rank: currentRung.rank, dungeonId },
         });
         notifyStatsUpdated({ xpDelta: bonus });
       }, 1100);

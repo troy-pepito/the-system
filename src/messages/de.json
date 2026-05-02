@@ -88,11 +88,19 @@
     "rangeWeek": "Letzte 7 Tage",
     "rangeMonth": "Letzte 30 Tage",
     "rangeAll": "Lebenszeit",
+    "range7d": "7T",
+    "range30d": "30T",
+    "rangeAllShort": "ALLE",
     "earnedFromQuests": "Verdient durch Daily Quests und bestandene Dungeon-Ränge."
   },
   "heatmap": {
     "less": "weniger",
     "more": "mehr"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · Aufgabe Erledigt",
+    "dayCleared": "{dungeon} · Tag Bestanden",
+    "victory": "{dungeon} · Sieg"
   },
   "dungeons": {
     "caffeine": {

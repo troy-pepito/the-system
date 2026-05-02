@@ -19,13 +19,11 @@ import { TIER_BONUS_XP } from "@/lib/dungeons";
  */
 export function useTierCrossingCelebration({
   dungeonId,
-  dungeonName,
   startDate,
   tierIdx,
   tierRank,
 }: {
   dungeonId: string;
-  dungeonName: string;
   startDate: string | null;
   tierIdx: number;
   tierRank: string | null;
@@ -62,10 +60,11 @@ export function useTierCrossingCelebration({
     const timer = setTimeout(() => {
       notifyReward({
         xp: bonus,
-        source: `🏆 Rank ${tierRank} · ${dungeonName}`,
+        sourceKey: "dungeonRun.tierBonusSource",
+        sourceValues: { rank: tierRank, dungeonId },
       });
       notifyStatsUpdated({ xpDelta: bonus });
     }, 1100);
     return () => clearTimeout(timer);
-  }, [dungeonId, dungeonName, startDate, tierIdx, tierRank]);
+  }, [dungeonId, startDate, tierIdx, tierRank]);
 }

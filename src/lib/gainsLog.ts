@@ -3,13 +3,55 @@ import { useSyncExternalStore } from "react";
 
 export interface GainEntry {
   ts: number;
-  source: string;
+  /**
+   * Translation key path for the source label, e.g.
+   * "dailyQuests.quest_cold_shower" or "gainSources.taskCleared".
+   * Resolved at render time so the label follows the active locale
+   * even when it changes after the gain was written.
+   */
+  sourceKey?: string;
+  /**
+   * Placeholder values for `sourceKey`. A `dungeonId` value is special:
+   * it gets resolved to the dungeon's translated name at render and
+   * exposed as `dungeon` to the template.
+   */
+  sourceValues?: Record<string, string | number>;
+  /**
+   * Legacy: pre-i18n entries store the resolved English string here.
+   * New writes should set `sourceKey` instead.
+   */
+  source?: string;
   xp?: number;
   body?: number;
   mind?: number;
   emotion?: number;
   energy?: number;
   spirit?: number;
+}
+
+/**
+ * Resolve the source label for a gain entry. Falls back to the legacy
+ * `source` field for entries written before the i18n refactor.
+ */
+export function resolveGainSource(
+  entry: GainEntry,
+  translate: (key: string, values?: Record<string, string | number>) => string,
+  resolveDungeonName: (dungeonId: string) => string
+): string {
+  if (entry.sourceKey) {
+    const values: Record<string, string | number> = {
+      ...(entry.sourceValues ?? {}),
+    };
+    if (typeof values.dungeonId === "string") {
+      values.dungeon = resolveDungeonName(values.dungeonId);
+    }
+    try {
+      return translate(entry.sourceKey, values);
+    } catch {
+      return entry.source ?? "";
+    }
+  }
+  return entry.source ?? "";
 }
 
 const KEY = "system:gains-log";

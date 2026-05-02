@@ -70,7 +70,17 @@ export interface RewardDelta {
   emotion?: number;
   energy?: number;
   spirit?: number;
-  /** Optional human-readable source label, e.g. "Cold Shower" or "NoFap · Day Cleared". */
+  /**
+   * Translation key for the source label, resolved at render time so
+   * it follows the active locale. Prefer this over `source`.
+   */
+  sourceKey?: string;
+  /** Placeholder values for `sourceKey`. */
+  sourceValues?: Record<string, string | number>;
+  /**
+   * Legacy: pre-resolved source string. Only used when no `sourceKey`
+   * was provided (dev-test panels, transient flavor strings).
+   */
   source?: string;
 }
 

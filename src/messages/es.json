@@ -88,11 +88,19 @@
     "rangeWeek": "Últimos 7 días",
     "rangeMonth": "Últimos 30 días",
     "rangeAll": "Vida entera",
+    "range7d": "7D",
+    "range30d": "30D",
+    "rangeAllShort": "TOTAL",
     "earnedFromQuests": "Ganado de misiones diarias y rangos de mazmorra superados."
   },
   "heatmap": {
     "less": "menos",
     "more": "más"
+  },
+  "gainSources": {
+    "taskCleared": "{dungeon} · Tarea Cumplida",
+    "dayCleared": "{dungeon} · Día Cumplido",
+    "victory": "{dungeon} · Victoria"
   },
   "dungeons": {
     "caffeine": {
