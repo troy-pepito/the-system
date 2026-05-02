@@ -104,6 +104,16 @@
     "perfectDay": "🌟 Dia Perfeito",
     "fullClear": "✦ {dungeon} · Limpeza Total"
   },
+  "celebration": {
+    "perfectDayTitle": "PERFECT DAY",
+    "perfectDaySubtitle": "Every quest cleared",
+    "fullClearTitle": "FULL CLEAR",
+    "fullClearSubtitle": "{dungeon}",
+    "tierCrossingTitle": "RANK {rank}",
+    "tierCrossingSubtitle": "{dungeon} · Tier Cleared",
+    "comboTitle": "{days}-DAY COMBO",
+    "comboSubtitle": "Combo milestone reached"
+  },
   "dungeons": {
     "caffeine": {
       "name": "Reset da Cafeína",

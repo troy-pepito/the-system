@@ -78,6 +78,25 @@ body {
   100% { opacity: 0; transform: translateY(-28px); }
 }
 
+/* Big-moment celebration banner. Overshoots on entry, settles, holds,
+   then drifts up + fades. Total run: 2600ms. */
+@keyframes celebration-pop {
+  0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+  12% { opacity: 1; transform: scale(1.18) translateY(0); }
+  22% { transform: scale(0.96); }
+  32% { transform: scale(1); }
+  82% { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(1.05) translateY(-30px); }
+}
+
+/* Soft halo that pulses behind the celebration card. */
+@keyframes celebration-halo {
+  0% { opacity: 0; transform: scale(0.6); }
+  20% { opacity: 1; transform: scale(1.4); }
+  60% { opacity: 0.6; transform: scale(1.6); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
 @keyframes vignette-breathe {
   0%, 100% { opacity: 0.55; }
   50% { opacity: 0.8; }
@@ -125,6 +144,14 @@ body {
 
 @utility animate-gain-pop {
   animation: gain-pop 1.8s ease-out both;
+}
+
+@utility animate-celebration-pop {
+  animation: celebration-pop 2.6s ease-out both;
+}
+
+@utility animate-celebration-halo {
+  animation: celebration-halo 2.6s ease-out both;
 }
 
 @utility animate-vignette-breathe {

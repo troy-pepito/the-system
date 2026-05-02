@@ -139,13 +139,18 @@ export default function PortalsPage() {
               )}
             </div>
             <h2
-              className={`font-display text-xl font-bold uppercase tracking-wider ${
+              className={`font-display text-xl font-bold uppercase tracking-wider flex items-center gap-2 ${
                 locked
                   ? "text-slate-400"
                   : "text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"
               }`}
             >
-              {tDungeons(`${dungeonKey(d.id)}.name`)}
+              {d.icon && (
+                <span aria-hidden className="text-lg leading-none">
+                  {d.icon}
+                </span>
+              )}
+              <span>{tDungeons(`${dungeonKey(d.id)}.name`)}</span>
             </h2>
           </div>
           {isActive && (

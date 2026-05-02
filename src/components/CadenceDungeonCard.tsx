@@ -1,7 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { CADENCE_FULL_CLEAR_BONUS_XP, getDungeon } from "@/lib/dungeons";
+import {
+  CADENCE_FULL_CLEAR_BONUS_XP,
+  getDungeon,
+  getDungeonAccent,
+} from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
 import { todayLocalISO } from "@/lib/quests";
 import { track } from "@/lib/analytics";
@@ -9,6 +13,7 @@ import {
   computeStreakDays,
   notifyStatsUpdated,
   notifyReward,
+  notifyCelebration,
   beginMutation,
   endMutation,
   XP_PER_WORKOUT,
@@ -68,6 +73,7 @@ export default function CadenceDungeonCard({
     ? tDungeons(`${dungeonKey(dungeonId)}.name`)
     : dungeonId;
   const TIERS = dungeon?.tiers ?? [];
+  const accent = getDungeonAccent(dungeonId);
   const cadence = dungeon?.cadence;
   const WORKOUTS = cadence?.workouts ?? [];
   const TARGET = cadence?.target ?? WORKOUTS.length;
@@ -83,6 +89,7 @@ export default function CadenceDungeonCard({
     tierIdxForHook >= 0 ? TIERS[tierIdxForHook].rank : null;
   useTierCrossingCelebration({
     dungeonId,
+    dungeonName,
     startDate,
     tierIdx: tierIdxForHook,
     tierRank: tierRankForHook,
@@ -136,18 +143,21 @@ export default function CadenceDungeonCard({
         sourceKey: "gainSources.taskCleared",
         sourceValues: { dungeonId },
       });
+    }
 
-      // Full-clear bonus: every workout in the window's list ticked.
-      // For Training Regimen this is 5/5; for the daily-window starters
-      // (target=1, 3 tasks each) it rewards the rare day all three get
-      // done. Once per (dungeonId, windowStart).
-      const isAllClear =
-        WORKOUTS.length > 0 && nextCompleted.length === WORKOUTS.length;
-      const wasAllClear =
-        WORKOUTS.length > 0 && completed.length === WORKOUTS.length;
+    // Full-clear bonus: credit when the toggle flips us from "not all
+    // ticked" to "all ticked"; refund (and reset the celeb key) when
+    // the toggle flips us back. Without the refund branch, unchecking
+    // a workout after a full clear would let the player keep the bonus
+    // indefinitely.
+    const isAllClear =
+      WORKOUTS.length > 0 && nextCompleted.length === WORKOUTS.length;
+    const wasAllClear =
+      WORKOUTS.length > 0 && completed.length === WORKOUTS.length;
+    if (WORKOUTS.length > 0 && wasAllClear !== isAllClear) {
+      const windowStart = cadenceWindowKey(cadence?.window ?? "day");
+      const celebKey = `cadence-full-clear:${dungeonId}:${windowStart}`;
       if (!wasAllClear && isAllClear) {
-        const windowStart = cadenceWindowKey(cadence?.window ?? "day");
-        const celebKey = `cadence-full-clear:${dungeonId}:${windowStart}`;
         if (
           typeof window !== "undefined" &&
           !localStorage.getItem(celebKey)
@@ -166,7 +176,22 @@ export default function CadenceDungeonCard({
               sourceValues: { dungeonId },
             });
             notifyStatsUpdated({ xpDelta: CADENCE_FULL_CLEAR_BONUS_XP });
+            notifyCelebration({
+              titleKey: "celebration.fullClearTitle",
+              subtitleKey: "celebration.fullClearSubtitle",
+              subtitleValues: { dungeon: dungeonName },
+              xp: CADENCE_FULL_CLEAR_BONUS_XP,
+              tone: "emerald",
+            });
           }, 700);
+        }
+      } else {
+        // wasAllClear && !isAllClear → refund.
+        if (typeof window !== "undefined" && localStorage.getItem(celebKey)) {
+          try {
+            localStorage.removeItem(celebKey);
+          } catch {}
+          notifyStatsUpdated({ xpDelta: -CADENCE_FULL_CLEAR_BONUS_XP });
         }
       }
     }
@@ -211,9 +236,14 @@ export default function CadenceDungeonCard({
   const weekCleared = weekCount >= TARGET;
 
   return (
-    <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
-      <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">
-        {dungeonName}
+    <div className={`bg-slate-900/80 border rounded-xl p-5 text-center ${accent.border} ${accent.glow}`}>
+      <p className="text-xs uppercase tracking-wider mb-3 flex items-center justify-center gap-2">
+        {dungeon?.icon && (
+          <span className={`text-base leading-none ${accent.iconText}`} aria-hidden>
+            {dungeon.icon}
+          </span>
+        )}
+        <span className={accent.nameText}>{dungeonName}</span>
       </p>
       {startDate ? (
         <div className="space-y-4">

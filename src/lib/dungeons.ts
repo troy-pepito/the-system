@@ -66,6 +66,23 @@ export interface DungeonDimensions {
   spirit?: number;
 }
 
+/** Visual accent palette per dungeon, so two NoFap-style streak cards
+ *  (e.g. NoFap and Sound Sensitization) don't look identical at a
+ *  glance. Each key resolves to a class-set in {@link DUNGEON_ACCENT}. */
+export type DungeonAccent =
+  | "amber"
+  | "emerald"
+  | "red"
+  | "violet"
+  | "sky"
+  | "rose"
+  | "indigo"
+  | "orange"
+  | "teal"
+  | "pink"
+  | "yellow"
+  | "fuchsia";
+
 export interface DungeonDef {
   id: string;
   name: string;
@@ -80,6 +97,103 @@ export interface DungeonDef {
   hunterType?: HunterType;
   rules?: string[];
   dimensions?: DungeonDimensions;
+  /** Single emoji shown next to the dungeon name. Pure cosmetic. */
+  icon?: string;
+  /** Visual accent — drives card border + glow color. */
+  accent?: DungeonAccent;
+}
+
+/** Class-set per accent — kept here as full literals (not built via
+ *  template) so Tailwind's purge keeps every variant. */
+export const DUNGEON_ACCENT: Record<
+  DungeonAccent,
+  { border: string; glow: string; iconText: string; nameText: string }
+> = {
+  amber: {
+    border: "border-amber-500/40",
+    glow: "shadow-[0_0_14px_rgba(251,191,36,0.18)]",
+    iconText: "text-amber-300",
+    nameText: "text-amber-200/90",
+  },
+  emerald: {
+    border: "border-emerald-500/40",
+    glow: "shadow-[0_0_14px_rgba(52,211,153,0.18)]",
+    iconText: "text-emerald-300",
+    nameText: "text-emerald-200/90",
+  },
+  red: {
+    border: "border-red-500/40",
+    glow: "shadow-[0_0_14px_rgba(248,113,113,0.18)]",
+    iconText: "text-red-300",
+    nameText: "text-red-200/90",
+  },
+  violet: {
+    border: "border-violet-500/40",
+    glow: "shadow-[0_0_14px_rgba(167,139,250,0.18)]",
+    iconText: "text-violet-300",
+    nameText: "text-violet-200/90",
+  },
+  sky: {
+    border: "border-sky-500/40",
+    glow: "shadow-[0_0_14px_rgba(56,189,248,0.18)]",
+    iconText: "text-sky-300",
+    nameText: "text-sky-200/90",
+  },
+  rose: {
+    border: "border-rose-500/40",
+    glow: "shadow-[0_0_14px_rgba(251,113,133,0.18)]",
+    iconText: "text-rose-300",
+    nameText: "text-rose-200/90",
+  },
+  indigo: {
+    border: "border-indigo-500/40",
+    glow: "shadow-[0_0_14px_rgba(129,140,248,0.18)]",
+    iconText: "text-indigo-300",
+    nameText: "text-indigo-200/90",
+  },
+  orange: {
+    border: "border-orange-500/40",
+    glow: "shadow-[0_0_14px_rgba(251,146,60,0.18)]",
+    iconText: "text-orange-300",
+    nameText: "text-orange-200/90",
+  },
+  teal: {
+    border: "border-teal-500/40",
+    glow: "shadow-[0_0_14px_rgba(45,212,191,0.18)]",
+    iconText: "text-teal-300",
+    nameText: "text-teal-200/90",
+  },
+  pink: {
+    border: "border-pink-500/40",
+    glow: "shadow-[0_0_14px_rgba(244,114,182,0.18)]",
+    iconText: "text-pink-300",
+    nameText: "text-pink-200/90",
+  },
+  yellow: {
+    border: "border-yellow-500/40",
+    glow: "shadow-[0_0_14px_rgba(250,204,21,0.18)]",
+    iconText: "text-yellow-300",
+    nameText: "text-yellow-200/90",
+  },
+  fuchsia: {
+    border: "border-fuchsia-500/40",
+    glow: "shadow-[0_0_14px_rgba(232,121,249,0.18)]",
+    iconText: "text-fuchsia-300",
+    nameText: "text-fuchsia-200/90",
+  },
+};
+
+/** Cyan fallback for any dungeon without an explicit accent. */
+export const DEFAULT_DUNGEON_ACCENT = {
+  border: "border-cyan-500/20",
+  glow: "shadow-[0_0_10px_rgba(34,211,238,0.1)]",
+  iconText: "text-cyan-300",
+  nameText: "text-cyan-100",
+} as const;
+
+export function getDungeonAccent(id: string) {
+  const accent = getDungeon(id)?.accent;
+  return accent ? DUNGEON_ACCENT[accent] : DEFAULT_DUNGEON_ACCENT;
 }
 
 // Multipliers for rank-cleared dimension rewards (E, D, C, B, A, S).
@@ -195,6 +309,8 @@ export const DUNGEONS: DungeonDef[] = [
     rank: "E",
     ruleType: "continuous_streak",
     tiers: NOFAP_TIERS,
+    icon: "☕",
+    accent: "amber",
     description:
       "Reset the nervous system. Up to 2 coffees per month is fine — the 3rd ends the run.",
     rules: [
@@ -210,6 +326,8 @@ export const DUNGEONS: DungeonDef[] = [
     rank: "E",
     ruleType: "continuous_streak",
     tiers: NOFAP_TIERS,
+    icon: "🌿",
+    accent: "emerald",
     description:
       "Eat with awareness. 2–3 meals a day, no snacking between. Plant-first, animal-source second, seafood after that, meat only if nothing else. Up to 4 unnatural sweets per month — beyond that is a relapse.",
     rules: [
@@ -226,6 +344,8 @@ export const DUNGEONS: DungeonDef[] = [
     rank: "E",
     ruleType: "cadence",
     tiers: NOFAP_TIERS,
+    icon: "💪",
+    accent: "red",
     cadence: {
       target: 5,
       window: "week",
@@ -246,6 +366,8 @@ export const DUNGEONS: DungeonDef[] = [
     rank: "E",
     ruleType: "timed",
     tiers: NOFAP_TIERS,
+    icon: "🧠",
+    accent: "violet",
     timed: { targetDays: 30 },
     description:
       "30 days without doom scrolling. Messaging, posting, and intentional single-video views are fine — only passive infinite feeds count as a slip.",
@@ -257,6 +379,8 @@ export const DUNGEONS: DungeonDef[] = [
     rank: "E",
     ruleType: "timed",
     tiers: NOFAP_TIERS,
+    icon: "🔇",
+    accent: "sky",
     timed: { targetDays: 30 },
     description:
       "30 days without music. A sensory reset — let the ears grow quiet so wind, rain, birdsong, and real voices start to feel alive again.",
@@ -272,6 +396,8 @@ export const DUNGEONS: DungeonDef[] = [
     name: "Exposure Therapy",
     rank: "E",
     ruleType: "progressive",
+    icon: "👁",
+    accent: "rose",
     progressive: { rungs: SOCIAL_RECLAIM_RUNGS },
     description:
       "Climb the social ladder. Six rungs from silent presence to speaking up in groups — desensitize through graded exposure, one rung at a time.",
@@ -288,6 +414,8 @@ export const DUNGEONS: DungeonDef[] = [
     rank: "E",
     ruleType: "continuous_streak",
     tiers: NOFAP_TIERS,
+    icon: "🛡",
+    accent: "indigo",
     description:
       "Reclaim your vital energy. Strict: no porn, masturbation, edging, or gooning. Sex and orgasm with a partner are fine — the rule targets compulsive solo use, not intimacy.",
     rules: [
@@ -307,6 +435,8 @@ export const DUNGEONS: DungeonDef[] = [
     ruleType: "cadence",
     hunterType: "body",
     tiers: NOFAP_TIERS,
+    icon: "🔥",
+    accent: "orange",
     cadence: {
       target: 1,
       window: "day",
@@ -348,6 +478,8 @@ export const DUNGEONS: DungeonDef[] = [
     ruleType: "cadence",
     hunterType: "mind",
     tiers: NOFAP_TIERS,
+    icon: "📖",
+    accent: "teal",
     cadence: {
       target: 1,
       window: "day",
@@ -368,6 +500,8 @@ export const DUNGEONS: DungeonDef[] = [
     ruleType: "cadence",
     hunterType: "emotion",
     tiers: NOFAP_TIERS,
+    icon: "💝",
+    accent: "pink",
     cadence: {
       target: 1,
       window: "day",
@@ -388,6 +522,8 @@ export const DUNGEONS: DungeonDef[] = [
     ruleType: "cadence",
     hunterType: "energy",
     tiers: NOFAP_TIERS,
+    icon: "⚡",
+    accent: "yellow",
     cadence: {
       target: 1,
       window: "day",
@@ -408,6 +544,8 @@ export const DUNGEONS: DungeonDef[] = [
     ruleType: "cadence",
     hunterType: "spirit",
     tiers: NOFAP_TIERS,
+    icon: "🕉",
+    accent: "fuchsia",
     cadence: {
       target: 1,
       window: "day",

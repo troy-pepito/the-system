@@ -104,6 +104,16 @@
     "perfectDay": "🌟 완벽한 하루",
     "fullClear": "✦ {dungeon} · 전체 클리어"
   },
+  "celebration": {
+    "perfectDayTitle": "PERFECT DAY",
+    "perfectDaySubtitle": "Every quest cleared",
+    "fullClearTitle": "FULL CLEAR",
+    "fullClearSubtitle": "{dungeon}",
+    "tierCrossingTitle": "RANK {rank}",
+    "tierCrossingSubtitle": "{dungeon} · Tier Cleared",
+    "comboTitle": "{days}-DAY COMBO",
+    "comboSubtitle": "Combo milestone reached"
+  },
   "dungeons": {
     "caffeine": {
       "name": "카페인 리부트",

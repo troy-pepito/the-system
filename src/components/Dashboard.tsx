@@ -84,6 +84,25 @@ export default function Dashboard() {
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
 
+  // Force a fresh fetch when the tab regains focus or the network
+  // comes back, so stale localStorage snapshots (e.g. an ended run
+  // still appearing on the Status page) self-correct without the
+  // user having to clear data.
+  useEffect(() => {
+    const onWake = () => reload();
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") reload();
+    };
+    window.addEventListener("focus", onWake);
+    window.addEventListener("online", onWake);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("focus", onWake);
+      window.removeEventListener("online", onWake);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+
   const initialHashScrollDone = useRef(false);
   useEffect(() => {
     if (!dashboard) return;

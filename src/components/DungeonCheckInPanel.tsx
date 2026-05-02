@@ -11,6 +11,7 @@ import { getDungeon, TIER_BONUS_XP } from "@/lib/dungeons";
 import {
   notifyReward,
   notifyStatsUpdated,
+  notifyCelebration,
   STATS_UPDATED_EVENT,
   XP_PER_STREAK_DAY,
 } from "@/lib/player";
@@ -105,6 +106,39 @@ export default function DungeonCheckInPanel({
     writeCache(checkInCacheKey(dungeonId), list);
   }
 
+  // Refund tier-crossing bonuses when the cleared-day count drops back
+  // below a previously-celebrated tier threshold. Without this, marking
+  // a cleared day as relapsed (or undoing it) leaves the tier bonus XP
+  // banked even though the tier is no longer earned — that's the
+  // streak-side version of the perfect-day exploit. Removing the
+  // celebKey lets the tier re-celebrate cleanly if the player climbs
+  // back up.
+  function refundTierCrossings(
+    prevClearedCount: number,
+    newClearedCount: number
+  ) {
+    if (newClearedCount >= prevClearedCount) return;
+    if (typeof window === "undefined") return;
+    const def = getDungeon(dungeonId);
+    if (!def?.tiers) return;
+    const tierCap =
+      def.ruleType === "timed" && def.timed ? def.timed.targetDays : Infinity;
+    for (let i = 0; i < def.tiers.length; i++) {
+      const tier = def.tiers[i];
+      if (tier.days > tierCap) continue;
+      if (prevClearedCount >= tier.days && newClearedCount < tier.days) {
+        const celebKey = `tier-celebrated:${dungeonId}:${startDate ?? "x"}:${tier.rank}`;
+        if (localStorage.getItem(celebKey)) {
+          try {
+            localStorage.removeItem(celebKey);
+          } catch {}
+          const bonus = TIER_BONUS_XP[i] ?? 0;
+          if (bonus > 0) notifyStatsUpdated({ xpDelta: -bonus });
+        }
+      }
+    }
+  }
+
   async function commitCleared(date: string) {
     // Compute next list from the closure synchronously — using the
     // functional updater + outer variable mutation was unreliable in
@@ -168,6 +202,14 @@ export default function DungeonCheckInPanel({
                 sourceValues: { rank: tier.rank, dungeonId },
               });
               notifyStatsUpdated({ xpDelta: bonus });
+              notifyCelebration({
+                titleKey: "celebration.tierCrossingTitle",
+                titleValues: { rank: tier.rank },
+                subtitleKey: "celebration.tierCrossingSubtitle",
+                subtitleValues: { dungeon: dungeonName },
+                xp: bonus,
+                tone: "violet",
+              });
             }, 1100);
           }
         }
@@ -206,6 +248,12 @@ export default function DungeonCheckInPanel({
       ...filtered,
       { date, state: "relapsed" as const, count: nextCount },
     ].sort((a, b) => a.date.localeCompare(b.date));
+    const prevClearedCount = checkIns.filter(
+      (c) => c.state === "cleared"
+    ).length;
+    const newClearedCount = nextList.filter(
+      (c) => c.state === "cleared"
+    ).length;
     setCheckIns(nextList);
     reportClearedCount(nextList);
     track("day_confirmed_relapsed", { dungeon_id: dungeonId, date });
@@ -214,6 +262,7 @@ export default function DungeonCheckInPanel({
     // races with the server write below and clobbers our optimistic
     // update with a stale read.
     notifyStatsUpdated({ xpDelta });
+    refundTierCrossings(prevClearedCount, newClearedCount);
 
     try {
       await confirmDay(
@@ -244,9 +293,16 @@ export default function DungeonCheckInPanel({
     const xpDelta = removed?.state === "cleared" ? -XP_PER_STREAK_DAY : 0;
 
     const nextList: DayCheckIn[] = checkIns.filter((c) => c.date !== date);
+    const prevClearedCount = checkIns.filter(
+      (c) => c.state === "cleared"
+    ).length;
+    const newClearedCount = nextList.filter(
+      (c) => c.state === "cleared"
+    ).length;
     setCheckIns(nextList);
     reportClearedCount(nextList);
     notifyStatsUpdated({ xpDelta });
+    refundTierCrossings(prevClearedCount, newClearedCount);
     try {
       await clearCheckIn(dungeonId, date);
     } catch {

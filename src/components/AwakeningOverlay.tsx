@@ -71,6 +71,23 @@ export default function AwakeningOverlay() {
     }
   }, [accepted, isSignedIn, phase]);
 
+  // Backfill the localStorage AWAKENED_KEY when the user signs in on a
+  // device that doesn't have it (e.g. a sign-out wiped it, or they're
+  // on a new device). We treat the presence of unsafeMetadata.hunterName
+  // as proof they've already completed awakening — re-running the intro
+  // scene every time someone logs back in is the bug Troy hit.
+  const hunterName = user?.unsafeMetadata?.hunterName as string | undefined;
+  const alreadyHasIdentity = isLoaded && isSignedIn && !!hunterName;
+  useEffect(() => {
+    if (!alreadyHasIdentity) return;
+    if (typeof window === "undefined") return;
+    if (localStorage.getItem(AWAKENED_KEY) === "true") return;
+    try {
+      localStorage.setItem(AWAKENED_KEY, "true");
+      window.dispatchEvent(new Event(AWAKENED_EVENT));
+    } catch {}
+  }, [alreadyHasIdentity]);
+
   useEffect(() => {
     if (awakened) return;
     if (lineIdx >= activeLines.length) return;
@@ -169,6 +186,9 @@ export default function AwakeningOverlay() {
   if (awakened) return null;
   if (!isLoaded) return null;
   if (!isSignedIn) return null;
+  // Already-completed awakening — render nothing while the effect
+  // above backfills the localStorage flag.
+  if (alreadyHasIdentity) return null;
 
   const complete = lineIdx >= activeLines.length;
 
@@ -242,6 +262,7 @@ export default function AwakeningOverlay() {
               </div>
 
               <div
+                key="path-controls"
                 className={`mt-6 space-y-2 transition-all duration-700 ${
                   complete
                     ? "opacity-100 translate-y-0"
@@ -291,6 +312,7 @@ export default function AwakeningOverlay() {
               </div>
 
               <div
+                key="intro-controls"
                 className={`flex gap-4 mt-10 justify-center transition-all duration-700 ${
                   complete ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
                 }`}
@@ -320,6 +342,7 @@ export default function AwakeningOverlay() {
               </div>
 
               <div
+                key="naming-controls"
                 className={`mt-8 flex flex-col items-center gap-4 transition-all duration-700 ${
                   complete ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
                 }`}

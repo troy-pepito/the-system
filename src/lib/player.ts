@@ -89,6 +89,30 @@ export function notifyReward(delta: RewardDelta) {
   window.dispatchEvent(new CustomEvent(REWARD_EVENT, { detail: delta }));
 }
 
+export const CELEBRATION_EVENT = "system:celebration";
+
+/** Distinct from {@link RewardDelta}: a "moment" — the centered banner
+ *  for perfect-day, full-clear, tier-crossing, combo-milestone. The
+ *  small +XP pill from {@link notifyReward} still fires alongside this
+ *  one (the regular gain log pattern), but the celebration owns the
+ *  screen for ~2.6s. */
+export interface CelebrationDetail {
+  /** Bigger label — e.g. "PERFECT DAY", "FULL CLEAR", "RANK D". */
+  titleKey: string;
+  titleValues?: Record<string, string | number>;
+  /** Optional smaller subtitle (dungeon name, day count). */
+  subtitleKey?: string;
+  subtitleValues?: Record<string, string | number>;
+  xp: number;
+  /** Drives the visual tint. Defaults to "amber". */
+  tone?: "amber" | "cyan" | "violet" | "emerald";
+}
+
+export function notifyCelebration(detail: CelebrationDetail) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(CELEBRATION_EVENT, { detail }));
+}
+
 export const NOTICE_EVENT = "system:notice";
 
 export interface SystemNotice {

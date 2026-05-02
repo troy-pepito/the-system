@@ -1,6 +1,10 @@
 "use client";
 import { useEffect } from "react";
-import { notifyReward, notifyStatsUpdated } from "@/lib/player";
+import {
+  notifyCelebration,
+  notifyReward,
+  notifyStatsUpdated,
+} from "@/lib/player";
 import { TIER_BONUS_XP } from "@/lib/dungeons";
 
 /**
@@ -19,11 +23,13 @@ import { TIER_BONUS_XP } from "@/lib/dungeons";
  */
 export function useTierCrossingCelebration({
   dungeonId,
+  dungeonName,
   startDate,
   tierIdx,
   tierRank,
 }: {
   dungeonId: string;
+  dungeonName: string;
   startDate: string | null;
   tierIdx: number;
   tierRank: string | null;
@@ -64,7 +70,15 @@ export function useTierCrossingCelebration({
         sourceValues: { rank: tierRank, dungeonId },
       });
       notifyStatsUpdated({ xpDelta: bonus });
+      notifyCelebration({
+        titleKey: "celebration.tierCrossingTitle",
+        titleValues: { rank: tierRank },
+        subtitleKey: "celebration.tierCrossingSubtitle",
+        subtitleValues: { dungeon: dungeonName },
+        xp: bonus,
+        tone: "violet",
+      });
     }, 1100);
     return () => clearTimeout(timer);
-  }, [dungeonId, startDate, tierIdx, tierRank]);
+  }, [dungeonId, dungeonName, startDate, tierIdx, tierRank]);
 }

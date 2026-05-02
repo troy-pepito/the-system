@@ -51,6 +51,13 @@ export default async function GuidePage() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-300 py-16 px-6">
       <article className="max-w-3xl mx-auto space-y-12">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-[10px] tracking-[0.4em] uppercase text-slate-500 hover:text-cyan-300 transition-colors"
+        >
+          <span aria-hidden>←</span>
+          <span>Back</span>
+        </Link>
         <header className="text-center border-b border-slate-800 pb-10">
           <p className="text-[10px] tracking-[0.5em] text-cyan-400/70 uppercase mb-4 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
             {t("header")}
@@ -101,8 +108,13 @@ export default async function GuidePage() {
                 className="border border-slate-800 bg-slate-900/40 p-5 rounded"
               >
                 <div className="flex items-start justify-between flex-wrap gap-2 mb-3">
-                  <p className="font-display text-base font-bold text-cyan-100">
-                    {tDungeons(`${dungeonKey(d.id)}.name`)}
+                  <p className="font-display text-base font-bold text-cyan-100 flex items-center gap-2">
+                    {d.icon && (
+                      <span aria-hidden className="leading-none">
+                        {d.icon}
+                      </span>
+                    )}
+                    <span>{tDungeons(`${dungeonKey(d.id)}.name`)}</span>
                   </p>
                   <span className="text-[9px] uppercase tracking-[0.25em] text-amber-400/80 px-2 py-0.5 border border-amber-400/30 rounded-sm">
                     {t(`ruleLabels.${d.ruleType}`)}

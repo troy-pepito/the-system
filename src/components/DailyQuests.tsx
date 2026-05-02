@@ -13,6 +13,7 @@ import {
 import {
   notifyStatsUpdated,
   notifyReward,
+  notifyCelebration,
   beginMutation,
   endMutation,
 } from "@/lib/player";
@@ -112,62 +113,81 @@ export default function DailyQuests({
         spirit: quest.spirit,
         sourceKey: `dailyQuests.${questKey(quest.id)}`,
       });
+    }
 
-      // Perfect-day bonus: this completion is the one that brings the
-      // total to exactly QUESTS.length (every quest done in a single
-      // day). Independent from the combo block below — combo rewards
-      // continuity across days, this rewards completeness on one day.
-      const oldFull = completed.length === QUESTS.length;
-      const newFull = nextCompleted.length === QUESTS.length;
-      if (!oldFull && newFull) {
-        const celebKey = `perfect-day-bonus:${date}`;
-        if (
-          typeof window !== "undefined" &&
-          !localStorage.getItem(celebKey)
-        ) {
+    // Perfect-day bonus: credit when the toggle flips us from "not all
+    // ticked" to "all ticked"; refund (and reset the celeb key so a
+    // re-credit can happen) when the toggle flips us back. Without the
+    // refund branch, unchecking after a full clear would let the player
+    // pocket the bonus indefinitely.
+    const oldFull = completed.length === QUESTS.length;
+    const newFull = nextCompleted.length === QUESTS.length;
+    const perfectKey = `perfect-day-bonus:${date}`;
+    if (!oldFull && newFull) {
+      if (typeof window !== "undefined" && !localStorage.getItem(perfectKey)) {
+        try {
+          localStorage.setItem(perfectKey, "1");
+        } catch {}
+        track("perfect_day_bonus", { date, xp: PERFECT_DAY_BONUS_XP });
+        setTimeout(() => {
+          notifyReward({
+            xp: PERFECT_DAY_BONUS_XP,
+            sourceKey: "gainSources.perfectDay",
+          });
+          notifyStatsUpdated({ xpDelta: PERFECT_DAY_BONUS_XP });
+          notifyCelebration({
+            titleKey: "celebration.perfectDayTitle",
+            subtitleKey: "celebration.perfectDaySubtitle",
+            xp: PERFECT_DAY_BONUS_XP,
+            tone: "amber",
+          });
+        }, 700);
+      }
+    } else if (oldFull && !newFull) {
+      if (typeof window !== "undefined" && localStorage.getItem(perfectKey)) {
+        try {
+          localStorage.removeItem(perfectKey);
+        } catch {}
+        notifyStatsUpdated({ xpDelta: -PERFECT_DAY_BONUS_XP });
+      }
+    }
+
+    // Combo-milestone celebration: same pattern as perfect-day. Credit
+    // when the toggle pushes us over COMBO_THRESHOLD into a milestone
+    // day count, refund when it drops us back below.
+    const oldQualifies = completed.length >= COMBO_THRESHOLD;
+    const newQualifies = nextCompleted.length >= COMBO_THRESHOLD;
+    const newComboDays = priorComboDays > 0 ? priorComboDays + 1 : 1;
+    const milestone = COMBO_MILESTONES.find((m) => m.days === newComboDays);
+    if (milestone) {
+      const comboKey = `combo-celebrated:${date}:${milestone.days}`;
+      if (!oldQualifies && newQualifies) {
+        if (typeof window !== "undefined" && !localStorage.getItem(comboKey)) {
           try {
-            localStorage.setItem(celebKey, "1");
+            localStorage.setItem(comboKey, "1");
           } catch {}
-          track("perfect_day_bonus", { date, xp: PERFECT_DAY_BONUS_XP });
           setTimeout(() => {
             notifyReward({
-              xp: PERFECT_DAY_BONUS_XP,
-              sourceKey: "gainSources.perfectDay",
+              xp: milestone.xp,
+              sourceKey: "dailyQuests.comboSource",
+              sourceValues: { days: milestone.days },
             });
-            notifyStatsUpdated({ xpDelta: PERFECT_DAY_BONUS_XP });
-          }, 700);
+            notifyStatsUpdated({ xpDelta: milestone.xp });
+            notifyCelebration({
+              titleKey: "celebration.comboTitle",
+              titleValues: { days: milestone.days },
+              subtitleKey: "celebration.comboSubtitle",
+              xp: milestone.xp,
+              tone: "amber",
+            });
+          }, 900);
         }
-      }
-
-      // Combo-milestone celebration: when this completion is the one
-      // that pushes today over the COMBO_THRESHOLD AND the resulting
-      // combo length lands on a milestone day count (7/14/30/...),
-      // fire a second toast a beat later so it lands as its own moment.
-      const oldQualifies = completed.length >= COMBO_THRESHOLD;
-      const newQualifies = nextCompleted.length >= COMBO_THRESHOLD;
-      if (!oldQualifies && newQualifies) {
-        const newComboDays = priorComboDays > 0 ? priorComboDays + 1 : 1;
-        const milestone = COMBO_MILESTONES.find(
-          (m) => m.days === newComboDays
-        );
-        if (milestone) {
-          const celebKey = `combo-celebrated:${date}:${milestone.days}`;
-          if (
-            typeof window !== "undefined" &&
-            !localStorage.getItem(celebKey)
-          ) {
-            try {
-              localStorage.setItem(celebKey, "1");
-            } catch {}
-            setTimeout(() => {
-              notifyReward({
-                xp: milestone.xp,
-                sourceKey: "dailyQuests.comboSource",
-                sourceValues: { days: milestone.days },
-              });
-              notifyStatsUpdated({ xpDelta: milestone.xp });
-            }, 900);
-          }
+      } else if (oldQualifies && !newQualifies) {
+        if (typeof window !== "undefined" && localStorage.getItem(comboKey)) {
+          try {
+            localStorage.removeItem(comboKey);
+          } catch {}
+          notifyStatsUpdated({ xpDelta: -milestone.xp });
         }
       }
     }

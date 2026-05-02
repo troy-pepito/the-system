@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { getDungeon, TIER_BONUS_XP } from "@/lib/dungeons";
+import { getDungeon, getDungeonAccent, TIER_BONUS_XP } from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
 import {
   notifyStatsUpdated,
   notifyReward,
+  notifyCelebration,
   beginMutation,
   endMutation,
   XP_PER_EXPOSURE,
@@ -65,6 +66,7 @@ export default function ProgressiveDungeonCard({
     ? tDungeons(`${dungeonKey(dungeonId)}.name`)
     : dungeonId;
   const RUNGS = dungeon?.progressive?.rungs ?? [];
+  const accent = getDungeonAccent(dungeonId);
 
   const [active, setActive] = useState<boolean>(initialActive);
   const [counts, setCounts] =
@@ -139,6 +141,14 @@ export default function ProgressiveDungeonCard({
           sourceValues: { rank: currentRung.rank, dungeonId },
         });
         notifyStatsUpdated({ xpDelta: bonus });
+        notifyCelebration({
+          titleKey: "celebration.tierCrossingTitle",
+          titleValues: { rank: currentRung.rank },
+          subtitleKey: "celebration.tierCrossingSubtitle",
+          subtitleValues: { dungeon: dungeonName },
+          xp: bonus,
+          tone: "violet",
+        });
       }, 1100);
     }
 
@@ -198,6 +208,19 @@ export default function ProgressiveDungeonCard({
     adjustRungCountInCache(dungeonId, rungId, -1);
     notifyStatsUpdated({ xpDelta: -XP_PER_EXPOSURE });
 
+    // Refund the rung-clear bonus if the undo drops us back below the
+    // rung target. Symmetric with the credit branch in handleExposure;
+    // without it, log-to-target then undo lets the player keep the
+    // tier bonus indefinitely.
+    if (
+      prevCount >= currentRung.target &&
+      prevCount - 1 < currentRung.target
+    ) {
+      const tierIdx = currentRungIndex;
+      const bonus = TIER_BONUS_XP[tierIdx] ?? 0;
+      if (bonus > 0) notifyStatsUpdated({ xpDelta: -bonus });
+    }
+
     beginMutation();
     try {
       await undoRungExposure(dungeonId, rungId);
@@ -221,9 +244,14 @@ export default function ProgressiveDungeonCard({
     : 100;
 
   return (
-    <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
-      <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">
-        {dungeonName}
+    <div className={`bg-slate-900/80 border rounded-xl p-5 text-center ${accent.border} ${accent.glow}`}>
+      <p className="text-xs uppercase tracking-wider mb-3 flex items-center justify-center gap-2">
+        {dungeon?.icon && (
+          <span className={`text-base leading-none ${accent.iconText}`} aria-hidden>
+            {dungeon.icon}
+          </span>
+        )}
+        <span className={accent.nameText}>{dungeonName}</span>
       </p>
 
       {dungeonCleared ? (

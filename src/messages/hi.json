@@ -104,6 +104,16 @@
     "perfectDay": "🌟 परफेक्ट दिन",
     "fullClear": "✦ {dungeon} · पूर्ण सफाया"
   },
+  "celebration": {
+    "perfectDayTitle": "PERFECT DAY",
+    "perfectDaySubtitle": "Every quest cleared",
+    "fullClearTitle": "FULL CLEAR",
+    "fullClearSubtitle": "{dungeon}",
+    "tierCrossingTitle": "RANK {rank}",
+    "tierCrossingSubtitle": "{dungeon} · Tier Cleared",
+    "comboTitle": "{days}-DAY COMBO",
+    "comboSubtitle": "Combo milestone reached"
+  },
   "dungeons": {
     "caffeine": {
       "name": "कैफीन रीबूट",

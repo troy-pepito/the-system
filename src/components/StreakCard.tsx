@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
-import { getDungeon } from "@/lib/dungeons";
+import { getDungeon, getDungeonAccent } from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
 import { notifyStatsUpdated } from "@/lib/player";
 import DateEntryPicker from "@/components/DateEntryPicker";
@@ -39,6 +39,7 @@ export default function StreakCard({
     ? tDungeons(`${dungeonKey(dungeonId)}.name`)
     : dungeonId;
   const TIERS = dungeon?.tiers ?? [];
+  const accent = getDungeonAccent(dungeonId);
 
   const [startDate, setStartDate] = useState<string | null>(
     initialRun.startDate
@@ -91,9 +92,14 @@ export default function StreakCard({
     : 100;
 
   return (
-    <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-5 text-center shadow-[0_0_10px_rgba(34,211,238,0.1)]">
-      <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">
-        {dungeonName}
+    <div className={`bg-slate-900/80 border rounded-xl p-5 text-center ${accent.border} ${accent.glow}`}>
+      <p className="text-xs uppercase tracking-wider mb-3 flex items-center justify-center gap-2">
+        {dungeon?.icon && (
+          <span className={`text-base leading-none ${accent.iconText}`} aria-hidden>
+            {dungeon.icon}
+          </span>
+        )}
+        <span className={accent.nameText}>{dungeonName}</span>
       </p>
       {startDate ? (
         <div className="space-y-4">
