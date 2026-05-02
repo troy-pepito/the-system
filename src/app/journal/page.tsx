@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   getJournalEntries,
   type JournalEntry,
@@ -12,6 +13,7 @@ import { STATS_UPDATED_EVENT } from "@/lib/player";
 const JOURNAL_CACHE_KEY = "journal";
 
 export default function JournalPage() {
+  const t = useTranslations("journal");
   const [entries, setEntries] = useState<JournalEntry[]>([]);
 
   useEffect(() => {
@@ -36,14 +38,14 @@ export default function JournalPage() {
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
-            Journal
+            {t("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
           <Link
             href="/profile"
             className="inline-block mt-4 text-[10px] tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-300 transition-colors"
           >
-            ← Back to Profile
+            {t("backToProfile")}
           </Link>
         </div>
 

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Card from "@/components/Card";
 import NoteModal from "@/components/NoteModal";
 import {
@@ -21,7 +21,7 @@ interface JournalSectionProps {
   /** When previewLimit is set and total entries exceed it, this href
    *  is rendered as a "See all" link. */
   seeAllHref?: string;
-  /** Title text for the card. Defaults to "Journal". */
+  /** Title text for the card. Defaults to the translated "Journal". */
   title?: string;
 }
 
@@ -30,9 +30,13 @@ export default function JournalSection({
   onEntriesChange,
   previewLimit,
   seeAllHref,
-  title = "Journal",
+  title,
 }: JournalSectionProps) {
+  const t = useTranslations("journal");
+  const tEntryTypes = useTranslations("entryTypes");
   const tDungeons = useTranslations("dungeons");
+  const tNote = useTranslations("noteModal");
+  const locale = useLocale();
   const visible =
     typeof previewLimit === "number"
       ? entries.slice(0, previewLimit)
@@ -89,22 +93,20 @@ export default function JournalSection({
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
-          {title}
+          {title ?? t("title")}
         </p>
         {entries.length > 0 && (
           <p className="text-[10px] text-slate-500 tracking-wider">
-            {entries.length}{" "}
-            {entries.length === 1 ? "entry" : "entries"} ·{" "}
-            {groupEntriesByDate(entries).length}{" "}
-            {groupEntriesByDate(entries).length === 1 ? "day" : "days"}
+            {t("summary", {
+              entries: entries.length,
+              days: groupEntriesByDate(entries).length,
+            })}
           </p>
         )}
       </div>
       {entries.length === 0 ? (
         <p className="text-xs text-slate-500 leading-relaxed">
-          No entries yet. When you relapse, log a coffee, or mark an exposure,
-          you&apos;ll be asked if you want to write a note — skip or save, your
-          call.
+          {t("empty")}
         </p>
       ) : (
         <div className="space-y-6">
@@ -112,7 +114,7 @@ export default function JournalSection({
             <div key={date}>
               <div className="flex items-center gap-3 mb-3">
                 <p className="text-[11px] tracking-[0.3em] uppercase text-cyan-300 font-bold drop-shadow-[0_0_6px_rgba(34,211,238,0.4)]">
-                  {relativeDateLabel(date)}
+                  {relativeDateLabel(date, locale, t)}
                 </p>
                 <div className="flex-1 h-px bg-cyan-500/20" />
                 <p className="text-[9px] text-slate-600 font-mono">{date}</p>
@@ -136,11 +138,11 @@ export default function JournalSection({
                         <span
                           className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${eventTone(e.type)}`}
                         >
-                          {eventLabel(e.type)}
+                          {eventLabel(e.type, tEntryTypes)}
                         </span>
                         {e.isPublic && (
                           <span className="text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm text-cyan-300 border-cyan-400/40 bg-cyan-500/5">
-                            ◉ Public
+                            {t("publicBadge")}
                           </span>
                         )}
                       </div>
@@ -151,21 +153,21 @@ export default function JournalSection({
                         {isConfirmingDelete ? (
                           <>
                             <span className="text-[10px] tracking-widest uppercase text-red-400/80">
-                              Delete this entry?
+                              {t("deletePrompt")}
                             </span>
                             <button
                               type="button"
                               onClick={() => handleConfirmDelete(e.id)}
                               className="text-[10px] tracking-widest uppercase text-red-300 hover:text-red-200 transition-colors"
                             >
-                              Yes
+                              {t("yes")}
                             </button>
                             <button
                               type="button"
                               onClick={() => setConfirmingDeleteId(null)}
                               className="text-[10px] tracking-widest uppercase text-slate-500 hover:text-slate-300 transition-colors"
                             >
-                              Cancel
+                              {t("cancel")}
                             </button>
                           </>
                         ) : (
@@ -175,7 +177,7 @@ export default function JournalSection({
                               onClick={() => setEditingId(e.id)}
                               className="text-[10px] tracking-widest uppercase text-slate-500 hover:text-cyan-300 transition-colors"
                             >
-                              Edit
+                              {t("edit")}
                             </button>
                             <span className="text-slate-700 text-[10px]">·</span>
                             <button
@@ -183,7 +185,7 @@ export default function JournalSection({
                               onClick={() => setConfirmingDeleteId(e.id)}
                               className="text-[10px] tracking-widest uppercase text-slate-500 hover:text-red-300 transition-colors"
                             >
-                              Delete
+                              {t("delete")}
                             </button>
                           </>
                         )}
@@ -203,17 +205,17 @@ export default function JournalSection({
             href={seeAllHref}
             className="text-[11px] tracking-[0.3em] uppercase text-cyan-400/80 hover:text-cyan-200 transition-colors"
           >
-            See all {entries.length} entries →
+            {t("seeAll", { count: entries.length })}
           </Link>
         </div>
       )}
 
       <NoteModal
         open={editingEntry !== null}
-        title={`Edit Journal — ${editingDungeonName}`}
-        placeholder="Edit your reflection…"
-        confirmLabel="Save"
-        skipLabel="Cancel"
+        title={t("editTitle", { dungeon: editingDungeonName })}
+        placeholder={tNote("editPlaceholder")}
+        confirmLabel={tNote("defaultConfirm")}
+        skipLabel={tNote("editCancel")}
         cancelOnSkip
         showPublicToggle
         initialNote={editingEntry?.note ?? ""}
@@ -225,10 +227,13 @@ export default function JournalSection({
   );
 }
 
-function eventLabel(type: string): string {
-  if (type === "relapse") return "Relapse";
-  if (type === "completed") return "Completed";
-  if (type === "journal") return "Journal";
+function eventLabel(
+  type: string,
+  t: (key: string) => string
+): string {
+  if (type === "relapse" || type === "completed" || type === "journal") {
+    return t(type);
+  }
   return type.replace(/-/g, " ");
 }
 
@@ -241,21 +246,25 @@ function eventTone(type: string): string {
   return "text-cyan-300 border-cyan-500/40 bg-cyan-500/10";
 }
 
-function relativeDateLabel(iso: string): string {
+function relativeDateLabel(
+  iso: string,
+  locale: string,
+  t: (key: string, values?: Record<string, string | number>) => string
+): string {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const date = new Date(`${iso}T00:00:00`);
   const diffDays = Math.round((today.getTime() - date.getTime()) / 86_400_000);
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays === 0) return t("today");
+  if (diffDays === 1) return t("yesterday");
+  if (diffDays < 7) return t("daysAgo", { count: diffDays });
   if (date.getFullYear() === today.getFullYear()) {
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString(locale, {
       month: "short",
       day: "numeric",
     });
   }
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",

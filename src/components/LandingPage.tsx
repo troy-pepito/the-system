@@ -3,7 +3,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { DUNGEONS, dungeonDims, DIM_STYLE } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 import LandingShaderBg from "@/components/LandingShaderBg";
 import {
   detectInstallState,
@@ -34,6 +36,7 @@ const STEPS = [
 ];
 
 export default function LandingPage() {
+  const tDungeons = useTranslations("dungeons");
   const { openSignIn } = useClerk();
   const { isSignedIn } = useUser();
   const router = useRouter();
@@ -140,7 +143,9 @@ export default function LandingPage() {
               key={d.id}
               className="border border-slate-800 bg-slate-900/40 p-5"
             >
-              <p className="font-display text-sm font-bold text-cyan-100 mb-2">{d.name}</p>
+              <p className="font-display text-sm font-bold text-cyan-100 mb-2">
+                {tDungeons(`${dungeonKey(d.id)}.name`)}
+              </p>
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {dungeonDims(d).map((dim) => (
                   <span
@@ -152,7 +157,7 @@ export default function LandingPage() {
                 ))}
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
-                {d.description}
+                {tDungeons(`${dungeonKey(d.id)}.description`)}
               </p>
             </div>
           ))}

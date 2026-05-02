@@ -28,7 +28,494 @@
     "edit": "Edit",
     "scattered": "Scattered",
     "viewPublic": "View Public",
-    "choosePath": "+ Choose your path"
+    "choosePath": "+ Choose your path",
+    "share": "Share",
+    "shareCopied": "✓ Copied",
+    "changeAvatarLabel": "Change profile picture",
+    "changeAvatar": "Change",
+    "uploading": "Uploading",
+    "rename": "Rename",
+    "changePath": "Change path",
+    "viewAllRanks": "View all ranks",
+    "rankPath": "Rank Path",
+    "maxRank": "MAX RANK",
+    "rankProgress": "{count} LVL → {next}",
+    "scatteredHelp": "No daily quests completed yesterday. Clears after your next active day.",
+    "avatarLocalError": "Could not store avatar locally"
+  },
+  "toasts": {
+    "achievementUnlocked": "[ Achievement Unlocked ]",
+    "levelUp": "[ Level Up ]",
+    "levelLabel": "Lv {level}",
+    "rankAscended": "[ Rank Ascended ]",
+    "tierAchieved": "{flavor} tier achieved",
+    "tapToDismiss": "Tap to dismiss",
+    "ascension": "[ Ascension ]",
+    "rankReached": "You hit Rank {rank}",
+    "shareAscension": "Share your ascension with someone who'd get it.",
+    "share": "Share",
+    "sharing": "Sharing…",
+    "later": "Later",
+    "dismissShare": "Dismiss share prompt"
+  },
+  "friends": {
+    "title": "Friends",
+    "emptyBody": "No hunters connected yet. Share your profile link or visit another hunter's profile to send a request.",
+    "requests": "Friend Requests · {count}",
+    "wantsToConnect": "Wants to connect",
+    "accept": "Accept",
+    "decline": "Decline",
+    "rankPrefix": "Rank ",
+    "levelLabel": "Lv {level}",
+    "unfriend": "Unfriend",
+    "cancel": "Cancel",
+    "isFriend": "✓ Friends",
+    "requestSent": "Request Sent",
+    "addFriend": "+ Add Friend"
+  },
+  "installApp": {
+    "title": "Install App",
+    "installed": "✓ Installed — running in standalone mode.",
+    "available": "One-tap install. No app store. Push notifications and offline mode work better when installed.",
+    "iosInstructions": "On iPhone, tap the <strong>Share</strong> icon, then <strong>Add to Home Screen</strong>. Requires iOS 16.4+.",
+    "unsupported": "Open your browser menu and look for 'Install app' or 'Add to Home Screen'.",
+    "install": "Install",
+    "installing": "Installing…"
+  },
+  "notifications": {
+    "title": "Daily Reminder",
+    "unsupported": "This browser doesn't support push notifications.",
+    "denied": "Notifications are blocked. Re-enable in your browser/OS settings.",
+    "description": "Get a nudge when the day resets so you don't miss your quests.",
+    "notConfigured": "Push notifications not configured.",
+    "couldNotEnable": "Could not enable",
+    "couldNotDisable": "Could not disable"
+  },
+  "noteModal": {
+    "chrome": "[ Journal ]",
+    "defaultPlaceholder": "What happened? (optional)",
+    "defaultConfirm": "Save",
+    "defaultSkip": "Skip",
+    "sharePublic": "Share to public profile",
+    "editPlaceholder": "Edit your reflection…",
+    "editCancel": "Cancel"
+  },
+  "dungeonRun": {
+    "daysCleared": "{count, plural, one {# day} other {# days}} cleared",
+    "daysForged": "{count, plural, one {# day} other {# days}} forged",
+    "nextTier": "Next tier: {rank}",
+    "daysFraction": "{count} / {target} days",
+    "dungeonMastered": "Dungeon mastered",
+    "dungeonClearedBanner": "★ Dungeon Cleared ★",
+    "claimVictory": "Claim Victory",
+    "target": "Target: {count} days",
+    "entered": "Entered: {date}",
+    "journalEntry": "+ Journal Entry",
+    "exitDungeon": "Exit Dungeon",
+    "portalDormant": "Portal Dormant",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "dayCleared": "✦ Day cleared ✦",
+    "weekCleared": "✦ Week cleared ✦",
+    "ladderMastered": "★ Ladder Mastered ★",
+    "ladderRetired": "All {count} rungs cleared. Dungeon retired.",
+    "rungLabel": "Rank {rank} · Rung {current} / {total}",
+    "progress": "Progress",
+    "progressFraction": "{count} / {target}",
+    "logExposure": "+ Log Exposure",
+    "undo": "Undo",
+    "ladder": "Ladder",
+    "lockedRung": "???",
+    "abandonLadder": "Abandon Ladder — Reset",
+    "noRungs": "No rungs configured.",
+    "abandonModalTitle": "Abandon Ladder — {dungeon}",
+    "abandonPlaceholder": "What stopped the climb? (optional)",
+    "abandonConfirm": "Confirm Abandon",
+    "logExposureTitle": "Log Exposure — {rung}",
+    "logExposurePlaceholder": "What did you face? How did it go? (optional)",
+    "logExposureConfirm": "Log Exposure",
+    "logExposureSkip": "Skip Note",
+    "taskCleared": "Task Cleared",
+    "dayClearedSource": "Day Cleared",
+    "tierBonusSource": "🏆 Rank {rank} · {dungeon}"
+  },
+  "checkIn": {
+    "didYouClearToday": "Did you clear today?",
+    "confirmDate": "Confirm {date}",
+    "currentlyCleared": "{date} — currently cleared",
+    "currentlyRelapsed": "{date} — {count, plural, one {# relapse} other {# relapses}}",
+    "markCleared": "Mark Cleared",
+    "cleared": "Cleared",
+    "relapsePlus": "Relapse +1",
+    "markRelapsed": "Mark Relapsed",
+    "relapsed": "Relapsed",
+    "undo": "Undo",
+    "cancel": "Cancel",
+    "relapseTitle": "Relapse — {dungeon}",
+    "relapsePlaceholder": "What triggered it? How are you feeling? (optional)",
+    "relapseConfirm": "Log Relapse",
+    "relapseSkip": "Cancel"
+  },
+  "calendar": {
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "current": "Current",
+    "longest": "Longest",
+    "daysShort": "{count}d",
+    "legendCleared": "Cleared",
+    "legendTapToLog": "Tap to log",
+    "legendRelapse": "Relapse"
+  },
+  "awakening": {
+    "intro": [
+      "[ NOTIFICATION ]",
+      "",
+      "A special quest has arrived.",
+      "",
+      "You have been selected",
+      "to become a Player.",
+      "",
+      "Do you wish to accept?"
+    ],
+    "naming": [
+      "[ REGISTRATION ]",
+      "",
+      "The System recognizes you.",
+      "",
+      "State the name",
+      "you shall be known by."
+    ],
+    "path": [
+      "[ PATH SELECTION ]",
+      "",
+      "Every hunter walks a path.",
+      "",
+      "Choose what you want",
+      "to forge first."
+    ],
+    "accept": "Accept",
+    "decline": "Decline",
+    "reconsider": "← Reconsider",
+    "standbyHeader": "[ STANDBY ]",
+    "standbyMessage": "The System will wait.",
+    "standbySubtext": "The quest remains open. Return when you are ready to awaken.",
+    "namePlaceholder": "Enter name",
+    "register": "Register",
+    "registering": "Registering",
+    "registrationFailed": "Registration failed",
+    "pathFailed": "Path selection failed",
+    "noPath": "Nothing in particular — decide later"
+  },
+  "paywall": {
+    "gateLocked": "[ Gate Locked ]",
+    "title": "Ascend to Pro",
+    "intro": "Your third gate is Pro. Two active dungeons is the free tier — past that, you're in hunter territory.",
+    "features": [
+      "Unlimited active dungeons",
+      "Streak Insurance — one relapse forgiven per month",
+      "VIP cosmetic frame + badge",
+      "Whole-app theme packs",
+      "Lifetime analytics — full history, data export"
+    ],
+    "ascend": "Ascend",
+    "openingCheckout": "Opening Checkout…",
+    "returnFree": "Return to free tier",
+    "closeLabel": "Close",
+    "notConfigured": "Checkout is not configured yet.",
+    "checkoutFailed": "Could not open checkout. Try again in a moment."
+  },
+  "ranksPage": {
+    "title": "Hunter Path",
+    "subtitle": "Six ranks. Six versions of yourself. Each one earned, not bought.",
+    "youAreHere": "You are here",
+    "locked": "🔒 Locked",
+    "levelsRange": "Levels {start}–{end} · {xp} XP to reach",
+    "levelsRangeMax": "Levels {start}+ · {xp} XP to reach",
+    "footer": "Lv {level} · {xp} XP earned"
+  },
+  "whatsNew": {
+    "header": "[ System Update Log ]",
+    "title": "What's New",
+    "backToStatus": "← Back to Status",
+    "empty": "No releases logged yet.",
+    "latest": "Latest",
+    "kindFeature": "feature",
+    "kindFix": "fix",
+    "kindChange": "change"
+  },
+  "rankStyles": {
+    "E": {
+      "flavor": "Bronze",
+      "title": "The Awakened",
+      "description": "You've stepped into the System. The path begins. The body still slumbers and the mind still wanders — but you've shown up, and that is enough."
+    },
+    "D": {
+      "flavor": "Iron",
+      "title": "The Disciplined",
+      "description": "Routine becomes ritual. The first habits hold even when no one watches — even when you yourself don't want to. The hunter taking shape."
+    },
+    "C": {
+      "flavor": "Silver",
+      "title": "The Cultivated",
+      "description": "What was effort becomes default. The body and mind compound on each other. You no longer fight to wake up early — you wake. The System recognizes you."
+    },
+    "B": {
+      "flavor": "Gold",
+      "title": "The Bound",
+      "description": "Self has met self. The shadows that ran the show now answer to you. The hunter holds territory in the inner world. Few make it this far."
+    },
+    "A": {
+      "flavor": "Platinum",
+      "title": "The Ascendant",
+      "description": "Beyond what most ever know of themselves. The five dimensions move in concert. You are the version of you that strangers feel before you speak."
+    },
+    "S": {
+      "flavor": "Holo",
+      "title": "The Sovereign",
+      "description": "The System bends to you. There is nothing left to fight, only the ongoing practice. Hunter and path are the same thing. You walk in your own light."
+    }
+  },
+  "rarityLabels": {
+    "common": "Common",
+    "rare": "Rare",
+    "epic": "Epic",
+    "legendary": "Legendary"
+  },
+  "rungs": {
+    "presence": {
+      "name": "Presence",
+      "description": "Hold eye contact and smile with 3 strangers in a single outing. No words needed."
+    },
+    "acknowledge": {
+      "name": "Acknowledge",
+      "description": "Greet 3 strangers out loud — 'hi', 'morning', 'hey'. Voice breaks the silence."
+    },
+    "request": {
+      "name": "Request",
+      "description": "Ask a stranger a small, low-stakes question — the time, directions, a recommendation."
+    },
+    "small-talk": {
+      "name": "Small Talk",
+      "description": "Trade a brief comment with a cashier, barista, or seatmate. An observation, a compliment, a remark about the moment."
+    },
+    "engage": {
+      "name": "Engage",
+      "description": "Hold a 1–2 minute conversation with a stranger. Ask a follow-up. Find the thread."
+    },
+    "expose": {
+      "name": "Expose",
+      "description": "Share an opinion, story, or joke in a group setting — meeting, class, party. Be seen and heard."
+    }
+  },
+  "achievements": {
+    "dungeonRankName": "{dungeon}: Rank {rank}",
+    "dungeonRankDescription": "Reach {days} days in {dungeon}.",
+    "dungeonRungName": "{dungeon}: {rung}",
+    "dungeonRungDescription": "Clear the {rung} rung in {dungeon} ({target} exposures).",
+    "dungeonClearedName": "{dungeon}: Cleared",
+    "dungeonClearedDescription": "Complete the full {target}-day {dungeon} run.",
+    "comboName": "{days}-Day Combo",
+    "comboDescription": "Daily quest combo reached {days} days. +{xp} XP",
+    "static": {
+      "awakened": {
+        "name": "Awakened",
+        "description": "Accept the call. Enter your first dungeon."
+      },
+      "first-streak": {
+        "name": "First Blood",
+        "description": "Survive your first day inside a dungeon."
+      },
+      "first-quest": {
+        "name": "Quest Taken",
+        "description": "Complete your first daily quest."
+      },
+      "first-workout": {
+        "name": "First Rep",
+        "description": "Log a workout in Gym Life."
+      },
+      "first-exposure": {
+        "name": "Silent Presence",
+        "description": "Log your first exposure in the therapy ladder."
+      },
+      "rank-e": {
+        "name": "E-Rank Clear",
+        "description": "Hold a 7-day streak in any dungeon."
+      },
+      "rank-d": {
+        "name": "D-Rank Clear",
+        "description": "Reach 14 days in any dungeon."
+      },
+      "rank-c": {
+        "name": "C-Rank Clear",
+        "description": "Reach 30 days in any dungeon."
+      },
+      "rank-b": {
+        "name": "B-Rank Clear",
+        "description": "Reach 60 days in any dungeon."
+      },
+      "rank-a": {
+        "name": "A-Rank Clear",
+        "description": "Reach 90 days in any dungeon."
+      },
+      "rank-s": {
+        "name": "S-Rank Ascendant",
+        "description": "Reach 180 days in any dungeon."
+      },
+      "multi-classed": {
+        "name": "Multi-Classed",
+        "description": "Be active in 3 dungeons at once."
+      },
+      "polymath": {
+        "name": "Polymath",
+        "description": "Be active in all 5 dungeons simultaneously."
+      },
+      "perfect-day": {
+        "name": "Perfect Day",
+        "description": "Complete every daily quest in a single day."
+      },
+      "grinder": {
+        "name": "The Grinder",
+        "description": "50 total quest completions."
+      },
+      "grind-lord": {
+        "name": "Grind Lord",
+        "description": "250 total quest completions."
+      },
+      "iron-will": {
+        "name": "Iron Will",
+        "description": "Complete 10 workouts."
+      },
+      "forged": {
+        "name": "Forged",
+        "description": "100 workouts logged."
+      },
+      "ladder-climber": {
+        "name": "Ladder Climber",
+        "description": "Clear 3 rungs of the exposure ladder."
+      },
+      "fearless": {
+        "name": "Fearless",
+        "description": "Complete the entire exposure ladder."
+      },
+      "dungeon-master": {
+        "name": "Dungeon Master",
+        "description": "Successfully clear and retire a dungeon."
+      },
+      "conqueror": {
+        "name": "Conqueror",
+        "description": "Clear 3 dungeons to completion."
+      },
+      "level-5": {
+        "name": "Novice Hunter",
+        "description": "Reach level 5."
+      },
+      "level-10": {
+        "name": "Adept",
+        "description": "Reach level 10."
+      },
+      "level-25": {
+        "name": "Veteran",
+        "description": "Reach level 25."
+      },
+      "level-50": {
+        "name": "Shadow Monarch",
+        "description": "Reach level 50."
+      }
+    }
+  },
+  "guide": {
+    "header": "[ The System Manual ]",
+    "title": "Hunter Guide",
+    "subtitle": "The System doesn't hide its rules. Read them. Enter a dungeon. Begin.",
+    "section1Title": "1. How to Awaken",
+    "section1P1": "First contact with the System is brief. You sign in. The System greets you as a hunter. You accept the gate. A hunter ID is written and your Portal Registry unlocks.",
+    "section1P2": "From there, seven dungeons stand open. Pick one you'd fight even without a scoreboard. The scoreboard is only there to remind you that you did.",
+    "section2Title": "2. The Five Rule Types",
+    "section2Intro": "Every dungeon runs on one of five rule types. Read this once and the rest of the System collapses into something simple.",
+    "ruleLabels": {
+      "continuous_streak": "Continuous Streak",
+      "cadence": "Cadence",
+      "timed": "Timed Run",
+      "progressive": "Progressive Ladder"
+    },
+    "ruleSummaries": {
+      "continuous_streak": "A daily check-in. Confirm each day as cleared or relapsed in the calendar. Cleared days bank XP + dimensions permanently.",
+      "cadence": "A checklist pattern. Tick boxes within a window — daily for the Hunter-Type starters (clear any one), weekly for Training Regimen (5 of 5).",
+      "timed": "A daily check-in toward an N-day target. Same calendar mechanic as the streak dungeons. Claim Victory at the target to retire the run.",
+      "progressive": "An escalating ladder. Clear a rung to unlock the next. No skipping."
+    },
+    "ruleUsedBy": {
+      "continuous_streak": "NoFap · Caffeine Reboot · Diet Challenge",
+      "cadence": "Training Regimen · Daily Forge · Daily Sharpening · Daily Bonds · Daily Spark · Daily Stillness",
+      "timed": "No Doomscroll · Sound Sensitization",
+      "progressive": "Exposure Therapy"
+    },
+    "section3Title": "3. The Seven Portals",
+    "section3Intro": "Each portal is a specific discipline with specific rules and specific dimensions it trains.",
+    "section4Title": "4. Hunter Ranks",
+    "section4Intro": "Six ranks. Each holds 10 levels. Sixty levels total to Shadow Monarch. XP required per level follows a 1.5-power curve — the higher you climb, the slower each level arrives.",
+    "rankLevels": "Lv {start}–{end}",
+    "xpDropsIntro": "XP drops from four places:",
+    "xpStreakDay": "each time you check in a cleared day on a streak/timed dungeon — plus that dungeon's dimension points",
+    "xpWorkout": "per workout logged in Training Regimen",
+    "xpExposure": "per exposure logged in Exposure Therapy",
+    "xpCompletion": "when you claim Victory on a timed dungeon",
+    "section5Title": "5. The Five Dimensions",
+    "section5Intro": "Progress is tracked across five dimensions, not one flat XP bar. Each dungeon trains a specific subset. Your profile shows a radar chart — balanced hunters see a pentagon; specialized hunters see a spike.",
+    "dimensions": {
+      "body": {
+        "name": "BODY",
+        "description": "Physical strength and vitality. Earned from workouts and dietary discipline."
+      },
+      "mind": {
+        "name": "MIND",
+        "description": "Clarity, focus, attention. Earned from reclaiming your attention and senses."
+      },
+      "emotion": {
+        "name": "EMOTION",
+        "description": "Social courage and emotional regulation. Earned from exposure and reclaimed intimacy."
+      },
+      "energy": {
+        "name": "ENERGY",
+        "description": "Raw vitality and stamina. Earned from stimulant control, diet, and compulsion resistance."
+      },
+      "spirit": {
+        "name": "SPIRIT",
+        "description": "Depth, presence, inner silence. Earned from sensory reset and sustained discipline."
+      }
+    },
+    "section6Title": "6. Daily Quests & the Combo System",
+    "section6P1": "Each day the System offers a rotating set of small quests — each tied to a dimension. Complete them to earn dimension points and XP.",
+    "section6P2": "Complete <b>{threshold}</b> or more quests in a single day and that day qualifies for your combo. Consecutive qualifying days build a combo streak. At each milestone, bonus XP lands as a toast on your Status Window:",
+    "section6Footnote": "A 1-quest or 2-quest day is a grace day — you won't build, but you won't break either. Only a full miss resets the combo.",
+    "section7Title": "7. The Scattered Debuff",
+    "section7P1": "Complete zero quests in a day, and tomorrow you wake up <scattered>⚠ Scattered</scattered> — a visible mark on your Hunter Card.",
+    "section7P2": "Scattered is not a punishment. It costs no XP. It reveals nothing to other hunters. It's a mirror. You were absent, and the System shows you that fact until you're back.",
+    "section7P3": "It clears the moment you complete your first quest of the new day.",
+    "section8Title": "8. The Social Layer",
+    "section8Intro": "Other hunters exist. The System lets you cross paths.",
+    "section8PublicProfileLabel": "Public Profile.",
+    "section8PublicProfileBody": "Every hunter has a read-only profile at <code>/h/&lt;id&gt;</code> — rank, level, active dungeons, dimensions, trophies. Other signed-in hunters with your link can view it (not exposed to the open internet). Find your share link on your <profileLink>/profile</profileLink> page.",
+    "section8FriendsLabel": "Friends.",
+    "section8FriendsBody": "Visit another hunter's profile and tap <addFriend>+ Add Friend</addFriend>. They'll get a notification, accept, and you both appear on each other's friends list. Friendship is the foundation — group hunts and leaderboards build on top of it later.",
+    "section8JournalLabel": "Journal Entries.",
+    "section8JournalBody": "When you relapse, log a coffee, complete a run, or just want to write — a small note modal lets you save a reflection. Default is private (only you see it on your profile). Tick <code>Share to public profile</code> to surface that one entry on your public profile under Reflections.",
+    "section9Title": "9. Reach & Reliability",
+    "section9DailyLabel": "Daily Reminders.",
+    "section9DailyBody": "On by default. The first time you sign in, your browser asks once for notification permission — say yes and you're enrolled. The System sends a morning push if your day went unused yesterday and an evening push if today is slipping away. The message is state-aware — relapsed yesterday gets a comeback nudge, fell behind gets a pattern-break, on track gets a keep-going reset.",
+    "section9DailyNote": "To turn reminders off, either toggle them off on your profile or block notifications for the app at the OS level (iOS Settings → Notifications, Android app info, browser site settings on desktop).",
+    "section9InstallLabel": "Install the App.",
+    "section9InstallIntro": "Pushes only work if the app is installed. The flow is different on every platform:",
+    "section9InstallIos": "<b>iPhone / iPad:</b> open the site in Safari → <code>Share → Add to Home Screen</code>. Requires iOS 16.4+. Pushes won't fire from a regular Safari tab.",
+    "section9InstallAndroid": "<b>Android:</b> open in Chrome → tap the install banner that appears, or use Chrome's ⋮ menu → <code>Install app</code>. Pushes work either way once installed.",
+    "section9InstallDesktop": "<b>Desktop (Chrome, Edge, Brave):</b> look for the install icon in the address bar, or use the browser menu → <code>Install Shivaliva Leveling</code>. The app then opens in its own window.",
+    "section9OfflineLabel": "Offline.",
+    "section9OfflineBody": "The app works without a connection. On a plane, in the subway, in bad-signal zones — complete quests, log relapses, write journal entries. Everything queues locally and drains to the server the moment you reconnect. An amber banner shows when you're offline and how many actions are waiting to sync.",
+    "section10Title": "10. Currently Free",
+    "section10P1": "Every feature is currently free — every dungeon, every achievement, daily quests, dimensions, the heatmap, friends, journal, push, unlimited active runs.",
+    "section10P2": "If paid tiers ever exist, core self-hunting stays free. Competition with yourself shouldn't have a paywall. Early hunters get remembered.",
+    "ctaText": "The quest remains open.",
+    "ctaButton": "Enter the Portal Registry →"
   },
   "dailyQuests": {
     "header": "(!) Daily Quests",
@@ -42,25 +529,142 @@
     "quest_clean_room": "Clean Room"
   },
   "dungeons": {
-    "caffeine": { "name": "Caffeine Reboot" },
-    "sensible_diet": { "name": "Diet Challenge" },
-    "gym_life": { "name": "Training Regimen" },
-    "attention_reclaim": { "name": "No Doomscroll" },
-    "music_sensitization": { "name": "Sound Sensitization" },
-    "social_reclaim": { "name": "Exposure Therapy" },
-    "nofap": { "name": "NoFap" },
-    "starter_body": { "name": "Daily Forge" },
-    "starter_mind": { "name": "Daily Sharpening" },
-    "starter_emotion": { "name": "Daily Bonds" },
-    "starter_energy": { "name": "Daily Spark" },
-    "starter_spirit": { "name": "Daily Stillness" }
+    "caffeine": {
+      "name": "Caffeine Reboot",
+      "description": "Reset the nervous system. Up to 2 coffees per month is fine — the 3rd ends the run.",
+      "rules": [
+        "Up to 2 coffees per month is fine. The 3rd is a relapse.",
+        "Confirm each day on the calendar — Cleared if you held the line, Relapsed if you broke it.",
+        "Cleared days bank XP + dimension points permanently. Relapses are calendar markers — Exit Dungeon is the only way to end the run early."
+      ]
+    },
+    "sensible_diet": {
+      "name": "Diet Challenge",
+      "description": "Eat with awareness. 2–3 meals a day, no snacking between. Plant-first, animal-source second, seafood after that, meat only if nothing else. Up to 4 unnatural sweets per month — beyond that is a relapse.",
+      "rules": [
+        "2–3 meals per day. No snacks between meals — let the gut rest.",
+        "Eat plants first; then animal-source (eggs, dairy, nuts); then seafood; then meat only if no alternative.",
+        "Up to 4 unnatural sweets per month is fine. The 5th is a relapse.",
+        "Confirm each day on the calendar — Cleared if you held the line, Relapsed if you broke it."
+      ]
+    },
+    "gym_life": {
+      "name": "Training Regimen",
+      "description": "Forge the body. 5 workouts per week — one per muscle group: Chest & Shoulders, Back & Arms, Legs & Glutes, Core, and Full Body. Discipline is cadence, not intensity.",
+      "rules": [
+        "Complete 5 workouts per week — one of each: Chest & Shoulders, Back & Arms, Legs & Glutes, Core, Full Body.",
+        "Pick any exercises that hit the target muscle group. Log when the session is done.",
+        "Week runs Monday–Sunday (UTC). Manual relapse if you fall off the cadence."
+      ]
+    },
+    "attention_reclaim": {
+      "name": "No Doomscroll",
+      "description": "30 days without doom scrolling. Messaging, posting, and intentional single-video views are fine — only passive infinite feeds count as a slip.",
+      "rules": [
+        "Confirm each day on the calendar — Cleared or Relapsed.",
+        "Reach 30 cleared days to unlock Claim Victory.",
+        "Cleared days bank XP + dimensions permanently. Relapses are calendar markers — Exit Dungeon is the only way to end the run early."
+      ]
+    },
+    "music_sensitization": {
+      "name": "Sound Sensitization",
+      "description": "30 days without music. A sensory reset — let the ears grow quiet so wind, rain, birdsong, and real voices start to feel alive again.",
+      "rules": [
+        "Relapse = intentionally listening to songs (playlists, albums, concerts, background music you chose).",
+        "Allowed: podcasts, audiobooks, film scores, nature sounds, and involuntary ambient music (stores, cafes, other people's speakers).",
+        "Confirm each day on the calendar. Hit 30 cleared days to unlock Claim Victory."
+      ]
+    },
+    "social_reclaim": {
+      "name": "Exposure Therapy",
+      "description": "Climb the social ladder. Six rungs from silent presence to speaking up in groups — desensitize through graded exposure, one rung at a time.",
+      "rules": [
+        "Each rung has a target — log an exposure every time you do the action in real life.",
+        "Clear the current rung to unlock the next. No skipping.",
+        "Rungs progress ranks E → S. Dungeon cleared when the final rung is complete."
+      ]
+    },
+    "nofap": {
+      "name": "NoFap",
+      "description": "Reclaim your vital energy. Strict: no porn, masturbation, edging, or gooning. Sex and orgasm with a partner are fine — the rule targets compulsive solo use, not intimacy.",
+      "rules": [
+        "Relapse = porn, masturbation, edging, or gooning (thirst traps, bot accounts, sensualized social feeds).",
+        "Allowed: sex and orgasm with a partner — this dungeon is about compulsion, not abstinence.",
+        "Check in each day on the calendar — Cleared or Relapsed. Cleared days bank XP + dimensions permanently. Relapses are markers, not resets."
+      ]
+    },
+    "starter_body": {
+      "name": "Daily Forge",
+      "description": "The Body Hunter's daily floor. Three reps that ramp with your rank — clear any one to bank the day. Pushups, pullups, squats grow as your streak climbs E → S.",
+      "rules": [
+        "Complete 1 task per day.",
+        "Check off each one as you do it. Uncheck to remove a log.",
+        "Day resets at midnight UTC. Manual relapse if you fall off."
+      ]
+    },
+    "starter_mind": {
+      "name": "Daily Sharpening",
+      "description": "The Mind Hunter's daily floor. A few pages, a new idea, a single honest sentence. Clear any one to bank the day.",
+      "rules": [
+        "Complete 1 task per day.",
+        "Check off each one as you do it. Uncheck to remove a log.",
+        "Day resets at midnight UTC. Manual relapse if you fall off."
+      ]
+    },
+    "starter_emotion": {
+      "name": "Daily Bonds",
+      "description": "The Emotion Hunter's daily floor. Small reps of being seen, heard, present. Clear any one to bank the day.",
+      "rules": [
+        "Complete 1 task per day.",
+        "Check off each one as you do it. Uncheck to remove a log.",
+        "Day resets at midnight UTC. Manual relapse if you fall off."
+      ]
+    },
+    "starter_energy": {
+      "name": "Daily Spark",
+      "description": "The Energy Hunter's daily floor. Cold, motion, breath — three small jolts to wake the nervous system. Clear any one to bank the day.",
+      "rules": [
+        "Complete 1 task per day.",
+        "Check off each one as you do it. Uncheck to remove a log.",
+        "Day resets at midnight UTC. Manual relapse if you fall off."
+      ]
+    },
+    "starter_spirit": {
+      "name": "Daily Stillness",
+      "description": "The Spirit Hunter's daily floor. A breath of silence, a sentence of thanks, one craving denied. Clear any one to bank the day.",
+      "rules": [
+        "Complete 1 task per day.",
+        "Check off each one as you do it. Uncheck to remove a log.",
+        "Day resets at midnight UTC. Manual relapse if you fall off."
+      ]
+    }
   },
   "hunterTypes": {
-    "body": { "label": "Body Hunter", "tagline": "Forge the vessel." },
-    "mind": { "label": "Mind Hunter", "tagline": "Sharpen the blade." },
-    "emotion": { "label": "Emotion Hunter", "tagline": "Tend the flame." },
-    "energy": { "label": "Energy Hunter", "tagline": "Master the spark." },
-    "spirit": { "label": "Spirit Hunter", "tagline": "Touch the silent." }
+    "body": {
+      "label": "Body Hunter",
+      "tagline": "Forge the vessel.",
+      "description": "Train physical capacity. Pushups, pullups, squats — incremental ladders that climb to S rank. The path of iron and breath."
+    },
+    "mind": {
+      "label": "Mind Hunter",
+      "tagline": "Sharpen the blade.",
+      "description": "Train intellect. Reading, study, memorization — ladders of focus that compound across years. The path of clarity."
+    },
+    "emotion": {
+      "label": "Emotion Hunter",
+      "tagline": "Tend the flame.",
+      "description": "Train relational depth. Vulnerability, empathy, expression — daily reps of being seen. The path of the heart."
+    },
+    "energy": {
+      "label": "Energy Hunter",
+      "tagline": "Master the spark.",
+      "description": "Train vitality. Cold exposure, fasting, cardio — ladders that wake the body up. The path of the awakened nervous system."
+    },
+    "spirit": {
+      "label": "Spirit Hunter",
+      "tagline": "Touch the silent.",
+      "description": "Train transcendence. Meditation, silence, contemplation — ladders that deepen the inside. The path beyond the self."
+    }
   },
   "portals": {
     "header": "Portal Registry",
@@ -78,5 +682,37 @@
     "active": "Active",
     "viewInStatus": "View in Status Window",
     "rules": "Rules of Engagement"
+  },
+  "feed": {
+    "title": "The Feed",
+    "subtitle": "Public reflections from hunters across the system. Tap a name to view their profile.",
+    "emptyTitle": "[ No Reflections Yet ]",
+    "emptyBody": "When hunters mark their journal entries public, they'll appear here. Be the first — open a dungeon, log a note, toggle public.",
+    "loadMore": "Load More",
+    "loading": "Loading…",
+    "endOfFeed": "— End of Feed —",
+    "addReaction": "Add reaction"
+  },
+  "journal": {
+    "title": "Journal",
+    "backToProfile": "← Back to Profile",
+    "empty": "No entries yet. When you relapse, log a coffee, or mark an exposure, you'll be asked if you want to write a note — skip or save, your call.",
+    "summary": "{entries, plural, one {# entry} other {# entries}} · {days, plural, one {# day} other {# days}}",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{count} days ago",
+    "editTitle": "Edit Journal — {dungeon}",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deletePrompt": "Delete this entry?",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "seeAll": "See all {count} entries →",
+    "publicBadge": "◉ Public"
+  },
+  "entryTypes": {
+    "relapse": "Relapse",
+    "completed": "Completed",
+    "journal": "Journal"
   }
 }

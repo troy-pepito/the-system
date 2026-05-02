@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
 import Heatmap from "@/components/Heatmap";
@@ -9,6 +10,7 @@ import {
   achievementCategory,
   isComboAchievementId,
   rarityStyle,
+  resolveAchievementLabels,
   type AchievementDef,
 } from "@/lib/achievements";
 import { DUNGEONS } from "@/lib/dungeons";
@@ -238,6 +240,10 @@ function TrophySection({
   unlockedMap: Map<string, unknown>;
   nested?: boolean;
 }) {
+  const tAchievements = useTranslations("achievements");
+  const tDungeons = useTranslations("dungeons");
+  const tRungs = useTranslations("rungs");
+  const tRarity = useTranslations("rarityLabels");
   const [expanded, setExpanded] = useState(false);
   if (defs.length === 0) return null;
   const unlockedHere = defs.filter((d) => unlockedMap.has(d.id)).length;
@@ -278,6 +284,13 @@ function TrophySection({
           const unlockedAt = unlockedMap.get(def.id);
           const style = rarityStyle(def.rarity);
           const isUnlocked = !!unlockedAt;
+          const labels = resolveAchievementLabels(
+            def.id,
+            tAchievements,
+            tDungeons,
+            tRungs,
+            { name: def.name, description: def.description }
+          );
           return (
             <div
               key={def.id}
@@ -303,21 +316,21 @@ function TrophySection({
                       isUnlocked ? style.text : "text-slate-600"
                     }`}
                   >
-                    {isUnlocked ? def.name : "???"}
+                    {isUnlocked ? labels.name : "???"}
                   </p>
                   <p
                     className={`text-[11px] leading-relaxed mt-1 ${
                       isUnlocked ? "text-slate-300" : "text-slate-700"
                     }`}
                   >
-                    {def.description}
+                    {labels.description}
                   </p>
                   <p
                     className={`text-[9px] uppercase tracking-widest mt-1 ${
                       isUnlocked ? style.text : "text-slate-700"
                     }`}
                   >
-                    {style.label}
+                    {tRarity(def.rarity)}
                   </p>
                 </div>
               </div>

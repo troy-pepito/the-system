@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   acceptFriend,
   declineFriend,
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function FriendActions({ hunterId }: Props) {
+  const t = useTranslations("friends");
   const [status, setStatus] = useState<FriendStatus | "loading">("loading");
   const [busy, setBusy] = useState(false);
   const [confirmingUnfriend, setConfirmingUnfriend] = useState(false);
@@ -70,7 +72,7 @@ export default function FriendActions({ hunterId }: Props) {
             onClick={() => run(() => removeFriend(hunterId), "none")}
             className="px-4 py-2 border border-red-500/50 bg-red-500/15 text-red-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-red-500/25 transition-colors disabled:opacity-50"
           >
-            Unfriend
+            {t("unfriend")}
           </button>
           <button
             type="button"
@@ -78,7 +80,7 @@ export default function FriendActions({ hunterId }: Props) {
             onClick={() => setConfirmingUnfriend(false)}
             className="px-4 py-2 border border-slate-700 text-slate-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-slate-800/60 transition-colors disabled:opacity-50"
           >
-            Cancel
+            {t("cancel")}
           </button>
         </div>
       );
@@ -90,7 +92,7 @@ export default function FriendActions({ hunterId }: Props) {
         onClick={() => setConfirmingUnfriend(true)}
         className="px-4 py-2 border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
       >
-        ✓ Friends
+        {t("isFriend")}
       </button>
     );
   }
@@ -102,7 +104,7 @@ export default function FriendActions({ hunterId }: Props) {
         disabled
         className="px-4 py-2 border border-slate-700 text-slate-500 text-xs uppercase tracking-[0.3em] rounded cursor-not-allowed"
       >
-        Request Sent
+        {t("requestSent")}
       </button>
     );
   }
@@ -116,7 +118,7 @@ export default function FriendActions({ hunterId }: Props) {
           onClick={() => run(() => acceptFriend(hunterId), "friends")}
           className="px-4 py-2 border border-cyan-400/60 bg-cyan-500/20 text-cyan-200 text-xs uppercase tracking-[0.3em] rounded hover:bg-cyan-500/30 transition-colors disabled:opacity-50"
         >
-          Accept
+          {t("accept")}
         </button>
         <button
           type="button"
@@ -124,7 +126,7 @@ export default function FriendActions({ hunterId }: Props) {
           onClick={() => run(() => declineFriend(hunterId), "none")}
           className="px-4 py-2 border border-slate-700 text-slate-400 text-xs uppercase tracking-[0.3em] rounded hover:bg-slate-800/60 transition-colors disabled:opacity-50"
         >
-          Decline
+          {t("decline")}
         </button>
       </div>
     );
@@ -137,7 +139,7 @@ export default function FriendActions({ hunterId }: Props) {
       onClick={() => run(() => requestFriend(hunterId), "pending_out")}
       className="px-4 py-2 border border-cyan-400/60 bg-cyan-500/10 text-cyan-200 text-xs uppercase tracking-[0.3em] rounded hover:bg-cyan-500/20 transition-colors disabled:opacity-50"
     >
-      + Add Friend
+      {t("addFriend")}
     </button>
   );
 }

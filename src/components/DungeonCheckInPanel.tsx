@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   clearCheckIn,
   confirmDay,
@@ -44,6 +45,8 @@ export default function DungeonCheckInPanel({
   startDate,
   onClearedCountChange,
 }: DungeonCheckInPanelProps) {
+  const t = useTranslations("checkIn");
+  const tRun = useTranslations("dungeonRun");
   // Initialize empty on both server and client so SSR HTML matches
   // first-client render. Cache hydration runs in the useEffect below
   // before the server fetch settles.
@@ -125,7 +128,7 @@ export default function DungeonCheckInPanel({
       emotion: dims.emotion,
       energy: dims.energy,
       spirit: dims.spirit,
-      source: `${dungeonName} · Day Cleared`,
+      source: `${dungeonName} · ${tRun("dayClearedSource")}`,
     });
     notifyStatsUpdated({ xpDelta: XP_PER_STREAK_DAY });
     track("day_confirmed_cleared", { dungeon_id: dungeonId, date });
@@ -161,7 +164,10 @@ export default function DungeonCheckInPanel({
             setTimeout(() => {
               notifyReward({
                 xp: bonus,
-                source: `🏆 Rank ${tier.rank} · ${dungeonName}`,
+                source: tRun("tierBonusSource", {
+                  rank: tier.rank,
+                  dungeon: dungeonName,
+                }),
               });
               notifyStatsUpdated({ xpDelta: bonus });
             }, 1100);
@@ -274,14 +280,15 @@ export default function DungeonCheckInPanel({
         <div className="bg-cyan-500/10 border border-cyan-400/40 rounded-lg p-3 space-y-2">
           <p className="text-[11px] uppercase tracking-[0.3em] text-cyan-300 text-center">
             {promptExisting?.state === "cleared"
-              ? `${promptDate} — currently cleared`
+              ? t("currentlyCleared", { date: promptDate })
               : promptExisting?.state === "relapsed"
-              ? `${promptDate} — ${promptExisting.count} relapse${
-                  promptExisting.count === 1 ? "" : "s"
-                }`
+              ? t("currentlyRelapsed", {
+                  date: promptDate,
+                  count: promptExisting.count,
+                })
               : promptDate === today
-              ? "Did you clear today?"
-              : `Confirm ${promptDate}`}
+              ? t("didYouClearToday")
+              : t("confirmDate", { date: promptDate })}
           </p>
           <div className="flex gap-2 flex-wrap">
             {promptExisting?.state !== "cleared" && (
@@ -294,8 +301,8 @@ export default function DungeonCheckInPanel({
                 className="flex-1 min-w-[6rem] px-3 py-2 bg-emerald-500/20 border border-emerald-400/50 rounded text-emerald-300 text-xs uppercase tracking-widest hover:bg-emerald-500/30 transition-colors shadow-[0_0_8px_rgba(52,211,153,0.3)]"
               >
                 {promptExisting?.state === "relapsed"
-                  ? "Mark Cleared"
-                  : "Cleared"}
+                  ? t("markCleared")
+                  : t("cleared")}
               </button>
             )}
             <button
@@ -306,10 +313,10 @@ export default function DungeonCheckInPanel({
               className="flex-1 min-w-[6rem] px-3 py-2 bg-red-500/15 border border-red-500/40 rounded text-red-300 text-xs uppercase tracking-widest hover:bg-red-500/25 transition-colors"
             >
               {promptExisting?.state === "relapsed"
-                ? "Relapse +1"
+                ? t("relapsePlus")
                 : promptExisting?.state === "cleared"
-                ? "Mark Relapsed"
-                : "Relapsed"}
+                ? t("markRelapsed")
+                : t("relapsed")}
             </button>
             {promptExisting && (
               <button
@@ -320,7 +327,7 @@ export default function DungeonCheckInPanel({
                 }}
                 className="flex-1 min-w-[6rem] px-3 py-2 bg-slate-700/40 border border-slate-600 rounded text-slate-300 text-xs uppercase tracking-widest hover:bg-slate-700/60 transition-colors"
               >
-                Undo
+                {t("undo")}
               </button>
             )}
           </div>
@@ -329,7 +336,7 @@ export default function DungeonCheckInPanel({
               onClick={() => setPending(null)}
               className="w-full text-[10px] tracking-widest uppercase text-slate-500 hover:text-slate-300 transition-colors"
             >
-              Cancel
+              {t("cancel")}
             </button>
           )}
         </div>
@@ -345,10 +352,10 @@ export default function DungeonCheckInPanel({
 
       <NoteModal
         open={relapseNoteOpen}
-        title={`Relapse — ${dungeonName}`}
-        placeholder="What triggered it? How are you feeling? (optional)"
-        confirmLabel="Log Relapse"
-        skipLabel="Cancel"
+        title={t("relapseTitle", { dungeon: dungeonName })}
+        placeholder={t("relapsePlaceholder")}
+        confirmLabel={t("relapseConfirm")}
+        skipLabel={t("relapseSkip")}
         tone="danger"
         cancelOnSkip
         showPublicToggle

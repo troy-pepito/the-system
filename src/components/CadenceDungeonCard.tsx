@@ -48,6 +48,7 @@ export default function CadenceDungeonCard({
   onExit,
 }: CadenceDungeonCardProps) {
   const tDungeons = useTranslations("dungeons");
+  const tRun = useTranslations("dungeonRun");
   const dungeon = getDungeon(dungeonId);
   const dungeonName = dungeon
     ? tDungeons(`${dungeonKey(dungeonId)}.name`)
@@ -118,7 +119,7 @@ export default function CadenceDungeonCard({
         emotion: dims.emotion,
         energy: dims.energy,
         spirit: dims.spirit,
-        source: `${dungeonName} · Task Cleared`,
+        source: `${dungeonName} · ${tRun("taskCleared")}`,
       });
     }
 
@@ -173,7 +174,7 @@ export default function CadenceDungeonCard({
               {streak}
             </p>
             <p className="text-xs text-emerald-400/60 uppercase tracking-wider mt-1">
-              {streak === 1 ? "day" : "days"} forged
+              {tRun("daysForged", { count: streak })}
             </p>
           </div>
 
@@ -202,8 +203,8 @@ export default function CadenceDungeonCard({
           {nextTier ? (
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
-                <span>Next tier: {nextTier.rank}</span>
-                <span>{streak} / {nextTier.days} days</span>
+                <span>{tRun("nextTier", { rank: nextTier.rank })}</span>
+                <span>{tRun("daysFraction", { count: streak, target: nextTier.days })}</span>
               </div>
               <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
                 <div
@@ -214,14 +215,14 @@ export default function CadenceDungeonCard({
             </div>
           ) : (
             <p className="text-xs text-amber-300 uppercase tracking-widest drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">
-              Dungeon mastered
+              {tRun("dungeonMastered")}
             </p>
           )}
 
           <div className="border border-slate-700 rounded-lg p-4 space-y-3 text-left">
             <div className="flex justify-between items-center">
               <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70">
-                {cadence?.window === "day" ? "Today" : "This Week"}
+                {cadence?.window === "day" ? tRun("today") : tRun("thisWeek")}
               </p>
               <span
                 className={`text-xs font-bold ${
@@ -276,24 +277,24 @@ export default function CadenceDungeonCard({
 
             {weekCleared && (
               <p className="text-[10px] text-emerald-400 uppercase tracking-widest text-center pt-1 drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">
-                ✦ {cadence?.window === "day" ? "Day" : "Week"} cleared ✦
+                {cadence?.window === "day" ? tRun("dayCleared") : tRun("weekCleared")}
               </p>
             )}
           </div>
 
-          <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
+          <p className="text-[10px] text-slate-600">{tRun("entered", { date: startDate })}</p>
           <div className="flex flex-col gap-2 items-stretch">
             <button
               onClick={journal.open}
               className="px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
             >
-              + Journal Entry
+              {tRun("journalEntry")}
             </button>
             <button
               onClick={exitAction.open}
               className="px-4 py-2 border border-slate-700 rounded text-slate-500 text-[11px] uppercase tracking-[0.3em] hover:text-amber-300/80 hover:border-amber-500/30 transition-colors"
             >
-              Exit Dungeon
+              {tRun("exitDungeon")}
             </button>
           </div>
         </div>
@@ -301,7 +302,7 @@ export default function CadenceDungeonCard({
         <div className="space-y-4 py-3">
           <div className="flex items-center justify-center gap-2 text-[10px] tracking-[0.4em] text-slate-500 uppercase">
             <span className="inline-block w-1.5 h-1.5 bg-slate-600 rounded-full animate-pulse" />
-            Portal Dormant
+            {tRun("portalDormant")}
           </div>
           <DateEntryPicker onEnter={handleDatePick} />
         </div>

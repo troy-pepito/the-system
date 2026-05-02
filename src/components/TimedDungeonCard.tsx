@@ -35,6 +35,7 @@ export default function TimedDungeonCard({
   onComplete,
 }: TimedDungeonCardProps) {
   const tDungeons = useTranslations("dungeons");
+  const tRun = useTranslations("dungeonRun");
   const dungeon = getDungeon(dungeonId);
   const dungeonName = dungeon
     ? tDungeons(`${dungeonKey(dungeonId)}.name`)
@@ -114,7 +115,7 @@ export default function TimedDungeonCard({
               {clearedCount}
             </p>
             <p className="text-xs text-emerald-400/60 uppercase tracking-wider mt-1">
-              {clearedCount === 1 ? "day" : "days"} cleared
+              {tRun("daysCleared", { count: clearedCount })}
             </p>
           </div>
 
@@ -139,9 +140,9 @@ export default function TimedDungeonCard({
 
           <div className="space-y-1">
             <div className="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
-              <span>Target: {TARGET} days</span>
+              <span>{tRun("target", { count: TARGET })}</span>
               <span>
-                {clearedCount} / {TARGET}
+                {tRun("progressFraction", { count: clearedCount, target: TARGET })}
               </span>
             </div>
             <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
@@ -159,13 +160,13 @@ export default function TimedDungeonCard({
           {cleared && (
             <div className="space-y-3 pt-2">
               <p className="text-sm text-amber-300 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] animate-pulse">
-                ★ Dungeon Cleared ★
+                {tRun("dungeonClearedBanner")}
               </p>
               <button
                 onClick={victory.open}
                 className="w-full px-4 py-3 bg-amber-500/20 border border-amber-400/50 rounded text-amber-300 text-sm uppercase tracking-widest hover:bg-amber-500/30 transition-colors drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]"
               >
-                Claim Victory
+                {tRun("claimVictory")}
               </button>
             </div>
           )}
@@ -177,19 +178,19 @@ export default function TimedDungeonCard({
             onClearedCountChange={handleClearedCountChange}
           />
 
-          <p className="text-[10px] text-slate-600">Entered: {startDate}</p>
+          <p className="text-[10px] text-slate-600">{tRun("entered", { date: startDate })}</p>
           <div className="flex flex-col gap-2 items-stretch">
             <button
               onClick={journal.open}
               className="px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
             >
-              + Journal Entry
+              {tRun("journalEntry")}
             </button>
             <button
               onClick={exitAction.open}
               className="px-4 py-2 border border-slate-700 rounded text-slate-500 text-[11px] uppercase tracking-[0.3em] hover:text-amber-300/80 hover:border-amber-500/30 transition-colors"
             >
-              Exit Dungeon
+              {tRun("exitDungeon")}
             </button>
           </div>
         </div>
@@ -197,7 +198,7 @@ export default function TimedDungeonCard({
         <div className="space-y-4 py-3">
           <div className="flex items-center justify-center gap-2 text-[10px] tracking-[0.4em] text-slate-500 uppercase">
             <span className="inline-block w-1.5 h-1.5 bg-slate-600 rounded-full animate-pulse" />
-            Portal Dormant
+            {tRun("portalDormant")}
           </div>
           <DateEntryPicker onEnter={handleDatePick} />
         </div>

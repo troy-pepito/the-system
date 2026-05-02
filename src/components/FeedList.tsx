@@ -20,6 +20,7 @@ export default function FeedList({
   initialEntries,
   initialCursor,
 }: FeedListProps) {
+  const t = useTranslations("feed");
   const [entries, setEntries] = useState<FeedEntry[]>(initialEntries);
   const [cursor, setCursor] = useState<number | null>(initialCursor);
   const [loading, setLoading] = useState(false);
@@ -49,11 +50,10 @@ export default function FeedList({
     return (
       <div className="border border-slate-800 rounded-lg p-8 text-center">
         <p className="text-[10px] tracking-[0.4em] uppercase text-slate-500 mb-3">
-          [ No Reflections Yet ]
+          {t("emptyTitle")}
         </p>
         <p className="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto">
-          When hunters mark their journal entries public, they&apos;ll appear
-          here. Be the first — open a dungeon, log a note, toggle public.
+          {t("emptyBody")}
         </p>
       </div>
     );
@@ -77,13 +77,13 @@ export default function FeedList({
           disabled={loading}
           className="w-full px-4 py-3 border border-cyan-500/30 rounded text-cyan-300 text-[10px] uppercase tracking-[0.3em] hover:bg-cyan-500/10 transition-colors disabled:opacity-40"
         >
-          {loading ? "Loading…" : "Load More"}
+          {loading ? t("loading") : t("loadMore")}
         </button>
       )}
 
       {cursor === null && entries.length > 0 && (
         <p className="text-center text-[9px] tracking-[0.4em] uppercase text-slate-600 py-3">
-          — End of Feed —
+          {t("endOfFeed")}
         </p>
       )}
     </div>
@@ -97,6 +97,8 @@ interface FeedCardProps {
 
 function FeedCard({ entry, onReact }: FeedCardProps) {
   const tDungeons = useTranslations("dungeons");
+  const tEntryTypes = useTranslations("entryTypes");
+  const tFeed = useTranslations("feed");
   const dungeonName = getDungeon(entry.dungeonId)
     ? tDungeons(`${dungeonKey(entry.dungeonId)}.name`)
     : entry.dungeonId;
@@ -157,7 +159,7 @@ function FeedCard({ entry, onReact }: FeedCardProps) {
             <span
               className={`text-[9px] uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${entryTone(entry.type)}`}
             >
-              {entryLabel(entry.type)}
+              {entryLabel(entry.type, tEntryTypes)}
             </span>
           </div>
           <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
@@ -183,6 +185,7 @@ function FeedCard({ entry, onReact }: FeedCardProps) {
               open={pickerOpen}
               onOpenChange={setPickerOpen}
               onPick={handleToggle}
+              addReactionLabel={tFeed("addReaction")}
             />
           </div>
         </div>
@@ -195,14 +198,20 @@ interface ReactionPickerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onPick: (emoji: string) => void;
+  addReactionLabel: string;
 }
 
-function ReactionPicker({ open, onOpenChange, onPick }: ReactionPickerProps) {
+function ReactionPicker({
+  open,
+  onOpenChange,
+  onPick,
+  addReactionLabel,
+}: ReactionPickerProps) {
   return (
     <div className="relative">
       <button
         onClick={() => onOpenChange(!open)}
-        aria-label="Add reaction"
+        aria-label={addReactionLabel}
         className="px-2 py-0.5 border border-slate-700 rounded-full text-slate-400 text-[11px] hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
       >
         +
@@ -260,10 +269,13 @@ function nextReactions(
     .filter((r) => r.count > 0);
 }
 
-function entryLabel(type: string): string {
-  if (type === "relapse") return "Relapse";
-  if (type === "completed") return "Completed";
-  if (type === "journal") return "Journal";
+function entryLabel(
+  type: string,
+  t: (key: string) => string
+): string {
+  if (type === "relapse" || type === "completed" || type === "journal") {
+    return t(type);
+  }
   return type.replace(/-/g, " ");
 }
 

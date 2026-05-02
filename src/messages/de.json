@@ -28,7 +28,20 @@
     "edit": "Bearbeiten",
     "scattered": "Zerstreut",
     "viewPublic": "Öffentlich Ansehen",
-    "choosePath": "+ Wähle deinen Pfad"
+    "choosePath": "+ Wähle deinen Pfad",
+    "share": "Teilen",
+    "shareCopied": "✓ Kopiert",
+    "changeAvatarLabel": "Profilbild ändern",
+    "changeAvatar": "Ändern",
+    "uploading": "Lädt hoch",
+    "rename": "Umbenennen",
+    "changePath": "Pfad ändern",
+    "viewAllRanks": "Alle Ränge anzeigen",
+    "rankPath": "Rang-Pfad",
+    "maxRank": "MAX RANG",
+    "rankProgress": "{count} LVL → {next}",
+    "scatteredHelp": "Gestern keine Daily Quests abgeschlossen. Verschwindet nach deinem nächsten aktiven Tag.",
+    "avatarLocalError": "Avatar konnte nicht lokal gespeichert werden"
   },
   "dailyQuests": {
     "header": "(!) Tägliche Quests",
@@ -42,25 +55,142 @@
     "quest_clean_room": "Zimmer Aufräumen"
   },
   "dungeons": {
-    "caffeine": { "name": "Koffein-Reset" },
-    "sensible_diet": { "name": "Diät-Herausforderung" },
-    "gym_life": { "name": "Trainingsplan" },
-    "attention_reclaim": { "name": "Kein Doomscroll" },
-    "music_sensitization": { "name": "Klang-Sensibilisierung" },
-    "social_reclaim": { "name": "Expositionstherapie" },
-    "nofap": { "name": "NoFap" },
-    "starter_body": { "name": "Tägliche Schmiede" },
-    "starter_mind": { "name": "Tägliches Schärfen" },
-    "starter_emotion": { "name": "Tägliche Bande" },
-    "starter_energy": { "name": "Täglicher Funke" },
-    "starter_spirit": { "name": "Tägliche Stille" }
+    "caffeine": {
+      "name": "Koffein-Reset",
+      "description": "Setze das Nervensystem zurück. Bis zu 2 Kaffees pro Monat sind erlaubt — der 3. beendet den Lauf.",
+      "rules": [
+        "Bis zu 2 Kaffees pro Monat sind in Ordnung. Der 3. ist ein Rückfall.",
+        "Bestätige jeden Tag im Kalender — Bestanden, wenn du die Linie gehalten hast, Rückfall, wenn du sie gebrochen hast.",
+        "Bestandene Tage sammeln XP + Dimensionspunkte dauerhaft. Rückfälle sind Kalendermarkierungen — Dungeon Verlassen ist die einzige Möglichkeit, den Lauf vorzeitig zu beenden."
+      ]
+    },
+    "sensible_diet": {
+      "name": "Diät-Herausforderung",
+      "description": "Iss mit Achtsamkeit. 2–3 Mahlzeiten pro Tag, kein Snacken dazwischen. Pflanzen zuerst, tierische Quellen danach, Meeresfrüchte als nächstes, Fleisch nur wenn nichts anderes da ist. Bis zu 4 unnatürliche Süßigkeiten pro Monat — darüber hinaus ist ein Rückfall.",
+      "rules": [
+        "2–3 Mahlzeiten pro Tag. Keine Snacks zwischen den Mahlzeiten — lass den Darm ruhen.",
+        "Iss zuerst Pflanzen; dann tierische Quellen (Eier, Milchprodukte, Nüsse); dann Meeresfrüchte; dann Fleisch nur, wenn keine Alternative.",
+        "Bis zu 4 unnatürliche Süßigkeiten pro Monat sind in Ordnung. Die 5. ist ein Rückfall.",
+        "Bestätige jeden Tag im Kalender — Bestanden, wenn du die Linie gehalten hast, Rückfall, wenn du sie gebrochen hast."
+      ]
+    },
+    "gym_life": {
+      "name": "Trainingsplan",
+      "description": "Schmiede den Körper. 5 Workouts pro Woche — eins pro Muskelgruppe: Brust & Schultern, Rücken & Arme, Beine & Po, Core und Ganzkörper. Disziplin ist Kadenz, nicht Intensität.",
+      "rules": [
+        "Absolviere 5 Workouts pro Woche — je eins: Brust & Schultern, Rücken & Arme, Beine & Po, Core, Ganzkörper.",
+        "Wähle beliebige Übungen, die die Zielmuskelgruppe treffen. Logge, wenn die Session erledigt ist.",
+        "Die Woche läuft Montag–Sonntag (UTC). Manueller Rückfall, wenn du aus der Kadenz fällst."
+      ]
+    },
+    "attention_reclaim": {
+      "name": "Kein Doomscroll",
+      "description": "30 Tage ohne Doomscrolling. Nachrichten, Posten und gezielte Einzelvideos sind in Ordnung — nur passive endlose Feeds zählen als Ausrutscher.",
+      "rules": [
+        "Bestätige jeden Tag im Kalender — Bestanden oder Rückfall.",
+        "Erreiche 30 bestandene Tage, um Sieg Beanspruchen freizuschalten.",
+        "Bestandene Tage sammeln XP + Dimensionen dauerhaft. Rückfälle sind Kalendermarkierungen — Dungeon Verlassen ist die einzige Möglichkeit, den Lauf vorzeitig zu beenden."
+      ]
+    },
+    "music_sensitization": {
+      "name": "Klang-Sensibilisierung",
+      "description": "30 Tage ohne Musik. Ein sensorischer Reset — lass die Ohren still werden, damit Wind, Regen, Vogelgesang und echte Stimmen wieder lebendig wirken.",
+      "rules": [
+        "Rückfall = bewusst Lieder hören (Playlists, Alben, Konzerte, Hintergrundmusik, die du gewählt hast).",
+        "Erlaubt: Podcasts, Hörbücher, Filmmusik, Naturklänge und unfreiwillige Umgebungsmusik (Geschäfte, Cafés, Lautsprecher anderer Leute).",
+        "Bestätige jeden Tag im Kalender. Erreiche 30 bestandene Tage, um Sieg Beanspruchen freizuschalten."
+      ]
+    },
+    "social_reclaim": {
+      "name": "Expositionstherapie",
+      "description": "Erklimme die soziale Leiter. Sechs Sprossen von stiller Präsenz bis zum Sprechen in Gruppen — desensibilisiere durch gestufte Exposition, eine Sprosse nach der anderen.",
+      "rules": [
+        "Jede Sprosse hat ein Ziel — logge eine Exposition jedes Mal, wenn du die Aktion im echten Leben tust.",
+        "Beende die aktuelle Sprosse, um die nächste freizuschalten. Kein Überspringen.",
+        "Sprossen schreiten von Rang E → S fort. Dungeon abgeschlossen, wenn die letzte Sprosse fertig ist."
+      ]
+    },
+    "nofap": {
+      "name": "NoFap",
+      "description": "Erlange deine Lebensenergie zurück. Streng: keine Pornos, Masturbation, Edging oder Gooning. Sex und Orgasmus mit einer Partnerin sind in Ordnung — die Regel zielt auf zwanghafte Solo-Nutzung, nicht auf Intimität.",
+      "rules": [
+        "Rückfall = Pornos, Masturbation, Edging oder Gooning (Thirst Traps, Bot-Accounts, sexualisierte Social Feeds).",
+        "Erlaubt: Sex und Orgasmus mit einer Partnerin — in diesem Dungeon geht es um Zwang, nicht um Enthaltsamkeit.",
+        "Checke jeden Tag im Kalender ein — Bestanden oder Rückfall. Bestandene Tage sammeln XP + Dimensionen dauerhaft. Rückfälle sind Markierungen, keine Resets."
+      ]
+    },
+    "starter_body": {
+      "name": "Tägliche Schmiede",
+      "description": "Die tägliche Basis des Körper-Jägers. Drei Übungen, die mit deinem Rang wachsen — eine reicht, um den Tag zu sichern. Liegestütze, Klimmzüge, Kniebeugen steigen mit deiner Strähne von E → S.",
+      "rules": [
+        "Erledige 1 Aufgabe pro Tag.",
+        "Hake jede ab, sobald du sie tust. Häkchen entfernen, um einen Eintrag zu löschen.",
+        "Der Tag wird um Mitternacht UTC zurückgesetzt. Manueller Rückfall, wenn du aussteigst."
+      ]
+    },
+    "starter_mind": {
+      "name": "Tägliches Schärfen",
+      "description": "Die tägliche Basis des Geist-Jägers. Ein paar Seiten, eine neue Idee, ein einziger ehrlicher Satz. Eines reicht, um den Tag zu sichern.",
+      "rules": [
+        "Erledige 1 Aufgabe pro Tag.",
+        "Hake jede ab, sobald du sie tust. Häkchen entfernen, um einen Eintrag zu löschen.",
+        "Der Tag wird um Mitternacht UTC zurückgesetzt. Manueller Rückfall, wenn du aussteigst."
+      ]
+    },
+    "starter_emotion": {
+      "name": "Tägliche Bande",
+      "description": "Die tägliche Basis des Emotion-Jägers. Kleine Übungen, gesehen, gehört und präsent zu sein. Eines reicht, um den Tag zu sichern.",
+      "rules": [
+        "Erledige 1 Aufgabe pro Tag.",
+        "Hake jede ab, sobald du sie tust. Häkchen entfernen, um einen Eintrag zu löschen.",
+        "Der Tag wird um Mitternacht UTC zurückgesetzt. Manueller Rückfall, wenn du aussteigst."
+      ]
+    },
+    "starter_energy": {
+      "name": "Täglicher Funke",
+      "description": "Die tägliche Basis des Energie-Jägers. Kälte, Bewegung, Atem — drei kleine Stöße, um das Nervensystem zu wecken. Eines reicht, um den Tag zu sichern.",
+      "rules": [
+        "Erledige 1 Aufgabe pro Tag.",
+        "Hake jede ab, sobald du sie tust. Häkchen entfernen, um einen Eintrag zu löschen.",
+        "Der Tag wird um Mitternacht UTC zurückgesetzt. Manueller Rückfall, wenn du aussteigst."
+      ]
+    },
+    "starter_spirit": {
+      "name": "Tägliche Stille",
+      "description": "Die tägliche Basis des Seele-Jägers. Ein Atemzug Stille, ein Satz Dankbarkeit, eine Begierde verweigert. Eines reicht, um den Tag zu sichern.",
+      "rules": [
+        "Erledige 1 Aufgabe pro Tag.",
+        "Hake jede ab, sobald du sie tust. Häkchen entfernen, um einen Eintrag zu löschen.",
+        "Der Tag wird um Mitternacht UTC zurückgesetzt. Manueller Rückfall, wenn du aussteigst."
+      ]
+    }
   },
   "hunterTypes": {
-    "body": { "label": "Körper-Jäger", "tagline": "Schmiede das Gefäß." },
-    "mind": { "label": "Geist-Jäger", "tagline": "Schärfe die Klinge." },
-    "emotion": { "label": "Emotion-Jäger", "tagline": "Hüte die Flamme." },
-    "energy": { "label": "Energie-Jäger", "tagline": "Beherrsche den Funken." },
-    "spirit": { "label": "Seele-Jäger", "tagline": "Berühre die Stille." }
+    "body": {
+      "label": "Körper-Jäger",
+      "tagline": "Schmiede das Gefäß.",
+      "description": "Trainiere körperliche Kapazität. Liegestütze, Klimmzüge, Kniebeugen — schrittweise Leitern, die bis Rang S führen. Der Pfad aus Eisen und Atem."
+    },
+    "mind": {
+      "label": "Geist-Jäger",
+      "tagline": "Schärfe die Klinge.",
+      "description": "Trainiere den Intellekt. Lesen, Studieren, Auswendiglernen — Leitern der Konzentration, die sich über Jahre summieren. Der Pfad der Klarheit."
+    },
+    "emotion": {
+      "label": "Emotion-Jäger",
+      "tagline": "Hüte die Flamme.",
+      "description": "Trainiere relationale Tiefe. Verletzlichkeit, Empathie, Ausdruck — tägliche Übungen darin, gesehen zu werden. Der Pfad des Herzens."
+    },
+    "energy": {
+      "label": "Energie-Jäger",
+      "tagline": "Beherrsche den Funken.",
+      "description": "Trainiere Vitalität. Kälteexposition, Fasten, Cardio — Leitern, die den Körper aufwecken. Der Pfad des erweckten Nervensystems."
+    },
+    "spirit": {
+      "label": "Seele-Jäger",
+      "tagline": "Berühre die Stille.",
+      "description": "Trainiere Transzendenz. Meditation, Stille, Kontemplation — Leitern, die das Innere vertiefen. Der Pfad jenseits des Selbst."
+    }
   },
   "portals": {
     "header": "Portal-Register",
@@ -78,5 +208,433 @@
     "active": "Aktiv",
     "viewInStatus": "Im Status-Fenster Ansehen",
     "rules": "Kampfregeln"
+  },
+  "feed": {
+    "title": "Der Feed",
+    "subtitle": "Öffentliche Reflexionen von Jägern im System. Tippe auf einen Namen, um das Profil zu sehen.",
+    "emptyTitle": "[ Noch keine Reflexionen ]",
+    "emptyBody": "Wenn Jäger ihre Journaleinträge öffentlich machen, erscheinen sie hier. Sei der Erste — öffne einen Dungeon, schreibe eine Notiz, aktiviere öffentlich.",
+    "loadMore": "Mehr laden",
+    "loading": "Lädt…",
+    "endOfFeed": "— Ende des Feeds —",
+    "addReaction": "Reaktion hinzufügen"
+  },
+  "journal": {
+    "title": "Journal",
+    "backToProfile": "← Zurück zum Profil",
+    "empty": "Noch keine Einträge. Wenn du rückfällig wirst, einen Kaffee loggst oder eine Exposition markierst, wirst du gefragt, ob du eine Notiz schreiben willst — überspringen oder speichern, deine Wahl.",
+    "summary": "{entries, plural, one {# Eintrag} other {# Einträge}} · {days, plural, one {# Tag} other {# Tage}}",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "daysAgo": "vor {count} Tagen",
+    "editTitle": "Journal bearbeiten — {dungeon}",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deletePrompt": "Diesen Eintrag löschen?",
+    "yes": "Ja",
+    "cancel": "Abbrechen",
+    "seeAll": "Alle {count} Einträge sehen →",
+    "publicBadge": "◉ Öffentlich"
+  },
+  "entryTypes": {
+    "relapse": "Rückfall",
+    "completed": "Abgeschlossen",
+    "journal": "Journal"
+  },
+  "toasts": {
+    "achievementUnlocked": "[ Erfolg Freigeschaltet ]",
+    "levelUp": "[ Level Up ]",
+    "levelLabel": "Lv {level}",
+    "rankAscended": "[ Rang Aufgestiegen ]",
+    "tierAchieved": "{flavor}-Stufe erreicht",
+    "tapToDismiss": "Tippen zum Schließen",
+    "ascension": "[ Aufstieg ]",
+    "rankReached": "Du hast Rang {rank} erreicht",
+    "shareAscension": "Teile deinen Aufstieg mit jemandem, der es versteht.",
+    "share": "Teilen",
+    "sharing": "Teilen…",
+    "later": "Später",
+    "dismissShare": "Teilen-Hinweis schließen"
+  },
+  "friends": {
+    "title": "Freunde",
+    "emptyBody": "Noch keine Jäger verbunden. Teile deinen Profil-Link oder besuche das Profil eines anderen Jägers, um eine Anfrage zu senden.",
+    "requests": "Freundschaftsanfragen · {count}",
+    "wantsToConnect": "Möchte sich verbinden",
+    "accept": "Annehmen",
+    "decline": "Ablehnen",
+    "rankPrefix": "Rang ",
+    "levelLabel": "Lv {level}",
+    "unfriend": "Entfreunden",
+    "cancel": "Abbrechen",
+    "isFriend": "✓ Befreundet",
+    "requestSent": "Anfrage Gesendet",
+    "addFriend": "+ Freund Hinzufügen"
+  },
+  "installApp": {
+    "title": "App Installieren",
+    "installed": "✓ Installiert — läuft im Standalone-Modus.",
+    "available": "Ein-Tap-Installation. Kein App Store. Push-Benachrichtigungen und Offline-Modus funktionieren besser, wenn installiert.",
+    "iosInstructions": "Auf dem iPhone tippe auf das <strong>Teilen</strong>-Symbol, dann <strong>Zum Home-Bildschirm</strong>. Erfordert iOS 16.4+.",
+    "unsupported": "Öffne dein Browser-Menü und suche nach 'App installieren' oder 'Zum Startbildschirm hinzufügen'.",
+    "install": "Installieren",
+    "installing": "Installiert…"
+  },
+  "notifications": {
+    "title": "Tägliche Erinnerung",
+    "unsupported": "Dieser Browser unterstützt keine Push-Benachrichtigungen.",
+    "denied": "Benachrichtigungen sind blockiert. Aktiviere sie erneut in deinen Browser-/OS-Einstellungen.",
+    "description": "Erhalte einen Anstoß, wenn der Tag zurückgesetzt wird, damit du keine Quests verpasst.",
+    "notConfigured": "Push-Benachrichtigungen nicht konfiguriert.",
+    "couldNotEnable": "Aktivierung fehlgeschlagen",
+    "couldNotDisable": "Deaktivierung fehlgeschlagen"
+  },
+  "noteModal": {
+    "chrome": "[ Journal ]",
+    "defaultPlaceholder": "Was ist passiert? (optional)",
+    "defaultConfirm": "Speichern",
+    "defaultSkip": "Überspringen",
+    "sharePublic": "Auf öffentlichem Profil teilen",
+    "editPlaceholder": "Bearbeite deine Reflexion…",
+    "editCancel": "Abbrechen"
+  },
+  "dungeonRun": {
+    "daysCleared": "{count, plural, one {# Tag} other {# Tage}} bestanden",
+    "daysForged": "{count, plural, one {# Tag} other {# Tage}} geschmiedet",
+    "nextTier": "Nächste Stufe: {rank}",
+    "daysFraction": "{count} / {target} Tage",
+    "dungeonMastered": "Dungeon gemeistert",
+    "dungeonClearedBanner": "★ Dungeon Bestanden ★",
+    "claimVictory": "Sieg Beanspruchen",
+    "target": "Ziel: {count} Tage",
+    "entered": "Betreten: {date}",
+    "journalEntry": "+ Journaleintrag",
+    "exitDungeon": "Dungeon Verlassen",
+    "portalDormant": "Portal Inaktiv",
+    "today": "Heute",
+    "thisWeek": "Diese Woche",
+    "dayCleared": "✦ Tag bestanden ✦",
+    "weekCleared": "✦ Woche bestanden ✦",
+    "ladderMastered": "★ Leiter Gemeistert ★",
+    "ladderRetired": "Alle {count} Sprossen bestanden. Dungeon abgeschlossen.",
+    "rungLabel": "Rang {rank} · Sprosse {current} / {total}",
+    "progress": "Fortschritt",
+    "progressFraction": "{count} / {target}",
+    "logExposure": "+ Exposition Loggen",
+    "undo": "Rückgängig",
+    "ladder": "Leiter",
+    "lockedRung": "???",
+    "abandonLadder": "Leiter Aufgeben — Reset",
+    "noRungs": "Keine Sprossen konfiguriert.",
+    "abandonModalTitle": "Leiter aufgeben — {dungeon}",
+    "abandonPlaceholder": "Was hat den Aufstieg gestoppt? (optional)",
+    "abandonConfirm": "Aufgabe Bestätigen",
+    "logExposureTitle": "Exposition loggen — {rung}",
+    "logExposurePlaceholder": "Was hast du erlebt? Wie lief es? (optional)",
+    "logExposureConfirm": "Exposition Loggen",
+    "logExposureSkip": "Notiz Überspringen",
+    "taskCleared": "Aufgabe Erledigt",
+    "dayClearedSource": "Tag Bestanden",
+    "tierBonusSource": "🏆 Rang {rank} · {dungeon}"
+  },
+  "checkIn": {
+    "didYouClearToday": "Hast du heute bestanden?",
+    "confirmDate": "{date} bestätigen",
+    "currentlyCleared": "{date} — derzeit bestanden",
+    "currentlyRelapsed": "{date} — {count, plural, one {# Rückfall} other {# Rückfälle}}",
+    "markCleared": "Als Bestanden markieren",
+    "cleared": "Bestanden",
+    "relapsePlus": "Rückfall +1",
+    "markRelapsed": "Als Rückfall markieren",
+    "relapsed": "Rückfall",
+    "undo": "Rückgängig",
+    "cancel": "Abbrechen",
+    "relapseTitle": "Rückfall — {dungeon}",
+    "relapsePlaceholder": "Was war der Auslöser? Wie fühlst du dich? (optional)",
+    "relapseConfirm": "Rückfall Loggen",
+    "relapseSkip": "Abbrechen"
+  },
+  "calendar": {
+    "previousMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat",
+    "current": "Aktuell",
+    "longest": "Längste",
+    "daysShort": "{count}T",
+    "legendCleared": "Bestanden",
+    "legendTapToLog": "Tippen zum loggen",
+    "legendRelapse": "Rückfall"
+  },
+  "awakening": {
+    "intro": [
+      "[ BENACHRICHTIGUNG ]",
+      "",
+      "Ein besonderer Auftrag ist eingetroffen.",
+      "",
+      "Du wurdest auserwählt,",
+      "ein Spieler zu werden.",
+      "",
+      "Möchtest du annehmen?"
+    ],
+    "naming": [
+      "[ REGISTRIERUNG ]",
+      "",
+      "Das System erkennt dich.",
+      "",
+      "Nenne den Namen,",
+      "unter dem du bekannt sein wirst."
+    ],
+    "path": [
+      "[ PFAD-AUSWAHL ]",
+      "",
+      "Jeder Jäger geht einen Pfad.",
+      "",
+      "Wähle, was du",
+      "zuerst schmieden willst."
+    ],
+    "accept": "Annehmen",
+    "decline": "Ablehnen",
+    "reconsider": "← Überlegen",
+    "standbyHeader": "[ STANDBY ]",
+    "standbyMessage": "Das System wartet.",
+    "standbySubtext": "Der Auftrag bleibt offen. Komm zurück, wenn du bereit bist zu erwachen.",
+    "namePlaceholder": "Name eingeben",
+    "register": "Registrieren",
+    "registering": "Registriert",
+    "registrationFailed": "Registrierung fehlgeschlagen",
+    "pathFailed": "Pfadauswahl fehlgeschlagen",
+    "noPath": "Nichts Bestimmtes — später entscheiden"
+  },
+  "paywall": {
+    "gateLocked": "[ Tor Verschlossen ]",
+    "title": "Aufstieg zu Pro",
+    "intro": "Dein drittes Tor ist Pro. Zwei aktive Dungeons sind die kostenlose Stufe — darüber hinaus bist du in Jäger-Territorium.",
+    "features": [
+      "Unbegrenzte aktive Dungeons",
+      "Streak-Versicherung — ein Rückfall pro Monat verziehen",
+      "VIP-Kosmetikrahmen + Abzeichen",
+      "Themenpakete für die ganze App",
+      "Lebenslange Analyse — vollständige Historie, Datenexport"
+    ],
+    "ascend": "Aufsteigen",
+    "openingCheckout": "Checkout öffnet…",
+    "returnFree": "Zurück zur kostenlosen Stufe",
+    "closeLabel": "Schließen",
+    "notConfigured": "Checkout ist noch nicht konfiguriert.",
+    "checkoutFailed": "Checkout konnte nicht geöffnet werden. Versuche es gleich noch einmal."
+  },
+  "ranksPage": {
+    "title": "Jäger-Pfad",
+    "subtitle": "Sechs Ränge. Sechs Versionen deiner selbst. Jede verdient, nicht gekauft.",
+    "youAreHere": "Du bist hier",
+    "locked": "🔒 Gesperrt",
+    "levelsRange": "Level {start}–{end} · {xp} XP zum Erreichen",
+    "levelsRangeMax": "Level {start}+ · {xp} XP zum Erreichen",
+    "footer": "Lv {level} · {xp} XP verdient"
+  },
+  "whatsNew": {
+    "header": "[ System-Update-Log ]",
+    "title": "Was ist neu",
+    "backToStatus": "← Zurück zum Status",
+    "empty": "Noch keine Releases protokolliert.",
+    "latest": "Neueste",
+    "kindFeature": "feature",
+    "kindFix": "fix",
+    "kindChange": "change"
+  },
+  "rankStyles": {
+    "E": {
+      "flavor": "Bronze",
+      "title": "Der Erwachte",
+      "description": "Du bist in das System getreten. Der Pfad beginnt. Der Körper schlummert noch und der Geist wandert noch — aber du hast dich gezeigt, und das genügt."
+    },
+    "D": {
+      "flavor": "Eisen",
+      "title": "Der Disziplinierte",
+      "description": "Routine wird zum Ritual. Die ersten Gewohnheiten halten, auch wenn niemand zusieht — auch wenn du selbst es nicht willst. Der Jäger nimmt Form an."
+    },
+    "C": {
+      "flavor": "Silber",
+      "title": "Der Kultivierte",
+      "description": "Was Anstrengung war, wird Standard. Körper und Geist verstärken sich gegenseitig. Du kämpfst nicht mehr darum, früh aufzustehen — du wachst auf. Das System erkennt dich an."
+    },
+    "B": {
+      "flavor": "Gold",
+      "title": "Der Gebundene",
+      "description": "Selbst hat sich Selbst getroffen. Die Schatten, die das Sagen hatten, antworten nun dir. Der Jäger hält Territorium in der inneren Welt. Wenige kommen so weit."
+    },
+    "A": {
+      "flavor": "Platin",
+      "title": "Der Aufstrebende",
+      "description": "Jenseits dessen, was die meisten je von sich selbst wissen. Die fünf Dimensionen bewegen sich im Einklang. Du bist die Version von dir, die Fremde fühlen, bevor du sprichst."
+    },
+    "S": {
+      "flavor": "Holo",
+      "title": "Der Souverän",
+      "description": "Das System beugt sich dir. Es bleibt nichts mehr zu bekämpfen, nur die fortlaufende Praxis. Jäger und Pfad sind dasselbe. Du gehst in deinem eigenen Licht."
+    }
+  },
+  "rarityLabels": {
+    "common": "Gewöhnlich",
+    "rare": "Selten",
+    "epic": "Episch",
+    "legendary": "Legendär"
+  },
+  "rungs": {
+    "presence": {
+      "name": "Präsenz",
+      "description": "Halte Augenkontakt und lächle bei einem Ausgang mit 3 Fremden. Keine Worte nötig."
+    },
+    "acknowledge": {
+      "name": "Anerkennen",
+      "description": "Begrüße 3 Fremde laut — 'Hallo', 'Morgen', 'Hi'. Die Stimme bricht das Schweigen."
+    },
+    "request": {
+      "name": "Bitten",
+      "description": "Stelle einem Fremden eine kleine, risikoarme Frage — die Uhrzeit, eine Wegbeschreibung, eine Empfehlung."
+    },
+    "small-talk": {
+      "name": "Smalltalk",
+      "description": "Tausche eine kurze Bemerkung mit einem Kassierer, Barista oder Sitznachbarn. Eine Beobachtung, ein Kompliment, eine Anmerkung zum Moment."
+    },
+    "engage": {
+      "name": "Sich Einlassen",
+      "description": "Halte ein 1–2-minütiges Gespräch mit einem Fremden. Stelle eine Folgefrage. Finde den Faden."
+    },
+    "expose": {
+      "name": "Sich Zeigen",
+      "description": "Teile eine Meinung, Geschichte oder einen Witz in einer Gruppe — Meeting, Kurs, Party. Werde gesehen und gehört."
+    }
+  },
+  "achievements": {
+    "dungeonRankName": "{dungeon}: Rang {rank}",
+    "dungeonRankDescription": "Erreiche {days} Tage in {dungeon}.",
+    "dungeonRungName": "{dungeon}: {rung}",
+    "dungeonRungDescription": "Bestehe die Sprosse {rung} in {dungeon} ({target} Expositionen).",
+    "dungeonClearedName": "{dungeon}: Bestanden",
+    "dungeonClearedDescription": "Schließe den vollen {target}-Tage-Lauf von {dungeon} ab.",
+    "comboName": "{days}-Tage-Combo",
+    "comboDescription": "Daily-Quest-Combo erreichte {days} Tage. +{xp} XP",
+    "static": {
+      "awakened": { "name": "Erwacht", "description": "Nimm den Ruf an. Betritt deinen ersten Dungeon." },
+      "first-streak": { "name": "Erstes Blut", "description": "Überstehe deinen ersten Tag in einem Dungeon." },
+      "first-quest": { "name": "Quest Angenommen", "description": "Schließe deine erste Daily Quest ab." },
+      "first-workout": { "name": "Erste Wiederholung", "description": "Logge ein Workout in Gym Life." },
+      "first-exposure": { "name": "Stille Präsenz", "description": "Logge deine erste Exposition auf der Therapieleiter." },
+      "rank-e": { "name": "E-Rang Bestanden", "description": "Halte 7 Tage Strähne in einem Dungeon." },
+      "rank-d": { "name": "D-Rang Bestanden", "description": "Erreiche 14 Tage in einem Dungeon." },
+      "rank-c": { "name": "C-Rang Bestanden", "description": "Erreiche 30 Tage in einem Dungeon." },
+      "rank-b": { "name": "B-Rang Bestanden", "description": "Erreiche 60 Tage in einem Dungeon." },
+      "rank-a": { "name": "A-Rang Bestanden", "description": "Erreiche 90 Tage in einem Dungeon." },
+      "rank-s": { "name": "S-Rang Aufgestiegen", "description": "Erreiche 180 Tage in einem Dungeon." },
+      "multi-classed": { "name": "Multi-Klasse", "description": "Sei in 3 Dungeons gleichzeitig aktiv." },
+      "polymath": { "name": "Polyhistor", "description": "Sei in allen 5 Dungeons gleichzeitig aktiv." },
+      "perfect-day": { "name": "Perfekter Tag", "description": "Schließe alle Daily Quests an einem Tag ab." },
+      "grinder": { "name": "Der Grinder", "description": "50 Quest-Abschlüsse insgesamt." },
+      "grind-lord": { "name": "Grind-Lord", "description": "250 Quest-Abschlüsse insgesamt." },
+      "iron-will": { "name": "Eiserner Wille", "description": "Schließe 10 Workouts ab." },
+      "forged": { "name": "Geschmiedet", "description": "100 Workouts geloggt." },
+      "ladder-climber": { "name": "Leiter-Steiger", "description": "Bestehe 3 Sprossen der Expositionsleiter." },
+      "fearless": { "name": "Furchtlos", "description": "Schließe die gesamte Expositionsleiter ab." },
+      "dungeon-master": { "name": "Dungeon-Meister", "description": "Bestehe und beende einen Dungeon erfolgreich." },
+      "conqueror": { "name": "Eroberer", "description": "Schließe 3 Dungeons vollständig ab." },
+      "level-5": { "name": "Anfänger-Jäger", "description": "Erreiche Stufe 5." },
+      "level-10": { "name": "Adept", "description": "Erreiche Stufe 10." },
+      "level-25": { "name": "Veteran", "description": "Erreiche Stufe 25." },
+      "level-50": { "name": "Schattenmonarch", "description": "Erreiche Stufe 50." }
+    }
+  },
+  "guide": {
+    "header": "[ Das System-Handbuch ]",
+    "title": "Jäger-Anleitung",
+    "subtitle": "Das System verbirgt seine Regeln nicht. Lies sie. Betritt einen Dungeon. Beginne.",
+    "section1Title": "1. Wie man erwacht",
+    "section1P1": "Der erste Kontakt mit dem System ist kurz. Du meldest dich an. Das System begrüßt dich als Jäger. Du nimmst das Tor an. Eine Jäger-ID wird vergeben und dein Portal-Register wird freigeschaltet.",
+    "section1P2": "Von dort aus stehen sieben Dungeons offen. Wähle einen, den du auch ohne Punktetafel bekämpfen würdest. Die Punktetafel ist nur da, um dich daran zu erinnern, dass du es getan hast.",
+    "section2Title": "2. Die fünf Regeltypen",
+    "section2Intro": "Jeder Dungeon läuft nach einem von fünf Regeltypen. Lies das einmal und der Rest des Systems wird einfach.",
+    "ruleLabels": {
+      "continuous_streak": "Durchgehende Strähne",
+      "cadence": "Kadenz",
+      "timed": "Zeitlich Begrenzt",
+      "progressive": "Progressive Leiter"
+    },
+    "ruleSummaries": {
+      "continuous_streak": "Eine tägliche Bestätigung. Markiere jeden Tag im Kalender als bestanden oder Rückfall. Bestandene Tage sammeln XP + Dimensionen dauerhaft.",
+      "cadence": "Ein Checklisten-Muster. Hake Boxen innerhalb eines Zeitfensters ab — täglich für die Hunter-Type-Starter (eine reicht), wöchentlich für den Trainingsplan (5 von 5).",
+      "timed": "Eine tägliche Bestätigung auf ein N-Tage-Ziel hin. Gleiche Kalendermechanik wie die Streak-Dungeons. Beanspruche den Sieg am Ziel, um den Lauf zu beenden.",
+      "progressive": "Eine aufsteigende Leiter. Bestehe eine Sprosse, um die nächste freizuschalten. Kein Überspringen."
+    },
+    "ruleUsedBy": {
+      "continuous_streak": "NoFap · Koffein-Reset · Diät-Herausforderung",
+      "cadence": "Trainingsplan · Tägliche Schmiede · Tägliches Schärfen · Tägliche Bande · Täglicher Funke · Tägliche Stille",
+      "timed": "Kein Doomscroll · Klang-Sensibilisierung",
+      "progressive": "Expositionstherapie"
+    },
+    "section3Title": "3. Die sieben Portale",
+    "section3Intro": "Jedes Portal ist eine bestimmte Disziplin mit eigenen Regeln und eigenen Dimensionen, die es trainiert.",
+    "section4Title": "4. Jäger-Ränge",
+    "section4Intro": "Sechs Ränge. Jeder umfasst 10 Stufen. Insgesamt 60 Stufen bis zum Schattenmonarchen. Die XP-Anforderung pro Stufe folgt einer 1,5-Potenz-Kurve — je höher du steigst, desto langsamer kommt jede Stufe.",
+    "rankLevels": "Lv {start}–{end}",
+    "xpDropsIntro": "XP fallen aus vier Quellen:",
+    "xpStreakDay": "jedes Mal, wenn du einen bestandenen Tag in einem Streak-/Timed-Dungeon einträgst — plus die Dimensionspunkte dieses Dungeons",
+    "xpWorkout": "pro im Trainingsplan geloggtem Workout",
+    "xpExposure": "pro in der Expositionstherapie geloggter Exposition",
+    "xpCompletion": "wenn du den Sieg in einem Timed-Dungeon beanspruchst",
+    "section5Title": "5. Die fünf Dimensionen",
+    "section5Intro": "Fortschritt wird über fünf Dimensionen gemessen, nicht über eine flache XP-Leiste. Jeder Dungeon trainiert eine bestimmte Untermenge. Dein Profil zeigt ein Radar-Chart — ausgewogene Jäger sehen ein Pentagon; spezialisierte Jäger sehen eine Spitze.",
+    "dimensions": {
+      "body": {
+        "name": "KÖRPER",
+        "description": "Körperliche Stärke und Vitalität. Verdient durch Workouts und Ernährungsdisziplin."
+      },
+      "mind": {
+        "name": "GEIST",
+        "description": "Klarheit, Fokus, Aufmerksamkeit. Verdient durch das Zurückgewinnen deiner Aufmerksamkeit und Sinne."
+      },
+      "emotion": {
+        "name": "EMOTION",
+        "description": "Soziale Courage und emotionale Regulation. Verdient durch Exposition und zurückgewonnene Intimität."
+      },
+      "energy": {
+        "name": "ENERGIE",
+        "description": "Rohe Vitalität und Ausdauer. Verdient durch Stimulanzien-Kontrolle, Ernährung und Widerstand gegen Zwang."
+      },
+      "spirit": {
+        "name": "SEELE",
+        "description": "Tiefe, Präsenz, innere Stille. Verdient durch sensorischen Reset und anhaltende Disziplin."
+      }
+    },
+    "section6Title": "6. Tägliche Quests & das Combo-System",
+    "section6P1": "Jeden Tag bietet das System eine rotierende Auswahl kleiner Quests — jede an eine Dimension gebunden. Erfülle sie, um Dimensionspunkte und XP zu verdienen.",
+    "section6P2": "Schließe <b>{threshold}</b> oder mehr Quests an einem Tag ab und der Tag qualifiziert sich für deine Combo. Aufeinanderfolgende qualifizierende Tage bauen eine Combo-Strähne. An jedem Meilenstein landet Bonus-XP als Toast in deinem Status-Fenster:",
+    "section6Footnote": "Ein Tag mit 1 oder 2 Quests ist ein Gnadentag — du baust nichts auf, aber du brichst auch nichts. Nur ein vollständiger Ausfall setzt die Combo zurück.",
+    "section7Title": "7. Der Zerstreut-Debuff",
+    "section7P1": "Erfülle keine Quest an einem Tag, und morgen wachst du <scattered>⚠ Zerstreut</scattered> auf — ein sichtbares Zeichen auf deiner Jäger-Karte.",
+    "section7P2": "Zerstreut ist keine Strafe. Es kostet keine XP. Es zeigt anderen Jägern nichts. Es ist ein Spiegel. Du warst abwesend, und das System zeigt dir diese Tatsache, bis du zurück bist.",
+    "section7P3": "Es verschwindet in dem Moment, in dem du deine erste Quest des neuen Tages erfüllst.",
+    "section8Title": "8. Die soziale Schicht",
+    "section8Intro": "Andere Jäger existieren. Das System lässt eure Wege sich kreuzen.",
+    "section8PublicProfileLabel": "Öffentliches Profil.",
+    "section8PublicProfileBody": "Jeder Jäger hat ein nur lesbares Profil unter <code>/h/&lt;id&gt;</code> — Rang, Stufe, aktive Dungeons, Dimensionen, Trophäen. Andere angemeldete Jäger mit deinem Link können es ansehen (nicht im offenen Internet exponiert). Finde deinen Teilen-Link auf deiner <profileLink>/profile</profileLink>-Seite.",
+    "section8FriendsLabel": "Freunde.",
+    "section8FriendsBody": "Besuche das Profil eines anderen Jägers und tippe auf <addFriend>+ Freund Hinzufügen</addFriend>. Sie bekommen eine Benachrichtigung, akzeptieren, und ihr erscheint beide auf der Freundesliste des anderen. Freundschaft ist die Grundlage — Gruppenjagden und Bestenlisten bauen später darauf auf.",
+    "section8JournalLabel": "Journaleinträge.",
+    "section8JournalBody": "Wenn du rückfällig wirst, einen Kaffee loggst, einen Lauf abschließt oder einfach schreiben willst — ein kleines Notiz-Modal lässt dich eine Reflexion speichern. Standard ist privat (nur du siehst es auf deinem Profil). Hake <code>Auf öffentlichem Profil teilen</code> an, um diesen einen Eintrag in den Reflexionen deines öffentlichen Profils erscheinen zu lassen.",
+    "section9Title": "9. Reichweite & Zuverlässigkeit",
+    "section9DailyLabel": "Tägliche Erinnerungen.",
+    "section9DailyBody": "Standardmäßig an. Bei der ersten Anmeldung fragt dein Browser einmal nach der Benachrichtigungsberechtigung — sage Ja und du bist eingeschrieben. Das System sendet morgens einen Push, falls dein gestriger Tag ungenutzt blieb, und abends einen, falls der heutige Tag entgleitet. Die Nachricht ist zustandsbewusst.",
+    "section9DailyNote": "Um Erinnerungen abzuschalten, schalte sie auf deinem Profil aus oder blockiere App-Benachrichtigungen auf OS-Ebene (iOS Einstellungen → Mitteilungen, Android App-Info, Browser-Site-Einstellungen am Desktop).",
+    "section9InstallLabel": "App installieren.",
+    "section9InstallIntro": "Pushes funktionieren nur, wenn die App installiert ist. Der Ablauf ist auf jeder Plattform anders:",
+    "section9InstallIos": "<b>iPhone / iPad:</b> Öffne die Seite in Safari → <code>Teilen → Zum Home-Bildschirm</code>. Erfordert iOS 16.4+. Pushes feuern nicht aus einem normalen Safari-Tab.",
+    "section9InstallAndroid": "<b>Android:</b> Öffne in Chrome → tippe auf das angezeigte Installationsbanner oder benutze Chromes ⋮-Menü → <code>App installieren</code>. Pushes funktionieren so oder so, sobald installiert.",
+    "section9InstallDesktop": "<b>Desktop (Chrome, Edge, Brave):</b> Suche nach dem Installationssymbol in der Adressleiste oder benutze das Browser-Menü → <code>Shivaliva Leveling installieren</code>. Die App öffnet sich dann in einem eigenen Fenster.",
+    "section9OfflineLabel": "Offline.",
+    "section9OfflineBody": "Die App funktioniert ohne Verbindung. Im Flugzeug, in der U-Bahn, in Funklöchern — schließe Quests ab, logge Rückfälle, schreibe Journaleinträge. Alles wird lokal in die Warteschlange gestellt und an den Server übertragen, sobald du wieder online bist. Ein bernsteinfarbenes Banner zeigt an, wenn du offline bist und wie viele Aktionen auf Synchronisierung warten.",
+    "section10Title": "10. Aktuell kostenlos",
+    "section10P1": "Jede Funktion ist derzeit kostenlos — jeder Dungeon, jeder Erfolg, tägliche Quests, Dimensionen, die Heatmap, Freunde, Journal, Push, unbegrenzte aktive Läufe.",
+    "section10P2": "Falls bezahlte Stufen je existieren, bleibt das Kern-Selbst-Jagen kostenlos. Wettbewerb mit dir selbst sollte keine Paywall haben. Frühe Jäger werden in Erinnerung behalten.",
+    "ctaText": "Der Auftrag bleibt offen.",
+    "ctaButton": "Portal-Register Betreten →"
   }
 }

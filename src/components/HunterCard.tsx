@@ -178,7 +178,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
     try {
       await savePendingAvatar(file);
     } catch {
-      setError("Could not store avatar locally");
+      setError(t("avatarLocalError"));
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
@@ -233,7 +233,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 onClick={handleShare}
                 className="text-slate-500 hover:text-cyan-300 transition-colors"
               >
-                {shareCopied ? "✓ Copied" : "Share"}
+                {shareCopied ? t("shareCopied") : t("share")}
               </button>
               <span className="text-slate-700">·</span>
               <Link
@@ -251,7 +251,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading || !isLoaded}
-            aria-label="Change profile picture"
+            aria-label={t("changeAvatarLabel")}
             className="group relative shrink-0 w-24 h-24 sm:w-28 sm:h-28 overflow-hidden border border-cyan-400/50 bg-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.25)] disabled:cursor-not-allowed"
           >
             {avatarSrc ? (
@@ -269,14 +269,14 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
             {!uploading && (
               <div className="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span className="text-[9px] text-cyan-200 tracking-[0.3em] uppercase font-bold">
-                  Change
+                  {t("changeAvatar")}
                 </span>
               </div>
             )}
             {uploading && (
               <div className="absolute inset-0 bg-slate-950/80 flex items-center justify-center">
                 <span className="text-[9px] text-cyan-300 tracking-[0.3em] uppercase animate-pulse">
-                  Uploading
+                  {t("uploading")}
                 </span>
               </div>
             )}
@@ -296,7 +296,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
               </p>
               {scattered && (
                 <span
-                  title="No daily quests completed yesterday. Clears after your next active day."
+                  title={t("scatteredHelp")}
                   className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm"
                 >
                   <span aria-hidden>⚠</span>
@@ -328,7 +328,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
               <button
                 type="button"
                 onClick={startEditName}
-                title="Rename"
+                title={t("rename")}
                 className="group flex items-center gap-2 w-full text-left"
               >
                 <span className="font-display text-lg sm:text-xl font-bold text-cyan-100 truncate tracking-wider group-hover:text-white transition-colors">
@@ -342,7 +342,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
             {hunterTypeDef && (
               <Link
                 href="/settings"
-                title="Change path"
+                title={t("changePath")}
                 className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${hunterTypeDef.badgeStyle}`}
               >
                 <span>{tHunterTypes(`${hunterTypeDef.id}.label`)}</span>
@@ -360,7 +360,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
               <Link
                 href="/ranks"
                 className="group cursor-pointer"
-                title="View all ranks"
+                title={t("viewAllRanks")}
               >
                 <p className="text-[9px] text-slate-500 tracking-widest uppercase group-hover:text-slate-300 transition-colors">
                   {t("rank")}
@@ -388,11 +388,11 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
 
         <div className="mt-8">
           <div className="flex justify-between items-center text-[9px] text-slate-500 uppercase tracking-wider mb-4">
-            <span>Rank Path</span>
+            <span>{t("rankPath")}</span>
             <span className="font-mono text-amber-300/80">
               {isMaxRank
-                ? "MAX RANK"
-                : `${levelsToNext} LVL → ${nextRank}`}
+                ? t("maxRank")
+                : t("rankProgress", { count: levelsToNext, next: nextRank ?? "" })}
             </span>
           </div>
           <div className="flex items-center">

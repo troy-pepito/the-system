@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { RANK_UP_EVENT } from "@/lib/player";
 
@@ -24,6 +25,7 @@ export function fireRankUpSharePrompt(detail: RankPair) {
 }
 
 export default function RankUpShare() {
+  const t = useTranslations("toasts");
   const { user } = useUser();
   const [pair, setPair] = useState<RankPair | null>(null);
   const [working, setWorking] = useState(false);
@@ -100,20 +102,20 @@ export default function RankUpShare() {
         <button
           type="button"
           onClick={dismiss}
-          aria-label="Dismiss share prompt"
+          aria-label={t("dismissShare")}
           className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center text-slate-500 hover:text-slate-200 text-sm"
         >
           ✕
         </button>
 
         <p className="text-[9px] tracking-[0.4em] uppercase text-amber-400/80 mb-1.5 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">
-          [ Ascension ]
+          {t("ascension")}
         </p>
         <p className="font-display text-base font-bold text-amber-100 tracking-wider mb-1">
-          You hit Rank {pair.to}
+          {t("rankReached", { rank: pair.to })}
         </p>
         <p className="text-xs text-slate-400 leading-relaxed mb-4">
-          Share your ascension with someone who&apos;d get it.
+          {t("shareAscension")}
         </p>
 
         <div className="flex gap-2">
@@ -123,14 +125,14 @@ export default function RankUpShare() {
             disabled={working}
             className="flex-1 px-3 py-2 bg-amber-500/20 border border-amber-400/60 text-amber-100 text-xs uppercase tracking-[0.3em] hover:bg-amber-500/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_10px_rgba(251,191,36,0.4)]"
           >
-            {working ? "Sharing…" : "Share"}
+            {working ? t("sharing") : t("share")}
           </button>
           <button
             type="button"
             onClick={dismiss}
             className="px-3 py-2 border border-slate-700 text-slate-400 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors"
           >
-            Later
+            {t("later")}
           </button>
         </div>
       </div>

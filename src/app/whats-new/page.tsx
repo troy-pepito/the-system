@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import Card from "@/components/Card";
 import {
   CHANGELOG,
@@ -10,6 +11,7 @@ import {
 } from "@/lib/changelog";
 
 export default function WhatsNewPage() {
+  const t = useTranslations("whatsNew");
   // Mark the latest version as seen the moment the user lands here.
   // Clears the navbar NEW badge for them.
   useEffect(() => {
@@ -21,24 +23,24 @@ export default function WhatsNewPage() {
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
           <p className="text-[10px] tracking-[0.5em] uppercase text-cyan-400/70 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
-            [ System Update Log ]
+            {t("header")}
           </p>
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-cyan-100 tracking-wider mt-3">
-            What&apos;s New
+            {t("title")}
           </h1>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
           <Link
             href="/"
             className="inline-block mt-4 text-[10px] tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-300 transition-colors"
           >
-            ← Back to Status
+            {t("backToStatus")}
           </Link>
         </div>
 
         {CHANGELOG.length === 0 ? (
           <Card className="p-6">
             <p className="text-xs text-slate-500 leading-relaxed">
-              No releases logged yet.
+              {t("empty")}
             </p>
           </Card>
         ) : (
@@ -61,7 +63,7 @@ export default function WhatsNewPage() {
                       </span>
                       {isLatest && (
                         <span className="text-[9px] tracking-[0.3em] uppercase text-amber-300 px-1.5 py-0.5 border border-amber-400/50 bg-amber-500/10 rounded-sm">
-                          Latest
+                          {t("latest")}
                         </span>
                       )}
                     </div>
@@ -80,7 +82,7 @@ export default function WhatsNewPage() {
                             c.kind
                           )}`}
                         >
-                          {c.kind}
+                          {kindLabel(c.kind, t)}
                         </span>
                         <p className="text-sm text-slate-300 leading-relaxed">
                           {c.text}
@@ -103,4 +105,13 @@ function changeTone(kind: ChangelogChange["kind"]): string {
     return "text-emerald-300 border-emerald-400/40 bg-emerald-500/10";
   if (kind === "fix") return "text-red-300 border-red-500/40 bg-red-500/10";
   return "text-slate-300 border-slate-600 bg-slate-800/60";
+}
+
+function kindLabel(
+  kind: ChangelogChange["kind"],
+  t: (key: string) => string
+): string {
+  if (kind === "feature") return t("kindFeature");
+  if (kind === "fix") return t("kindFix");
+  return t("kindChange");
 }

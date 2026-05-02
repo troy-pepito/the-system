@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { LEVEL_UP_EVENT } from "@/lib/player";
 
 interface ActiveLevelUp {
@@ -22,6 +23,7 @@ const FADE_MS = 420;
  * over it.
  */
 export default function LevelUpToast() {
+  const t = useTranslations("toasts");
   const [active, setActive] = useState<ActiveLevelUp | null>(null);
   const [leaving, setLeaving] = useState(false);
 
@@ -71,10 +73,10 @@ export default function LevelUpToast() {
         <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-emerald-300" />
 
         <p className="font-mono text-[9px] tracking-[0.4em] uppercase text-emerald-300/90 text-center mb-1">
-          [ Level Up ]
+          {t("levelUp")}
         </p>
         <p className="font-display font-bold text-2xl tracking-widest text-emerald-300 text-center drop-shadow-[0_0_10px_rgba(52,211,153,0.7)]">
-          Lv {active.to}
+          {t("levelLabel", { level: active.to })}
         </p>
       </div>
     </div>

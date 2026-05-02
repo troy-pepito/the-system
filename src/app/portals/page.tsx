@@ -8,7 +8,6 @@ import Card from "@/components/Card";
 import Paywall from "@/components/Paywall";
 import {
   DUNGEONS,
-  getDungeonRules,
   dungeonDims,
   DIM_STYLE,
 } from "@/lib/dungeons";
@@ -98,7 +97,7 @@ export default function PortalsPage() {
   function renderDungeonCard(d: (typeof DUNGEONS)[number], opts?: { locked?: boolean }) {
     const isActive = activeIds?.has(d.id) ?? false;
     const loaded = activeIds !== null;
-    const rules = getDungeonRules(d);
+    const rules = tDungeons.raw(`${dungeonKey(d.id)}.rules`) as string[];
     const isExpanded = expandedId === d.id;
     const pathDef = d.hunterType ? HUNTER_TYPE_DEFS[d.hunterType] : null;
     const locked = opts?.locked ?? false;
@@ -157,7 +156,7 @@ export default function PortalsPage() {
         </div>
 
         <p className="text-xs text-slate-400 leading-relaxed mb-4">
-          {d.description}
+          {tDungeons(`${dungeonKey(d.id)}.description`)}
         </p>
 
         {d.tiers && (

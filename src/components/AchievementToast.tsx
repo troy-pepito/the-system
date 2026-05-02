@@ -1,8 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
 import { evaluateAchievements } from "@/app/actions/achievements";
-import { getAchievement, rarityStyle } from "@/lib/achievements";
+import {
+  getAchievement,
+  rarityStyle,
+  resolveAchievementLabels,
+} from "@/lib/achievements";
 
 interface QueuedToast {
   key: number;
@@ -10,6 +15,11 @@ interface QueuedToast {
 }
 
 export default function AchievementToast() {
+  const t = useTranslations("toasts");
+  const tAchievements = useTranslations("achievements");
+  const tDungeons = useTranslations("dungeons");
+  const tRungs = useTranslations("rungs");
+  const tRarity = useTranslations("rarityLabels");
   const [queue, setQueue] = useState<QueuedToast[]>([]);
 
   useEffect(() => {
@@ -49,6 +59,14 @@ export default function AchievementToast() {
   const def = getAchievement(current.id);
   if (!def) return null;
   const style = rarityStyle(def.rarity);
+  const labels = resolveAchievementLabels(
+    current.id,
+    tAchievements,
+    tDungeons,
+    tRungs,
+    { name: def.name, description: def.description }
+  );
+  const rarityLabel = tRarity(def.rarity);
 
   return (
     <div className="fixed top-20 right-4 z-[100] pointer-events-none animate-[toast-slide_0.5s_ease-out]">
@@ -56,7 +74,7 @@ export default function AchievementToast() {
         className={`${style.bg} ${style.border} border-2 rounded-lg px-5 py-4 min-w-[280px] max-w-[360px] backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] ${style.glow}`}
       >
         <p className={`text-[10px] tracking-[0.3em] uppercase ${style.text} mb-1`}>
-          [ Achievement Unlocked ]
+          {t("achievementUnlocked")}
         </p>
         <div className="flex items-center gap-3">
           <span
@@ -66,13 +84,13 @@ export default function AchievementToast() {
           </span>
           <div className="flex-1">
             <p className={`text-sm font-bold uppercase tracking-wider ${style.text} ${style.glow}`}>
-              {def.name}
+              {labels.name}
             </p>
             <p className="text-xs text-slate-300 leading-snug mt-0.5">
-              {def.description}
+              {labels.description}
             </p>
             <p className={`text-[9px] uppercase tracking-widest mt-1 ${style.text}`}>
-              {style.label}
+              {rarityLabel}
             </p>
           </div>
         </div>

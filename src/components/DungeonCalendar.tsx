@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import type { DayCheckIn } from "@/app/actions/dungeons";
 
 interface DungeonCalendarProps {
@@ -7,12 +8,6 @@ interface DungeonCalendarProps {
   checkIns: DayCheckIn[];
   onDaySelect: (dateIso: string) => void;
 }
-
-const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
-const MONTH_NAMES = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
 
 function todayIso(): string {
   const now = new Date();
@@ -77,12 +72,25 @@ export default function DungeonCalendar({
   checkIns,
   onDaySelect,
 }: DungeonCalendarProps) {
+  const t = useTranslations("calendar");
+  const locale = useLocale();
   const today = todayIso();
   const initialMonth = useMemo(() => {
     const d = new Date();
     return { year: d.getFullYear(), month: d.getMonth() };
   }, []);
   const [view, setView] = useState(initialMonth);
+
+  // Locale-aware weekday initials. Sunday = day 0 in JS, but we use Date(2024,0,7)
+  // (Sunday Jan 7 2024) as the anchor and walk 7 days forward.
+  const weekdayInitials = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale, { weekday: "narrow" });
+    const labels: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      labels.push(fmt.format(new Date(Date.UTC(2024, 0, 7 + i))));
+    }
+    return labels;
+  }, [locale]);
 
   const checkInMap = useMemo(() => {
     const map: Record<string, DayCheckIn> = {};
@@ -114,7 +122,10 @@ export default function DungeonCalendar({
   }
   while (cells.length % 7 !== 0) cells.push({ iso: null, day: null });
 
-  const monthLabel = `${MONTH_NAMES[view.month]} ${view.year}`;
+  const monthLabel = new Intl.DateTimeFormat(locale, {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(Date.UTC(view.year, view.month, 1)));
 
   function shiftMonth(delta: number) {
     setView((v) => {
@@ -131,7 +142,7 @@ export default function DungeonCalendar({
         <button
           onClick={() => shiftMonth(-1)}
           className="px-2 py-1 text-cyan-400/70 hover:text-cyan-300 text-sm"
-          aria-label="Previous month"
+          aria-label={t("previousMonth")}
         >
           ‹
         </button>
@@ -141,7 +152,7 @@ export default function DungeonCalendar({
         <button
           onClick={() => shiftMonth(1)}
           className="px-2 py-1 text-cyan-400/70 hover:text-cyan-300 text-sm"
-          aria-label="Next month"
+          aria-label={t("nextMonth")}
         >
           ›
         </button>
@@ -151,23 +162,23 @@ export default function DungeonCalendar({
         <div className="flex items-center justify-center gap-3 mb-3 text-[10px] tracking-widest uppercase">
           <span className="flex items-center gap-1.5 text-orange-300">
             <span className="text-sm leading-none">🔥</span>
-            <span className="text-slate-500">Current</span>
+            <span className="text-slate-500">{t("current")}</span>
             <span className="text-orange-300 font-bold tabular-nums">
-              {streaks.current}d
+              {t("daysShort", { count: streaks.current })}
             </span>
           </span>
           <span className="text-slate-700">·</span>
           <span className="flex items-center gap-1.5 text-amber-300">
-            <span className="text-slate-500">Longest</span>
+            <span className="text-slate-500">{t("longest")}</span>
             <span className="text-amber-300 font-bold tabular-nums">
-              {streaks.longest}d
+              {t("daysShort", { count: streaks.longest })}
             </span>
           </span>
         </div>
       )}
 
       <div className="grid grid-cols-7 gap-1 mb-1">
-        {WEEKDAYS.map((w, i) => (
+        {weekdayInitials.map((w, i) => (
           <div
             key={i}
             className="text-center text-[9px] tracking-widest text-slate-600 uppercase py-1"
@@ -253,13 +264,13 @@ export default function DungeonCalendar({
 
       <div className="flex items-center justify-center gap-3 mt-3 text-[8px] tracking-widest uppercase text-slate-600">
         <span className="flex items-center gap-1">
-          <span className="text-emerald-400">✓</span> Cleared
+          <span className="text-emerald-400">✓</span> {t("legendCleared")}
         </span>
         <span className="flex items-center gap-1">
-          <span className="text-amber-300/80">?</span> Tap to log
+          <span className="text-amber-300/80">?</span> {t("legendTapToLog")}
         </span>
         <span className="flex items-center gap-1">
-          <span className="text-red-300">×</span> Relapse
+          <span className="text-red-300">×</span> {t("legendRelapse")}
         </span>
       </div>
     </div>

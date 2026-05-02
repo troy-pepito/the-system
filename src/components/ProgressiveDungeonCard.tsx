@@ -44,6 +44,22 @@ export default function ProgressiveDungeonCard({
   onComplete,
 }: ProgressiveDungeonCardProps) {
   const tDungeons = useTranslations("dungeons");
+  const tRun = useTranslations("dungeonRun");
+  const tRungs = useTranslations("rungs");
+  const rungName = (id: string, fallback: string): string => {
+    try {
+      return tRungs(`${id}.name`);
+    } catch {
+      return fallback;
+    }
+  };
+  const rungDescription = (id: string, fallback: string): string => {
+    try {
+      return tRungs(`${id}.description`);
+    } catch {
+      return fallback;
+    }
+  };
   const dungeon = getDungeon(dungeonId);
   const dungeonName = dungeon
     ? tDungeons(`${dungeonKey(dungeonId)}.name`)
@@ -70,9 +86,9 @@ export default function ProgressiveDungeonCard({
     ruleType: "progressive",
     trackProperties: { current_rung: currentRung?.id ?? null },
     modalOverrides: {
-      title: `Abandon Ladder — ${dungeonName}`,
-      placeholder: "What stopped the climb? (optional)",
-      confirmLabel: "Confirm Abandon",
+      title: tRun("abandonModalTitle", { dungeon: dungeonName }),
+      placeholder: tRun("abandonPlaceholder"),
+      confirmLabel: tRun("abandonConfirm"),
     },
     onLocalReset: () => {
       setActive(false);
@@ -119,7 +135,10 @@ export default function ProgressiveDungeonCard({
       setTimeout(() => {
         notifyReward({
           xp: bonus,
-          source: `🏆 Rank ${currentRung.rank} · ${dungeonName}`,
+          source: tRun("tierBonusSource", {
+            rank: currentRung.rank,
+            dungeon: dungeonName,
+          }),
         });
         notifyStatsUpdated({ xpDelta: bonus });
       }, 1100);
@@ -212,31 +231,38 @@ export default function ProgressiveDungeonCard({
       {dungeonCleared ? (
         <div className="py-6 space-y-2">
           <p className="text-sm text-amber-300 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] animate-pulse">
-            ★ Ladder Mastered ★
+            {tRun("ladderMastered")}
           </p>
           <p className="text-xs text-slate-500">
-            All {RUNGS.length} rungs cleared. Dungeon retired.
+            {tRun("ladderRetired", { count: RUNGS.length })}
           </p>
         </div>
       ) : currentRung ? (
         <div className="space-y-4">
           <div className="py-2">
             <p className="text-[10px] uppercase tracking-widest text-amber-400/80 drop-shadow-[0_0_6px_rgba(251,191,36,0.5)]">
-              Rank {currentRung.rank} · Rung {currentRungIndex + 1} / {RUNGS.length}
+              {tRun("rungLabel", {
+                rank: currentRung.rank,
+                current: currentRungIndex + 1,
+                total: RUNGS.length,
+              })}
             </p>
             <p className="text-2xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)] mt-1 uppercase tracking-wider">
-              {currentRung.name}
+              {rungName(currentRung.id, currentRung.name)}
             </p>
             <p className="text-xs text-slate-400 leading-relaxed mt-2 px-2">
-              {currentRung.description}
+              {rungDescription(currentRung.id, currentRung.description)}
             </p>
           </div>
 
           <div className="space-y-1">
             <div className="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
-              <span>Progress</span>
+              <span>{tRun("progress")}</span>
               <span className="text-cyan-300 font-bold">
-                {currentCount} / {currentRung.target}
+                {tRun("progressFraction", {
+                  count: currentCount,
+                  target: currentRung.target,
+                })}
               </span>
             </div>
             <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
@@ -253,7 +279,7 @@ export default function ProgressiveDungeonCard({
               disabled={busy}
               className="flex-1 px-4 py-3 bg-cyan-500/20 border border-cyan-500/40 rounded text-cyan-300 text-sm uppercase tracking-widest hover:bg-cyan-500/30 transition-colors drop-shadow-[0_0_8px_rgba(34,211,238,0.3)] disabled:opacity-50"
             >
-              + Log Exposure
+              {tRun("logExposure")}
             </button>
             {currentCount > 0 && (
               <button
@@ -261,14 +287,14 @@ export default function ProgressiveDungeonCard({
                 disabled={busy}
                 className="px-3 py-3 bg-slate-800/60 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-wider hover:bg-slate-700/60 transition-colors disabled:opacity-50"
               >
-                Undo
+                {tRun("undo")}
               </button>
             )}
           </div>
 
           <div className="border border-slate-700 rounded-lg p-3 space-y-2 text-left">
             <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70 mb-1">
-              Ladder
+              {tRun("ladder")}
             </p>
             <ul className="space-y-1.5">
               {RUNGS.map((r, i) => {
@@ -299,7 +325,7 @@ export default function ProgressiveDungeonCard({
                       {r.rank}
                     </span>
                     <span className="uppercase tracking-wider flex-1">
-                      {locked ? "???" : r.name}
+                      {locked ? tRun("lockedRung") : rungName(r.id, r.name)}
                     </span>
                     <span className="text-[10px] font-mono">
                       {locked ? "—" : `${c}/${r.target}`}
@@ -316,27 +342,29 @@ export default function ProgressiveDungeonCard({
                 onClick={journal.open}
                 className="px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
               >
-                + Journal Entry
+                {tRun("journalEntry")}
               </button>
               <button
                 onClick={relapse.open}
                 className="px-4 py-2 bg-red-500/10 border border-red-500/20 rounded text-red-400/70 text-xs uppercase tracking-wider hover:bg-red-500/20 transition-colors"
               >
-                Abandon Ladder — Reset
+                {tRun("abandonLadder")}
               </button>
             </div>
           )}
         </div>
       ) : (
-        <p className="text-xs text-slate-600 py-4">No rungs configured.</p>
+        <p className="text-xs text-slate-600 py-4">{tRun("noRungs")}</p>
       )}
 
       <NoteModal
         open={logModalOpen}
-        title={`Log Exposure — ${currentRung?.name ?? ""}`}
-        placeholder="What did you face? How did it go? (optional)"
-        confirmLabel="Log Exposure"
-        skipLabel="Skip Note"
+        title={tRun("logExposureTitle", {
+          rung: currentRung ? rungName(currentRung.id, currentRung.name) : "",
+        })}
+        placeholder={tRun("logExposurePlaceholder")}
+        confirmLabel={tRun("logExposureConfirm")}
+        skipLabel={tRun("logExposureSkip")}
         showPublicToggle
         onSubmit={handleLog}
         onCancel={() => setLogModalOpen(false)}

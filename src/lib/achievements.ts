@@ -1,4 +1,5 @@
 import { DUNGEONS } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 import { COMBO_MILESTONES } from "@/lib/quests";
 
 export type AchievementRarity =
@@ -486,5 +487,114 @@ export function rarityStyle(rarity: AchievementRarity): {
         glow: "drop-shadow-[0_0_14px_rgba(251,191,36,0.8)]",
         label: "Legendary",
       };
+  }
+}
+
+type Translator = (key: string, values?: Record<string, string | number>) => string;
+
+/**
+ * Resolve a localized name + description for any achievement id.
+ * Splits on the id shape: static ones live under achievements.static.{id},
+ * the four templated families (dungeon-rank, dungeon-rung, dungeon-cleared,
+ * combo) format from a single template key. Falls back to the def's
+ * English string if the lookup fails (defensive against locale drift).
+ */
+export function resolveAchievementLabels(
+  id: string,
+  tAchievements: Translator,
+  tDungeons: Translator,
+  tRungs: Translator,
+  fallback: { name: string; description: string }
+): { name: string; description: string } {
+  // Combo achievements: combo-YYYY-MM-DD-N
+  const comboMatch = COMBO_ID_REGEX.exec(id);
+  if (comboMatch) {
+    const days = parseInt(comboMatch[2], 10);
+    const milestone = COMBO_MILESTONES.find((m) => m.days === days);
+    return {
+      name: tAchievements("comboName", { days }),
+      description: tAchievements("comboDescription", {
+        days,
+        xp: milestone?.xp ?? 0,
+      }),
+    };
+  }
+
+  // Per-dungeon templated achievements: ${dungeonId}-rank-${rank},
+  // ${dungeonId}-rung-${rungId}, ${dungeonId}-cleared.
+  for (const d of DUNGEONS) {
+    const prefix = `${d.id}-`;
+    if (!id.startsWith(prefix)) continue;
+    const dungeonName = (() => {
+      try {
+        return tDungeons(`${dungeonKey(d.id)}.name`);
+      } catch {
+        return d.name;
+      }
+    })();
+
+    if (id === `${d.id}-cleared` && d.timed) {
+      return {
+        name: tAchievements("dungeonClearedName", { dungeon: dungeonName }),
+        description: tAchievements("dungeonClearedDescription", {
+          dungeon: dungeonName,
+          target: d.timed.targetDays,
+        }),
+      };
+    }
+
+    const rankMatch = id.match(new RegExp(`^${d.id}-rank-([eEdDcCbBaAsS])$`));
+    if (rankMatch && d.tiers) {
+      const rank = rankMatch[1].toUpperCase();
+      const tier = d.tiers.find((t) => t.rank === rank);
+      if (tier) {
+        return {
+          name: tAchievements("dungeonRankName", {
+            dungeon: dungeonName,
+            rank,
+          }),
+          description: tAchievements("dungeonRankDescription", {
+            dungeon: dungeonName,
+            days: tier.days,
+          }),
+        };
+      }
+    }
+
+    const rungMatch = id.match(new RegExp(`^${d.id}-rung-(.+)$`));
+    if (rungMatch && d.progressive) {
+      const rungId = rungMatch[1];
+      const rung = d.progressive.rungs.find((r) => r.id === rungId);
+      if (rung) {
+        const rungName = (() => {
+          try {
+            return tRungs(`${rungId}.name`);
+          } catch {
+            return rung.name;
+          }
+        })();
+        return {
+          name: tAchievements("dungeonRungName", {
+            dungeon: dungeonName,
+            rung: rungName,
+          }),
+          description: tAchievements("dungeonRungDescription", {
+            dungeon: dungeonName,
+            rung: rungName,
+            target: rung.target,
+          }),
+        };
+      }
+    }
+  }
+
+  // Static achievements live under achievements.static.{id}.
+  try {
+    return {
+      name: tAchievements(`static.${id}.name`),
+      description: tAchievements(`static.${id}.description`),
+    };
+  } catch {
+    return fallback;
   }
 }

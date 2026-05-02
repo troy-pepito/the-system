@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 
 interface NoteModalProps {
   open: boolean;
@@ -36,9 +37,9 @@ export default function NoteModal(props: NoteModalProps) {
 
 function NoteModalInner({
   title,
-  placeholder = "What happened? (optional)",
-  confirmLabel = "Save",
-  skipLabel = "Skip",
+  placeholder,
+  confirmLabel,
+  skipLabel,
   onSubmit,
   onCancel,
   tone = "neutral",
@@ -47,8 +48,12 @@ function NoteModalInner({
   initialNote = "",
   initialIsPublic = false,
 }: NoteModalProps) {
+  const t = useTranslations("noteModal");
   const [note, setNote] = useState(initialNote);
   const [isPublic, setIsPublic] = useState(initialIsPublic);
+  const resolvedPlaceholder = placeholder ?? t("defaultPlaceholder");
+  const resolvedConfirm = confirmLabel ?? t("defaultConfirm");
+  const resolvedSkip = skipLabel ?? t("defaultSkip");
   const taRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -91,7 +96,7 @@ function NoteModalInner({
         <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
 
         <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-2">
-          [ Journal ]
+          {t("chrome")}
         </p>
         <p className="text-sm text-cyan-100 uppercase tracking-wider mb-4">
           {title}
@@ -107,7 +112,7 @@ function NoteModalInner({
               submit();
             }
           }}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           maxLength={2000}
           rows={5}
           className="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-400/60 focus:outline-none text-sm text-slate-200 p-3 resize-none placeholder:text-slate-600 tracking-wide leading-relaxed"
@@ -122,7 +127,7 @@ function NoteModalInner({
               className="w-4 h-4 accent-cyan-400 cursor-pointer"
             />
             <span className="text-[10px] tracking-[0.25em] uppercase text-slate-400">
-              Share to public profile
+              {t("sharePublic")}
             </span>
           </label>
         )}
@@ -135,14 +140,14 @@ function NoteModalInner({
             }
             className="px-4 py-2 border border-slate-700 text-slate-400 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors"
           >
-            {skipLabel}
+            {resolvedSkip}
           </button>
           <button
             type="button"
             onClick={submit}
             className={`px-4 py-2 border text-xs uppercase tracking-[0.3em] transition-colors ${confirmClass}`}
           >
-            {confirmLabel}
+            {resolvedConfirm}
           </button>
         </div>
       </div>

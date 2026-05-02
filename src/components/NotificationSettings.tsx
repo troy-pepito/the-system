@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   removePushSubscription,
   savePushSubscription,
@@ -23,6 +24,7 @@ function urlBase64ToUint8Array(base64: string): Uint8Array {
 }
 
 export default function NotificationSettings() {
+  const t = useTranslations("notifications");
   const [status, setStatus] = useState<Status>("loading");
   const [error, setError] = useState<string | null>(null);
 
@@ -55,7 +57,7 @@ export default function NotificationSettings() {
   async function enable() {
     const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
     if (!vapidPublicKey) {
-      setError("Push notifications not configured.");
+      setError(t("notConfigured"));
       return;
     }
     setStatus("working");
@@ -95,7 +97,7 @@ export default function NotificationSettings() {
       });
       setStatus("on");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not enable");
+      setError(err instanceof Error ? err.message : t("couldNotEnable"));
       setStatus("off");
     }
   }
@@ -112,7 +114,7 @@ export default function NotificationSettings() {
       }
       setStatus("off");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not disable");
+      setError(err instanceof Error ? err.message : t("couldNotDisable"));
       setStatus("on");
     }
   }
@@ -126,14 +128,14 @@ export default function NotificationSettings() {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm text-slate-200 uppercase tracking-wider">
-            Daily Reminder
+            {t("title")}
           </p>
           <p className="text-xs text-slate-500 leading-relaxed mt-1">
             {status === "unsupported"
-              ? "This browser doesn't support push notifications."
+              ? t("unsupported")
               : status === "denied"
-                ? "Notifications are blocked. Re-enable in your browser/OS settings."
-                : "Get a nudge when the day resets so you don't miss your quests."}
+                ? t("denied")
+                : t("description")}
           </p>
         </div>
         <button

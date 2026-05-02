@@ -28,7 +28,20 @@
     "edit": "编辑",
     "scattered": "散乱",
     "viewPublic": "查看公开",
-    "choosePath": "+ 选择你的道路"
+    "choosePath": "+ 选择你的道路",
+    "share": "分享",
+    "shareCopied": "✓ 已复制",
+    "changeAvatarLabel": "更换头像",
+    "changeAvatar": "更换",
+    "uploading": "上传中",
+    "rename": "重命名",
+    "changePath": "更换道路",
+    "viewAllRanks": "查看所有等级",
+    "rankPath": "等级路径",
+    "maxRank": "最高等级",
+    "rankProgress": "{count} LVL → {next}",
+    "scatteredHelp": "昨天没有完成任何每日任务。下一个活跃日后消失。",
+    "avatarLocalError": "无法将头像保存到本地"
   },
   "dailyQuests": {
     "header": "(!) 每日任务",
@@ -42,25 +55,142 @@
     "quest_clean_room": "整理房间"
   },
   "dungeons": {
-    "caffeine": { "name": "咖啡因重启" },
-    "sensible_diet": { "name": "饮食挑战" },
-    "gym_life": { "name": "训练计划" },
-    "attention_reclaim": { "name": "戒末日刷屏" },
-    "music_sensitization": { "name": "声音感知重塑" },
-    "social_reclaim": { "name": "暴露疗法" },
-    "nofap": { "name": "NoFap" },
-    "starter_body": { "name": "每日锻造" },
-    "starter_mind": { "name": "每日磨砺" },
-    "starter_emotion": { "name": "每日联结" },
-    "starter_energy": { "name": "每日火花" },
-    "starter_spirit": { "name": "每日静寂" }
+    "caffeine": {
+      "name": "咖啡因重启",
+      "description": "重置神经系统。每月最多 2 杯咖啡可以接受 — 第 3 杯结束此次记录。",
+      "rules": [
+        "每月最多 2 杯咖啡可以接受。第 3 杯算破戒。",
+        "每天在日历上确认 — 守住底线为通过,破了为破戒。",
+        "通过的日子永久累积 XP + 维度点。破戒只是日历上的标记 — 退出副本是提前结束此次记录的唯一方式。"
+      ]
+    },
+    "sensible_diet": {
+      "name": "饮食挑战",
+      "description": "带着觉知吃饭。每日 2–3 餐,中间不吃零食。先植物,再动物来源,然后海鲜,实在没有别的才吃肉。每月最多 4 件非天然甜食 — 超过即为破戒。",
+      "rules": [
+        "每日 2–3 餐。两餐之间不吃零食 — 让肠胃休息。",
+        "先吃植物;然后是动物来源(蛋、奶制品、坚果);接着是海鲜;肉只有在别无选择时才吃。",
+        "每月最多 4 件非天然甜食可以接受。第 5 件算破戒。",
+        "每天在日历上确认 — 守住底线为通过,破了为破戒。"
+      ]
+    },
+    "gym_life": {
+      "name": "训练计划",
+      "description": "锻造身体。每周 5 次训练 — 每个肌群一次:胸与肩、背与臂、腿与臀、核心、全身。纪律是节奏,不是强度。",
+      "rules": [
+        "每周完成 5 次训练 — 各一次:胸与肩、背与臂、腿与臀、核心、全身。",
+        "选择能刺激目标肌群的任意训练动作。完成后记录该次训练。",
+        "一周从星期一到星期日(UTC)。如果跟不上节奏,手动破戒。"
+      ]
+    },
+    "attention_reclaim": {
+      "name": "戒末日刷屏",
+      "description": "30 天不刷末日信息流。发消息、发帖、有意识地观看单条视频都可以 — 只有被动的无限信息流才算失误。",
+      "rules": [
+        "每天在日历上确认 — 通过或破戒。",
+        "通过 30 天解锁宣告胜利。",
+        "通过的日子永久累积 XP + 维度。破戒只是日历上的标记 — 退出副本是提前结束此次记录的唯一方式。"
+      ]
+    },
+    "music_sensitization": {
+      "name": "声音感知重塑",
+      "description": "30 天不听音乐。一次感官重置 — 让耳朵安静下来,使风、雨、鸟鸣和真实的声音重新变得鲜活。",
+      "rules": [
+        "破戒 = 主动听歌(歌单、专辑、演唱会、你自己选择的背景音乐)。",
+        "允许:播客、有声书、电影配乐、自然声响,以及非主动的环境音乐(商店、咖啡馆、他人的扬声器)。",
+        "每天在日历上确认。通过 30 天解锁宣告胜利。"
+      ]
+    },
+    "social_reclaim": {
+      "name": "暴露疗法",
+      "description": "攀登社交阶梯。从沉默的在场到群体中开口共有六级 — 通过分级暴露脱敏,一级一级来。",
+      "rules": [
+        "每一级都有目标 — 每次在现实中完成相应行动时记录一次暴露。",
+        "通过当前级别才能解锁下一级。不可跳级。",
+        "级别按等级 E → S 推进。最后一级完成时副本通关。"
+      ]
+    },
+    "nofap": {
+      "name": "NoFap",
+      "description": "夺回你的生命能量。严格:不看色情、不自慰、不边缘、不沉溺。与伴侣的性爱与高潮可以 — 这条规则针对的是强迫性的独自使用,而不是亲密关系。",
+      "rules": [
+        "破戒 = 色情、自慰、边缘、沉溺(诱惑账号、机器人账号、被性化的社交流)。",
+        "允许:与伴侣的性爱与高潮 — 这个副本是关于强迫性,而不是禁欲。",
+        "每天在日历上签到 — 通过或破戒。通过的日子永久累积 XP + 维度。破戒只是标记,不是重置。"
+      ]
+    },
+    "starter_body": {
+      "name": "每日锻造",
+      "description": "身体猎人的每日底线。三个项目随你的等级提升 — 完成任意一项即守住当天。俯卧撑、引体向上、深蹲随你的连续记录从 E → S 一路成长。",
+      "rules": [
+        "每天完成 1 项任务。",
+        "做完即勾选。取消勾选可以删除一条记录。",
+        "每天在 UTC 午夜重置。如果断了,手动破戒。"
+      ]
+    },
+    "starter_mind": {
+      "name": "每日磨砺",
+      "description": "心智猎人的每日底线。几页书、一个新概念、一句诚实的话。完成任意一项即守住当天。",
+      "rules": [
+        "每天完成 1 项任务。",
+        "做完即勾选。取消勾选可以删除一条记录。",
+        "每天在 UTC 午夜重置。如果断了,手动破戒。"
+      ]
+    },
+    "starter_emotion": {
+      "name": "每日联结",
+      "description": "情感猎人的每日底线。被看见、被听见、在场的小练习。完成任意一项即守住当天。",
+      "rules": [
+        "每天完成 1 项任务。",
+        "做完即勾选。取消勾选可以删除一条记录。",
+        "每天在 UTC 午夜重置。如果断了,手动破戒。"
+      ]
+    },
+    "starter_energy": {
+      "name": "每日火花",
+      "description": "活力猎人的每日底线。冷、动、呼吸 — 三个唤醒神经系统的小冲击。完成任意一项即守住当天。",
+      "rules": [
+        "每天完成 1 项任务。",
+        "做完即勾选。取消勾选可以删除一条记录。",
+        "每天在 UTC 午夜重置。如果断了,手动破戒。"
+      ]
+    },
+    "starter_spirit": {
+      "name": "每日静寂",
+      "description": "灵魂猎人的每日底线。一口静默的呼吸、一句感恩的话、拒绝一次渴求。完成任意一项即守住当天。",
+      "rules": [
+        "每天完成 1 项任务。",
+        "做完即勾选。取消勾选可以删除一条记录。",
+        "每天在 UTC 午夜重置。如果断了,手动破戒。"
+      ]
+    }
   },
   "hunterTypes": {
-    "body": { "label": "身体猎人", "tagline": "锻造容器。" },
-    "mind": { "label": "心智猎人", "tagline": "磨利刀锋。" },
-    "emotion": { "label": "情感猎人", "tagline": "守护火焰。" },
-    "energy": { "label": "活力猎人", "tagline": "驾驭火花。" },
-    "spirit": { "label": "灵魂猎人", "tagline": "触及静寂。" }
+    "body": {
+      "label": "身体猎人",
+      "tagline": "锻造容器。",
+      "description": "训练身体能力。俯卧撑、引体向上、深蹲 — 一级一级直至 S 级的阶梯。铁与呼吸之道。"
+    },
+    "mind": {
+      "label": "心智猎人",
+      "tagline": "磨利刀锋。",
+      "description": "训练智识。阅读、学习、记忆 — 多年累积的专注阶梯。清明之道。"
+    },
+    "emotion": {
+      "label": "情感猎人",
+      "tagline": "守护火焰。",
+      "description": "训练关系的深度。脆弱、共情、表达 — 每日被看见的练习。心之道。"
+    },
+    "energy": {
+      "label": "活力猎人",
+      "tagline": "驾驭火花。",
+      "description": "训练生命力。冷暴露、断食、有氧 — 唤醒身体的阶梯。觉醒神经系统之道。"
+    },
+    "spirit": {
+      "label": "灵魂猎人",
+      "tagline": "触及静寂。",
+      "description": "训练超越。冥想、静默、观照 — 深入内在的阶梯。超越自我之道。"
+    }
   },
   "portals": {
     "header": "传送门登记处",
@@ -78,5 +208,433 @@
     "active": "进行中",
     "viewInStatus": "在状态窗口查看",
     "rules": "战斗规则"
+  },
+  "feed": {
+    "title": "动态",
+    "subtitle": "来自系统中各位猎人的公开反思。点击名字查看其个人主页。",
+    "emptyTitle": "[ 还没有反思 ]",
+    "emptyBody": "当猎人将日志条目设为公开时,它们会出现在这里。成为第一个 — 进入一个副本,记录一条笔记,切换为公开。",
+    "loadMore": "加载更多",
+    "loading": "加载中…",
+    "endOfFeed": "— 动态结束 —",
+    "addReaction": "添加反应"
+  },
+  "journal": {
+    "title": "日志",
+    "backToProfile": "← 返回个人主页",
+    "empty": "暂无条目。当你破戒、记录咖啡或标记暴露时,系统会询问你是否要写一条笔记 — 跳过或保存,由你决定。",
+    "summary": "{entries, plural, one {# 条} other {# 条}} · {days, plural, one {# 天} other {# 天}}",
+    "today": "今天",
+    "yesterday": "昨天",
+    "daysAgo": "{count} 天前",
+    "editTitle": "编辑日志 — {dungeon}",
+    "edit": "编辑",
+    "delete": "删除",
+    "deletePrompt": "删除此条目?",
+    "yes": "是",
+    "cancel": "取消",
+    "seeAll": "查看全部 {count} 条 →",
+    "publicBadge": "◉ 公开"
+  },
+  "entryTypes": {
+    "relapse": "破戒",
+    "completed": "完成",
+    "journal": "日志"
+  },
+  "toasts": {
+    "achievementUnlocked": "[ 成就解锁 ]",
+    "levelUp": "[ 升级 ]",
+    "levelLabel": "Lv {level}",
+    "rankAscended": "[ 等级提升 ]",
+    "tierAchieved": "{flavor} 阶层达成",
+    "tapToDismiss": "点击关闭",
+    "ascension": "[ 飞升 ]",
+    "rankReached": "你抵达了 {rank} 等级",
+    "shareAscension": "把你的飞升分享给一个能懂的人。",
+    "share": "分享",
+    "sharing": "分享中…",
+    "later": "稍后",
+    "dismissShare": "关闭分享提示"
+  },
+  "friends": {
+    "title": "好友",
+    "emptyBody": "尚未连接任何猎人。分享你的个人主页链接,或访问其他猎人的主页发送请求。",
+    "requests": "好友请求 · {count}",
+    "wantsToConnect": "想要连接",
+    "accept": "接受",
+    "decline": "拒绝",
+    "rankPrefix": "等级 ",
+    "levelLabel": "Lv {level}",
+    "unfriend": "解除好友",
+    "cancel": "取消",
+    "isFriend": "✓ 好友",
+    "requestSent": "请求已发送",
+    "addFriend": "+ 添加好友"
+  },
+  "installApp": {
+    "title": "安装应用",
+    "installed": "✓ 已安装 — 在独立模式下运行。",
+    "available": "一键安装。无需应用商店。安装后推送通知和离线模式效果更好。",
+    "iosInstructions": "在 iPhone 上,点击<strong>分享</strong>图标,然后选择<strong>添加到主屏幕</strong>。需要 iOS 16.4 或更高。",
+    "unsupported": "打开浏览器菜单,寻找“安装应用”或“添加到主屏幕”。",
+    "install": "安装",
+    "installing": "安装中…"
+  },
+  "notifications": {
+    "title": "每日提醒",
+    "unsupported": "此浏览器不支持推送通知。",
+    "denied": "通知已被屏蔽。请在浏览器/系统设置中重新启用。",
+    "description": "在每天重置时收到提醒,不再错过任务。",
+    "notConfigured": "推送通知未配置。",
+    "couldNotEnable": "无法启用",
+    "couldNotDisable": "无法停用"
+  },
+  "noteModal": {
+    "chrome": "[ 日志 ]",
+    "defaultPlaceholder": "发生了什么?(可选)",
+    "defaultConfirm": "保存",
+    "defaultSkip": "跳过",
+    "sharePublic": "分享到公开主页",
+    "editPlaceholder": "编辑你的反思…",
+    "editCancel": "取消"
+  },
+  "dungeonRun": {
+    "daysCleared": "{count, plural, other {# 天}}通过",
+    "daysForged": "{count, plural, other {# 天}}锻造",
+    "nextTier": "下一阶段:{rank}",
+    "daysFraction": "{count} / {target} 天",
+    "dungeonMastered": "副本精通",
+    "dungeonClearedBanner": "★ 副本通关 ★",
+    "claimVictory": "宣告胜利",
+    "target": "目标:{count} 天",
+    "entered": "进入:{date}",
+    "journalEntry": "+ 日志条目",
+    "exitDungeon": "退出副本",
+    "portalDormant": "传送门休眠",
+    "today": "今天",
+    "thisWeek": "本周",
+    "dayCleared": "✦ 当日完成 ✦",
+    "weekCleared": "✦ 本周完成 ✦",
+    "ladderMastered": "★ 阶梯精通 ★",
+    "ladderRetired": "全部 {count} 级通过。副本退役。",
+    "rungLabel": "等级 {rank} · 第 {current} / {total} 级",
+    "progress": "进度",
+    "progressFraction": "{count} / {target}",
+    "logExposure": "+ 记录暴露",
+    "undo": "撤销",
+    "ladder": "阶梯",
+    "lockedRung": "???",
+    "abandonLadder": "放弃阶梯 — 重置",
+    "noRungs": "未配置任何级别。",
+    "abandonModalTitle": "放弃阶梯 — {dungeon}",
+    "abandonPlaceholder": "是什么阻止了攀登?(可选)",
+    "abandonConfirm": "确认放弃",
+    "logExposureTitle": "记录暴露 — {rung}",
+    "logExposurePlaceholder": "你面对了什么?进展如何?(可选)",
+    "logExposureConfirm": "记录暴露",
+    "logExposureSkip": "跳过笔记",
+    "taskCleared": "任务完成",
+    "dayClearedSource": "当日通过",
+    "tierBonusSource": "🏆 等级 {rank} · {dungeon}"
+  },
+  "checkIn": {
+    "didYouClearToday": "今天通过了吗?",
+    "confirmDate": "确认 {date}",
+    "currentlyCleared": "{date} — 当前已通过",
+    "currentlyRelapsed": "{date} — {count, plural, other {# 次破戒}}",
+    "markCleared": "标记为通过",
+    "cleared": "通过",
+    "relapsePlus": "破戒 +1",
+    "markRelapsed": "标记为破戒",
+    "relapsed": "破戒",
+    "undo": "撤销",
+    "cancel": "取消",
+    "relapseTitle": "破戒 — {dungeon}",
+    "relapsePlaceholder": "什么触发了它?现在感觉如何?(可选)",
+    "relapseConfirm": "记录破戒",
+    "relapseSkip": "取消"
+  },
+  "calendar": {
+    "previousMonth": "上个月",
+    "nextMonth": "下个月",
+    "current": "当前",
+    "longest": "最长",
+    "daysShort": "{count}天",
+    "legendCleared": "通过",
+    "legendTapToLog": "点击记录",
+    "legendRelapse": "破戒"
+  },
+  "awakening": {
+    "intro": [
+      "[ 通知 ]",
+      "",
+      "一项特别任务已抵达。",
+      "",
+      "你被选中,",
+      "成为一名玩家。",
+      "",
+      "你愿意接受吗?"
+    ],
+    "naming": [
+      "[ 注册 ]",
+      "",
+      "系统识别了你。",
+      "",
+      "说出你",
+      "将被知晓的名字。"
+    ],
+    "path": [
+      "[ 道路选择 ]",
+      "",
+      "每位猎人都行走在一条道路上。",
+      "",
+      "选择你最先",
+      "想要锻造的方向。"
+    ],
+    "accept": "接受",
+    "decline": "拒绝",
+    "reconsider": "← 再考虑",
+    "standbyHeader": "[ 待机 ]",
+    "standbyMessage": "系统将等候。",
+    "standbySubtext": "任务依然敞开。当你准备好觉醒时再回来。",
+    "namePlaceholder": "输入名字",
+    "register": "注册",
+    "registering": "注册中",
+    "registrationFailed": "注册失败",
+    "pathFailed": "道路选择失败",
+    "noPath": "无特别选择 — 稍后决定"
+  },
+  "paywall": {
+    "gateLocked": "[ 关卡封锁 ]",
+    "title": "晋级 Pro",
+    "intro": "你的第三道关卡是 Pro。免费层支持两个活跃副本 — 再多就进入猎人领域。",
+    "features": [
+      "无限活跃副本",
+      "连续保险 — 每月一次破戒可被原谅",
+      "VIP 装饰边框 + 徽章",
+      "覆盖整个应用的主题包",
+      "终生数据分析 — 完整历史、数据导出"
+    ],
+    "ascend": "晋级",
+    "openingCheckout": "正在打开结账…",
+    "returnFree": "返回免费层",
+    "closeLabel": "关闭",
+    "notConfigured": "结账尚未配置。",
+    "checkoutFailed": "无法打开结账。请稍后重试。"
+  },
+  "ranksPage": {
+    "title": "猎人之路",
+    "subtitle": "六个等级。六个版本的自己。每一个都是赢得的,不是买来的。",
+    "youAreHere": "你在这里",
+    "locked": "🔒 已锁定",
+    "levelsRange": "等级 {start}–{end} · 抵达需 {xp} XP",
+    "levelsRangeMax": "等级 {start}+ · 抵达需 {xp} XP",
+    "footer": "Lv {level} · 已获得 {xp} XP"
+  },
+  "whatsNew": {
+    "header": "[ 系统更新日志 ]",
+    "title": "新动态",
+    "backToStatus": "← 返回状态",
+    "empty": "尚未记录任何发布。",
+    "latest": "最新",
+    "kindFeature": "feature",
+    "kindFix": "fix",
+    "kindChange": "change"
+  },
+  "rankStyles": {
+    "E": {
+      "flavor": "青铜",
+      "title": "觉醒者",
+      "description": "你已踏入系统。道路开始。身体仍在沉睡,心智仍在游荡 — 但你已现身,这就足够了。"
+    },
+    "D": {
+      "flavor": "玄铁",
+      "title": "自律者",
+      "description": "例行成为仪式。即使无人在看 — 即使你自己不情愿 — 最初的习惯仍然成立。猎人正在成形。"
+    },
+    "C": {
+      "flavor": "白银",
+      "title": "精进者",
+      "description": "曾经的努力变成默认。身心彼此叠加。你不再为早起而搏斗 — 你只是醒来。系统认可你。"
+    },
+    "B": {
+      "flavor": "黄金",
+      "title": "受缚者",
+      "description": "自我与自我相遇。曾主导你的阴影,如今对你回应。猎人在内在世界占据领地。少有人走到这里。"
+    },
+    "A": {
+      "flavor": "白金",
+      "title": "升腾者",
+      "description": "超越多数人对自己的认知。五个维度协调而动。你就是陌生人未开口便能感受到的那个版本的你。"
+    },
+    "S": {
+      "flavor": "全息",
+      "title": "君主",
+      "description": "系统向你俯身。再无可斗,只剩持续的修行。猎人与道一也。你行于自身之光中。"
+    }
+  },
+  "rarityLabels": {
+    "common": "普通",
+    "rare": "稀有",
+    "epic": "史诗",
+    "legendary": "传说"
+  },
+  "rungs": {
+    "presence": {
+      "name": "在场",
+      "description": "一次外出中,与 3 位陌生人保持目光并微笑。无需言语。"
+    },
+    "acknowledge": {
+      "name": "致意",
+      "description": "向 3 位陌生人出声打招呼 — '嗨'、'早'、'你好'。声音打破沉默。"
+    },
+    "request": {
+      "name": "请求",
+      "description": "向陌生人提出一个低风险的小问题 — 时间、方向、推荐。"
+    },
+    "small-talk": {
+      "name": "闲谈",
+      "description": "与收银员、咖啡师或邻座短暂交流。一个观察、一句称赞、一句关于此刻的话。"
+    },
+    "engage": {
+      "name": "投入",
+      "description": "与陌生人持续 1–2 分钟的对话。追问一句。找到话头。"
+    },
+    "expose": {
+      "name": "袒露",
+      "description": "在群体场合分享观点、故事或玩笑 — 会议、课堂、聚会。被看见、被听见。"
+    }
+  },
+  "achievements": {
+    "dungeonRankName": "{dungeon}:等级 {rank}",
+    "dungeonRankDescription": "在 {dungeon} 中达到 {days} 天。",
+    "dungeonRungName": "{dungeon}:{rung}",
+    "dungeonRungDescription": "在 {dungeon} 中通过 {rung} 级({target} 次暴露)。",
+    "dungeonClearedName": "{dungeon}:通关",
+    "dungeonClearedDescription": "完成 {dungeon} 完整的 {target} 天记录。",
+    "comboName": "{days} 天连击",
+    "comboDescription": "每日任务连击达到 {days} 天。+{xp} XP",
+    "static": {
+      "awakened": { "name": "觉醒", "description": "接受召唤。进入你的第一个副本。" },
+      "first-streak": { "name": "首滴血", "description": "在一个副本中度过你的第一天。" },
+      "first-quest": { "name": "接受任务", "description": "完成你的第一个每日任务。" },
+      "first-workout": { "name": "首次训练", "description": "在 Gym Life 中记录一次训练。" },
+      "first-exposure": { "name": "沉默的在场", "description": "在治疗阶梯中记录你的第一次暴露。" },
+      "rank-e": { "name": "E 级通过", "description": "在任意副本保持 7 天连续记录。" },
+      "rank-d": { "name": "D 级通过", "description": "在任意副本中达到 14 天。" },
+      "rank-c": { "name": "C 级通过", "description": "在任意副本中达到 30 天。" },
+      "rank-b": { "name": "B 级通过", "description": "在任意副本中达到 60 天。" },
+      "rank-a": { "name": "A 级通过", "description": "在任意副本中达到 90 天。" },
+      "rank-s": { "name": "S 级飞升", "description": "在任意副本中达到 180 天。" },
+      "multi-classed": { "name": "多职修行", "description": "同时在 3 个副本中保持活跃。" },
+      "polymath": { "name": "博学", "description": "同时在全部 5 个副本中保持活跃。" },
+      "perfect-day": { "name": "完美一日", "description": "在一天内完成所有每日任务。" },
+      "grinder": { "name": "刷子", "description": "累计完成 50 项任务。" },
+      "grind-lord": { "name": "刷王", "description": "累计完成 250 项任务。" },
+      "iron-will": { "name": "钢铁意志", "description": "完成 10 次训练。" },
+      "forged": { "name": "锻造", "description": "记录 100 次训练。" },
+      "ladder-climber": { "name": "登梯者", "description": "通过暴露阶梯的 3 级。" },
+      "fearless": { "name": "无畏", "description": "完成完整的暴露阶梯。" },
+      "dungeon-master": { "name": "副本大师", "description": "成功完成并退役一个副本。" },
+      "conqueror": { "name": "征服者", "description": "完整通关 3 个副本。" },
+      "level-5": { "name": "新手猎人", "description": "达到 5 级。" },
+      "level-10": { "name": "老练", "description": "达到 10 级。" },
+      "level-25": { "name": "老兵", "description": "达到 25 级。" },
+      "level-50": { "name": "影子君主", "description": "达到 50 级。" }
+    }
+  },
+  "guide": {
+    "header": "[ 系统手册 ]",
+    "title": "猎人指南",
+    "subtitle": "系统不隐藏其规则。读它们。进入一个副本。开始。",
+    "section1Title": "1. 如何觉醒",
+    "section1P1": "与系统的初次接触是简短的。你登录,系统欢迎你成为猎人,你接受关卡。一个猎人 ID 被写入,你的传送门登记处随之解锁。",
+    "section1P2": "从那里开始,七个副本敞开。挑选一个即使没有积分榜也愿意去打的。积分榜只是为了提醒你,你做到了。",
+    "section2Title": "2. 五种规则类型",
+    "section2Intro": "每个副本都基于五种规则之一运行。读一次,系统的其余部分就变得简单。",
+    "ruleLabels": {
+      "continuous_streak": "连续记录",
+      "cadence": "节奏",
+      "timed": "限时挑战",
+      "progressive": "渐进阶梯"
+    },
+    "ruleSummaries": {
+      "continuous_streak": "每日签到。在日历中将每一天确认为通过或破戒。通过的日子永久积累 XP 和维度。",
+      "cadence": "清单模式。在一个时间窗口内勾选 — Hunter-Type 起步副本是每天(完成任意一项),训练计划是每周(5/5)。",
+      "timed": "朝着 N 天目标的每日签到。与连续副本同样的日历机制。在目标处宣告胜利来结束记录。",
+      "progressive": "递增的阶梯。完成一级才能解锁下一级。不可跳级。"
+    },
+    "ruleUsedBy": {
+      "continuous_streak": "NoFap · 咖啡因重启 · 饮食挑战",
+      "cadence": "训练计划 · 每日锻造 · 每日磨砺 · 每日联结 · 每日火花 · 每日静寂",
+      "timed": "戒末日刷屏 · 声音感知重塑",
+      "progressive": "暴露疗法"
+    },
+    "section3Title": "3. 七个传送门",
+    "section3Intro": "每个传送门都是一项具体的修炼,有自己的规则和它所训练的具体维度。",
+    "section4Title": "4. 猎人等级",
+    "section4Intro": "六个等级。每个等级包含 10 级。一共 60 级,直至影子君主。每级所需 XP 遵循 1.5 次方曲线 — 越往上爬,每一级到来得越慢。",
+    "rankLevels": "Lv {start}–{end}",
+    "xpDropsIntro": "XP 来自四个地方:",
+    "xpStreakDay": "每次在连续/限时副本中签到一个通过日 — 加上该副本的维度积分",
+    "xpWorkout": "在训练计划中每记录一次训练",
+    "xpExposure": "在暴露疗法中每记录一次暴露",
+    "xpCompletion": "在限时副本宣告胜利时",
+    "section5Title": "5. 五个维度",
+    "section5Intro": "进度按五个维度追踪,而不是单一的 XP 条。每个副本训练特定的子集。你的主页显示一个雷达图 — 平衡的猎人看到一个五边形,专精的猎人看到一根尖刺。",
+    "dimensions": {
+      "body": {
+        "name": "身体",
+        "description": "身体力量与活力。从训练和饮食纪律中获得。"
+      },
+      "mind": {
+        "name": "心智",
+        "description": "清明、专注、注意力。通过夺回你的注意力和感官获得。"
+      },
+      "emotion": {
+        "name": "情感",
+        "description": "社交勇气与情绪调节。从暴露和重新获得的亲密中得来。"
+      },
+      "energy": {
+        "name": "活力",
+        "description": "原始活力与耐力。来自对刺激物的控制、饮食和对强迫的抵抗。"
+      },
+      "spirit": {
+        "name": "灵魂",
+        "description": "深度、临在、内在的寂静。从感官重置和持续的纪律中得来。"
+      }
+    },
+    "section6Title": "6. 每日任务与连击系统",
+    "section6P1": "每天系统提供一组轮换的小任务 — 每个都绑定一个维度。完成它们以获得维度积分和 XP。",
+    "section6P2": "在一天内完成 <b>{threshold}</b> 个或更多任务,该日就具备连击资格。连续合格日构成连击。每达到一个里程碑,奖励 XP 会作为通知出现在你的状态窗口中:",
+    "section6Footnote": "一天 1 个或 2 个任务的日子是宽限日 — 不会构建,也不会破坏。只有完全错失才会重置连击。",
+    "section7Title": "7. 散乱减益",
+    "section7P1": "若一天完成零任务,明天你将以 <scattered>⚠ 散乱</scattered> 状态醒来 — 一个出现在猎人卡上的可见印记。",
+    "section7P2": "散乱不是惩罚。它不消耗 XP。其他猎人看不到。它是一面镜子。你曾缺席,系统会向你映出这一事实,直到你回来。",
+    "section7P3": "在你完成新一天的第一个任务那一刻,它就消失。",
+    "section8Title": "8. 社交层",
+    "section8Intro": "其他猎人存在。系统让你们的路径相交。",
+    "section8PublicProfileLabel": "公开主页。",
+    "section8PublicProfileBody": "每位猎人在 <code>/h/&lt;id&gt;</code> 都有一个只读主页 — 等级、级别、活跃副本、维度、奖杯。持有你链接且已登录的其他猎人可以查看(不向公开互联网暴露)。在你的 <profileLink>/profile</profileLink> 页面找到分享链接。",
+    "section8FriendsLabel": "朋友。",
+    "section8FriendsBody": "访问另一位猎人的主页并点击 <addFriend>+ 添加好友</addFriend>。对方会收到通知,接受后,你们会出现在彼此的好友列表里。友谊是基础 — 团队狩猎和排行榜稍后将在其上构建。",
+    "section8JournalLabel": "日志条目。",
+    "section8JournalBody": "当你破戒、记录咖啡、完成一次记录,或只是想写点什么 — 一个小笔记弹窗能让你保存反思。默认私密(只有你能在你的主页看到)。勾选 <code>分享到公开主页</code> 把这条记录显示在你公开主页的「反思」中。",
+    "section9Title": "9. 触达与可靠性",
+    "section9DailyLabel": "每日提醒。",
+    "section9DailyBody": "默认开启。第一次登录时,浏览器只问一次通知权限 — 同意即注册。如果昨天的一天无所事事,系统会发送早晨推送;如果今天正在溜走,会发送傍晚推送。消息会根据状态变化。",
+    "section9DailyNote": "要关闭提醒,在你的个人主页切换,或在 OS 层面屏蔽该应用通知(iOS 设置 → 通知,Android 应用信息,桌面端浏览器站点设置)。",
+    "section9InstallLabel": "安装应用。",
+    "section9InstallIntro": "推送只有在应用已安装时才工作。每个平台流程不同:",
+    "section9InstallIos": "<b>iPhone / iPad:</b> 用 Safari 打开站点 → <code>分享 → 添加到主屏幕</code>。需要 iOS 16.4 或更高。从普通 Safari 标签页推送不会触发。",
+    "section9InstallAndroid": "<b>Android:</b> 用 Chrome 打开 → 点击出现的安装横幅,或使用 Chrome 的 ⋮ 菜单 → <code>安装应用</code>。安装之后无论哪种方式推送都生效。",
+    "section9InstallDesktop": "<b>桌面端 (Chrome, Edge, Brave):</b> 在地址栏寻找安装图标,或使用浏览器菜单 → <code>安装 Shivaliva Leveling</code>。然后应用在自己的窗口中打开。",
+    "section9OfflineLabel": "离线。",
+    "section9OfflineBody": "应用无连接也能工作。在飞机上、地铁里、信号差的地方 — 完成任务、记录破戒、写日志。一切都在本地排队,重新联网时同步到服务器。一个琥珀色横幅显示你何时离线,以及多少操作正等待同步。",
+    "section10Title": "10. 当前免费",
+    "section10P1": "目前每个功能都免费 — 每个副本、每项成就、每日任务、维度、热力图、好友、日志、推送、无限活跃记录。",
+    "section10P2": "如果未来出现付费层级,自我狩猎的核心仍然免费。与自己竞争不应被付费墙挡住。早期猎人会被记住。",
+    "ctaText": "任务依然敞开。",
+    "ctaButton": "进入传送门登记处 →"
   }
 }

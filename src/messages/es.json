@@ -28,7 +28,20 @@
     "edit": "Editar",
     "scattered": "Disperso",
     "viewPublic": "Ver Público",
-    "choosePath": "+ Elige tu camino"
+    "choosePath": "+ Elige tu camino",
+    "share": "Compartir",
+    "shareCopied": "✓ Copiado",
+    "changeAvatarLabel": "Cambiar foto de perfil",
+    "changeAvatar": "Cambiar",
+    "uploading": "Subiendo",
+    "rename": "Renombrar",
+    "changePath": "Cambiar camino",
+    "viewAllRanks": "Ver todos los rangos",
+    "rankPath": "Ruta de Rango",
+    "maxRank": "RANGO MÁX",
+    "rankProgress": "{count} LVL → {next}",
+    "scatteredHelp": "Ayer no completaste ninguna daily quest. Se borra tras tu próximo día activo.",
+    "avatarLocalError": "No se pudo guardar el avatar localmente"
   },
   "dailyQuests": {
     "header": "(!) Misiones Diarias",
@@ -42,25 +55,142 @@
     "quest_clean_room": "Limpiar la Habitación"
   },
   "dungeons": {
-    "caffeine": { "name": "Reinicio de Cafeína" },
-    "sensible_diet": { "name": "Desafío de Dieta" },
-    "gym_life": { "name": "Régimen de Entrenamiento" },
-    "attention_reclaim": { "name": "Sin Doomscroll" },
-    "music_sensitization": { "name": "Sensibilización del Oído" },
-    "social_reclaim": { "name": "Terapia de Exposición" },
-    "nofap": { "name": "NoFap" },
-    "starter_body": { "name": "Forja Diaria" },
-    "starter_mind": { "name": "Afilar Diario" },
-    "starter_emotion": { "name": "Vínculos Diarios" },
-    "starter_energy": { "name": "Chispa Diaria" },
-    "starter_spirit": { "name": "Quietud Diaria" }
+    "caffeine": {
+      "name": "Reinicio de Cafeína",
+      "description": "Reinicia el sistema nervioso. Hasta 2 cafés al mes están bien — el 3.º termina la racha.",
+      "rules": [
+        "Hasta 2 cafés al mes está bien. El 3.º es una recaída.",
+        "Confirma cada día en el calendario — Cumplido si mantuviste la línea, Recaída si la rompiste.",
+        "Los días cumplidos acumulan XP + puntos de dimensión permanentemente. Las recaídas son marcas en el calendario — Salir de la Mazmorra es la única manera de terminar la racha antes."
+      ]
+    },
+    "sensible_diet": {
+      "name": "Desafío de Dieta",
+      "description": "Come con conciencia. 2–3 comidas al día, sin picar entre medias. Plantas primero, luego fuentes animales, después mariscos, carne solo si no hay otra cosa. Hasta 4 dulces no naturales al mes — más allá es una recaída.",
+      "rules": [
+        "2–3 comidas al día. Sin picar entre comidas — deja que el intestino descanse.",
+        "Come plantas primero; luego fuentes animales (huevos, lácteos, frutos secos); después mariscos; y carne solo si no hay alternativa.",
+        "Hasta 4 dulces no naturales al mes está bien. El 5.º es una recaída.",
+        "Confirma cada día en el calendario — Cumplido si mantuviste la línea, Recaída si la rompiste."
+      ]
+    },
+    "gym_life": {
+      "name": "Régimen de Entrenamiento",
+      "description": "Forja el cuerpo. 5 entrenamientos por semana — uno por grupo muscular: Pecho y Hombros, Espalda y Brazos, Piernas y Glúteos, Core y Cuerpo Completo. La disciplina es cadencia, no intensidad.",
+      "rules": [
+        "Completa 5 entrenamientos por semana — uno de cada: Pecho y Hombros, Espalda y Brazos, Piernas y Glúteos, Core, Cuerpo Completo.",
+        "Elige cualquier ejercicio que trabaje el grupo muscular objetivo. Registra cuando termines la sesión.",
+        "La semana va de lunes a domingo (UTC). Recaída manual si caes de la cadencia."
+      ]
+    },
+    "attention_reclaim": {
+      "name": "Sin Doomscroll",
+      "description": "30 días sin doomscrolling. Mensajear, publicar y ver vídeos sueltos intencionales está bien — solo los feeds infinitos pasivos cuentan como desliz.",
+      "rules": [
+        "Confirma cada día en el calendario — Cumplido o Recaída.",
+        "Alcanza 30 días cumplidos para desbloquear Reclamar Victoria.",
+        "Los días cumplidos acumulan XP + dimensiones permanentemente. Las recaídas son marcas en el calendario — Salir de la Mazmorra es la única manera de terminar la racha antes."
+      ]
+    },
+    "music_sensitization": {
+      "name": "Sensibilización del Oído",
+      "description": "30 días sin música. Un reinicio sensorial — deja que los oídos se aquieten para que el viento, la lluvia, el canto de los pájaros y las voces reales vuelvan a sentirse vivos.",
+      "rules": [
+        "Recaída = escuchar canciones a propósito (listas, álbumes, conciertos, música de fondo que tú elegiste).",
+        "Permitido: pódcasts, audiolibros, bandas sonoras, sonidos de la naturaleza y música ambiental involuntaria (tiendas, cafés, altavoces de otros).",
+        "Confirma cada día en el calendario. Alcanza 30 días cumplidos para desbloquear Reclamar Victoria."
+      ]
+    },
+    "social_reclaim": {
+      "name": "Terapia de Exposición",
+      "description": "Sube la escalera social. Seis peldaños desde la presencia silenciosa hasta hablar en grupo — desensibilízate mediante exposición gradual, un peldaño a la vez.",
+      "rules": [
+        "Cada peldaño tiene un objetivo — registra una exposición cada vez que hagas la acción en la vida real.",
+        "Completa el peldaño actual para desbloquear el siguiente. No saltes.",
+        "Los peldaños progresan de rango E → S. Mazmorra completada cuando termines el último peldaño."
+      ]
+    },
+    "nofap": {
+      "name": "NoFap",
+      "description": "Recupera tu energía vital. Estricto: nada de porno, masturbación, edging ni gooning. El sexo y el orgasmo con pareja están bien — la regla apunta al uso compulsivo en solitario, no a la intimidad.",
+      "rules": [
+        "Recaída = porno, masturbación, edging o gooning (thirst traps, cuentas bot, redes sociales sensualizadas).",
+        "Permitido: sexo y orgasmo con pareja — esta mazmorra es sobre la compulsión, no la abstinencia.",
+        "Marca cada día en el calendario — Cumplido o Recaída. Los días cumplidos acumulan XP + dimensiones permanentemente. Las recaídas son marcas, no reinicios."
+      ]
+    },
+    "starter_body": {
+      "name": "Forja Diaria",
+      "description": "El piso diario del Cazador del Cuerpo. Tres ejercicios que escalan con tu rango — completa cualquiera para asegurar el día. Flexiones, dominadas y sentadillas crecen mientras tu racha sube de E → S.",
+      "rules": [
+        "Completa 1 tarea al día.",
+        "Marca cada una mientras la haces. Desmárcala para eliminar un registro.",
+        "El día se reinicia a medianoche UTC. Recaída manual si caes."
+      ]
+    },
+    "starter_mind": {
+      "name": "Afilar Diario",
+      "description": "El piso diario del Cazador de la Mente. Unas páginas, una nueva idea, una sola frase honesta. Completa cualquiera para asegurar el día.",
+      "rules": [
+        "Completa 1 tarea al día.",
+        "Marca cada una mientras la haces. Desmárcala para eliminar un registro.",
+        "El día se reinicia a medianoche UTC. Recaída manual si caes."
+      ]
+    },
+    "starter_emotion": {
+      "name": "Vínculos Diarios",
+      "description": "El piso diario del Cazador de la Emoción. Pequeñas repeticiones de ser visto, escuchado, presente. Completa cualquiera para asegurar el día.",
+      "rules": [
+        "Completa 1 tarea al día.",
+        "Marca cada una mientras la haces. Desmárcala para eliminar un registro.",
+        "El día se reinicia a medianoche UTC. Recaída manual si caes."
+      ]
+    },
+    "starter_energy": {
+      "name": "Chispa Diaria",
+      "description": "El piso diario del Cazador de la Energía. Frío, movimiento, respiración — tres sacudidas pequeñas para despertar el sistema nervioso. Completa cualquiera para asegurar el día.",
+      "rules": [
+        "Completa 1 tarea al día.",
+        "Marca cada una mientras la haces. Desmárcala para eliminar un registro.",
+        "El día se reinicia a medianoche UTC. Recaída manual si caes."
+      ]
+    },
+    "starter_spirit": {
+      "name": "Quietud Diaria",
+      "description": "El piso diario del Cazador del Espíritu. Un respiro de silencio, una frase de gratitud, un antojo negado. Completa cualquiera para asegurar el día.",
+      "rules": [
+        "Completa 1 tarea al día.",
+        "Marca cada una mientras la haces. Desmárcala para eliminar un registro.",
+        "El día se reinicia a medianoche UTC. Recaída manual si caes."
+      ]
+    }
   },
   "hunterTypes": {
-    "body": { "label": "Cazador del Cuerpo", "tagline": "Forja el vehículo." },
-    "mind": { "label": "Cazador de la Mente", "tagline": "Afila la hoja." },
-    "emotion": { "label": "Cazador de la Emoción", "tagline": "Cuida la llama." },
-    "energy": { "label": "Cazador de la Energía", "tagline": "Domina la chispa." },
-    "spirit": { "label": "Cazador del Espíritu", "tagline": "Toca lo silente." }
+    "body": {
+      "label": "Cazador del Cuerpo",
+      "tagline": "Forja el vehículo.",
+      "description": "Entrena la capacidad física. Flexiones, dominadas, sentadillas — escaleras incrementales que llegan al rango S. El camino del hierro y la respiración."
+    },
+    "mind": {
+      "label": "Cazador de la Mente",
+      "tagline": "Afila la hoja.",
+      "description": "Entrena el intelecto. Lectura, estudio, memorización — escaleras de enfoque que se acumulan a lo largo de los años. El camino de la claridad."
+    },
+    "emotion": {
+      "label": "Cazador de la Emoción",
+      "tagline": "Cuida la llama.",
+      "description": "Entrena la profundidad relacional. Vulnerabilidad, empatía, expresión — repeticiones diarias de ser visto. El camino del corazón."
+    },
+    "energy": {
+      "label": "Cazador de la Energía",
+      "tagline": "Domina la chispa.",
+      "description": "Entrena la vitalidad. Exposición al frío, ayuno, cardio — escaleras que despiertan el cuerpo. El camino del sistema nervioso despierto."
+    },
+    "spirit": {
+      "label": "Cazador del Espíritu",
+      "tagline": "Toca lo silente.",
+      "description": "Entrena la trascendencia. Meditación, silencio, contemplación — escaleras que profundizan en el interior. El camino más allá del yo."
+    }
   },
   "portals": {
     "header": "Registro de Portales",
@@ -78,5 +208,433 @@
     "active": "Activa",
     "viewInStatus": "Ver en Ventana de Estado",
     "rules": "Reglas de Combate"
+  },
+  "feed": {
+    "title": "El Feed",
+    "subtitle": "Reflexiones públicas de cazadores en todo el sistema. Toca un nombre para ver su perfil.",
+    "emptyTitle": "[ Aún sin reflexiones ]",
+    "emptyBody": "Cuando los cazadores marquen sus entradas de diario como públicas, aparecerán aquí. Sé el primero — abre una mazmorra, escribe una nota, activa público.",
+    "loadMore": "Cargar más",
+    "loading": "Cargando…",
+    "endOfFeed": "— Fin del feed —",
+    "addReaction": "Añadir reacción"
+  },
+  "journal": {
+    "title": "Diario",
+    "backToProfile": "← Volver al perfil",
+    "empty": "Aún sin entradas. Cuando recaigas, registres un café o marques una exposición, se te preguntará si quieres escribir una nota — saltar o guardar, tú decides.",
+    "summary": "{entries, plural, one {# entrada} other {# entradas}} · {days, plural, one {# día} other {# días}}",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "daysAgo": "hace {count} días",
+    "editTitle": "Editar diario — {dungeon}",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deletePrompt": "¿Eliminar esta entrada?",
+    "yes": "Sí",
+    "cancel": "Cancelar",
+    "seeAll": "Ver todas las {count} entradas →",
+    "publicBadge": "◉ Pública"
+  },
+  "entryTypes": {
+    "relapse": "Recaída",
+    "completed": "Completada",
+    "journal": "Diario"
+  },
+  "toasts": {
+    "achievementUnlocked": "[ Logro Desbloqueado ]",
+    "levelUp": "[ Subida de Nivel ]",
+    "levelLabel": "Lv {level}",
+    "rankAscended": "[ Rango Ascendido ]",
+    "tierAchieved": "Nivel {flavor} alcanzado",
+    "tapToDismiss": "Toca para cerrar",
+    "ascension": "[ Ascensión ]",
+    "rankReached": "Alcanzaste el Rango {rank}",
+    "shareAscension": "Comparte tu ascensión con alguien que lo entienda.",
+    "share": "Compartir",
+    "sharing": "Compartiendo…",
+    "later": "Más tarde",
+    "dismissShare": "Descartar aviso de compartir"
+  },
+  "friends": {
+    "title": "Amigos",
+    "emptyBody": "Aún no hay cazadores conectados. Comparte el enlace de tu perfil o visita el perfil de otro cazador para enviar una solicitud.",
+    "requests": "Solicitudes de amistad · {count}",
+    "wantsToConnect": "Quiere conectar",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "rankPrefix": "Rango ",
+    "levelLabel": "Lv {level}",
+    "unfriend": "Eliminar amigo",
+    "cancel": "Cancelar",
+    "isFriend": "✓ Amigos",
+    "requestSent": "Solicitud Enviada",
+    "addFriend": "+ Añadir Amigo"
+  },
+  "installApp": {
+    "title": "Instalar App",
+    "installed": "✓ Instalada — funcionando en modo standalone.",
+    "available": "Instala con un toque. Sin tienda de apps. Las notificaciones push y el modo offline funcionan mejor cuando está instalada.",
+    "iosInstructions": "En iPhone, toca el icono <strong>Compartir</strong>, luego <strong>Añadir a pantalla de inicio</strong>. Requiere iOS 16.4+.",
+    "unsupported": "Abre el menú del navegador y busca 'Instalar app' o 'Añadir a pantalla de inicio'.",
+    "install": "Instalar",
+    "installing": "Instalando…"
+  },
+  "notifications": {
+    "title": "Recordatorio Diario",
+    "unsupported": "Este navegador no admite notificaciones push.",
+    "denied": "Las notificaciones están bloqueadas. Reactívalas en la configuración del navegador/SO.",
+    "description": "Recibe un toque cuando el día se reinicie para no perder tus quests.",
+    "notConfigured": "Notificaciones push no configuradas.",
+    "couldNotEnable": "No se pudo activar",
+    "couldNotDisable": "No se pudo desactivar"
+  },
+  "noteModal": {
+    "chrome": "[ Diario ]",
+    "defaultPlaceholder": "¿Qué pasó? (opcional)",
+    "defaultConfirm": "Guardar",
+    "defaultSkip": "Saltar",
+    "sharePublic": "Compartir en perfil público",
+    "editPlaceholder": "Edita tu reflexión…",
+    "editCancel": "Cancelar"
+  },
+  "dungeonRun": {
+    "daysCleared": "{count, plural, one {# día} other {# días}} cumplidos",
+    "daysForged": "{count, plural, one {# día} other {# días}} forjados",
+    "nextTier": "Siguiente nivel: {rank}",
+    "daysFraction": "{count} / {target} días",
+    "dungeonMastered": "Mazmorra dominada",
+    "dungeonClearedBanner": "★ Mazmorra Superada ★",
+    "claimVictory": "Reclamar Victoria",
+    "target": "Meta: {count} días",
+    "entered": "Entrada: {date}",
+    "journalEntry": "+ Entrada de Diario",
+    "exitDungeon": "Salir de la Mazmorra",
+    "portalDormant": "Portal Inactivo",
+    "today": "Hoy",
+    "thisWeek": "Esta Semana",
+    "dayCleared": "✦ Día cumplido ✦",
+    "weekCleared": "✦ Semana cumplida ✦",
+    "ladderMastered": "★ Escalera Dominada ★",
+    "ladderRetired": "Todos los {count} peldaños superados. Mazmorra retirada.",
+    "rungLabel": "Rango {rank} · Peldaño {current} / {total}",
+    "progress": "Progreso",
+    "progressFraction": "{count} / {target}",
+    "logExposure": "+ Registrar Exposición",
+    "undo": "Deshacer",
+    "ladder": "Escalera",
+    "lockedRung": "???",
+    "abandonLadder": "Abandonar Escalera — Reiniciar",
+    "noRungs": "Sin peldaños configurados.",
+    "abandonModalTitle": "Abandonar escalera — {dungeon}",
+    "abandonPlaceholder": "¿Qué detuvo la subida? (opcional)",
+    "abandonConfirm": "Confirmar Abandono",
+    "logExposureTitle": "Registrar exposición — {rung}",
+    "logExposurePlaceholder": "¿Qué enfrentaste? ¿Cómo fue? (opcional)",
+    "logExposureConfirm": "Registrar Exposición",
+    "logExposureSkip": "Saltar Nota",
+    "taskCleared": "Tarea Cumplida",
+    "dayClearedSource": "Día Cumplido",
+    "tierBonusSource": "🏆 Rango {rank} · {dungeon}"
+  },
+  "checkIn": {
+    "didYouClearToday": "¿Cumpliste hoy?",
+    "confirmDate": "Confirmar {date}",
+    "currentlyCleared": "{date} — actualmente cumplido",
+    "currentlyRelapsed": "{date} — {count, plural, one {# recaída} other {# recaídas}}",
+    "markCleared": "Marcar Cumplido",
+    "cleared": "Cumplido",
+    "relapsePlus": "Recaída +1",
+    "markRelapsed": "Marcar Recaída",
+    "relapsed": "Recaída",
+    "undo": "Deshacer",
+    "cancel": "Cancelar",
+    "relapseTitle": "Recaída — {dungeon}",
+    "relapsePlaceholder": "¿Qué lo desencadenó? ¿Cómo te sientes? (opcional)",
+    "relapseConfirm": "Registrar Recaída",
+    "relapseSkip": "Cancelar"
+  },
+  "calendar": {
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "current": "Actual",
+    "longest": "Mayor",
+    "daysShort": "{count}d",
+    "legendCleared": "Cumplido",
+    "legendTapToLog": "Toca para registrar",
+    "legendRelapse": "Recaída"
+  },
+  "awakening": {
+    "intro": [
+      "[ NOTIFICACIÓN ]",
+      "",
+      "Ha llegado una misión especial.",
+      "",
+      "Has sido elegido",
+      "para convertirte en Jugador.",
+      "",
+      "¿Deseas aceptar?"
+    ],
+    "naming": [
+      "[ REGISTRO ]",
+      "",
+      "El Sistema te reconoce.",
+      "",
+      "Declara el nombre",
+      "por el que serás conocido."
+    ],
+    "path": [
+      "[ ELECCIÓN DE CAMINO ]",
+      "",
+      "Cada cazador recorre un camino.",
+      "",
+      "Elige qué quieres",
+      "forjar primero."
+    ],
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "reconsider": "← Reconsiderar",
+    "standbyHeader": "[ EN ESPERA ]",
+    "standbyMessage": "El Sistema esperará.",
+    "standbySubtext": "La misión sigue abierta. Vuelve cuando estés listo para despertar.",
+    "namePlaceholder": "Introduce nombre",
+    "register": "Registrar",
+    "registering": "Registrando",
+    "registrationFailed": "Registro fallido",
+    "pathFailed": "Selección de camino fallida",
+    "noPath": "Nada en particular — decidir luego"
+  },
+  "paywall": {
+    "gateLocked": "[ Puerta Bloqueada ]",
+    "title": "Asciende a Pro",
+    "intro": "Tu tercera puerta es Pro. Dos mazmorras activas es el plan gratis — más allá, ya estás en territorio de cazador.",
+    "features": [
+      "Mazmorras activas ilimitadas",
+      "Seguro de Racha — una recaída perdonada al mes",
+      "Marco cosmético VIP + insignia",
+      "Paquetes de temas para toda la app",
+      "Analítica de por vida — historial completo, exportación de datos"
+    ],
+    "ascend": "Ascender",
+    "openingCheckout": "Abriendo Checkout…",
+    "returnFree": "Volver al plan gratis",
+    "closeLabel": "Cerrar",
+    "notConfigured": "Checkout aún no está configurado.",
+    "checkoutFailed": "No se pudo abrir el checkout. Inténtalo en un momento."
+  },
+  "ranksPage": {
+    "title": "Camino del Cazador",
+    "subtitle": "Seis rangos. Seis versiones de ti mismo. Cada uno ganado, no comprado.",
+    "youAreHere": "Estás aquí",
+    "locked": "🔒 Bloqueado",
+    "levelsRange": "Niveles {start}–{end} · {xp} XP para alcanzar",
+    "levelsRangeMax": "Niveles {start}+ · {xp} XP para alcanzar",
+    "footer": "Lv {level} · {xp} XP ganados"
+  },
+  "whatsNew": {
+    "header": "[ Registro de actualizaciones ]",
+    "title": "Novedades",
+    "backToStatus": "← Volver al Estado",
+    "empty": "Aún no hay versiones registradas.",
+    "latest": "Última",
+    "kindFeature": "feature",
+    "kindFix": "fix",
+    "kindChange": "change"
+  },
+  "rankStyles": {
+    "E": {
+      "flavor": "Bronce",
+      "title": "El Despierto",
+      "description": "Has entrado al Sistema. El camino comienza. El cuerpo aún duerme y la mente aún divaga — pero apareciste, y eso basta."
+    },
+    "D": {
+      "flavor": "Hierro",
+      "title": "El Disciplinado",
+      "description": "La rutina se vuelve ritual. Los primeros hábitos se sostienen aunque nadie mire — aunque tú mismo no quieras. El cazador toma forma."
+    },
+    "C": {
+      "flavor": "Plata",
+      "title": "El Cultivado",
+      "description": "Lo que era esfuerzo se vuelve natural. Cuerpo y mente se potencian entre sí. Ya no peleas para levantarte temprano — te despiertas. El Sistema te reconoce."
+    },
+    "B": {
+      "flavor": "Oro",
+      "title": "El Atado",
+      "description": "El yo se encontró con el yo. Las sombras que dirigían el espectáculo ahora te responden. El cazador domina territorio en el mundo interior. Pocos llegan tan lejos."
+    },
+    "A": {
+      "flavor": "Platino",
+      "title": "El Ascendente",
+      "description": "Más allá de lo que la mayoría conoce de sí misma. Las cinco dimensiones se mueven en concierto. Eres la versión de ti que los desconocidos sienten antes de que hables."
+    },
+    "S": {
+      "flavor": "Holo",
+      "title": "El Soberano",
+      "description": "El Sistema se inclina ante ti. Nada queda por luchar, solo la práctica continua. Cazador y camino son la misma cosa. Caminas en tu propia luz."
+    }
+  },
+  "rarityLabels": {
+    "common": "Común",
+    "rare": "Raro",
+    "epic": "Épico",
+    "legendary": "Legendario"
+  },
+  "rungs": {
+    "presence": {
+      "name": "Presencia",
+      "description": "Sostén contacto visual y sonríe a 3 desconocidos en una salida. No se necesitan palabras."
+    },
+    "acknowledge": {
+      "name": "Reconocer",
+      "description": "Saluda a 3 desconocidos en voz alta — 'hola', 'buenos días', 'qué tal'. La voz rompe el silencio."
+    },
+    "request": {
+      "name": "Pedir",
+      "description": "Hazle a un desconocido una pregunta pequeña y de poco riesgo — la hora, una dirección, una recomendación."
+    },
+    "small-talk": {
+      "name": "Charla Breve",
+      "description": "Intercambia un comentario breve con un cajero, barista o vecino de asiento. Una observación, un cumplido, una nota sobre el momento."
+    },
+    "engage": {
+      "name": "Conectar",
+      "description": "Mantén una conversación de 1–2 minutos con un desconocido. Haz una pregunta de seguimiento. Encuentra el hilo."
+    },
+    "expose": {
+      "name": "Exponerse",
+      "description": "Comparte una opinión, historia o broma en grupo — reunión, clase, fiesta. Ser visto y oído."
+    }
+  },
+  "achievements": {
+    "dungeonRankName": "{dungeon}: Rango {rank}",
+    "dungeonRankDescription": "Alcanza {days} días en {dungeon}.",
+    "dungeonRungName": "{dungeon}: {rung}",
+    "dungeonRungDescription": "Completa el peldaño {rung} en {dungeon} ({target} exposiciones).",
+    "dungeonClearedName": "{dungeon}: Cumplido",
+    "dungeonClearedDescription": "Completa la corrida completa de {target} días de {dungeon}.",
+    "comboName": "Combo de {days} días",
+    "comboDescription": "El combo de quests diarias alcanzó {days} días. +{xp} XP",
+    "static": {
+      "awakened": { "name": "Despierto", "description": "Acepta el llamado. Entra a tu primera mazmorra." },
+      "first-streak": { "name": "Primera Sangre", "description": "Sobrevive tu primer día dentro de una mazmorra." },
+      "first-quest": { "name": "Quest Tomada", "description": "Completa tu primera quest diaria." },
+      "first-workout": { "name": "Primera Repetición", "description": "Registra un entrenamiento en Gym Life." },
+      "first-exposure": { "name": "Presencia Silenciosa", "description": "Registra tu primera exposición en la escalera de terapia." },
+      "rank-e": { "name": "Rango E Cumplido", "description": "Mantén una racha de 7 días en cualquier mazmorra." },
+      "rank-d": { "name": "Rango D Cumplido", "description": "Alcanza 14 días en cualquier mazmorra." },
+      "rank-c": { "name": "Rango C Cumplido", "description": "Alcanza 30 días en cualquier mazmorra." },
+      "rank-b": { "name": "Rango B Cumplido", "description": "Alcanza 60 días en cualquier mazmorra." },
+      "rank-a": { "name": "Rango A Cumplido", "description": "Alcanza 90 días en cualquier mazmorra." },
+      "rank-s": { "name": "Rango S Ascendente", "description": "Alcanza 180 días en cualquier mazmorra." },
+      "multi-classed": { "name": "Multiclase", "description": "Está activo en 3 mazmorras a la vez." },
+      "polymath": { "name": "Polímata", "description": "Está activo en las 5 mazmorras simultáneamente." },
+      "perfect-day": { "name": "Día Perfecto", "description": "Completa todas las quests diarias en un solo día." },
+      "grinder": { "name": "El Grinder", "description": "50 quests completadas en total." },
+      "grind-lord": { "name": "Grind Lord", "description": "250 quests completadas en total." },
+      "iron-will": { "name": "Voluntad de Hierro", "description": "Completa 10 entrenamientos." },
+      "forged": { "name": "Forjado", "description": "100 entrenamientos registrados." },
+      "ladder-climber": { "name": "Escalador", "description": "Completa 3 peldaños de la escalera de exposición." },
+      "fearless": { "name": "Sin Miedo", "description": "Completa toda la escalera de exposición." },
+      "dungeon-master": { "name": "Maestro de Mazmorras", "description": "Cumple y retira una mazmorra exitosamente." },
+      "conqueror": { "name": "Conquistador", "description": "Cumple 3 mazmorras hasta el final." },
+      "level-5": { "name": "Cazador Novato", "description": "Alcanza el nivel 5." },
+      "level-10": { "name": "Adepto", "description": "Alcanza el nivel 10." },
+      "level-25": { "name": "Veterano", "description": "Alcanza el nivel 25." },
+      "level-50": { "name": "Monarca de las Sombras", "description": "Alcanza el nivel 50." }
+    }
+  },
+  "guide": {
+    "header": "[ El Manual del Sistema ]",
+    "title": "Guía del Cazador",
+    "subtitle": "El Sistema no esconde sus reglas. Léelas. Entra en una mazmorra. Comienza.",
+    "section1Title": "1. Cómo despertar",
+    "section1P1": "El primer contacto con el Sistema es breve. Inicias sesión. El Sistema te recibe como cazador. Aceptas la puerta. Se escribe una ID de cazador y se desbloquea tu Registro de Portales.",
+    "section1P2": "Desde ahí, siete mazmorras están abiertas. Elige una contra la que pelearías incluso sin marcador. El marcador solo está ahí para recordarte que lo hiciste.",
+    "section2Title": "2. Los cinco tipos de regla",
+    "section2Intro": "Cada mazmorra funciona con uno de cinco tipos de regla. Léelo una vez y el resto del Sistema se vuelve simple.",
+    "ruleLabels": {
+      "continuous_streak": "Racha Continua",
+      "cadence": "Cadencia",
+      "timed": "Tiempo Limitado",
+      "progressive": "Escalera Progresiva"
+    },
+    "ruleSummaries": {
+      "continuous_streak": "Un check-in diario. Confirma cada día como cumplido o recaída en el calendario. Los días cumplidos acumulan XP + dimensiones permanentemente.",
+      "cadence": "Un patrón de lista. Marca casillas dentro de una ventana — diaria para los iniciadores de Hunter-Type (basta con cualquiera), semanal para el Régimen de Entrenamiento (5 de 5).",
+      "timed": "Un check-in diario hacia un objetivo de N días. Misma mecánica de calendario que las mazmorras de racha. Reclama Victoria al alcanzar la meta para terminar la corrida.",
+      "progressive": "Una escalera ascendente. Completa un peldaño para desbloquear el siguiente. Sin saltos."
+    },
+    "ruleUsedBy": {
+      "continuous_streak": "NoFap · Reinicio de Cafeína · Desafío de Dieta",
+      "cadence": "Régimen de Entrenamiento · Forja Diaria · Afilar Diario · Vínculos Diarios · Chispa Diaria · Quietud Diaria",
+      "timed": "Sin Doomscroll · Sensibilización del Oído",
+      "progressive": "Terapia de Exposición"
+    },
+    "section3Title": "3. Los siete portales",
+    "section3Intro": "Cada portal es una disciplina específica con reglas específicas y dimensiones específicas que entrena.",
+    "section4Title": "4. Rangos de cazador",
+    "section4Intro": "Seis rangos. Cada uno contiene 10 niveles. Sesenta niveles totales hasta Monarca de las Sombras. La XP requerida por nivel sigue una curva de potencia 1.5 — cuanto más subes, más lento llega cada nivel.",
+    "rankLevels": "Lv {start}–{end}",
+    "xpDropsIntro": "La XP cae de cuatro lugares:",
+    "xpStreakDay": "cada vez que registras un día cumplido en una mazmorra de racha/temporizada — además de los puntos de dimensión de esa mazmorra",
+    "xpWorkout": "por entrenamiento registrado en Régimen de Entrenamiento",
+    "xpExposure": "por exposición registrada en Terapia de Exposición",
+    "xpCompletion": "cuando reclamas Victoria en una mazmorra temporizada",
+    "section5Title": "5. Las cinco dimensiones",
+    "section5Intro": "El progreso se rastrea en cinco dimensiones, no en una barra plana de XP. Cada mazmorra entrena un subconjunto específico. Tu perfil muestra un gráfico radar — los cazadores equilibrados ven un pentágono; los especializados ven una punta.",
+    "dimensions": {
+      "body": {
+        "name": "CUERPO",
+        "description": "Fuerza física y vitalidad. Ganada con entrenamientos y disciplina dietética."
+      },
+      "mind": {
+        "name": "MENTE",
+        "description": "Claridad, foco, atención. Ganada al recuperar tu atención y tus sentidos."
+      },
+      "emotion": {
+        "name": "EMOCIÓN",
+        "description": "Coraje social y regulación emocional. Ganada con exposición e intimidad recuperada."
+      },
+      "energy": {
+        "name": "ENERGÍA",
+        "description": "Vitalidad cruda y resistencia. Ganada con control de estimulantes, dieta y resistencia a la compulsión."
+      },
+      "spirit": {
+        "name": "ESPÍRITU",
+        "description": "Profundidad, presencia, silencio interior. Ganada con reinicio sensorial y disciplina sostenida."
+      }
+    },
+    "section6Title": "6. Misiones diarias y el sistema de combos",
+    "section6P1": "Cada día el Sistema ofrece un conjunto rotatorio de pequeñas misiones — cada una ligada a una dimensión. Complétalas para ganar puntos de dimensión y XP.",
+    "section6P2": "Completa <b>{threshold}</b> o más misiones en un solo día y ese día califica para tu combo. Días consecutivos que califican forman una racha de combo. En cada hito, la XP de bonificación cae como un toast en tu Ventana de Estado:",
+    "section6Footnote": "Un día con 1 o 2 misiones es un día de gracia — no construyes, pero tampoco rompes. Solo un fallo total reinicia el combo.",
+    "section7Title": "7. El debuff Disperso",
+    "section7P1": "Completa cero misiones en un día y mañana despertarás <scattered>⚠ Disperso</scattered> — una marca visible en tu Tarjeta de Cazador.",
+    "section7P2": "Disperso no es un castigo. No cuesta XP. No revela nada a otros cazadores. Es un espejo. Estuviste ausente, y el Sistema te muestra ese hecho hasta que regreses.",
+    "section7P3": "Se borra en el momento en que completas tu primera misión del nuevo día.",
+    "section8Title": "8. La capa social",
+    "section8Intro": "Otros cazadores existen. El Sistema permite que tus caminos se crucen.",
+    "section8PublicProfileLabel": "Perfil público.",
+    "section8PublicProfileBody": "Cada cazador tiene un perfil de solo lectura en <code>/h/&lt;id&gt;</code> — rango, nivel, mazmorras activas, dimensiones, trofeos. Otros cazadores con sesión iniciada y tu enlace pueden verlo (no expuesto al internet abierto). Encuentra tu enlace para compartir en tu página <profileLink>/profile</profileLink>.",
+    "section8FriendsLabel": "Amigos.",
+    "section8FriendsBody": "Visita el perfil de otro cazador y pulsa <addFriend>+ Añadir Amigo</addFriend>. Recibirá una notificación, aceptará y ambos aparecerán en la lista de amigos del otro. La amistad es la base — cazas grupales y tablas de clasificación se construyen sobre ella más tarde.",
+    "section8JournalLabel": "Entradas de diario.",
+    "section8JournalBody": "Cuando recaes, registras un café, completas una corrida o simplemente quieres escribir — un pequeño modal de nota te deja guardar una reflexión. Por defecto es privado (solo tú la ves en tu perfil). Marca <code>Compartir en perfil público</code> para que esa entrada aparezca en tu perfil público bajo Reflexiones.",
+    "section9Title": "9. Alcance y fiabilidad",
+    "section9DailyLabel": "Recordatorios diarios.",
+    "section9DailyBody": "Activados por defecto. La primera vez que inicias sesión, tu navegador pide permiso de notificación una vez — di sí y estás inscrito. El Sistema envía un push matutino si tu día de ayer quedó sin usar y un push nocturno si el día de hoy se escapa. El mensaje se adapta al estado.",
+    "section9DailyNote": "Para apagar los recordatorios, alterna en tu perfil o bloquea las notificaciones de la app a nivel de SO (Ajustes iOS → Notificaciones, info de la app en Android, ajustes de sitio del navegador en escritorio).",
+    "section9InstallLabel": "Instalar la app.",
+    "section9InstallIntro": "Los pushes solo funcionan si la app está instalada. El flujo es distinto en cada plataforma:",
+    "section9InstallIos": "<b>iPhone / iPad:</b> abre el sitio en Safari → <code>Compartir → Añadir a pantalla de inicio</code>. Requiere iOS 16.4+. Los pushes no se disparan desde una pestaña normal de Safari.",
+    "section9InstallAndroid": "<b>Android:</b> abre en Chrome → toca el banner de instalación que aparece, o usa el menú ⋮ de Chrome → <code>Instalar app</code>. Los pushes funcionan en cualquier caso una vez instalada.",
+    "section9InstallDesktop": "<b>Escritorio (Chrome, Edge, Brave):</b> busca el icono de instalar en la barra de direcciones, o usa el menú del navegador → <code>Instalar Shivaliva Leveling</code>. La app se abre entonces en su propia ventana.",
+    "section9OfflineLabel": "Sin conexión.",
+    "section9OfflineBody": "La app funciona sin conexión. En un avión, en el metro, en zonas de mala señal — completa misiones, registra recaídas, escribe entradas de diario. Todo se encola localmente y se descarga al servidor en cuanto te reconectas. Una banda ámbar muestra cuándo estás sin conexión y cuántas acciones esperan sincronizarse.",
+    "section10Title": "10. Actualmente gratis",
+    "section10P1": "Cada función es actualmente gratuita — cada mazmorra, cada logro, misiones diarias, dimensiones, el mapa de calor, amigos, diario, push, corridas activas ilimitadas.",
+    "section10P2": "Si alguna vez existen niveles de pago, la auto-cacería principal sigue siendo gratis. Competir contigo mismo no debería tener un muro de pago. Los cazadores tempranos serán recordados.",
+    "ctaText": "La misión sigue abierta.",
+    "ctaButton": "Entrar al Registro de Portales →"
   }
 }

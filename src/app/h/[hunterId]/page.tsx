@@ -10,6 +10,7 @@ import {
   achievementCategory,
   isComboAchievementId,
   rarityStyle,
+  resolveAchievementLabels,
   type AchievementDef,
 } from "@/lib/achievements";
 import { DUNGEONS, getDungeon } from "@/lib/dungeons";
@@ -374,7 +375,7 @@ function StatLine({ label, value }: { label: string; value: number }) {
   );
 }
 
-function TrophyList({
+async function TrophyList({
   label,
   defs,
   nested,
@@ -385,6 +386,10 @@ function TrophyList({
   nested?: boolean;
 }) {
   if (defs.length === 0) return null;
+  const tAchievements = await getTranslations("achievements");
+  const tDungeons = await getTranslations("dungeons");
+  const tRungs = await getTranslations("rungs");
+  const tRarity = await getTranslations("rarityLabels");
   return (
     <div className={nested ? "" : "mt-6 first:mt-0"}>
       <div className="flex items-center justify-between gap-3 py-2 mb-3">
@@ -402,6 +407,13 @@ function TrophyList({
       <div className="grid grid-cols-2 gap-3">
         {defs.map((def) => {
           const style = rarityStyle(def.rarity);
+          const labels = resolveAchievementLabels(
+            def.id,
+            tAchievements,
+            tDungeons,
+            tRungs,
+            { name: def.name, description: def.description }
+          );
           return (
             <div
               key={def.id}
@@ -417,15 +429,15 @@ function TrophyList({
                   <p
                     className={`text-xs font-bold uppercase tracking-wider truncate ${style.text}`}
                   >
-                    {def.name}
+                    {labels.name}
                   </p>
                   <p className="text-[11px] leading-relaxed mt-1 text-slate-300">
-                    {def.description}
+                    {labels.description}
                   </p>
                   <p
                     className={`text-[9px] uppercase tracking-widest mt-1 ${style.text}`}
                   >
-                    {style.label}
+                    {tRarity(def.rarity)}
                   </p>
                 </div>
               </div>

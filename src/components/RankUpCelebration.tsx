@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { RANK_UP_EVENT } from "@/lib/player";
-import { getRankStyle } from "@/lib/rankStyle";
+import { getRankStyle, resolveRankLabels } from "@/lib/rankStyle";
 
 interface RankChange {
   id: number;
@@ -24,6 +25,8 @@ let nextId = 1;
  * over as the formal announcement. Layered moments, not competing.
  */
 export default function RankUpCelebration() {
+  const t = useTranslations("toasts");
+  const tRankStyles = useTranslations("rankStyles");
   const [active, setActive] = useState<RankChange | null>(null);
   const dismissTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -74,7 +77,7 @@ export default function RankUpCelebration() {
         <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-cyan-300" />
 
         <p className="font-display text-[10px] sm:text-xs tracking-[0.6em] uppercase text-cyan-300 drop-shadow-[0_0_12px_rgba(34,211,238,0.8)] mb-5">
-          [ Rank Ascended ]
+          {t("rankAscended")}
         </p>
 
         <p
@@ -98,10 +101,12 @@ export default function RankUpCelebration() {
         </div>
 
         <p className="mt-6 text-[10px] text-slate-500 tracking-[0.4em] uppercase">
-          {toStyle.flavor} tier achieved
+          {t("tierAchieved", {
+            flavor: resolveRankLabels(active.to, tRankStyles).flavor,
+          })}
         </p>
         <p className="mt-2 text-[9px] text-slate-600 tracking-[0.3em] uppercase">
-          Tap to dismiss
+          {t("tapToDismiss")}
         </p>
       </div>
     </div>

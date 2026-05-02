@@ -28,7 +28,20 @@
     "edit": "수정",
     "scattered": "흩어짐",
     "viewPublic": "공개 보기",
-    "choosePath": "+ 경로 선택"
+    "choosePath": "+ 경로 선택",
+    "share": "공유",
+    "shareCopied": "✓ 복사됨",
+    "changeAvatarLabel": "프로필 사진 변경",
+    "changeAvatar": "변경",
+    "uploading": "업로드 중",
+    "rename": "이름 변경",
+    "changePath": "경로 변경",
+    "viewAllRanks": "모든 등급 보기",
+    "rankPath": "등급 경로",
+    "maxRank": "최고 등급",
+    "rankProgress": "{count} LVL → {next}",
+    "scatteredHelp": "어제 일일 퀘스트를 완료하지 않았습니다. 다음 활동일 이후에 사라집니다.",
+    "avatarLocalError": "아바타를 로컬에 저장할 수 없습니다"
   },
   "dailyQuests": {
     "header": "(!) 일일 퀘스트",
@@ -42,25 +55,142 @@
     "quest_clean_room": "방 청소"
   },
   "dungeons": {
-    "caffeine": { "name": "카페인 리부트" },
-    "sensible_diet": { "name": "식단 챌린지" },
-    "gym_life": { "name": "훈련 루틴" },
-    "attention_reclaim": { "name": "둠스크롤 금지" },
-    "music_sensitization": { "name": "소리 재민감화" },
-    "social_reclaim": { "name": "노출 치료" },
-    "nofap": { "name": "NoFap" },
-    "starter_body": { "name": "매일의 단련" },
-    "starter_mind": { "name": "매일의 연마" },
-    "starter_emotion": { "name": "매일의 유대" },
-    "starter_energy": { "name": "매일의 불꽃" },
-    "starter_spirit": { "name": "매일의 고요" }
+    "caffeine": {
+      "name": "카페인 리부트",
+      "description": "신경계를 리셋하라. 한 달에 커피 2잔까지는 괜찮다 — 3잔째에 런이 끝난다.",
+      "rules": [
+        "한 달에 커피 2잔까지는 괜찮다. 3잔째는 리랩스.",
+        "매일 캘린더에서 확인 — 선을 지켰으면 클리어, 무너졌으면 리랩스.",
+        "클리어한 날은 XP + 차원 점수를 영구히 적립한다. 리랩스는 캘린더 표시일 뿐 — 던전을 나가야만 런을 일찍 끝낼 수 있다."
+      ]
+    },
+    "sensible_diet": {
+      "name": "식단 챌린지",
+      "description": "의식하며 먹어라. 하루 2–3끼, 끼니 사이 간식은 없다. 식물이 먼저, 그 다음 동물성, 다음으로 해산물, 다른 게 없을 때만 고기. 한 달에 인공 단것 4개까지는 괜찮다 — 그 이상은 리랩스.",
+      "rules": [
+        "하루 2–3끼. 끼니 사이 간식은 없다 — 장에 휴식을 줘라.",
+        "먼저 식물; 그 다음 동물성(달걀, 유제품, 견과); 그 다음 해산물; 대안이 없을 때만 고기.",
+        "한 달에 인공 단것 4개까지는 괜찮다. 5개째는 리랩스.",
+        "매일 캘린더에서 확인 — 선을 지켰으면 클리어, 무너졌으면 리랩스."
+      ]
+    },
+    "gym_life": {
+      "name": "훈련 루틴",
+      "description": "몸을 단련하라. 주 5회 운동 — 근육군별로 하나씩: 가슴과 어깨, 등과 팔, 다리와 둔근, 코어, 전신. 규율은 강도가 아니라 리듬이다.",
+      "rules": [
+        "주 5회 운동 완료 — 각각 하나씩: 가슴과 어깨, 등과 팔, 다리와 둔근, 코어, 전신.",
+        "대상 근육군을 자극하는 어떤 종목이든 선택. 세션이 끝나면 기록.",
+        "주는 월요일–일요일(UTC)로 진행. 리듬을 놓치면 수동 리랩스."
+      ]
+    },
+    "attention_reclaim": {
+      "name": "둠스크롤 금지",
+      "description": "30일 동안 둠스크롤 없이. 메시지, 게시, 의도적인 단일 영상 시청은 괜찮다 — 수동적인 무한 피드만이 이탈로 기록된다.",
+      "rules": [
+        "매일 캘린더에서 확인 — 클리어 또는 리랩스.",
+        "30일 클리어를 채우면 승리 선언이 해제된다.",
+        "클리어한 날은 XP + 차원을 영구히 적립한다. 리랩스는 캘린더 표시일 뿐 — 던전을 나가야만 런을 일찍 끝낼 수 있다."
+      ]
+    },
+    "music_sensitization": {
+      "name": "소리 재민감화",
+      "description": "30일 동안 음악 없이. 감각의 리셋 — 귀를 고요하게 두면 바람, 비, 새소리, 진짜 목소리가 다시 살아 있는 것처럼 느껴진다.",
+      "rules": [
+        "리랩스 = 일부러 노래를 듣는 것(플레이리스트, 앨범, 콘서트, 본인이 고른 배경 음악).",
+        "허용: 팟캐스트, 오디오북, 영화 OST, 자연음, 그리고 비자발적인 환경 음악(상점, 카페, 타인의 스피커).",
+        "매일 캘린더에서 확인. 30일 클리어를 채우면 승리 선언이 해제된다."
+      ]
+    },
+    "social_reclaim": {
+      "name": "노출 치료",
+      "description": "사회의 사다리를 오르라. 침묵의 존재감에서 무리 속 발언까지 여섯 단 — 점진적 노출로 둔감해져라, 한 번에 한 단씩.",
+      "rules": [
+        "각 단마다 목표가 있다 — 현실에서 그 행동을 할 때마다 노출을 기록.",
+        "현재 단을 클리어해야 다음 단이 열린다. 건너뛰기 없음.",
+        "단은 등급 E → S로 진행. 마지막 단을 완료하면 던전 클리어."
+      ]
+    },
+    "nofap": {
+      "name": "NoFap",
+      "description": "당신의 생명 에너지를 되찾아라. 엄격하게: 포르노, 자위, 엣징, 구닝 금지. 파트너와의 섹스와 오르가즘은 괜찮다 — 이 규칙은 강박적인 단독 사용을 겨냥하는 것이지, 친밀함이 아니다.",
+      "rules": [
+        "리랩스 = 포르노, 자위, 엣징, 구닝(서스트 트랩, 봇 계정, 자극적인 SNS 피드).",
+        "허용: 파트너와의 섹스와 오르가즘 — 이 던전은 강박에 관한 것이지 금욕이 아니다.",
+        "매일 캘린더에 체크인 — 클리어 또는 리랩스. 클리어한 날은 XP + 차원을 영구히 적립한다. 리랩스는 표시일 뿐 리셋이 아니다."
+      ]
+    },
+    "starter_body": {
+      "name": "매일의 단련",
+      "description": "육체 헌터의 일일 최저선. 당신의 등급에 따라 늘어나는 세 가지 동작 — 어느 하나만 클리어해도 그 날은 확보. 푸시업, 풀업, 스쿼트가 연속 기록 E → S와 함께 자란다.",
+      "rules": [
+        "하루에 1개의 과제를 완료하라.",
+        "수행할 때마다 체크. 기록을 지우려면 체크 해제.",
+        "날짜는 자정(UTC)에 리셋. 흐트러지면 수동 리랩스."
+      ]
+    },
+    "starter_mind": {
+      "name": "매일의 연마",
+      "description": "정신 헌터의 일일 최저선. 몇 페이지, 새로운 한 가지 개념, 정직한 한 문장. 어느 하나만 클리어해도 그 날은 확보.",
+      "rules": [
+        "하루에 1개의 과제를 완료하라.",
+        "수행할 때마다 체크. 기록을 지우려면 체크 해제.",
+        "날짜는 자정(UTC)에 리셋. 흐트러지면 수동 리랩스."
+      ]
+    },
+    "starter_emotion": {
+      "name": "매일의 유대",
+      "description": "감정 헌터의 일일 최저선. 보이고, 들리고, 함께 있는 작은 반복들. 어느 하나만 클리어해도 그 날은 확보.",
+      "rules": [
+        "하루에 1개의 과제를 완료하라.",
+        "수행할 때마다 체크. 기록을 지우려면 체크 해제.",
+        "날짜는 자정(UTC)에 리셋. 흐트러지면 수동 리랩스."
+      ]
+    },
+    "starter_energy": {
+      "name": "매일의 불꽃",
+      "description": "기운 헌터의 일일 최저선. 차가움, 움직임, 호흡 — 신경계를 깨우는 세 가지 작은 충격. 어느 하나만 클리어해도 그 날은 확보.",
+      "rules": [
+        "하루에 1개의 과제를 완료하라.",
+        "수행할 때마다 체크. 기록을 지우려면 체크 해제.",
+        "날짜는 자정(UTC)에 리셋. 흐트러지면 수동 리랩스."
+      ]
+    },
+    "starter_spirit": {
+      "name": "매일의 고요",
+      "description": "영혼 헌터의 일일 최저선. 한 번의 침묵의 호흡, 한 줄의 감사, 거절한 하나의 갈망. 어느 하나만 클리어해도 그 날은 확보.",
+      "rules": [
+        "하루에 1개의 과제를 완료하라.",
+        "수행할 때마다 체크. 기록을 지우려면 체크 해제.",
+        "날짜는 자정(UTC)에 리셋. 흐트러지면 수동 리랩스."
+      ]
+    }
   },
   "hunterTypes": {
-    "body": { "label": "육체 헌터", "tagline": "그릇을 단련하라." },
-    "mind": { "label": "정신 헌터", "tagline": "칼날을 갈아라." },
-    "emotion": { "label": "감정 헌터", "tagline": "불꽃을 지켜라." },
-    "energy": { "label": "기운 헌터", "tagline": "불꽃을 다스려라." },
-    "spirit": { "label": "영혼 헌터", "tagline": "고요를 만져라." }
+    "body": {
+      "label": "육체 헌터",
+      "tagline": "그릇을 단련하라.",
+      "description": "신체 능력을 단련하라. 푸시업, 풀업, 스쿼트 — S 등급까지 올라가는 점진적 사다리. 쇠와 호흡의 길."
+    },
+    "mind": {
+      "label": "정신 헌터",
+      "tagline": "칼날을 갈아라.",
+      "description": "지성을 단련하라. 읽기, 공부, 암기 — 여러 해에 걸쳐 누적되는 집중의 사다리. 명료의 길."
+    },
+    "emotion": {
+      "label": "감정 헌터",
+      "tagline": "불꽃을 지켜라.",
+      "description": "관계의 깊이를 단련하라. 취약함, 공감, 표현 — 보여지는 일의 매일의 반복. 마음의 길."
+    },
+    "energy": {
+      "label": "기운 헌터",
+      "tagline": "불꽃을 다스려라.",
+      "description": "활력을 단련하라. 한랭 노출, 단식, 유산소 — 몸을 깨우는 사다리. 깨어난 신경계의 길."
+    },
+    "spirit": {
+      "label": "영혼 헌터",
+      "tagline": "고요를 만져라.",
+      "description": "초월을 단련하라. 명상, 침묵, 관조 — 내면을 깊게 하는 사다리. 자아 너머의 길."
+    }
   },
   "portals": {
     "header": "포털 레지스트리",
@@ -78,5 +208,433 @@
     "active": "활성",
     "viewInStatus": "상태 창에서 보기",
     "rules": "교전 규칙"
+  },
+  "feed": {
+    "title": "더 피드",
+    "subtitle": "시스템 전역 헌터들의 공개된 성찰. 이름을 탭하여 프로필을 확인하세요.",
+    "emptyTitle": "[ 아직 성찰이 없습니다 ]",
+    "emptyBody": "헌터들이 일지 항목을 공개로 표시하면 여기에 표시됩니다. 첫 번째가 되어보세요 — 던전을 열고, 노트를 기록하고, 공개로 전환하세요.",
+    "loadMore": "더 불러오기",
+    "loading": "불러오는 중…",
+    "endOfFeed": "— 피드의 끝 —",
+    "addReaction": "반응 추가"
+  },
+  "journal": {
+    "title": "일지",
+    "backToProfile": "← 프로필로 돌아가기",
+    "empty": "아직 항목이 없습니다. 리랩스하거나 커피를 기록하거나 노출을 표시할 때 노트를 작성할지 묻게 됩니다 — 건너뛰거나 저장하거나, 당신의 선택입니다.",
+    "summary": "{entries, plural, one {# 항목} other {# 항목}} · {days, plural, one {# 일} other {# 일}}",
+    "today": "오늘",
+    "yesterday": "어제",
+    "daysAgo": "{count}일 전",
+    "editTitle": "일지 편집 — {dungeon}",
+    "edit": "편집",
+    "delete": "삭제",
+    "deletePrompt": "이 항목을 삭제하시겠습니까?",
+    "yes": "예",
+    "cancel": "취소",
+    "seeAll": "전체 {count} 항목 보기 →",
+    "publicBadge": "◉ 공개"
+  },
+  "entryTypes": {
+    "relapse": "리랩스",
+    "completed": "완료",
+    "journal": "일지"
+  },
+  "toasts": {
+    "achievementUnlocked": "[ 업적 해제 ]",
+    "levelUp": "[ 레벨 업 ]",
+    "levelLabel": "Lv {level}",
+    "rankAscended": "[ 등급 상승 ]",
+    "tierAchieved": "{flavor} 단계 달성",
+    "tapToDismiss": "탭하여 닫기",
+    "ascension": "[ 승격 ]",
+    "rankReached": "{rank} 등급에 도달했다",
+    "shareAscension": "당신의 승격을, 그것을 알아줄 누군가와 나눠라.",
+    "share": "공유",
+    "sharing": "공유 중…",
+    "later": "나중에",
+    "dismissShare": "공유 알림 닫기"
+  },
+  "friends": {
+    "title": "친구",
+    "emptyBody": "아직 연결된 헌터가 없습니다. 프로필 링크를 공유하거나 다른 헌터의 프로필을 방문해 요청을 보내세요.",
+    "requests": "친구 요청 · {count}",
+    "wantsToConnect": "연결하길 원합니다",
+    "accept": "수락",
+    "decline": "거절",
+    "rankPrefix": "등급 ",
+    "levelLabel": "Lv {level}",
+    "unfriend": "친구 해제",
+    "cancel": "취소",
+    "isFriend": "✓ 친구",
+    "requestSent": "요청 보냄",
+    "addFriend": "+ 친구 추가"
+  },
+  "installApp": {
+    "title": "앱 설치",
+    "installed": "✓ 설치됨 — 독립 실행 모드로 실행 중.",
+    "available": "원탭 설치. 앱스토어 없이. 설치하면 푸시 알림과 오프라인 모드가 더 잘 작동합니다.",
+    "iosInstructions": "iPhone에서 <strong>공유</strong> 아이콘을 누른 다음 <strong>홈 화면에 추가</strong>를 누르세요. iOS 16.4 이상 필요.",
+    "unsupported": "브라우저 메뉴를 열고 '앱 설치' 또는 '홈 화면에 추가'를 찾으세요.",
+    "install": "설치",
+    "installing": "설치 중…"
+  },
+  "notifications": {
+    "title": "일일 알림",
+    "unsupported": "이 브라우저는 푸시 알림을 지원하지 않습니다.",
+    "denied": "알림이 차단되었습니다. 브라우저/OS 설정에서 다시 활성화하세요.",
+    "description": "하루가 리셋될 때 푸시를 받아 퀘스트를 놓치지 마세요.",
+    "notConfigured": "푸시 알림이 설정되지 않았습니다.",
+    "couldNotEnable": "활성화할 수 없습니다",
+    "couldNotDisable": "비활성화할 수 없습니다"
+  },
+  "noteModal": {
+    "chrome": "[ 일지 ]",
+    "defaultPlaceholder": "무슨 일이 있었나요? (선택)",
+    "defaultConfirm": "저장",
+    "defaultSkip": "건너뛰기",
+    "sharePublic": "공개 프로필에 공유",
+    "editPlaceholder": "성찰을 수정하세요…",
+    "editCancel": "취소"
+  },
+  "dungeonRun": {
+    "daysCleared": "{count, plural, other {#일}} 클리어",
+    "daysForged": "{count, plural, other {#일}} 단련",
+    "nextTier": "다음 단계: {rank}",
+    "daysFraction": "{count} / {target}일",
+    "dungeonMastered": "던전 정복",
+    "dungeonClearedBanner": "★ 던전 클리어 ★",
+    "claimVictory": "승리 선언",
+    "target": "목표: {count}일",
+    "entered": "입장: {date}",
+    "journalEntry": "+ 일지 기록",
+    "exitDungeon": "던전 나가기",
+    "portalDormant": "포털 휴면",
+    "today": "오늘",
+    "thisWeek": "이번 주",
+    "dayCleared": "✦ 하루 달성 ✦",
+    "weekCleared": "✦ 한 주 달성 ✦",
+    "ladderMastered": "★ 사다리 정복 ★",
+    "ladderRetired": "모든 {count}단 클리어. 던전 종료.",
+    "rungLabel": "등급 {rank} · 단 {current} / {total}",
+    "progress": "진행",
+    "progressFraction": "{count} / {target}",
+    "logExposure": "+ 노출 기록",
+    "undo": "되돌리기",
+    "ladder": "사다리",
+    "lockedRung": "???",
+    "abandonLadder": "사다리 포기 — 리셋",
+    "noRungs": "구성된 단이 없습니다.",
+    "abandonModalTitle": "사다리 포기 — {dungeon}",
+    "abandonPlaceholder": "무엇이 등반을 멈추게 했나요? (선택)",
+    "abandonConfirm": "포기 확인",
+    "logExposureTitle": "노출 기록 — {rung}",
+    "logExposurePlaceholder": "무엇에 직면했나요? 어떻게 됐나요? (선택)",
+    "logExposureConfirm": "노출 기록",
+    "logExposureSkip": "노트 건너뛰기",
+    "taskCleared": "과제 완료",
+    "dayClearedSource": "하루 달성",
+    "tierBonusSource": "🏆 등급 {rank} · {dungeon}"
+  },
+  "checkIn": {
+    "didYouClearToday": "오늘 클리어했나요?",
+    "confirmDate": "{date} 확인",
+    "currentlyCleared": "{date} — 현재 클리어 상태",
+    "currentlyRelapsed": "{date} — {count, plural, other {# 회 리랩스}}",
+    "markCleared": "클리어로 표시",
+    "cleared": "클리어",
+    "relapsePlus": "리랩스 +1",
+    "markRelapsed": "리랩스로 표시",
+    "relapsed": "리랩스",
+    "undo": "되돌리기",
+    "cancel": "취소",
+    "relapseTitle": "리랩스 — {dungeon}",
+    "relapsePlaceholder": "무엇이 촉발했나요? 지금 기분은? (선택)",
+    "relapseConfirm": "리랩스 기록",
+    "relapseSkip": "취소"
+  },
+  "calendar": {
+    "previousMonth": "이전 달",
+    "nextMonth": "다음 달",
+    "current": "현재",
+    "longest": "최장",
+    "daysShort": "{count}일",
+    "legendCleared": "클리어",
+    "legendTapToLog": "탭하여 기록",
+    "legendRelapse": "리랩스"
+  },
+  "awakening": {
+    "intro": [
+      "[ 알림 ]",
+      "",
+      "특별한 퀘스트가 도착했다.",
+      "",
+      "당신은 플레이어가 되도록",
+      "선택되었다.",
+      "",
+      "수락하시겠습니까?"
+    ],
+    "naming": [
+      "[ 등록 ]",
+      "",
+      "시스템이 당신을 인식했다.",
+      "",
+      "당신이 불릴",
+      "이름을 말하라."
+    ],
+    "path": [
+      "[ 경로 선택 ]",
+      "",
+      "모든 헌터는 경로를 걷는다.",
+      "",
+      "먼저 무엇을 단련할지",
+      "선택하라."
+    ],
+    "accept": "수락",
+    "decline": "거절",
+    "reconsider": "← 다시 생각",
+    "standbyHeader": "[ 대기 ]",
+    "standbyMessage": "시스템은 기다릴 것이다.",
+    "standbySubtext": "퀘스트는 열려 있다. 깨어날 준비가 되면 돌아와라.",
+    "namePlaceholder": "이름 입력",
+    "register": "등록",
+    "registering": "등록 중",
+    "registrationFailed": "등록 실패",
+    "pathFailed": "경로 선택 실패",
+    "noPath": "특별히 없음 — 나중에 결정"
+  },
+  "paywall": {
+    "gateLocked": "[ 게이트 잠김 ]",
+    "title": "Pro로 승격",
+    "intro": "세 번째 게이트는 Pro입니다. 활성 던전 2개가 무료 등급 — 그 이상은 헌터 영역입니다.",
+    "features": [
+      "활성 던전 무제한",
+      "스트릭 보험 — 월 1회 리랩스 허용",
+      "VIP 코스메틱 프레임 + 배지",
+      "전체 앱 테마 팩",
+      "평생 분석 — 전체 이력, 데이터 내보내기"
+    ],
+    "ascend": "승격하기",
+    "openingCheckout": "결제를 여는 중…",
+    "returnFree": "무료 등급으로 돌아가기",
+    "closeLabel": "닫기",
+    "notConfigured": "결제가 아직 설정되지 않았습니다.",
+    "checkoutFailed": "결제를 열 수 없습니다. 잠시 후 다시 시도하세요."
+  },
+  "ranksPage": {
+    "title": "헌터의 길",
+    "subtitle": "여섯 개의 등급. 여섯 가지 자신의 모습. 사는 것이 아니라 얻어내는 것.",
+    "youAreHere": "당신은 여기",
+    "locked": "🔒 잠김",
+    "levelsRange": "레벨 {start}–{end} · {xp} XP 필요",
+    "levelsRangeMax": "레벨 {start}+ · {xp} XP 필요",
+    "footer": "Lv {level} · {xp} XP 획득"
+  },
+  "whatsNew": {
+    "header": "[ 시스템 업데이트 로그 ]",
+    "title": "새 소식",
+    "backToStatus": "← 상태로 돌아가기",
+    "empty": "아직 등록된 릴리스가 없습니다.",
+    "latest": "최신",
+    "kindFeature": "feature",
+    "kindFix": "fix",
+    "kindChange": "change"
+  },
+  "rankStyles": {
+    "E": {
+      "flavor": "브론즈",
+      "title": "각성한 자",
+      "description": "당신은 시스템에 발을 들였다. 길이 시작된다. 몸은 아직 잠들어 있고 마음은 아직 떠돈다 — 그러나 당신은 모습을 드러냈고, 그것으로 충분하다."
+    },
+    "D": {
+      "flavor": "철",
+      "title": "규율의 자",
+      "description": "루틴이 의례가 된다. 아무도 보지 않을 때에도, 당신 자신이 원하지 않을 때에도 첫 습관은 유지된다. 헌터의 윤곽이 잡혀간다."
+    },
+    "C": {
+      "flavor": "은",
+      "title": "도야한 자",
+      "description": "노력이었던 것이 기본이 된다. 몸과 마음이 서로를 증폭한다. 더는 일찍 일어나기 위해 싸우지 않는다 — 그저 깨어난다. 시스템이 당신을 알아본다."
+    },
+    "B": {
+      "flavor": "금",
+      "title": "결박된 자",
+      "description": "자아가 자아를 만났다. 무대를 휘둘렀던 그림자들이 이제 당신에게 답한다. 헌터는 내면 세계의 영토를 차지한다. 여기까지 이르는 자는 적다."
+    },
+    "A": {
+      "flavor": "플래티넘",
+      "title": "상승하는 자",
+      "description": "대부분이 자기 자신에 대해 아는 한계를 넘어선다. 다섯 차원이 합주처럼 움직인다. 당신은, 낯선 이가 입을 열기 전부터 느끼는 그 버전의 당신이다."
+    },
+    "S": {
+      "flavor": "홀로",
+      "title": "주권자",
+      "description": "시스템이 당신에게 굽힌다. 더 이상 싸울 것은 없고, 오직 이어지는 수련만 있다. 헌터와 길은 하나다. 당신은 자신의 빛 안에서 걷는다."
+    }
+  },
+  "rarityLabels": {
+    "common": "커먼",
+    "rare": "레어",
+    "epic": "에픽",
+    "legendary": "레전더리"
+  },
+  "rungs": {
+    "presence": {
+      "name": "임재",
+      "description": "한 번의 외출에서 낯선 사람 3명과 눈을 맞추고 미소 짓는다. 말은 필요 없다."
+    },
+    "acknowledge": {
+      "name": "인사",
+      "description": "낯선 사람 3명에게 소리 내어 인사한다 — '안녕', '좋은 아침', '하이'. 목소리가 침묵을 깬다."
+    },
+    "request": {
+      "name": "요청",
+      "description": "낯선 사람에게 부담 없는 작은 질문을 한다 — 시간, 길, 추천."
+    },
+    "small-talk": {
+      "name": "가벼운 대화",
+      "description": "계산원, 바리스타, 옆자리 사람과 짧은 한마디를 주고받는다. 관찰, 칭찬, 지금에 대한 한마디."
+    },
+    "engage": {
+      "name": "교류",
+      "description": "낯선 사람과 1–2분 대화를 이어간다. 후속 질문을 던진다. 실마리를 잡는다."
+    },
+    "expose": {
+      "name": "노출",
+      "description": "그룹에서 의견, 이야기, 농담을 공유한다 — 회의, 수업, 파티. 보이고 들리도록."
+    }
+  },
+  "achievements": {
+    "dungeonRankName": "{dungeon}: 랭크 {rank}",
+    "dungeonRankDescription": "{dungeon}에서 {days}일에 도달.",
+    "dungeonRungName": "{dungeon}: {rung}",
+    "dungeonRungDescription": "{dungeon}의 단 {rung}을(를) 달성 ({target}회 노출).",
+    "dungeonClearedName": "{dungeon}: 클리어",
+    "dungeonClearedDescription": "{dungeon}의 {target}일 풀 런을 완료.",
+    "comboName": "{days}일 콤보",
+    "comboDescription": "일일 퀘스트 콤보가 {days}일에 도달. +{xp} XP",
+    "static": {
+      "awakened": { "name": "각성", "description": "부름을 수락하라. 첫 던전에 들어가라." },
+      "first-streak": { "name": "첫 피", "description": "던전에서 첫 하루를 살아남는다." },
+      "first-quest": { "name": "퀘스트 수락", "description": "첫 일일 퀘스트를 완료한다." },
+      "first-workout": { "name": "첫 한 세트", "description": "Gym Life에서 운동을 기록한다." },
+      "first-exposure": { "name": "조용한 임재", "description": "치료 사다리에서 첫 노출을 기록한다." },
+      "rank-e": { "name": "E 랭크 클리어", "description": "어떤 던전에서든 7일 스트릭을 유지." },
+      "rank-d": { "name": "D 랭크 클리어", "description": "어떤 던전에서든 14일에 도달." },
+      "rank-c": { "name": "C 랭크 클리어", "description": "어떤 던전에서든 30일에 도달." },
+      "rank-b": { "name": "B 랭크 클리어", "description": "어떤 던전에서든 60일에 도달." },
+      "rank-a": { "name": "A 랭크 클리어", "description": "어떤 던전에서든 90일에 도달." },
+      "rank-s": { "name": "S 랭크 승격", "description": "어떤 던전에서든 180일에 도달." },
+      "multi-classed": { "name": "멀티클래스", "description": "동시에 3개 던전에서 활동." },
+      "polymath": { "name": "박학다식", "description": "동시에 5개 던전 모두 활동." },
+      "perfect-day": { "name": "완벽한 하루", "description": "하루에 모든 일일 퀘스트를 완료." },
+      "grinder": { "name": "그라인더", "description": "총 50개의 퀘스트 완료." },
+      "grind-lord": { "name": "그라인드 로드", "description": "총 250개의 퀘스트 완료." },
+      "iron-will": { "name": "강철 의지", "description": "운동 10회 완료." },
+      "forged": { "name": "단련된 자", "description": "운동 100회 기록." },
+      "ladder-climber": { "name": "사다리 등반자", "description": "노출 사다리 3단 클리어." },
+      "fearless": { "name": "두려움 없는 자", "description": "전체 노출 사다리를 완료." },
+      "dungeon-master": { "name": "던전 마스터", "description": "던전을 성공적으로 완료해 마무리한다." },
+      "conqueror": { "name": "정복자", "description": "3개 던전을 끝까지 완료." },
+      "level-5": { "name": "초보 헌터", "description": "레벨 5 도달." },
+      "level-10": { "name": "숙련자", "description": "레벨 10 도달." },
+      "level-25": { "name": "베테랑", "description": "레벨 25 도달." },
+      "level-50": { "name": "섀도우 모나크", "description": "레벨 50 도달." }
+    }
+  },
+  "guide": {
+    "header": "[ 시스템 매뉴얼 ]",
+    "title": "헌터 가이드",
+    "subtitle": "시스템은 규칙을 숨기지 않는다. 읽고, 던전에 들어가고, 시작하라.",
+    "section1Title": "1. 깨어나는 법",
+    "section1P1": "시스템과의 첫 접촉은 짧다. 로그인한다. 시스템은 당신을 헌터로 맞이한다. 게이트를 수락한다. 헌터 ID가 부여되고 포털 레지스트리가 열린다.",
+    "section1P2": "거기서 일곱 던전이 열려 있다. 점수판이 없어도 싸울 만한 하나를 골라라. 점수판은 당신이 그것을 했다는 것을 상기시키기 위해서만 존재한다.",
+    "section2Title": "2. 다섯 가지 규칙 유형",
+    "section2Intro": "모든 던전은 다섯 가지 규칙 유형 중 하나로 작동한다. 한 번 읽으면 시스템의 나머지가 단순해진다.",
+    "ruleLabels": {
+      "continuous_streak": "연속 스트릭",
+      "cadence": "리듬",
+      "timed": "타임드 런",
+      "progressive": "점진 사다리"
+    },
+    "ruleSummaries": {
+      "continuous_streak": "매일 체크인. 캘린더에 매일을 클리어 또는 리랩스로 확정. 클리어한 날은 XP + 차원을 영구히 적립.",
+      "cadence": "체크리스트 패턴. 창 안에서 박스 체크 — 헌터-타입 스타터는 매일(아무거나 하나), 훈련 루틴은 주간(5/5).",
+      "timed": "N일 목표를 향한 매일 체크인. 스트릭 던전과 동일한 캘린더. 목표에 도달하면 승리 선언으로 런을 종료.",
+      "progressive": "올라가는 사다리. 한 단을 클리어해야 다음이 열림. 건너뛰기 없음."
+    },
+    "ruleUsedBy": {
+      "continuous_streak": "NoFap · 카페인 리부트 · 식단 챌린지",
+      "cadence": "훈련 루틴 · 매일의 단련 · 매일의 연마 · 매일의 유대 · 매일의 불꽃 · 매일의 고요",
+      "timed": "둠스크롤 금지 · 소리 재민감화",
+      "progressive": "노출 치료"
+    },
+    "section3Title": "3. 일곱 포털",
+    "section3Intro": "각 포털은 고유의 규칙과 단련하는 차원을 가진 특정 분야이다.",
+    "section4Title": "4. 헌터 등급",
+    "section4Intro": "여섯 등급. 각 등급은 10레벨. 섀도우 모나크까지 총 60레벨. 레벨당 필요 XP는 1.5승 곡선을 따른다 — 올라갈수록 한 레벨이 더디 온다.",
+    "rankLevels": "Lv {start}–{end}",
+    "xpDropsIntro": "XP는 네 곳에서 떨어진다:",
+    "xpStreakDay": "스트릭/타임드 던전에 클리어 일을 체크인할 때마다 — 그 던전의 차원 점수도 함께",
+    "xpWorkout": "훈련 루틴에서 기록한 운동마다",
+    "xpExposure": "노출 치료에서 기록한 노출마다",
+    "xpCompletion": "타임드 던전에서 승리 선언할 때",
+    "section5Title": "5. 다섯 차원",
+    "section5Intro": "진행은 단일 XP 바가 아니라 다섯 차원으로 추적된다. 각 던전은 특정 부분집합을 단련한다. 프로필은 레이더 차트를 보여준다 — 균형 잡힌 헌터는 오각형, 특화된 헌터는 뾰족한 가시를 본다.",
+    "dimensions": {
+      "body": {
+        "name": "육체",
+        "description": "신체적 힘과 활력. 운동과 식단 규율로 획득."
+      },
+      "mind": {
+        "name": "정신",
+        "description": "명료함, 집중, 주의. 주의와 감각을 되찾으며 획득."
+      },
+      "emotion": {
+        "name": "감정",
+        "description": "사회적 용기와 감정 조절. 노출과 되찾은 친밀감으로 획득."
+      },
+      "energy": {
+        "name": "기운",
+        "description": "원초적 활력과 지구력. 자극제 통제, 식단, 강박 저항으로 획득."
+      },
+      "spirit": {
+        "name": "영혼",
+        "description": "깊이, 임재, 내면의 고요. 감각 리셋과 지속된 규율로 획득."
+      }
+    },
+    "section6Title": "6. 일일 퀘스트와 콤보 시스템",
+    "section6P1": "매일 시스템은 작은 퀘스트의 회전 세트를 제공한다 — 각각 차원에 묶여 있다. 완료해 차원 점수와 XP를 얻어라.",
+    "section6P2": "하루에 <b>{threshold}</b> 개 이상의 퀘스트를 완료하면 그 날은 콤보 자격을 얻는다. 연속 자격일이 콤보 스트릭을 만든다. 각 마일스톤마다 보너스 XP가 상태 창에 토스트로 떨어진다:",
+    "section6Footnote": "1–2 퀘스트의 날은 유예일 — 쌓이지도 무너지지도 않는다. 완전한 무위만이 콤보를 리셋한다.",
+    "section7Title": "7. 흩어짐 디버프",
+    "section7P1": "하루에 0 퀘스트로 끝내면 다음 날 <scattered>⚠ 흩어짐</scattered> 상태로 깨어난다 — 헌터 카드에 보이는 표식.",
+    "section7P2": "흩어짐은 처벌이 아니다. XP를 깎지 않는다. 다른 헌터에게 보이지 않는다. 그것은 거울이다. 당신은 부재했고, 시스템은 돌아올 때까지 그 사실을 비춘다.",
+    "section7P3": "새 날의 첫 퀘스트를 완료하는 순간 사라진다.",
+    "section8Title": "8. 사회 계층",
+    "section8Intro": "다른 헌터들이 존재한다. 시스템은 길이 교차하도록 한다.",
+    "section8PublicProfileLabel": "공개 프로필.",
+    "section8PublicProfileBody": "모든 헌터는 <code>/h/&lt;id&gt;</code>에 읽기 전용 프로필을 가진다 — 등급, 레벨, 활성 던전, 차원, 트로피. 링크를 가진 로그인된 헌터가 볼 수 있다(공개 인터넷에 노출되지 않음). 공유 링크는 <profileLink>/profile</profileLink> 페이지에 있다.",
+    "section8FriendsLabel": "친구.",
+    "section8FriendsBody": "다른 헌터의 프로필을 방문해 <addFriend>+ 친구 추가</addFriend>를 누른다. 알림이 가고 수락하면 서로의 친구 목록에 나타난다. 우정이 토대 — 그룹 사냥과 리더보드는 그 위에 나중에 쌓인다.",
+    "section8JournalLabel": "일지 기록.",
+    "section8JournalBody": "리랩스, 커피 기록, 런 완료, 또는 그냥 쓰고 싶을 때 — 작은 노트 모달로 성찰을 저장할 수 있다. 기본은 비공개(자기 프로필에서만 보임). <code>공개 프로필에 공유</code>를 체크하면 그 항목이 공개 프로필의 성찰에 표시된다.",
+    "section9Title": "9. 도달과 신뢰",
+    "section9DailyLabel": "일일 알림.",
+    "section9DailyBody": "기본 활성. 첫 로그인 시 브라우저가 한 번 알림 권한을 묻는다 — 예라고 하면 등록된다. 어제의 하루가 비어 있으면 시스템이 아침 푸시를, 오늘이 빠져나가고 있으면 저녁 푸시를 보낸다. 메시지는 상태에 맞춰진다.",
+    "section9DailyNote": "알림을 끄려면 프로필에서 토글하거나, OS 단계에서 앱 알림을 차단한다(iOS 설정 → 알림, Android 앱 정보, 데스크톱은 브라우저 사이트 설정).",
+    "section9InstallLabel": "앱 설치.",
+    "section9InstallIntro": "푸시는 앱이 설치되어야만 동작한다. 플랫폼마다 흐름이 다르다:",
+    "section9InstallIos": "<b>iPhone / iPad:</b> Safari로 사이트 열기 → <code>공유 → 홈 화면에 추가</code>. iOS 16.4 이상 필요. 일반 Safari 탭에서는 푸시가 발화하지 않는다.",
+    "section9InstallAndroid": "<b>Android:</b> Chrome에서 열기 → 나타나는 설치 배너를 누르거나 Chrome ⋮ 메뉴 → <code>앱 설치</code>. 설치되면 어느 쪽이든 푸시가 동작한다.",
+    "section9InstallDesktop": "<b>데스크톱 (Chrome, Edge, Brave):</b> 주소창의 설치 아이콘을 찾거나 브라우저 메뉴 → <code>Shivaliva Leveling 설치</code>. 그러면 앱이 자체 창에서 열린다.",
+    "section9OfflineLabel": "오프라인.",
+    "section9OfflineBody": "앱은 연결 없이도 동작한다. 비행기에서, 지하철에서, 약전계 지역에서 — 퀘스트 완료, 리랩스 기록, 일지 작성. 모든 게 로컬에 쌓이고 재연결되는 순간 서버로 흘러간다. 호박색 배너는 오프라인일 때와 동기화 대기 중인 액션 수를 보여준다.",
+    "section10Title": "10. 현재 무료",
+    "section10P1": "모든 기능은 현재 무료 — 모든 던전, 모든 업적, 일일 퀘스트, 차원, 히트맵, 친구, 일지, 푸시, 무제한 활성 런.",
+    "section10P2": "유료 등급이 언젠가 존재해도 자기 사냥의 핵심은 무료로 남는다. 자신과의 경쟁에 페이월은 없어야 한다. 초기의 헌터들은 기억된다.",
+    "ctaText": "퀘스트는 여전히 열려 있다.",
+    "ctaButton": "포털 레지스트리로 들어가기 →"
   }
 }

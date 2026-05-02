@@ -28,7 +28,20 @@
     "edit": "編集",
     "scattered": "散漫",
     "viewPublic": "公開ビュー",
-    "choosePath": "+ 道を選ぶ"
+    "choosePath": "+ 道を選ぶ",
+    "share": "共有",
+    "shareCopied": "✓ コピーしました",
+    "changeAvatarLabel": "プロフィール画像を変更",
+    "changeAvatar": "変更",
+    "uploading": "アップロード中",
+    "rename": "名前を変更",
+    "changePath": "道を変更",
+    "viewAllRanks": "すべてのランクを表示",
+    "rankPath": "ランクの道",
+    "maxRank": "最高ランク",
+    "rankProgress": "{count} LVL → {next}",
+    "scatteredHelp": "昨日デイリークエストを完了していません。次の活動日後に解除されます。",
+    "avatarLocalError": "アバターをローカルに保存できませんでした"
   },
   "dailyQuests": {
     "header": "(!) デイリークエスト",
@@ -42,25 +55,142 @@
     "quest_clean_room": "部屋の掃除"
   },
   "dungeons": {
-    "caffeine": { "name": "カフェイン・リブート" },
-    "sensible_diet": { "name": "食生活チャレンジ" },
-    "gym_life": { "name": "トレーニング・レジメン" },
-    "attention_reclaim": { "name": "ドゥームスクロール断ち" },
-    "music_sensitization": { "name": "音感の再覚醒" },
-    "social_reclaim": { "name": "曝露療法" },
-    "nofap": { "name": "NoFap" },
-    "starter_body": { "name": "毎日の鍛錬" },
-    "starter_mind": { "name": "毎日の研鑽" },
-    "starter_emotion": { "name": "毎日の絆" },
-    "starter_energy": { "name": "毎日の閃光" },
-    "starter_spirit": { "name": "毎日の静寂" }
+    "caffeine": {
+      "name": "カフェイン・リブート",
+      "description": "神経系をリセットする。月にコーヒー2杯までは可 — 3杯目で記録は終わる。",
+      "rules": [
+        "月にコーヒー2杯までは可。3杯目は相違反。",
+        "毎日カレンダーで確認 — ラインを守れたら達成、破ったら相違反。",
+        "達成日はXP + ディメンションポイントを永続的に積み上げる。相違反はカレンダー上の印に過ぎない — ダンジョンを抜けない限り、記録は途中で終わらない。"
+      ]
+    },
+    "sensible_diet": {
+      "name": "食生活チャレンジ",
+      "description": "意識して食べる。1日2〜3食、間食はしない。まず植物、次に動物性、その次に魚介、肉は他に何もない時だけ。月に4個までの不自然な甘味は可 — それを超えると相違反。",
+      "rules": [
+        "1日2〜3食。食事の間に間食はしない — 腸を休ませる。",
+        "まず植物;次に動物性(卵、乳製品、ナッツ);その次に魚介;肉は他に選択肢がない時だけ。",
+        "月に4個までの不自然な甘味は可。5個目は相違反。",
+        "毎日カレンダーで確認 — ラインを守れたら達成、破ったら相違反。"
+      ]
+    },
+    "gym_life": {
+      "name": "トレーニング・レジメン",
+      "description": "肉体を鍛え上げる。週5回のワークアウト — 筋肉群ごとに1回ずつ:胸と肩、背中と腕、脚と尻、体幹、全身。規律とは強度ではなくリズムだ。",
+      "rules": [
+        "週5回のワークアウトを完了する — 各1回ずつ:胸と肩、背中と腕、脚と尻、体幹、全身。",
+        "対象の筋肉群を刺激する種目なら何でも選んでよい。セッションが終わったら記録する。",
+        "週は月曜日〜日曜日(UTC)で進む。リズムを崩したら手動で相違反。"
+      ]
+    },
+    "attention_reclaim": {
+      "name": "ドゥームスクロール断ち",
+      "description": "ドゥームスクロールなしで30日間。メッセージ、投稿、意図的な単発動画視聴は可 — 受動的な無限フィードだけが脱落としてカウントされる。",
+      "rules": [
+        "毎日カレンダーで確認 — 達成または相違反。",
+        "30日達成で勝利宣言を解放する。",
+        "達成日はXP + ディメンションを永続的に積み上げる。相違反はカレンダー上の印に過ぎない — ダンジョンを抜けない限り、記録は途中で終わらない。"
+      ]
+    },
+    "music_sensitization": {
+      "name": "音感の再覚醒",
+      "description": "音楽なしで30日間。感覚のリセット — 耳を静まらせ、風、雨、鳥のさえずり、生身の声が再び生き生きと感じられるようにする。",
+      "rules": [
+        "相違反 = 意図的に楽曲を聴くこと(プレイリスト、アルバム、コンサート、自分で選んだBGM)。",
+        "可:ポッドキャスト、オーディオブック、映画音楽、自然音、そして意図せず流れる環境音楽(店舗、カフェ、他人のスピーカー)。",
+        "毎日カレンダーで確認。30日達成で勝利宣言を解放する。"
+      ]
+    },
+    "social_reclaim": {
+      "name": "曝露療法",
+      "description": "社会の階段を登る。沈黙の存在から集団での発言まで6段 — 段階的曝露で慣らしていく、一段ずつ。",
+      "rules": [
+        "各段には目標がある — 現実で行動するたびに曝露を記録する。",
+        "現在の段を達成して次を解放する。飛ばしは不可。",
+        "段はランクE → Sへ進む。最後の段を完了するとダンジョンクリア。"
+      ]
+    },
+    "nofap": {
+      "name": "NoFap",
+      "description": "生命力を取り戻す。厳格に:ポルノ、自慰、エッジング、グーニングは禁止。パートナーとのセックスとオーガズムは可 — このルールが狙うのは衝動的な独り使用であって、親密さではない。",
+      "rules": [
+        "相違反 = ポルノ、自慰、エッジング、グーニング(サースト・トラップ、ボット・アカウント、官能的なソーシャルフィード)。",
+        "可:パートナーとのセックスとオーガズム — このダンジョンは強迫について、禁欲ではない。",
+        "毎日カレンダーでチェックイン — 達成または相違反。達成日はXP + ディメンションを永続的に積み上げる。相違反は印であってリセットではない。"
+      ]
+    },
+    "starter_body": {
+      "name": "毎日の鍛錬",
+      "description": "身体ハンターの毎日の最低ライン。あなたのランクと共に増えていく3つの種目 — どれか1つをこなせばその日は確保。プッシュアップ、プルアップ、スクワットが連続記録E → Sに伴って成長する。",
+      "rules": [
+        "1日に1タスクを完了する。",
+        "やったらチェックを入れる。記録を取り消すにはチェックを外す。",
+        "日付は深夜0時(UTC)にリセットされる。崩したら手動で相違反。"
+      ]
+    },
+    "starter_mind": {
+      "name": "毎日の研鑽",
+      "description": "精神ハンターの毎日の最低ライン。数ページ、新しい着想、正直な一文。どれか1つをこなせばその日は確保。",
+      "rules": [
+        "1日に1タスクを完了する。",
+        "やったらチェックを入れる。記録を取り消すにはチェックを外す。",
+        "日付は深夜0時(UTC)にリセットされる。崩したら手動で相違反。"
+      ]
+    },
+    "starter_emotion": {
+      "name": "毎日の絆",
+      "description": "情動ハンターの毎日の最低ライン。見られ、聞かれ、そこに在る、その小さな反復。どれか1つをこなせばその日は確保。",
+      "rules": [
+        "1日に1タスクを完了する。",
+        "やったらチェックを入れる。記録を取り消すにはチェックを外す。",
+        "日付は深夜0時(UTC)にリセットされる。崩したら手動で相違反。"
+      ]
+    },
+    "starter_energy": {
+      "name": "毎日の閃光",
+      "description": "気力ハンターの毎日の最低ライン。冷、動、息 — 神経系を覚ます3つの小さな衝撃。どれか1つをこなせばその日は確保。",
+      "rules": [
+        "1日に1タスクを完了する。",
+        "やったらチェックを入れる。記録を取り消すにはチェックを外す。",
+        "日付は深夜0時(UTC)にリセットされる。崩したら手動で相違反。"
+      ]
+    },
+    "starter_spirit": {
+      "name": "毎日の静寂",
+      "description": "魂ハンターの毎日の最低ライン。ひと呼吸の沈黙、ひと文の感謝、ひとつの欲を退ける。どれか1つをこなせばその日は確保。",
+      "rules": [
+        "1日に1タスクを完了する。",
+        "やったらチェックを入れる。記録を取り消すにはチェックを外す。",
+        "日付は深夜0時(UTC)にリセットされる。崩したら手動で相違反。"
+      ]
+    }
   },
   "hunterTypes": {
-    "body": { "label": "身体のハンター", "tagline": "器を鍛えよ。" },
-    "mind": { "label": "精神のハンター", "tagline": "刃を研げ。" },
-    "emotion": { "label": "情動のハンター", "tagline": "炎を護れ。" },
-    "energy": { "label": "気力のハンター", "tagline": "閃光を制せよ。" },
-    "spirit": { "label": "魂のハンター", "tagline": "静寂に触れよ。" }
+    "body": {
+      "label": "身体のハンター",
+      "tagline": "器を鍛えよ。",
+      "description": "肉体的な能力を鍛える。プッシュアップ、プルアップ、スクワット — Sランクへと登っていく段階的な階段。鉄と呼吸の道。"
+    },
+    "mind": {
+      "label": "精神のハンター",
+      "tagline": "刃を研げ。",
+      "description": "知性を鍛える。読書、勉学、暗記 — 年月を重ねて積み上がる集中力の階段。明晰の道。"
+    },
+    "emotion": {
+      "label": "情動のハンター",
+      "tagline": "炎を護れ。",
+      "description": "関係の深さを鍛える。脆さ、共感、表現 — 見られることの毎日の反復。心の道。"
+    },
+    "energy": {
+      "label": "気力のハンター",
+      "tagline": "閃光を制せよ。",
+      "description": "生命力を鍛える。寒冷曝露、断食、有酸素 — 身体を目覚めさせる階段。覚醒した神経系の道。"
+    },
+    "spirit": {
+      "label": "魂のハンター",
+      "tagline": "静寂に触れよ。",
+      "description": "超越を鍛える。瞑想、沈黙、観想 — 内側を深めていく階段。自我の彼方の道。"
+    }
   },
   "portals": {
     "header": "ポータル・レジストリ",
@@ -78,5 +208,433 @@
     "active": "アクティブ",
     "viewInStatus": "ステータスウィンドウで見る",
     "rules": "戦闘規則"
+  },
+  "feed": {
+    "title": "ザ・フィード",
+    "subtitle": "システム中のハンターたちの公開された省察。名前をタップしてプロフィールを表示。",
+    "emptyTitle": "[ まだ省察はありません ]",
+    "emptyBody": "ハンターが日誌を公開すると、ここに表示されます。最初の一人になろう — ダンジョンを開け、ノートを記録し、公開を切り替える。",
+    "loadMore": "もっと読み込む",
+    "loading": "読み込み中…",
+    "endOfFeed": "— フィードの終わり —",
+    "addReaction": "リアクションを追加"
+  },
+  "journal": {
+    "title": "日誌",
+    "backToProfile": "← プロフィールに戻る",
+    "empty": "まだ記入はありません。再発、コーヒー記録、曝露の記録の際に、ノートを書くか聞かれます — スキップでも保存でもあなた次第。",
+    "summary": "{entries, plural, one {# 件} other {# 件}} · {days, plural, one {# 日} other {# 日}}",
+    "today": "今日",
+    "yesterday": "昨日",
+    "daysAgo": "{count} 日前",
+    "editTitle": "日誌を編集 — {dungeon}",
+    "edit": "編集",
+    "delete": "削除",
+    "deletePrompt": "この記録を削除しますか?",
+    "yes": "はい",
+    "cancel": "キャンセル",
+    "seeAll": "すべての {count} 件を見る →",
+    "publicBadge": "◉ 公開"
+  },
+  "entryTypes": {
+    "relapse": "再発",
+    "completed": "達成",
+    "journal": "日誌"
+  },
+  "toasts": {
+    "achievementUnlocked": "[ 実績解放 ]",
+    "levelUp": "[ レベルアップ ]",
+    "levelLabel": "Lv {level}",
+    "rankAscended": "[ ランク昇格 ]",
+    "tierAchieved": "{flavor} 段階に到達",
+    "tapToDismiss": "タップで閉じる",
+    "ascension": "[ 昇華 ]",
+    "rankReached": "ランク {rank} に到達した",
+    "shareAscension": "あなたの昇華を、それを分かってくれる誰かと分かち合おう。",
+    "share": "共有",
+    "sharing": "共有中…",
+    "later": "後で",
+    "dismissShare": "共有プロンプトを閉じる"
+  },
+  "friends": {
+    "title": "フレンド",
+    "emptyBody": "まだ繋がっているハンターはいません。プロフィールリンクを共有するか、他のハンターのプロフィールを訪れてリクエストを送りましょう。",
+    "requests": "フレンドリクエスト · {count}",
+    "wantsToConnect": "繋がりたがっています",
+    "accept": "承認",
+    "decline": "辞退",
+    "rankPrefix": "ランク ",
+    "levelLabel": "Lv {level}",
+    "unfriend": "フレンド解除",
+    "cancel": "キャンセル",
+    "isFriend": "✓ フレンド",
+    "requestSent": "リクエスト送信済み",
+    "addFriend": "+ フレンド追加"
+  },
+  "installApp": {
+    "title": "アプリをインストール",
+    "installed": "✓ インストール済み — スタンドアロンモードで実行中。",
+    "available": "ワンタップでインストール。アプリストア不要。インストールするとプッシュ通知やオフラインモードが快適に動作します。",
+    "iosInstructions": "iPhone では<strong>共有</strong>アイコンをタップしてから <strong>ホーム画面に追加</strong>。iOS 16.4 以上が必要。",
+    "unsupported": "ブラウザのメニューを開き、「アプリをインストール」または「ホーム画面に追加」を探してください。",
+    "install": "インストール",
+    "installing": "インストール中…"
+  },
+  "notifications": {
+    "title": "毎日のリマインダー",
+    "unsupported": "このブラウザはプッシュ通知に対応していません。",
+    "denied": "通知がブロックされています。ブラウザ/OS の設定で再有効化してください。",
+    "description": "日付が切り替わるタイミングで通知が届くので、クエストを取りこぼしません。",
+    "notConfigured": "プッシュ通知が設定されていません。",
+    "couldNotEnable": "有効化できませんでした",
+    "couldNotDisable": "無効化できませんでした"
+  },
+  "noteModal": {
+    "chrome": "[ 日誌 ]",
+    "defaultPlaceholder": "何があった?(任意)",
+    "defaultConfirm": "保存",
+    "defaultSkip": "スキップ",
+    "sharePublic": "公開プロフィールに共有",
+    "editPlaceholder": "省察を編集する…",
+    "editCancel": "キャンセル"
+  },
+  "dungeonRun": {
+    "daysCleared": "{count, plural, other {# 日}} 達成",
+    "daysForged": "{count, plural, other {# 日}} 鍛錬",
+    "nextTier": "次の段階:{rank}",
+    "daysFraction": "{count} / {target} 日",
+    "dungeonMastered": "ダンジョン制覇",
+    "dungeonClearedBanner": "★ ダンジョン達成 ★",
+    "claimVictory": "勝利を宣言",
+    "target": "目標:{count} 日",
+    "entered": "入場日:{date}",
+    "journalEntry": "+ 日誌に記録",
+    "exitDungeon": "ダンジョンを出る",
+    "portalDormant": "ポータル休眠中",
+    "today": "今日",
+    "thisWeek": "今週",
+    "dayCleared": "✦ 1日達成 ✦",
+    "weekCleared": "✦ 1週間達成 ✦",
+    "ladderMastered": "★ 階段を制覇 ★",
+    "ladderRetired": "すべての {count} 段を達成。ダンジョンは引退した。",
+    "rungLabel": "ランク {rank} · 段 {current} / {total}",
+    "progress": "進捗",
+    "progressFraction": "{count} / {target}",
+    "logExposure": "+ 曝露を記録",
+    "undo": "取り消す",
+    "ladder": "階段",
+    "lockedRung": "???",
+    "abandonLadder": "階段を放棄 — リセット",
+    "noRungs": "段が設定されていません。",
+    "abandonModalTitle": "階段を放棄 — {dungeon}",
+    "abandonPlaceholder": "登りを止めたのは何?(任意)",
+    "abandonConfirm": "放棄を確認",
+    "logExposureTitle": "曝露を記録 — {rung}",
+    "logExposurePlaceholder": "何に向き合った?どうだった?(任意)",
+    "logExposureConfirm": "曝露を記録",
+    "logExposureSkip": "ノートをスキップ",
+    "taskCleared": "タスク達成",
+    "dayClearedSource": "1日達成",
+    "tierBonusSource": "🏆 ランク {rank} · {dungeon}"
+  },
+  "checkIn": {
+    "didYouClearToday": "今日は達成した?",
+    "confirmDate": "{date} を確認",
+    "currentlyCleared": "{date} — 現在達成中",
+    "currentlyRelapsed": "{date} — {count, plural, other {# 回の相違反}}",
+    "markCleared": "達成として記録",
+    "cleared": "達成",
+    "relapsePlus": "相違反 +1",
+    "markRelapsed": "相違反として記録",
+    "relapsed": "相違反",
+    "undo": "取り消す",
+    "cancel": "キャンセル",
+    "relapseTitle": "相違反 — {dungeon}",
+    "relapsePlaceholder": "何がきっかけ?今どんな気持ち?(任意)",
+    "relapseConfirm": "相違反を記録",
+    "relapseSkip": "キャンセル"
+  },
+  "calendar": {
+    "previousMonth": "前の月",
+    "nextMonth": "次の月",
+    "current": "現在",
+    "longest": "最長",
+    "daysShort": "{count}日",
+    "legendCleared": "達成",
+    "legendTapToLog": "タップして記録",
+    "legendRelapse": "相違反"
+  },
+  "awakening": {
+    "intro": [
+      "[ 通知 ]",
+      "",
+      "特別なクエストが届いた。",
+      "",
+      "あなたはプレイヤーになるよう",
+      "選ばれた。",
+      "",
+      "受け入れますか?"
+    ],
+    "naming": [
+      "[ 登録 ]",
+      "",
+      "システムはあなたを認識した。",
+      "",
+      "あなたが名乗る",
+      "名前を述べよ。"
+    ],
+    "path": [
+      "[ 道の選択 ]",
+      "",
+      "すべてのハンターは道を歩む。",
+      "",
+      "まず何を鍛えたいか",
+      "選びなさい。"
+    ],
+    "accept": "受諾",
+    "decline": "辞退",
+    "reconsider": "← 考え直す",
+    "standbyHeader": "[ スタンバイ ]",
+    "standbyMessage": "システムは待つ。",
+    "standbySubtext": "クエストは開いたままだ。覚醒する準備ができたら戻りなさい。",
+    "namePlaceholder": "名前を入力",
+    "register": "登録",
+    "registering": "登録中",
+    "registrationFailed": "登録に失敗しました",
+    "pathFailed": "道の選択に失敗しました",
+    "noPath": "特に決めない — 後で決める"
+  },
+  "paywall": {
+    "gateLocked": "[ ゲート封鎖 ]",
+    "title": "Pro へ昇華",
+    "intro": "3つ目のゲートは Pro。アクティブなダンジョン2つまでは無料枠 — それを超えるとハンター領域だ。",
+    "features": [
+      "アクティブなダンジョン無制限",
+      "ストリーク・インシュランス — 月に1度の相違反を許容",
+      "VIP装飾フレーム + バッジ",
+      "アプリ全体のテーマパック",
+      "生涯アナリティクス — 全履歴、データ書き出し"
+    ],
+    "ascend": "昇華する",
+    "openingCheckout": "チェックアウトを開いています…",
+    "returnFree": "無料枠に戻る",
+    "closeLabel": "閉じる",
+    "notConfigured": "チェックアウトはまだ設定されていません。",
+    "checkoutFailed": "チェックアウトを開けませんでした。少ししてからもう一度試してください。"
+  },
+  "ranksPage": {
+    "title": "ハンターの道",
+    "subtitle": "6つのランク。6つの自分。それぞれが買ったものではなく、勝ち取ったものだ。",
+    "youAreHere": "あなたはここ",
+    "locked": "🔒 ロック中",
+    "levelsRange": "レベル {start}–{end} · 到達まで {xp} XP",
+    "levelsRangeMax": "レベル {start}+ · 到達まで {xp} XP",
+    "footer": "Lv {level} · {xp} XP 獲得"
+  },
+  "whatsNew": {
+    "header": "[ システム更新ログ ]",
+    "title": "新着情報",
+    "backToStatus": "← ステータスに戻る",
+    "empty": "まだリリース履歴はありません。",
+    "latest": "最新",
+    "kindFeature": "feature",
+    "kindFix": "fix",
+    "kindChange": "change"
+  },
+  "rankStyles": {
+    "E": {
+      "flavor": "ブロンズ",
+      "title": "覚醒者",
+      "description": "あなたはシステムに足を踏み入れた。道は始まる。身体はまだ眠り、心はまだ彷徨う — それでも姿を現した、それで十分だ。"
+    },
+    "D": {
+      "flavor": "アイアン",
+      "title": "規律者",
+      "description": "ルーチンが儀式となる。誰も見ていない時にも — そしてあなた自身が望まない時にも — 最初の習慣は揺るがない。ハンターが形をなしていく。"
+    },
+    "C": {
+      "flavor": "シルバー",
+      "title": "錬磨者",
+      "description": "努力だったものが既定値となる。身体と心が互いを高め合う。早起きと戦わなくなる — ただ目覚める。システムがあなたを認める。"
+    },
+    "B": {
+      "flavor": "ゴールド",
+      "title": "結びの者",
+      "description": "自己が自己と出会う。芝居を仕切っていた影が、いまはあなたに応える。ハンターは内なる世界に領土を持つ。ここまで至る者は少ない。"
+    },
+    "A": {
+      "flavor": "プラチナ",
+      "title": "上昇者",
+      "description": "ほとんどの人が自分自身について知る範囲を超える。5つのディメンションが協奏する。あなたは口を開く前に他者が感じる「あなた」自身だ。"
+    },
+    "S": {
+      "flavor": "ホロ",
+      "title": "至高者",
+      "description": "システムがあなたに屈する。戦うべきものは何も残らず、ただ続く実践のみ。ハンターと道は同じものだ。あなたは自らの光の中を歩む。"
+    }
+  },
+  "rarityLabels": {
+    "common": "コモン",
+    "rare": "レア",
+    "epic": "エピック",
+    "legendary": "レジェンダリー"
+  },
+  "rungs": {
+    "presence": {
+      "name": "存在",
+      "description": "1回の外出で見知らぬ3人と目を合わせて微笑む。言葉は不要。"
+    },
+    "acknowledge": {
+      "name": "挨拶",
+      "description": "見知らぬ3人に声を出して挨拶する — 「こんにちは」「おはよう」「やあ」。声が沈黙を破る。"
+    },
+    "request": {
+      "name": "依頼",
+      "description": "見知らぬ人にリスクの低い小さな質問をする — 時刻、道順、おすすめ。"
+    },
+    "small-talk": {
+      "name": "軽い会話",
+      "description": "レジ係、バリスタ、隣の人と短いやり取りを交わす。観察、賛辞、その瞬間についての一言。"
+    },
+    "engage": {
+      "name": "対話",
+      "description": "見知らぬ人と1〜2分の会話を続ける。フォローアップを聞き、糸口を見つける。"
+    },
+    "expose": {
+      "name": "露出",
+      "description": "集団の場で意見、物語、冗談を共有する — 会議、授業、パーティー。見られ、聞かれる。"
+    }
+  },
+  "achievements": {
+    "dungeonRankName": "{dungeon}:ランク {rank}",
+    "dungeonRankDescription": "{dungeon} で {days} 日に到達する。",
+    "dungeonRungName": "{dungeon}:{rung}",
+    "dungeonRungDescription": "{dungeon} の段「{rung}」を達成する({target} 回の曝露)。",
+    "dungeonClearedName": "{dungeon}:達成",
+    "dungeonClearedDescription": "{dungeon} の {target} 日間の完全ランを達成する。",
+    "comboName": "{days} 日コンボ",
+    "comboDescription": "デイリークエストのコンボが {days} 日に達した。+{xp} XP",
+    "static": {
+      "awakened": { "name": "覚醒", "description": "呼びかけを受け入れよ。最初のダンジョンに入れ。" },
+      "first-streak": { "name": "ファースト・ブラッド", "description": "ダンジョン内で最初の1日を生き延びる。" },
+      "first-quest": { "name": "クエスト受諾", "description": "最初のデイリークエストを完了する。" },
+      "first-workout": { "name": "最初のレップ", "description": "Gym Life でワークアウトを記録する。" },
+      "first-exposure": { "name": "静かな存在", "description": "セラピー階段で最初の曝露を記録する。" },
+      "rank-e": { "name": "E ランク達成", "description": "任意のダンジョンで 7 日のストリークを保つ。" },
+      "rank-d": { "name": "D ランク達成", "description": "任意のダンジョンで 14 日に到達する。" },
+      "rank-c": { "name": "C ランク達成", "description": "任意のダンジョンで 30 日に到達する。" },
+      "rank-b": { "name": "B ランク達成", "description": "任意のダンジョンで 60 日に到達する。" },
+      "rank-a": { "name": "A ランク達成", "description": "任意のダンジョンで 90 日に到達する。" },
+      "rank-s": { "name": "S ランク昇華", "description": "任意のダンジョンで 180 日に到達する。" },
+      "multi-classed": { "name": "マルチクラス", "description": "同時に 3 ダンジョンでアクティブ。" },
+      "polymath": { "name": "ポリマス", "description": "5 つすべてのダンジョンで同時にアクティブ。" },
+      "perfect-day": { "name": "完璧な1日", "description": "1日にすべてのデイリークエストを完了。" },
+      "grinder": { "name": "ザ・グラインダー", "description": "クエスト総完了 50 回。" },
+      "grind-lord": { "name": "グラインド・ロード", "description": "クエスト総完了 250 回。" },
+      "iron-will": { "name": "鉄の意志", "description": "10 回のワークアウトを完了。" },
+      "forged": { "name": "鍛造", "description": "100 回のワークアウトを記録。" },
+      "ladder-climber": { "name": "ラダー登攀者", "description": "曝露階段の 3 段を達成。" },
+      "fearless": { "name": "恐れ知らず", "description": "曝露階段全体を完了。" },
+      "dungeon-master": { "name": "ダンジョン・マスター", "description": "ダンジョンを成功裏に完了し引退させる。" },
+      "conqueror": { "name": "征服者", "description": "3 つのダンジョンを完了する。" },
+      "level-5": { "name": "新人ハンター", "description": "レベル 5 に到達する。" },
+      "level-10": { "name": "達人", "description": "レベル 10 に到達する。" },
+      "level-25": { "name": "ベテラン", "description": "レベル 25 に到達する。" },
+      "level-50": { "name": "影の君主", "description": "レベル 50 に到達する。" }
+    }
+  },
+  "guide": {
+    "header": "[ システム・マニュアル ]",
+    "title": "ハンター・ガイド",
+    "subtitle": "システムは規則を隠さない。読み、ダンジョンへ入り、始めよ。",
+    "section1Title": "1. 覚醒の仕方",
+    "section1P1": "システムとの最初の接触は短い。サインインする。システムはあなたをハンターとして迎える。あなたはゲートを受け入れる。ハンターIDが書き込まれ、ポータル・レジストリが解放される。",
+    "section1P2": "そこから、7つのダンジョンが開いている。スコアボードがなくても戦うであろう一つを選びなさい。スコアボードは、それを行ったことを思い出させるためにあるだけだ。",
+    "section2Title": "2. 5つのルール・タイプ",
+    "section2Intro": "すべてのダンジョンは5つのルール・タイプの一つで動く。一度読めば、システムの残りはシンプルに崩れる。",
+    "ruleLabels": {
+      "continuous_streak": "連続ストリーク",
+      "cadence": "リズム",
+      "timed": "タイムド・ラン",
+      "progressive": "進歩の階段"
+    },
+    "ruleSummaries": {
+      "continuous_streak": "毎日のチェックイン。各日をカレンダーで達成または相違反として確認する。達成日はXPとディメンションを永久に積む。",
+      "cadence": "チェックリストのパターン。窓内でボックスにチェック — ハンタータイプのスターターは毎日(どれか一つで可)、トレーニング・レジメンは週(5/5)。",
+      "timed": "N日目標へ向けた毎日のチェックイン。ストリーク・ダンジョンと同じカレンダー仕組み。目標で勝利を宣言してランを終える。",
+      "progressive": "上昇する階段。1段クリアで次が解放。飛ばし不可。"
+    },
+    "ruleUsedBy": {
+      "continuous_streak": "NoFap · カフェイン・リブート · 食生活チャレンジ",
+      "cadence": "トレーニング・レジメン · 毎日の鍛錬 · 毎日の研鑽 · 毎日の絆 · 毎日の閃光 · 毎日の静寂",
+      "timed": "ドゥームスクロール断ち · 音感の再覚醒",
+      "progressive": "曝露療法"
+    },
+    "section3Title": "3. 7つのポータル",
+    "section3Intro": "各ポータルは特定の規律で、独自の規則と鍛えるディメンションを持つ。",
+    "section4Title": "4. ハンター・ランク",
+    "section4Intro": "6ランク。各10レベル。シャドウ・モナークまで合計60レベル。レベル毎に必要なXPは1.5乗の曲線に従う — 上るほどレベルは遅く来る。",
+    "rankLevels": "Lv {start}–{end}",
+    "xpDropsIntro": "XPは4箇所から落ちる:",
+    "xpStreakDay": "ストリーク/タイムド・ダンジョンで達成日をチェックインするたび — そのダンジョンのディメンション点も加算",
+    "xpWorkout": "トレーニング・レジメンで記録したワークアウトごと",
+    "xpExposure": "曝露療法で記録した曝露ごと",
+    "xpCompletion": "タイムド・ダンジョンで勝利を宣言したとき",
+    "section5Title": "5. 5つのディメンション",
+    "section5Intro": "進捗は1本のXPバーではなく5つのディメンションで追跡される。各ダンジョンは特定の部分集合を鍛える。プロフィールはレーダー・チャートを表示 — 均整のとれたハンターは五角形、特化したハンターは尖りを見る。",
+    "dimensions": {
+      "body": {
+        "name": "身体",
+        "description": "肉体的な強さと活力。ワークアウトと食事規律から獲得。"
+      },
+      "mind": {
+        "name": "精神",
+        "description": "明晰さ、集中、注意。注意と感覚を取り戻すことで獲得。"
+      },
+      "emotion": {
+        "name": "情動",
+        "description": "社会的勇気と感情調整。曝露と取り戻された親密さから獲得。"
+      },
+      "energy": {
+        "name": "気力",
+        "description": "生の活力と持久力。刺激物の制御、食事、衝動への抵抗から獲得。"
+      },
+      "spirit": {
+        "name": "魂",
+        "description": "深さ、存在感、内なる静けさ。感覚のリセットと持続的な規律から獲得。"
+      }
+    },
+    "section6Title": "6. デイリークエストとコンボ・システム",
+    "section6P1": "毎日システムは小さなクエストの巡回セットを提供する — 各々がディメンションに紐づく。それを完了してディメンション点とXPを得る。",
+    "section6P2": "1日に <b>{threshold}</b> 個以上のクエストを完了すると、その日はコンボの資格を得る。連続する資格日でコンボ・ストリークが伸びる。各マイルストーンでボーナスXPがステータス・ウィンドウにトーストとして落ちる:",
+    "section6Footnote": "1〜2クエストの日は猶予日 — 積み上がらないが崩れもしない。完全な空振りだけがコンボをリセットする。",
+    "section7Title": "7. 散漫デバフ",
+    "section7P1": "1日にゼロクエストで終わると、翌日 <scattered>⚠ 散漫</scattered> として目覚める — ハンター・カードに見える印。",
+    "section7P2": "散漫は罰ではない。XPは減らない。他のハンターには何も見えない。それは鏡だ。あなたは不在で、システムは戻るまでその事実を映す。",
+    "section7P3": "新しい日の最初のクエストを完了した瞬間に消える。",
+    "section8Title": "8. ソーシャル・レイヤー",
+    "section8Intro": "他のハンターは存在する。システムは道を交わらせてくれる。",
+    "section8PublicProfileLabel": "公開プロフィール。",
+    "section8PublicProfileBody": "全ハンターは <code>/h/&lt;id&gt;</code> に読み取り専用プロフィールを持つ — ランク、レベル、アクティブなダンジョン、ディメンション、トロフィー。リンクを持つサインイン中の他のハンターが閲覧可能(オープンウェブには露出しない)。共有リンクはあなたの <profileLink>/profile</profileLink> ページにある。",
+    "section8FriendsLabel": "フレンド。",
+    "section8FriendsBody": "他のハンターのプロフィールを訪れて <addFriend>+ フレンド追加</addFriend> をタップする。相手に通知が届き、承認すれば、お互いのフレンド一覧に表示される。フレンドが基盤 — グループ・ハント、リーダーボードはこの上に後で構築される。",
+    "section8JournalLabel": "ジャーナル記録。",
+    "section8JournalBody": "再発、コーヒー記録、ランの完了、または書きたい時 — 小さなノート・モーダルで省察を保存できる。デフォルトは非公開(自分のプロフィールでだけ見える)。<code>公開プロフィールに共有</code> にチェックを入れると、その記録が公開プロフィールの「省察」に表示される。",
+    "section9Title": "9. 到達と信頼性",
+    "section9DailyLabel": "デイリー・リマインダー。",
+    "section9DailyBody": "デフォルトでオン。初回サインイン時、ブラウザが一度だけ通知許可を求める — 「はい」で登録される。前日が未使用なら朝のプッシュ、今日が滑り去りそうなら夜のプッシュをシステムが送る。メッセージは状態に応じる。",
+    "section9DailyNote": "リマインダーをオフにするには、プロフィールでトグルするか、OSレベルで通知をブロック(iOS 設定 → 通知、Android アプリ情報、デスクトップではブラウザのサイト設定)。",
+    "section9InstallLabel": "アプリのインストール。",
+    "section9InstallIntro": "プッシュはアプリがインストールされている場合のみ動く。プラットフォームごとに手順は異なる:",
+    "section9InstallIos": "<b>iPhone / iPad:</b> Safari でサイトを開く → <code>共有 → ホーム画面に追加</code>。iOS 16.4 以上が必要。通常の Safari タブからはプッシュは飛ばない。",
+    "section9InstallAndroid": "<b>Android:</b> Chrome で開く → 表示されるインストール・バナーをタップ、または Chrome の ⋮ メニュー → <code>アプリをインストール</code>。インストール済みならどちらでもプッシュは動く。",
+    "section9InstallDesktop": "<b>デスクトップ(Chrome, Edge, Brave):</b> アドレスバーのインストール・アイコンを探すか、ブラウザのメニュー → <code>Shivaliva Leveling をインストール</code>。アプリは独自ウィンドウで開く。",
+    "section9OfflineLabel": "オフライン。",
+    "section9OfflineBody": "アプリは接続なしで動く。飛行機、地下鉄、電波の悪い場所 — クエスト完了、相違反の記録、ジャーナル記入。すべてローカルに溜まり、再接続した瞬間にサーバーへ送られる。オフライン時とサーバー反映待ちの数を琥珀色のバナーが示す。",
+    "section10Title": "10. 現在は無料",
+    "section10P1": "全機能は現在無料 — 全ダンジョン、全実績、デイリークエスト、ディメンション、ヒートマップ、フレンド、ジャーナル、プッシュ、無制限のアクティブ・ラン。",
+    "section10P2": "もし将来有料層が登場しても、自分自身を狩る中核機能は無料のままだ。自分との競争にペイウォールはあってはならない。早期のハンターは記憶される。",
+    "ctaText": "クエストは依然開いている。",
+    "ctaButton": "ポータル・レジストリへ入る →"
   }
 }

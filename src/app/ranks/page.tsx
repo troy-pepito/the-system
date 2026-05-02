@@ -1,7 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
+import { getTranslations } from "next-intl/server";
 import { getProfileStats } from "@/app/actions/achievements";
 import { getRank, getXpForLevel } from "@/lib/player";
-import { RANK_STYLES } from "@/lib/rankStyle";
+import { RANK_STYLES, resolveRankLabels } from "@/lib/rankStyle";
 
 export const metadata = {
   title: "Hunter Path — Shivaliva Leveling",
@@ -29,6 +30,8 @@ export default async function RanksPage() {
     return <main className="min-h-screen bg-slate-950" />;
   }
 
+  const t = await getTranslations("ranksPage");
+  const tRankStyles = await getTranslations("rankStyles");
   const stats = await getProfileStats();
   const currentRank = getRank(stats.level);
   const currentRankIdx = (RANK_ORDER as readonly string[]).indexOf(
@@ -40,17 +43,18 @@ export default async function RanksPage() {
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
-            Hunter Path
+            {t("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
           <p className="text-[11px] text-slate-400 mt-3 max-w-sm mx-auto leading-relaxed">
-            Six ranks. Six versions of yourself. Each one earned, not bought.
+            {t("subtitle")}
           </p>
         </div>
 
         <div className="space-y-5">
           {RANK_ORDER.map((rank, idx) => {
             const style = RANK_STYLES[rank];
+            const labels = resolveRankLabels(rank, tRankStyles);
             const firstLevel = idx * LEVELS_PER_RANK + 1;
             const lastLevel = (idx + 1) * LEVELS_PER_RANK;
             const isLastRank = idx === RANK_ORDER.length - 1;
@@ -106,7 +110,7 @@ export default async function RanksPage() {
                           earned ? "text-slate-400" : "text-slate-700"
                         }`}
                       >
-                        {style.flavor}
+                        {labels.flavor}
                       </p>
                     </div>
 
@@ -117,18 +121,18 @@ export default async function RanksPage() {
                             earned ? "text-cyan-100" : "text-slate-500"
                           }`}
                         >
-                          {style.title}
+                          {labels.title}
                         </p>
                         {isCurrent && (
                           <span
                             className={`text-[9px] tracking-[0.3em] uppercase px-1.5 py-0.5 border rounded-sm font-bold ${style.bg} ${style.border} ${style.text} ${style.textClass}`}
                           >
-                            You are here
+                            {t("youAreHere")}
                           </span>
                         )}
                         {locked && (
                           <span className="text-[9px] tracking-[0.3em] uppercase px-1.5 py-0.5 border border-slate-700 text-slate-500 rounded-sm">
-                            🔒 Locked
+                            {t("locked")}
                           </span>
                         )}
                       </div>
@@ -137,16 +141,23 @@ export default async function RanksPage() {
                           earned ? "text-slate-500" : "text-slate-700"
                         }`}
                       >
-                        Levels {firstLevel}
-                        {!isLastRank ? `–${lastLevel}` : "+"} ·{" "}
-                        {xpToReach.toLocaleString()} XP to reach
+                        {isLastRank
+                          ? t("levelsRangeMax", {
+                              start: firstLevel,
+                              xp: xpToReach.toLocaleString(),
+                            })
+                          : t("levelsRange", {
+                              start: firstLevel,
+                              end: lastLevel,
+                              xp: xpToReach.toLocaleString(),
+                            })}
                       </p>
                       <p
                         className={`text-xs leading-relaxed ${
                           earned ? "text-slate-300" : "text-slate-600"
                         }`}
                       >
-                        {style.description}
+                        {labels.description}
                       </p>
                     </div>
                   </div>
@@ -158,7 +169,10 @@ export default async function RanksPage() {
 
         <div className="text-center pt-4">
           <p className="text-[10px] tracking-[0.3em] uppercase text-slate-600">
-            Lv {stats.level} · {stats.totalXp.toLocaleString()} XP earned
+            {t("footer", {
+              level: stats.level,
+              xp: stats.totalXp.toLocaleString(),
+            })}
           </p>
         </div>
       </div>

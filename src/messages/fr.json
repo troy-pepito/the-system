@@ -28,7 +28,20 @@
     "edit": "Modifier",
     "scattered": "Dispersé",
     "viewPublic": "Voir Public",
-    "choosePath": "+ Choisis ta voie"
+    "choosePath": "+ Choisis ta voie",
+    "share": "Partager",
+    "shareCopied": "✓ Copié",
+    "changeAvatarLabel": "Changer la photo de profil",
+    "changeAvatar": "Changer",
+    "uploading": "Téléversement",
+    "rename": "Renommer",
+    "changePath": "Changer de voie",
+    "viewAllRanks": "Voir tous les rangs",
+    "rankPath": "Voie de Rang",
+    "maxRank": "RANG MAX",
+    "rankProgress": "{count} LVL → {next}",
+    "scatteredHelp": "Aucune daily quest terminée hier. Disparaît après ta prochaine journée active.",
+    "avatarLocalError": "Impossible d'enregistrer l'avatar localement"
   },
   "dailyQuests": {
     "header": "(!) Quêtes Quotidiennes",
@@ -42,25 +55,142 @@
     "quest_clean_room": "Ranger la Chambre"
   },
   "dungeons": {
-    "caffeine": { "name": "Réinitialisation Caféine" },
-    "sensible_diet": { "name": "Défi Diète" },
-    "gym_life": { "name": "Régime d'Entraînement" },
-    "attention_reclaim": { "name": "Anti-Doomscroll" },
-    "music_sensitization": { "name": "Sensibilisation Sonore" },
-    "social_reclaim": { "name": "Thérapie d'Exposition" },
-    "nofap": { "name": "NoFap" },
-    "starter_body": { "name": "Forge Quotidienne" },
-    "starter_mind": { "name": "Aiguisage Quotidien" },
-    "starter_emotion": { "name": "Liens Quotidiens" },
-    "starter_energy": { "name": "Étincelle Quotidienne" },
-    "starter_spirit": { "name": "Silence Quotidien" }
+    "caffeine": {
+      "name": "Réinitialisation Caféine",
+      "description": "Réinitialise le système nerveux. Jusqu'à 2 cafés par mois, c'est bon — le 3ᵉ met fin à la course.",
+      "rules": [
+        "Jusqu'à 2 cafés par mois, c'est bon. Le 3ᵉ est une rechute.",
+        "Confirme chaque jour dans le calendrier — Validé si tu as tenu la ligne, Rechute si tu l'as cassée.",
+        "Les jours validés accumulent XP + points de dimension de façon permanente. Les rechutes sont des marqueurs de calendrier — Sortir du Donjon est la seule façon de terminer la course en avance."
+      ]
+    },
+    "sensible_diet": {
+      "name": "Défi Diète",
+      "description": "Mange en pleine conscience. 2–3 repas par jour, sans grignoter entre. Plantes d'abord, sources animales ensuite, fruits de mer après, viande seulement si rien d'autre. Jusqu'à 4 douceurs non naturelles par mois — au-delà, c'est une rechute.",
+      "rules": [
+        "2–3 repas par jour. Pas de grignotage entre les repas — laisse l'intestin se reposer.",
+        "Mange d'abord des plantes ; puis des sources animales (œufs, produits laitiers, noix) ; ensuite des fruits de mer ; et de la viande seulement s'il n'y a pas d'alternative.",
+        "Jusqu'à 4 douceurs non naturelles par mois, c'est bon. La 5ᵉ est une rechute.",
+        "Confirme chaque jour dans le calendrier — Validé si tu as tenu la ligne, Rechute si tu l'as cassée."
+      ]
+    },
+    "gym_life": {
+      "name": "Régime d'Entraînement",
+      "description": "Forge le corps. 5 séances par semaine — une par groupe musculaire : Pectoraux & Épaules, Dos & Bras, Jambes & Fessiers, Sangle abdominale et Corps entier. La discipline, c'est la cadence, pas l'intensité.",
+      "rules": [
+        "Complète 5 séances par semaine — une de chaque : Pectoraux & Épaules, Dos & Bras, Jambes & Fessiers, Sangle abdominale, Corps entier.",
+        "Choisis n'importe quels exercices qui touchent le groupe musculaire visé. Logge quand la séance est finie.",
+        "La semaine va de lundi à dimanche (UTC). Rechute manuelle si tu décroches de la cadence."
+      ]
+    },
+    "attention_reclaim": {
+      "name": "Anti-Doomscroll",
+      "description": "30 jours sans doomscroll. Messagerie, publication et visionnage volontaire d'une vidéo unique sont OK — seuls les feeds infinis passifs comptent comme un faux pas.",
+      "rules": [
+        "Confirme chaque jour dans le calendrier — Validé ou Rechute.",
+        "Atteins 30 jours validés pour débloquer Réclamer la Victoire.",
+        "Les jours validés accumulent XP + dimensions de façon permanente. Les rechutes sont des marqueurs de calendrier — Sortir du Donjon est la seule façon de terminer la course en avance."
+      ]
+    },
+    "music_sensitization": {
+      "name": "Sensibilisation Sonore",
+      "description": "30 jours sans musique. Une réinitialisation sensorielle — laisse les oreilles redevenir silencieuses pour que le vent, la pluie, le chant des oiseaux et les vraies voix recommencent à paraître vivants.",
+      "rules": [
+        "Rechute = écouter intentionnellement des chansons (playlists, albums, concerts, musique de fond que tu as choisie).",
+        "Autorisé : podcasts, livres audio, bandes originales de films, sons de la nature et musique ambiante involontaire (magasins, cafés, enceintes des autres).",
+        "Confirme chaque jour dans le calendrier. Atteins 30 jours validés pour débloquer Réclamer la Victoire."
+      ]
+    },
+    "social_reclaim": {
+      "name": "Thérapie d'Exposition",
+      "description": "Gravis l'échelle sociale. Six barreaux, de la présence silencieuse à prendre la parole en groupe — désensibilise-toi par exposition graduelle, un barreau à la fois.",
+      "rules": [
+        "Chaque barreau a un objectif — logge une exposition chaque fois que tu fais l'action en vrai.",
+        "Termine le barreau actuel pour débloquer le suivant. Pas de saut.",
+        "Les barreaux progressent en rangs E → S. Donjon terminé quand le dernier barreau est complété."
+      ]
+    },
+    "nofap": {
+      "name": "NoFap",
+      "description": "Récupère ton énergie vitale. Strict : pas de porno, de masturbation, d'edging ni de gooning. Le sexe et l'orgasme avec un(e) partenaire sont OK — la règle vise l'usage solo compulsif, pas l'intimité.",
+      "rules": [
+        "Rechute = porno, masturbation, edging ou gooning (thirst traps, comptes bots, feeds sociaux sexualisés).",
+        "Autorisé : sexe et orgasme avec un(e) partenaire — ce donjon parle de compulsion, pas d'abstinence.",
+        "Coche chaque jour dans le calendrier — Validé ou Rechute. Les jours validés accumulent XP + dimensions de façon permanente. Les rechutes sont des marqueurs, pas des resets."
+      ]
+    },
+    "starter_body": {
+      "name": "Forge Quotidienne",
+      "description": "Le seuil quotidien du Chasseur du Corps. Trois exercices qui montent avec ton rang — un seul suffit pour valider la journée. Pompes, tractions, squats grandissent à mesure que ta série monte de E → S.",
+      "rules": [
+        "Complète 1 tâche par jour.",
+        "Coche chacune au fur et à mesure que tu la fais. Décoche pour retirer une entrée.",
+        "Le jour se réinitialise à minuit UTC. Rechute manuelle si tu décroches."
+      ]
+    },
+    "starter_mind": {
+      "name": "Aiguisage Quotidien",
+      "description": "Le seuil quotidien du Chasseur de l'Esprit. Quelques pages, une idée nouvelle, une seule phrase honnête. Un seul suffit pour valider la journée.",
+      "rules": [
+        "Complète 1 tâche par jour.",
+        "Coche chacune au fur et à mesure que tu la fais. Décoche pour retirer une entrée.",
+        "Le jour se réinitialise à minuit UTC. Rechute manuelle si tu décroches."
+      ]
+    },
+    "starter_emotion": {
+      "name": "Liens Quotidiens",
+      "description": "Le seuil quotidien du Chasseur de l'Émotion. Petites répétitions d'être vu, entendu, présent. Un seul suffit pour valider la journée.",
+      "rules": [
+        "Complète 1 tâche par jour.",
+        "Coche chacune au fur et à mesure que tu la fais. Décoche pour retirer une entrée.",
+        "Le jour se réinitialise à minuit UTC. Rechute manuelle si tu décroches."
+      ]
+    },
+    "starter_energy": {
+      "name": "Étincelle Quotidienne",
+      "description": "Le seuil quotidien du Chasseur de l'Énergie. Froid, mouvement, souffle — trois petits chocs pour réveiller le système nerveux. Un seul suffit pour valider la journée.",
+      "rules": [
+        "Complète 1 tâche par jour.",
+        "Coche chacune au fur et à mesure que tu la fais. Décoche pour retirer une entrée.",
+        "Le jour se réinitialise à minuit UTC. Rechute manuelle si tu décroches."
+      ]
+    },
+    "starter_spirit": {
+      "name": "Silence Quotidien",
+      "description": "Le seuil quotidien du Chasseur de l'Âme. Un souffle de silence, une phrase de gratitude, une envie refusée. Un seul suffit pour valider la journée.",
+      "rules": [
+        "Complète 1 tâche par jour.",
+        "Coche chacune au fur et à mesure que tu la fais. Décoche pour retirer une entrée.",
+        "Le jour se réinitialise à minuit UTC. Rechute manuelle si tu décroches."
+      ]
+    }
   },
   "hunterTypes": {
-    "body": { "label": "Chasseur du Corps", "tagline": "Forge la coque." },
-    "mind": { "label": "Chasseur de l'Esprit", "tagline": "Aiguise la lame." },
-    "emotion": { "label": "Chasseur de l'Émotion", "tagline": "Veille sur la flamme." },
-    "energy": { "label": "Chasseur de l'Énergie", "tagline": "Maîtrise l'étincelle." },
-    "spirit": { "label": "Chasseur de l'Âme", "tagline": "Touche le silence." }
+    "body": {
+      "label": "Chasseur du Corps",
+      "tagline": "Forge la coque.",
+      "description": "Entraîne la capacité physique. Pompes, tractions, squats — des échelles incrémentales qui montent jusqu'au rang S. La voie du fer et du souffle."
+    },
+    "mind": {
+      "label": "Chasseur de l'Esprit",
+      "tagline": "Aiguise la lame.",
+      "description": "Entraîne l'intellect. Lecture, étude, mémorisation — des échelles de concentration qui s'additionnent au fil des années. La voie de la clarté."
+    },
+    "emotion": {
+      "label": "Chasseur de l'Émotion",
+      "tagline": "Veille sur la flamme.",
+      "description": "Entraîne la profondeur relationnelle. Vulnérabilité, empathie, expression — répétitions quotidiennes d'être vu. La voie du cœur."
+    },
+    "energy": {
+      "label": "Chasseur de l'Énergie",
+      "tagline": "Maîtrise l'étincelle.",
+      "description": "Entraîne la vitalité. Exposition au froid, jeûne, cardio — des échelles qui réveillent le corps. La voie du système nerveux éveillé."
+    },
+    "spirit": {
+      "label": "Chasseur de l'Âme",
+      "tagline": "Touche le silence.",
+      "description": "Entraîne la transcendance. Méditation, silence, contemplation — des échelles qui approfondissent l'intérieur. La voie au-delà du soi."
+    }
   },
   "portals": {
     "header": "Registre des Portails",
@@ -78,5 +208,433 @@
     "active": "Active",
     "viewInStatus": "Voir dans la Fenêtre de Statut",
     "rules": "Règles d'Engagement"
+  },
+  "feed": {
+    "title": "Le Feed",
+    "subtitle": "Réflexions publiques des chasseurs à travers le système. Touche un nom pour voir son profil.",
+    "emptyTitle": "[ Pas encore de réflexions ]",
+    "emptyBody": "Quand les chasseurs rendent leurs entrées de journal publiques, elles apparaissent ici. Sois le premier — ouvre un donjon, écris une note, active public.",
+    "loadMore": "Charger plus",
+    "loading": "Chargement…",
+    "endOfFeed": "— Fin du feed —",
+    "addReaction": "Ajouter une réaction"
+  },
+  "journal": {
+    "title": "Journal",
+    "backToProfile": "← Retour au profil",
+    "empty": "Pas encore d'entrées. Quand tu rechutes, enregistres un café ou marques une exposition, on te demandera si tu veux écrire une note — passer ou enregistrer, à toi de voir.",
+    "summary": "{entries, plural, one {# entrée} other {# entrées}} · {days, plural, one {# jour} other {# jours}}",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "daysAgo": "il y a {count} jours",
+    "editTitle": "Modifier le journal — {dungeon}",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "deletePrompt": "Supprimer cette entrée ?",
+    "yes": "Oui",
+    "cancel": "Annuler",
+    "seeAll": "Voir les {count} entrées →",
+    "publicBadge": "◉ Publique"
+  },
+  "entryTypes": {
+    "relapse": "Rechute",
+    "completed": "Terminé",
+    "journal": "Journal"
+  },
+  "toasts": {
+    "achievementUnlocked": "[ Succès Débloqué ]",
+    "levelUp": "[ Niveau Supérieur ]",
+    "levelLabel": "Lv {level}",
+    "rankAscended": "[ Rang Ascensionné ]",
+    "tierAchieved": "Palier {flavor} atteint",
+    "tapToDismiss": "Touche pour fermer",
+    "ascension": "[ Ascension ]",
+    "rankReached": "Tu as atteint le Rang {rank}",
+    "shareAscension": "Partage ton ascension avec quelqu'un qui comprendra.",
+    "share": "Partager",
+    "sharing": "Partage…",
+    "later": "Plus tard",
+    "dismissShare": "Fermer l'invite de partage"
+  },
+  "friends": {
+    "title": "Amis",
+    "emptyBody": "Aucun chasseur connecté pour l'instant. Partage le lien de ton profil ou visite le profil d'un autre chasseur pour envoyer une demande.",
+    "requests": "Demandes d'ami · {count}",
+    "wantsToConnect": "Veut se connecter",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "rankPrefix": "Rang ",
+    "levelLabel": "Lv {level}",
+    "unfriend": "Retirer",
+    "cancel": "Annuler",
+    "isFriend": "✓ Amis",
+    "requestSent": "Demande Envoyée",
+    "addFriend": "+ Ajouter un Ami"
+  },
+  "installApp": {
+    "title": "Installer l'App",
+    "installed": "✓ Installée — fonctionne en mode standalone.",
+    "available": "Installation en un clic. Pas d'app store. Notifications push et mode hors-ligne marchent mieux quand installée.",
+    "iosInstructions": "Sur iPhone, touche l'icône <strong>Partager</strong>, puis <strong>Sur l'écran d'accueil</strong>. Nécessite iOS 16.4+.",
+    "unsupported": "Ouvre le menu de ton navigateur et cherche 'Installer l'app' ou 'Ajouter à l'écran d'accueil'.",
+    "install": "Installer",
+    "installing": "Installation…"
+  },
+  "notifications": {
+    "title": "Rappel Quotidien",
+    "unsupported": "Ce navigateur ne supporte pas les notifications push.",
+    "denied": "Les notifications sont bloquées. Réactive-les dans les paramètres du navigateur/OS.",
+    "description": "Reçois une notification quand le jour se réinitialise pour ne pas manquer tes quests.",
+    "notConfigured": "Notifications push non configurées.",
+    "couldNotEnable": "Impossible d'activer",
+    "couldNotDisable": "Impossible de désactiver"
+  },
+  "noteModal": {
+    "chrome": "[ Journal ]",
+    "defaultPlaceholder": "Que s'est-il passé ? (optionnel)",
+    "defaultConfirm": "Enregistrer",
+    "defaultSkip": "Passer",
+    "sharePublic": "Partager sur le profil public",
+    "editPlaceholder": "Modifie ta réflexion…",
+    "editCancel": "Annuler"
+  },
+  "dungeonRun": {
+    "daysCleared": "{count, plural, one {# jour validé} other {# jours validés}}",
+    "daysForged": "{count, plural, one {# jour forgé} other {# jours forgés}}",
+    "nextTier": "Palier suivant : {rank}",
+    "daysFraction": "{count} / {target} jours",
+    "dungeonMastered": "Donjon maîtrisé",
+    "dungeonClearedBanner": "★ Donjon Terminé ★",
+    "claimVictory": "Réclamer la Victoire",
+    "target": "Objectif : {count} jours",
+    "entered": "Entré : {date}",
+    "journalEntry": "+ Entrée de Journal",
+    "exitDungeon": "Quitter le Donjon",
+    "portalDormant": "Portail Dormant",
+    "today": "Aujourd'hui",
+    "thisWeek": "Cette Semaine",
+    "dayCleared": "✦ Jour validé ✦",
+    "weekCleared": "✦ Semaine validée ✦",
+    "ladderMastered": "★ Échelle Maîtrisée ★",
+    "ladderRetired": "Les {count} barreaux validés. Donjon retiré.",
+    "rungLabel": "Rang {rank} · Barreau {current} / {total}",
+    "progress": "Progression",
+    "progressFraction": "{count} / {target}",
+    "logExposure": "+ Logger Exposition",
+    "undo": "Annuler",
+    "ladder": "Échelle",
+    "lockedRung": "???",
+    "abandonLadder": "Abandonner l'Échelle — Reset",
+    "noRungs": "Aucun barreau configuré.",
+    "abandonModalTitle": "Abandonner l'échelle — {dungeon}",
+    "abandonPlaceholder": "Qu'est-ce qui a arrêté la montée ? (optionnel)",
+    "abandonConfirm": "Confirmer Abandon",
+    "logExposureTitle": "Logger exposition — {rung}",
+    "logExposurePlaceholder": "Qu'as-tu affronté ? Comment ça s'est passé ? (optionnel)",
+    "logExposureConfirm": "Logger Exposition",
+    "logExposureSkip": "Passer la Note",
+    "taskCleared": "Tâche Validée",
+    "dayClearedSource": "Jour Validé",
+    "tierBonusSource": "🏆 Rang {rank} · {dungeon}"
+  },
+  "checkIn": {
+    "didYouClearToday": "As-tu validé aujourd'hui ?",
+    "confirmDate": "Confirmer {date}",
+    "currentlyCleared": "{date} — actuellement validé",
+    "currentlyRelapsed": "{date} — {count, plural, one {# rechute} other {# rechutes}}",
+    "markCleared": "Marquer Validé",
+    "cleared": "Validé",
+    "relapsePlus": "Rechute +1",
+    "markRelapsed": "Marquer Rechute",
+    "relapsed": "Rechute",
+    "undo": "Annuler",
+    "cancel": "Annuler",
+    "relapseTitle": "Rechute — {dungeon}",
+    "relapsePlaceholder": "Qu'est-ce qui l'a déclenché ? Comment te sens-tu ? (optionnel)",
+    "relapseConfirm": "Logger Rechute",
+    "relapseSkip": "Annuler"
+  },
+  "calendar": {
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "current": "Actuel",
+    "longest": "Le plus long",
+    "daysShort": "{count}j",
+    "legendCleared": "Validé",
+    "legendTapToLog": "Toucher pour logger",
+    "legendRelapse": "Rechute"
+  },
+  "awakening": {
+    "intro": [
+      "[ NOTIFICATION ]",
+      "",
+      "Une quête spéciale est arrivée.",
+      "",
+      "Tu as été choisi",
+      "pour devenir un Joueur.",
+      "",
+      "Souhaites-tu accepter ?"
+    ],
+    "naming": [
+      "[ ENREGISTREMENT ]",
+      "",
+      "Le Système te reconnaît.",
+      "",
+      "Déclare le nom",
+      "sous lequel tu seras connu."
+    ],
+    "path": [
+      "[ CHOIX DE LA VOIE ]",
+      "",
+      "Chaque chasseur emprunte une voie.",
+      "",
+      "Choisis ce que tu veux",
+      "forger en premier."
+    ],
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "reconsider": "← Reconsidérer",
+    "standbyHeader": "[ EN ATTENTE ]",
+    "standbyMessage": "Le Système attendra.",
+    "standbySubtext": "La quête reste ouverte. Reviens quand tu seras prêt à t'éveiller.",
+    "namePlaceholder": "Saisir un nom",
+    "register": "S'inscrire",
+    "registering": "Inscription",
+    "registrationFailed": "Échec de l'inscription",
+    "pathFailed": "Échec du choix de voie",
+    "noPath": "Rien de particulier — décider plus tard"
+  },
+  "paywall": {
+    "gateLocked": "[ Porte Verrouillée ]",
+    "title": "Ascension vers Pro",
+    "intro": "Ta troisième porte est Pro. Deux donjons actifs, c'est le palier gratuit — au-delà, tu es en territoire de chasseur.",
+    "features": [
+      "Donjons actifs illimités",
+      "Assurance Série — une rechute pardonnée par mois",
+      "Cadre cosmétique VIP + badge",
+      "Packs de thème pour toute l'app",
+      "Analyse à vie — historique complet, export de données"
+    ],
+    "ascend": "Ascensionner",
+    "openingCheckout": "Ouverture du Checkout…",
+    "returnFree": "Retour au palier gratuit",
+    "closeLabel": "Fermer",
+    "notConfigured": "Le checkout n'est pas encore configuré.",
+    "checkoutFailed": "Impossible d'ouvrir le checkout. Réessaie dans un instant."
+  },
+  "ranksPage": {
+    "title": "Voie du Chasseur",
+    "subtitle": "Six rangs. Six versions de toi-même. Chacun gagné, pas acheté.",
+    "youAreHere": "Tu es ici",
+    "locked": "🔒 Verrouillé",
+    "levelsRange": "Niveaux {start}–{end} · {xp} XP pour atteindre",
+    "levelsRangeMax": "Niveaux {start}+ · {xp} XP pour atteindre",
+    "footer": "Lv {level} · {xp} XP gagnés"
+  },
+  "whatsNew": {
+    "header": "[ Journal de Mises à Jour ]",
+    "title": "Nouveautés",
+    "backToStatus": "← Retour au Statut",
+    "empty": "Aucune version enregistrée pour l'instant.",
+    "latest": "Dernière",
+    "kindFeature": "feature",
+    "kindFix": "fix",
+    "kindChange": "change"
+  },
+  "rankStyles": {
+    "E": {
+      "flavor": "Bronze",
+      "title": "L'Éveillé",
+      "description": "Tu es entré dans le Système. La voie commence. Le corps sommeille encore et l'esprit erre encore — mais tu t'es présenté, et c'est suffisant."
+    },
+    "D": {
+      "flavor": "Fer",
+      "title": "Le Discipliné",
+      "description": "La routine devient rituel. Les premières habitudes tiennent même quand personne ne regarde — même quand toi-même tu n'en veux pas. Le chasseur prend forme."
+    },
+    "C": {
+      "flavor": "Argent",
+      "title": "Le Cultivé",
+      "description": "Ce qui était effort devient défaut. Le corps et l'esprit se composent l'un sur l'autre. Tu ne luttes plus pour te lever tôt — tu te réveilles. Le Système te reconnaît."
+    },
+    "B": {
+      "flavor": "Or",
+      "title": "Le Lié",
+      "description": "Soi a rencontré soi. Les ombres qui menaient le jeu te répondent maintenant. Le chasseur tient un territoire dans le monde intérieur. Peu vont aussi loin."
+    },
+    "A": {
+      "flavor": "Platine",
+      "title": "L'Ascendant",
+      "description": "Au-delà de ce que la plupart connaissent d'eux-mêmes. Les cinq dimensions se meuvent à l'unisson. Tu es la version de toi que les inconnus sentent avant que tu parles."
+    },
+    "S": {
+      "flavor": "Holo",
+      "title": "Le Souverain",
+      "description": "Le Système se plie à toi. Il ne reste rien à combattre, seulement la pratique continue. Chasseur et voie sont la même chose. Tu marches dans ta propre lumière."
+    }
+  },
+  "rarityLabels": {
+    "common": "Commun",
+    "rare": "Rare",
+    "epic": "Épique",
+    "legendary": "Légendaire"
+  },
+  "rungs": {
+    "presence": {
+      "name": "Présence",
+      "description": "Tiens un contact visuel et souris à 3 inconnus lors d'une sortie. Aucun mot nécessaire."
+    },
+    "acknowledge": {
+      "name": "Saluer",
+      "description": "Salue 3 inconnus à voix haute — 'salut', 'bonjour', 'hé'. La voix brise le silence."
+    },
+    "request": {
+      "name": "Demander",
+      "description": "Pose à un inconnu une petite question à faible enjeu — l'heure, une indication, une recommandation."
+    },
+    "small-talk": {
+      "name": "Bavardage",
+      "description": "Échange une brève remarque avec un caissier, un barista ou un voisin de siège. Une observation, un compliment, une note sur l'instant."
+    },
+    "engage": {
+      "name": "Engager",
+      "description": "Tiens une conversation de 1–2 minutes avec un inconnu. Pose une question de suivi. Trouve le fil."
+    },
+    "expose": {
+      "name": "S'Exposer",
+      "description": "Partage une opinion, une histoire ou une blague en groupe — réunion, cours, fête. Être vu et entendu."
+    }
+  },
+  "achievements": {
+    "dungeonRankName": "{dungeon} : Rang {rank}",
+    "dungeonRankDescription": "Atteins {days} jours dans {dungeon}.",
+    "dungeonRungName": "{dungeon} : {rung}",
+    "dungeonRungDescription": "Termine le barreau {rung} dans {dungeon} ({target} expositions).",
+    "dungeonClearedName": "{dungeon} : Validé",
+    "dungeonClearedDescription": "Complète la course complète de {target} jours de {dungeon}.",
+    "comboName": "Combo de {days} jours",
+    "comboDescription": "Le combo de quêtes quotidiennes a atteint {days} jours. +{xp} XP",
+    "static": {
+      "awakened": { "name": "Éveillé", "description": "Accepte l'appel. Entre dans ton premier donjon." },
+      "first-streak": { "name": "Premier Sang", "description": "Survis à ton premier jour dans un donjon." },
+      "first-quest": { "name": "Quête Acceptée", "description": "Termine ta première quête quotidienne." },
+      "first-workout": { "name": "Première Rep", "description": "Logge une séance dans Gym Life." },
+      "first-exposure": { "name": "Présence Silencieuse", "description": "Logge ta première exposition sur l'échelle de thérapie." },
+      "rank-e": { "name": "Rang E Validé", "description": "Tiens une série de 7 jours dans un donjon." },
+      "rank-d": { "name": "Rang D Validé", "description": "Atteins 14 jours dans un donjon." },
+      "rank-c": { "name": "Rang C Validé", "description": "Atteins 30 jours dans un donjon." },
+      "rank-b": { "name": "Rang B Validé", "description": "Atteins 60 jours dans un donjon." },
+      "rank-a": { "name": "Rang A Validé", "description": "Atteins 90 jours dans un donjon." },
+      "rank-s": { "name": "Rang S Ascendant", "description": "Atteins 180 jours dans un donjon." },
+      "multi-classed": { "name": "Multi-Classe", "description": "Sois actif dans 3 donjons à la fois." },
+      "polymath": { "name": "Polymathe", "description": "Sois actif dans les 5 donjons simultanément." },
+      "perfect-day": { "name": "Journée Parfaite", "description": "Termine toutes les quêtes quotidiennes en une journée." },
+      "grinder": { "name": "Le Grinder", "description": "50 quêtes terminées au total." },
+      "grind-lord": { "name": "Grind Lord", "description": "250 quêtes terminées au total." },
+      "iron-will": { "name": "Volonté de Fer", "description": "Termine 10 séances." },
+      "forged": { "name": "Forgé", "description": "100 séances loggées." },
+      "ladder-climber": { "name": "Grimpeur d'Échelle", "description": "Termine 3 barreaux de l'échelle d'exposition." },
+      "fearless": { "name": "Intrépide", "description": "Termine toute l'échelle d'exposition." },
+      "dungeon-master": { "name": "Maître du Donjon", "description": "Termine et retire un donjon avec succès." },
+      "conqueror": { "name": "Conquérant", "description": "Termine 3 donjons jusqu'au bout." },
+      "level-5": { "name": "Chasseur Novice", "description": "Atteins le niveau 5." },
+      "level-10": { "name": "Adepte", "description": "Atteins le niveau 10." },
+      "level-25": { "name": "Vétéran", "description": "Atteins le niveau 25." },
+      "level-50": { "name": "Monarque des Ombres", "description": "Atteins le niveau 50." }
+    }
+  },
+  "guide": {
+    "header": "[ Le Manuel du Système ]",
+    "title": "Guide du Chasseur",
+    "subtitle": "Le Système ne cache pas ses règles. Lis-les. Entre dans un donjon. Commence.",
+    "section1Title": "1. Comment s'éveiller",
+    "section1P1": "Le premier contact avec le Système est bref. Tu te connectes. Le Système t'accueille comme un chasseur. Tu acceptes la porte. Un ID de chasseur est attribué et ton Registre des Portails se débloque.",
+    "section1P2": "À partir de là, sept donjons sont ouverts. Choisis-en un que tu combattrais même sans tableau d'affichage. Le tableau n'est là que pour te rappeler que tu l'as fait.",
+    "section2Title": "2. Les cinq types de règle",
+    "section2Intro": "Chaque donjon fonctionne selon l'un des cinq types de règle. Lis ceci une fois et le reste du Système devient simple.",
+    "ruleLabels": {
+      "continuous_streak": "Série Continue",
+      "cadence": "Cadence",
+      "timed": "Course Chronométrée",
+      "progressive": "Échelle Progressive"
+    },
+    "ruleSummaries": {
+      "continuous_streak": "Un check-in quotidien. Confirme chaque jour comme validé ou rechute dans le calendrier. Les jours validés accumulent XP + dimensions de façon permanente.",
+      "cadence": "Un schéma de checklist. Coche des cases dans une fenêtre — quotidienne pour les starters Hunter-Type (un seul suffit), hebdomadaire pour le Régime d'Entraînement (5 sur 5).",
+      "timed": "Un check-in quotidien vers un objectif de N jours. Même mécanique de calendrier que les donjons de série. Réclame la Victoire à la cible pour terminer la course.",
+      "progressive": "Une échelle ascendante. Termine un barreau pour débloquer le suivant. Pas de saut."
+    },
+    "ruleUsedBy": {
+      "continuous_streak": "NoFap · Réinitialisation Caféine · Défi Diète",
+      "cadence": "Régime d'Entraînement · Forge Quotidienne · Aiguisage Quotidien · Liens Quotidiens · Étincelle Quotidienne · Silence Quotidien",
+      "timed": "Anti-Doomscroll · Sensibilisation Sonore",
+      "progressive": "Thérapie d'Exposition"
+    },
+    "section3Title": "3. Les sept portails",
+    "section3Intro": "Chaque portail est une discipline spécifique avec ses règles propres et les dimensions qu'il entraîne.",
+    "section4Title": "4. Rangs de chasseur",
+    "section4Intro": "Six rangs. Chacun contient 10 niveaux. Soixante niveaux au total jusqu'à Monarque des Ombres. L'XP requise par niveau suit une courbe en puissance 1,5 — plus tu montes, plus chaque niveau arrive lentement.",
+    "rankLevels": "Lv {start}–{end}",
+    "xpDropsIntro": "L'XP tombe de quatre endroits :",
+    "xpStreakDay": "à chaque journée validée enregistrée dans un donjon de série/chronométré — plus les points de dimension de ce donjon",
+    "xpWorkout": "par séance loggée dans Régime d'Entraînement",
+    "xpExposure": "par exposition loggée dans Thérapie d'Exposition",
+    "xpCompletion": "quand tu réclames la Victoire dans un donjon chronométré",
+    "section5Title": "5. Les cinq dimensions",
+    "section5Intro": "La progression est suivie sur cinq dimensions, pas une seule barre d'XP. Chaque donjon entraîne un sous-ensemble spécifique. Ton profil affiche un graphique radar — les chasseurs équilibrés voient un pentagone ; les spécialisés voient une pointe.",
+    "dimensions": {
+      "body": {
+        "name": "CORPS",
+        "description": "Force physique et vitalité. Gagnée avec l'entraînement et la discipline alimentaire."
+      },
+      "mind": {
+        "name": "ESPRIT",
+        "description": "Clarté, concentration, attention. Gagnée en récupérant ton attention et tes sens."
+      },
+      "emotion": {
+        "name": "ÉMOTION",
+        "description": "Courage social et régulation émotionnelle. Gagnée par l'exposition et l'intimité retrouvée."
+      },
+      "energy": {
+        "name": "ÉNERGIE",
+        "description": "Vitalité brute et endurance. Gagnée par le contrôle des stimulants, le régime et la résistance à la compulsion."
+      },
+      "spirit": {
+        "name": "ÂME",
+        "description": "Profondeur, présence, silence intérieur. Gagnée par la réinitialisation sensorielle et la discipline soutenue."
+      }
+    },
+    "section6Title": "6. Quêtes quotidiennes & système de combo",
+    "section6P1": "Chaque jour, le Système propose un ensemble tournant de petites quêtes — chacune liée à une dimension. Termine-les pour gagner des points de dimension et de l'XP.",
+    "section6P2": "Termine <b>{threshold}</b> quêtes ou plus en une journée et ce jour qualifie pour ton combo. Des jours qualifiants consécutifs construisent une série de combo. À chaque palier, l'XP bonus tombe en toast sur ta Fenêtre de Statut :",
+    "section6Footnote": "Un jour à 1 ou 2 quêtes est un jour de grâce — tu ne construis pas, mais tu ne casses pas non plus. Seul un échec total réinitialise le combo.",
+    "section7Title": "7. Le debuff Dispersé",
+    "section7P1": "Termine zéro quête en un jour et demain tu te réveilleras <scattered>⚠ Dispersé</scattered> — une marque visible sur ta Carte de Chasseur.",
+    "section7P2": "Dispersé n'est pas une punition. Ça ne coûte pas d'XP. Ça ne révèle rien aux autres chasseurs. C'est un miroir. Tu étais absent, et le Système te montre ce fait jusqu'à ton retour.",
+    "section7P3": "Ça disparaît à l'instant où tu termines ta première quête du nouveau jour.",
+    "section8Title": "8. La couche sociale",
+    "section8Intro": "D'autres chasseurs existent. Le Système permet à vos chemins de se croiser.",
+    "section8PublicProfileLabel": "Profil public.",
+    "section8PublicProfileBody": "Chaque chasseur a un profil en lecture seule à <code>/h/&lt;id&gt;</code> — rang, niveau, donjons actifs, dimensions, trophées. Les autres chasseurs connectés avec ton lien peuvent le voir (pas exposé au web ouvert). Trouve ton lien de partage sur ta page <profileLink>/profile</profileLink>.",
+    "section8FriendsLabel": "Amis.",
+    "section8FriendsBody": "Visite le profil d'un autre chasseur et touche <addFriend>+ Ajouter un Ami</addFriend>. Il recevra une notification, acceptera, et vous apparaîtrez tous les deux sur la liste d'amis de l'autre. L'amitié est la base — chasses de groupe et classements se construisent dessus plus tard.",
+    "section8JournalLabel": "Entrées de journal.",
+    "section8JournalBody": "Quand tu rechutes, logges un café, termines une course ou veux juste écrire — un petit modal de note te laisse enregistrer une réflexion. Par défaut c'est privé (toi seul la vois sur ton profil). Coche <code>Partager sur le profil public</code> pour faire apparaître cette entrée sur ton profil public sous Réflexions.",
+    "section9Title": "9. Portée et fiabilité",
+    "section9DailyLabel": "Rappels quotidiens.",
+    "section9DailyBody": "Activés par défaut. La première fois que tu te connectes, ton navigateur demande une fois la permission de notification — dis oui et tu es inscrit. Le Système envoie un push matinal si ta journée d'hier est restée vide et un push du soir si ta journée s'enfuit. Le message s'adapte à l'état.",
+    "section9DailyNote": "Pour désactiver les rappels, désactive-les sur ton profil ou bloque les notifications de l'app au niveau OS (Réglages iOS → Notifications, infos de l'app Android, paramètres du site dans le navigateur en desktop).",
+    "section9InstallLabel": "Installer l'app.",
+    "section9InstallIntro": "Les pushes ne fonctionnent que si l'app est installée. Le flux diffère par plateforme :",
+    "section9InstallIos": "<b>iPhone / iPad :</b> ouvre le site dans Safari → <code>Partager → Sur l'écran d'accueil</code>. Nécessite iOS 16.4+. Les pushes ne se déclenchent pas depuis un onglet Safari normal.",
+    "section9InstallAndroid": "<b>Android :</b> ouvre dans Chrome → touche la bannière d'installation qui apparaît, ou utilise le menu ⋮ de Chrome → <code>Installer l'app</code>. Les pushes fonctionnent dans les deux cas une fois installée.",
+    "section9InstallDesktop": "<b>Desktop (Chrome, Edge, Brave) :</b> cherche l'icône d'installation dans la barre d'adresse, ou utilise le menu du navigateur → <code>Installer Shivaliva Leveling</code>. L'app s'ouvre alors dans sa propre fenêtre.",
+    "section9OfflineLabel": "Hors ligne.",
+    "section9OfflineBody": "L'app fonctionne sans connexion. Dans un avion, dans le métro, en zone de mauvais signal — termine des quêtes, logge des rechutes, écris des entrées de journal. Tout est mis en file localement et envoyé au serveur dès que tu te reconnectes. Une bannière ambre indique quand tu es hors ligne et combien d'actions attendent la synchronisation.",
+    "section10Title": "10. Actuellement gratuit",
+    "section10P1": "Toutes les fonctions sont actuellement gratuites — chaque donjon, chaque succès, quêtes quotidiennes, dimensions, la heatmap, amis, journal, push, courses actives illimitées.",
+    "section10P2": "Si des paliers payants existent un jour, la chasse de soi reste gratuite. La compétition avec soi-même ne devrait pas avoir de paywall. Les chasseurs précoces s'en souviennent.",
+    "ctaText": "La quête reste ouverte.",
+    "ctaButton": "Entrer dans le Registre des Portails →"
   }
 }

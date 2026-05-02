@@ -136,6 +136,31 @@ export function getRankStyle(rank: string): RankStyle {
 }
 
 /**
+ * Resolve localized flavor / title / description for a rank. Falls back
+ * to the English defaults baked into RANK_STYLES if the translation
+ * key is missing.
+ */
+export function resolveRankLabels(
+  rank: string,
+  tRankStyles: (key: string) => string
+): { flavor: string; title: string; description: string } {
+  const fallback = getRankStyle(rank);
+  try {
+    return {
+      flavor: tRankStyles(`${rank}.flavor`),
+      title: tRankStyles(`${rank}.title`),
+      description: tRankStyles(`${rank}.description`),
+    };
+  } catch {
+    return {
+      flavor: fallback.flavor,
+      title: fallback.title,
+      description: fallback.description,
+    };
+  }
+}
+
+/**
  * Convenience: combined "badge"-shaped class string for a small chip
  * containing a rank letter. Compose with surrounding layout classes.
  */

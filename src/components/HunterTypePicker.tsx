@@ -92,7 +92,7 @@ export default function HunterTypePicker() {
                   active ? "" : "text-slate-500"
                 }`}
               >
-                {def.description}
+                {tHunterTypes(`${def.id}.description`)}
               </p>
             </button>
           );

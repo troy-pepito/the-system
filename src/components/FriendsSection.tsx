@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   acceptFriend,
   declineFriend,
@@ -12,6 +13,7 @@ import {
 import { getRankStyle } from "@/lib/rankStyle";
 
 export default function FriendsSection() {
+  const t = useTranslations("friends");
   const [friends, setFriends] = useState<FriendCard[] | null>(null);
   const [pending, setPending] = useState<PendingRequest[] | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -57,11 +59,10 @@ export default function FriendsSection() {
     return (
       <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
         <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-2">
-          Friends
+          {t("title")}
         </p>
         <p className="text-xs text-slate-500 leading-relaxed">
-          No hunters connected yet. Share your profile link or visit another
-          hunter's profile to send a request.
+          {t("emptyBody")}
         </p>
       </div>
     );
@@ -72,7 +73,7 @@ export default function FriendsSection() {
       {hasPending && (
         <div className="bg-slate-900/60 border border-amber-500/30 rounded-xl p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-amber-400/80 mb-4">
-            Friend Requests · {pending!.length}
+            {t("requests", { count: pending!.length })}
           </p>
           <ul className="space-y-3">
             {pending!.map((req) => (
@@ -99,7 +100,7 @@ export default function FriendsSection() {
                     {req.hunterName}
                   </p>
                   <p className="text-[9px] text-slate-500 tracking-widest uppercase">
-                    Wants to connect
+                    {t("wantsToConnect")}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -109,7 +110,7 @@ export default function FriendsSection() {
                     disabled={busyId === req.requesterId}
                     className="px-3 py-1.5 border border-cyan-400/60 bg-cyan-500/20 text-cyan-200 text-[10px] uppercase tracking-[0.25em] rounded hover:bg-cyan-500/30 transition-colors disabled:opacity-50"
                   >
-                    Accept
+                    {t("accept")}
                   </button>
                   <button
                     type="button"
@@ -117,7 +118,7 @@ export default function FriendsSection() {
                     disabled={busyId === req.requesterId}
                     className="px-3 py-1.5 border border-slate-700 text-slate-400 text-[10px] uppercase tracking-[0.25em] rounded hover:bg-slate-800/60 transition-colors disabled:opacity-50"
                   >
-                    Decline
+                    {t("decline")}
                   </button>
                 </div>
               </li>
@@ -130,7 +131,7 @@ export default function FriendsSection() {
         <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
-              Friends
+              {t("title")}
             </p>
             <p className="text-[10px] text-slate-500 tracking-wider">
               {friends!.length}
@@ -162,7 +163,7 @@ export default function FriendsSection() {
                       {f.hunterName}
                     </p>
                     <p className="text-[10px] text-slate-500 tracking-widest uppercase">
-                      <span>Rank </span>
+                      <span>{t("rankPrefix")}</span>
                       <span
                         className={`font-bold ${getRankStyle(f.rank).text} ${
                           getRankStyle(f.rank).textClass
@@ -171,7 +172,9 @@ export default function FriendsSection() {
                         {f.rank}
                       </span>
                       <span className="text-slate-700"> · </span>
-                      <span className="text-emerald-400">Lv {f.level}</span>
+                      <span className="text-emerald-400">
+                        {t("levelLabel", { level: f.level })}
+                      </span>
                     </p>
                   </div>
                 </Link>
