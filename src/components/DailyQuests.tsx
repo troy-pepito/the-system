@@ -7,6 +7,7 @@ import {
   todayLocalISO,
   COMBO_THRESHOLD,
   COMBO_MILESTONES,
+  PERFECT_DAY_BONUS_XP,
   type QuestRewards,
 } from "@/lib/quests";
 import {
@@ -111,6 +112,32 @@ export default function DailyQuests({
         spirit: quest.spirit,
         sourceKey: `dailyQuests.${questKey(quest.id)}`,
       });
+
+      // Perfect-day bonus: this completion is the one that brings the
+      // total to exactly QUESTS.length (every quest done in a single
+      // day). Independent from the combo block below — combo rewards
+      // continuity across days, this rewards completeness on one day.
+      const oldFull = completed.length === QUESTS.length;
+      const newFull = nextCompleted.length === QUESTS.length;
+      if (!oldFull && newFull) {
+        const celebKey = `perfect-day-bonus:${date}`;
+        if (
+          typeof window !== "undefined" &&
+          !localStorage.getItem(celebKey)
+        ) {
+          try {
+            localStorage.setItem(celebKey, "1");
+          } catch {}
+          track("perfect_day_bonus", { date, xp: PERFECT_DAY_BONUS_XP });
+          setTimeout(() => {
+            notifyReward({
+              xp: PERFECT_DAY_BONUS_XP,
+              sourceKey: "gainSources.perfectDay",
+            });
+            notifyStatsUpdated({ xpDelta: PERFECT_DAY_BONUS_XP });
+          }, 700);
+        }
+      }
 
       // Combo-milestone celebration: when this completion is the one
       // that pushes today over the COMBO_THRESHOLD AND the resulting

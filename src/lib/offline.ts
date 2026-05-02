@@ -27,7 +27,10 @@ function wipeUserScopedStorage(): void {
         k === "system:changelog-seen" ||
         k === "system:reminder-auto-asked" ||
         k === "radar:last-snapshot" ||
-        k.startsWith("tier-celebrated:")
+        k.startsWith("tier-celebrated:") ||
+        k.startsWith("perfect-day-bonus:") ||
+        k.startsWith("cadence-full-clear:") ||
+        k.startsWith("combo-celebrated:")
       ) {
         keysToRemove.push(k);
       }

@@ -29,7 +29,9 @@ export type AnalyticsEvent =
   | "quest_completed"
   | "relapse"
   | "day_confirmed_cleared"
-  | "day_confirmed_relapsed";
+  | "day_confirmed_relapsed"
+  | "perfect_day_bonus"
+  | "cadence_full_clear_bonus";
 
 export function track(
   event: AnalyticsEvent,

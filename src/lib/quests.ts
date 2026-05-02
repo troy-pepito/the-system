@@ -27,6 +27,12 @@ export const ZERO_REWARDS: QuestRewards = {
   spirit: 0,
 };
 
+/** Bonus XP for completing every daily quest in a single day. Fires
+ *  once per date — independent from the combo milestone bonuses,
+ *  which reward day-on-day continuity rather than single-day
+ *  completeness. */
+export const PERFECT_DAY_BONUS_XP = 30;
+
 export const QUESTS: Quest[] = [
   { id: "cold-shower", name: "Cold Shower", xp: 10, body: 1, energy: 1, spirit: 1 },
   { id: "supplements", name: "Take Supplements", xp: 10, body: 1, energy: 2 },

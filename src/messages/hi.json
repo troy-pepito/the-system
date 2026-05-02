@@ -100,7 +100,9 @@
   "gainSources": {
     "taskCleared": "{dungeon} · कार्य पूर्ण",
     "dayCleared": "{dungeon} · दिन पूर्ण",
-    "victory": "{dungeon} · विजय"
+    "victory": "{dungeon} · विजय",
+    "perfectDay": "🌟 परफेक्ट दिन",
+    "fullClear": "✦ {dungeon} · पूर्ण सफाया"
   },
   "dungeons": {
     "caffeine": {

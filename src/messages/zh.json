@@ -100,7 +100,9 @@
   "gainSources": {
     "taskCleared": "{dungeon} · 任务完成",
     "dayCleared": "{dungeon} · 当日通过",
-    "victory": "{dungeon} · 胜利"
+    "victory": "{dungeon} · 胜利",
+    "perfectDay": "🌟 完美一天",
+    "fullClear": "✦ {dungeon} · 全部通关"
   },
   "dungeons": {
     "caffeine": {

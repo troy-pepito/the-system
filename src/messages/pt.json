@@ -100,7 +100,9 @@
   "gainSources": {
     "taskCleared": "{dungeon} · Tarefa Cumprida",
     "dayCleared": "{dungeon} · Dia Cumprido",
-    "victory": "{dungeon} · Vitória"
+    "victory": "{dungeon} · Vitória",
+    "perfectDay": "🌟 Dia Perfeito",
+    "fullClear": "✦ {dungeon} · Limpeza Total"
   },
   "dungeons": {
     "caffeine": {

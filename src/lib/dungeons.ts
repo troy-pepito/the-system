@@ -97,6 +97,13 @@ export const TIER_BONUS_XP = [100, 200, 400, 800, 1600, 3200];
 // at S rank — this is the system's hard ceiling on per-action XP.
 export const TIER_PER_ACTION_BONUS = [5, 10, 15, 20, 25, 30];
 
+/** Bonus XP awarded when a cadence dungeon's window is fully cleared
+ *  (every workout in the list, not just enough to hit the cadence
+ *  target). Fires once per (dungeonId, windowStart). For Training
+ *  Regimen this rewards the 5/5 week. For starter dungeons (target=1,
+ *  3 tasks) it rewards the rare day where all three get done. */
+export const CADENCE_FULL_CLEAR_BONUS_XP = 20;
+
 export const DIM_ORDER = ["body", "mind", "emotion", "energy", "spirit"] as const;
 export type DimKey = (typeof DIM_ORDER)[number];
 

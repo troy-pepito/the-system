@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { getDungeon } from "@/lib/dungeons";
+import { CADENCE_FULL_CLEAR_BONUS_XP, getDungeon } from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
+import { todayLocalISO } from "@/lib/quests";
+import { track } from "@/lib/analytics";
 import {
   computeStreakDays,
   notifyStatsUpdated,
@@ -31,6 +33,18 @@ import {
 import { useTierCrossingCelebration } from "@/lib/tierCelebration";
 import { getRankStyle } from "@/lib/rankStyle";
 import NoteModal from "@/components/NoteModal";
+
+/** De-dup key for the full-clear bonus. Daily windows fire once per
+ *  date; weekly windows fire once per ISO Monday. */
+function cadenceWindowKey(window: "day" | "week"): string {
+  const today = todayLocalISO();
+  if (window === "day") return today;
+  const d = new Date(`${today}T00:00:00Z`);
+  const dow = d.getUTCDay();
+  const daysSinceMonday = (dow + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - daysSinceMonday);
+  return d.toISOString().split("T")[0];
+}
 
 interface CadenceDungeonCardProps {
   dungeonId: string;
@@ -103,9 +117,10 @@ export default function CadenceDungeonCard({
     const wasDone = completed.includes(workoutId);
     const isNowDone = !wasDone;
 
-    setCompleted(
-      isNowDone ? [...completed, workoutId] : completed.filter((id) => id !== workoutId)
-    );
+    const nextCompleted = isNowDone
+      ? [...completed, workoutId]
+      : completed.filter((id) => id !== workoutId);
+    setCompleted(nextCompleted);
     setWorkoutInCache(dungeonId, workoutId, isNowDone);
     const xpDelta = (isNowDone ? 1 : -1) * XP_PER_WORKOUT;
     notifyStatsUpdated({ xpDelta });
@@ -121,6 +136,39 @@ export default function CadenceDungeonCard({
         sourceKey: "gainSources.taskCleared",
         sourceValues: { dungeonId },
       });
+
+      // Full-clear bonus: every workout in the window's list ticked.
+      // For Training Regimen this is 5/5; for the daily-window starters
+      // (target=1, 3 tasks each) it rewards the rare day all three get
+      // done. Once per (dungeonId, windowStart).
+      const isAllClear =
+        WORKOUTS.length > 0 && nextCompleted.length === WORKOUTS.length;
+      const wasAllClear =
+        WORKOUTS.length > 0 && completed.length === WORKOUTS.length;
+      if (!wasAllClear && isAllClear) {
+        const windowStart = cadenceWindowKey(cadence?.window ?? "day");
+        const celebKey = `cadence-full-clear:${dungeonId}:${windowStart}`;
+        if (
+          typeof window !== "undefined" &&
+          !localStorage.getItem(celebKey)
+        ) {
+          try {
+            localStorage.setItem(celebKey, "1");
+          } catch {}
+          track("cadence_full_clear_bonus", {
+            dungeon_id: dungeonId,
+            xp: CADENCE_FULL_CLEAR_BONUS_XP,
+          });
+          setTimeout(() => {
+            notifyReward({
+              xp: CADENCE_FULL_CLEAR_BONUS_XP,
+              sourceKey: "gainSources.fullClear",
+              sourceValues: { dungeonId },
+            });
+            notifyStatsUpdated({ xpDelta: CADENCE_FULL_CLEAR_BONUS_XP });
+          }, 700);
+        }
+      }
     }
 
     beginMutation();
