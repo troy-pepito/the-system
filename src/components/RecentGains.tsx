@@ -68,7 +68,11 @@ export default function RecentGains() {
                 type="button"
                 onClick={() => toggle(key)}
                 aria-expanded={isOpen}
-                className="w-full flex items-start justify-between gap-3 text-xs border border-slate-800/60 bg-slate-950/40 rounded px-3 py-2 text-left hover:border-cyan-500/40 hover:bg-slate-900/40 transition-colors"
+                className={`w-full flex gap-3 text-xs border border-slate-800/60 bg-slate-950/40 rounded px-3 py-2 text-left hover:border-cyan-500/40 hover:bg-slate-900/40 transition-colors ${
+                  isOpen
+                    ? "flex-col items-stretch"
+                    : "items-start justify-between"
+                }`}
               >
                 <div className="flex-1 min-w-0">
                   <p
@@ -82,7 +86,11 @@ export default function RecentGains() {
                     {relativeTime(g.ts, t)}
                   </p>
                 </div>
-                <div className="flex items-center gap-1.5 flex-wrap justify-end shrink-0">
+                <div
+                  className={`flex items-center gap-1.5 flex-wrap ${
+                    isOpen ? "justify-start" : "justify-end shrink-0"
+                  }`}
+                >
                   {typeof g.xp === "number" && g.xp !== 0 && (
                     <span className="text-cyan-300 font-mono drop-shadow-[0_0_6px_rgba(34,211,238,0.4)]">
                       {g.xp > 0 ? "+" : ""}
