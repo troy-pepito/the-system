@@ -1,5 +1,7 @@
 "use client";
 import { useSyncExternalStore } from "react";
+import { QUESTS } from "@/lib/quests";
+import { DUNGEONS } from "@/lib/dungeons";
 
 export interface GainEntry {
   ts: number;
@@ -30,23 +32,110 @@ export interface GainEntry {
 }
 
 /**
- * Resolve the source label for a gain entry. Falls back to the legacy
- * `source` field for entries written before the i18n refactor.
+ * Recover a translatable key/values pair from a pre-i18n source string.
+ * Recognized patterns:
+ *   - Exact daily-quest names ("Cold Shower", "Walk / Run (10+ min)", …)
+ *   - "{dungeonName} · Day Cleared" / "Task Cleared" / "Victory"
+ *   - "🏆 Rank {X} · {dungeonName}" tier bonus
+ *   - "🔥 {N}-Day Combo" milestone
+ * Returns null for anything we don't recognize — caller falls back to
+ * displaying the legacy string verbatim.
+ */
+function migrateLegacySource(
+  source: string
+): { key: string; values?: Record<string, string | number> } | null {
+  // 1. Exact daily-quest name match.
+  const quest = QUESTS.find((q) => q.name === source);
+  if (quest) {
+    return { key: `dailyQuests.quest_${quest.id.replace(/-/g, "_")}` };
+  }
+
+  // 2. "🔥 {N}-Day Combo" milestone source.
+  const comboMatch = source.match(/^🔥 (\d+)-Day Combo$/);
+  if (comboMatch) {
+    return {
+      key: "dailyQuests.comboSource",
+      values: { days: parseInt(comboMatch[1], 10) },
+    };
+  }
+
+  // 3. "{prefix} · {suffix}" — covers tier bonuses and the three
+  //    dungeon-event sources (Day Cleared / Task Cleared / Victory).
+  const dotMatch = source.match(/^(.+?) · (.+)$/);
+  if (dotMatch) {
+    const [, prefix, suffix] = dotMatch;
+
+    // Tier bonus: "🏆 Rank E · NoFap"
+    const tierMatch = prefix.match(/^🏆 Rank (.+)$/);
+    if (tierMatch) {
+      const dungeon = DUNGEONS.find((d) => d.name === suffix);
+      if (dungeon) {
+        return {
+          key: "dungeonRun.tierBonusSource",
+          values: { rank: tierMatch[1], dungeonId: dungeon.id },
+        };
+      }
+    }
+
+    // Dungeon event: "{name} · Day Cleared" etc.
+    const dungeon = DUNGEONS.find((d) => d.name === prefix);
+    if (dungeon) {
+      if (suffix === "Day Cleared") {
+        return {
+          key: "gainSources.dayCleared",
+          values: { dungeonId: dungeon.id },
+        };
+      }
+      if (suffix === "Task Cleared") {
+        return {
+          key: "gainSources.taskCleared",
+          values: { dungeonId: dungeon.id },
+        };
+      }
+      if (suffix === "Victory") {
+        return {
+          key: "gainSources.victory",
+          values: { dungeonId: dungeon.id },
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Resolve the source label for a gain entry. Modern entries carry a
+ * `sourceKey` + `sourceValues`. Pre-i18n entries with only a frozen
+ * `source` string get pattern-matched back into a key/values pair so
+ * they translate too — anything unmatched falls through to the legacy
+ * string as a last resort.
  */
 export function resolveGainSource(
   entry: GainEntry,
   translate: (key: string, values?: Record<string, string | number>) => string,
   resolveDungeonName: (dungeonId: string) => string
 ): string {
-  if (entry.sourceKey) {
+  let sourceKey = entry.sourceKey;
+  let sourceValues = entry.sourceValues;
+
+  if (!sourceKey && entry.source) {
+    const migrated = migrateLegacySource(entry.source);
+    if (migrated) {
+      sourceKey = migrated.key;
+      sourceValues = migrated.values;
+    }
+  }
+
+  if (sourceKey) {
     const values: Record<string, string | number> = {
-      ...(entry.sourceValues ?? {}),
+      ...(sourceValues ?? {}),
     };
     if (typeof values.dungeonId === "string") {
       values.dungeon = resolveDungeonName(values.dungeonId);
     }
     try {
-      return translate(entry.sourceKey, values);
+      return translate(sourceKey, values);
     } catch {
       return entry.source ?? "";
     }
