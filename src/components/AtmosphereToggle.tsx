@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   ATMOSPHERE_EVENT,
   getAtmosphereEnabled,
@@ -7,6 +8,7 @@ import {
 } from "@/lib/preferences";
 
 export default function AtmosphereToggle() {
+  const t = useTranslations("settings");
   const [enabled, setEnabled] = useState(true);
 
   useEffect(() => {
@@ -24,10 +26,10 @@ export default function AtmosphereToggle() {
     <div className="flex items-start justify-between gap-4">
       <div className="flex-1 min-w-0">
         <p className="text-sm text-slate-200 uppercase tracking-wider">
-          Atmosphere
+          {t("atmosphereTitle")}
         </p>
         <p className="text-xs text-slate-500 leading-relaxed mt-1">
-          Film grain, scanlines, and vignette. Disable for a cleaner, flatter view.
+          {t("atmosphereDescription")}
         </p>
       </div>
       <button

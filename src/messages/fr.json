@@ -3,15 +3,37 @@
     "status": "Statut",
     "portals": "Portails",
     "feed": "Communauté",
-    "profile": "Profil"
+    "profile": "Profil",
+    "levelLabel": "Niv. {level}"
   },
   "settings": {
     "title": "Paramètres",
+    "hunterPath": "Voie du Chasseur",
     "appearance": "Apparence",
+    "atmosphereTitle": "Atmosphère",
+    "atmosphereDescription": "Grain de film, scanlines et vignette. Désactive pour une vue plus propre et plate.",
     "notifications": "Notifications",
     "install": "Installer",
     "language": "Langue",
     "languageHint": "Choisis la langue dans laquelle le Système te parle. Les traductions arrivent encore — l'anglais est le plus complet."
+  },
+  "hunterTypePicker": {
+    "intro": "Choisis une voie pour débloquer ses programmes d'entraînement. Touche à nouveau ta voie sélectionnée pour revenir à Non-Affilié. Changer est gratuit — explore.",
+    "loading": "Lecture de ta voie…",
+    "active": "Active"
+  },
+  "footer": {
+    "manual": "Manuel",
+    "privacy": "Confidentialité",
+    "terms": "Conditions"
+  },
+  "recentGains": {
+    "title": "Gains récents",
+    "empty": "Ton journal de gains apparaît ici à mesure que tu termines des quêtes, valides des jours et réclames des victoires.",
+    "justNow": "à l'instant",
+    "minutesAgo": "il y a {count}m",
+    "hoursAgo": "il y a {count}h",
+    "daysAgo": "il y a {count}j"
   },
   "dashboard": {
     "header": "Fenêtre de Statut du Joueur",

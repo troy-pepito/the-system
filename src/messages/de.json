@@ -3,15 +3,37 @@
     "status": "Status",
     "portals": "Portale",
     "feed": "Gemeinschaft",
-    "profile": "Profil"
+    "profile": "Profil",
+    "levelLabel": "Lvl. {level}"
   },
   "settings": {
     "title": "Einstellungen",
+    "hunterPath": "Jäger-Pfad",
     "appearance": "Darstellung",
+    "atmosphereTitle": "Atmosphäre",
+    "atmosphereDescription": "Filmkorn, Scanlines und Vignette. Deaktivieren für eine sauberere, flachere Ansicht.",
     "notifications": "Benachrichtigungen",
     "install": "Installieren",
     "language": "Sprache",
     "languageHint": "Wähle die Sprache, in der das System mit dir spricht. Übersetzungen kommen noch — Englisch ist am vollständigsten."
+  },
+  "hunterTypePicker": {
+    "intro": "Wähle einen Pfad, um seine Trainingsprogramme freizuschalten. Tippe deinen gewählten Pfad erneut, um zu Unaffiliiert zurückzukehren. Wechseln ist kostenlos — erkunde.",
+    "loading": "Lese deinen Pfad…",
+    "active": "Aktiv"
+  },
+  "footer": {
+    "manual": "Handbuch",
+    "privacy": "Datenschutz",
+    "terms": "Bedingungen"
+  },
+  "recentGains": {
+    "title": "Aktuelle Gewinne",
+    "empty": "Dein Gewinn-Log erscheint hier, sobald du Quests abschließt, Tage bestehst und Siege beanspruchst.",
+    "justNow": "gerade eben",
+    "minutesAgo": "vor {count}m",
+    "hoursAgo": "vor {count}h",
+    "daysAgo": "vor {count}T"
   },
   "dashboard": {
     "header": "Status-Fenster des Spielers",

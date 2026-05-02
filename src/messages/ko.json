@@ -3,15 +3,37 @@
     "status": "상태",
     "portals": "포털",
     "feed": "커뮤니티",
-    "profile": "프로필"
+    "profile": "프로필",
+    "levelLabel": "Lv. {level}"
   },
   "settings": {
     "title": "설정",
+    "hunterPath": "헌터의 길",
     "appearance": "외관",
+    "atmosphereTitle": "분위기",
+    "atmosphereDescription": "필름 그레인, 스캔라인, 비네트. 더 깔끔하고 평평한 화면을 원하면 끄세요.",
     "notifications": "알림",
     "install": "설치",
     "language": "언어",
     "languageHint": "시스템이 당신에게 말하는 언어를 선택하세요. 번역은 계속 추가되고 있습니다 — 영어가 가장 완성도가 높습니다."
+  },
+  "hunterTypePicker": {
+    "intro": "길을 선택해 훈련 프로그램을 잠금 해제하세요. 선택한 길을 다시 탭하면 무소속으로 돌아갑니다. 전환은 무료입니다 — 탐색해 보세요.",
+    "loading": "당신의 길을 읽는 중…",
+    "active": "활성"
+  },
+  "footer": {
+    "manual": "매뉴얼",
+    "privacy": "개인정보",
+    "terms": "약관"
+  },
+  "recentGains": {
+    "title": "최근 획득",
+    "empty": "퀘스트 완료, 하루 클리어, 승리 선언 등을 진행하면 게인 로그가 여기에 나타납니다.",
+    "justNow": "방금 전",
+    "minutesAgo": "{count}분 전",
+    "hoursAgo": "{count}시간 전",
+    "daysAgo": "{count}일 전"
   },
   "dashboard": {
     "header": "플레이어 상태 창",

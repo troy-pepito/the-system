@@ -2,8 +2,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations("footer");
   const pathname = usePathname();
   const { isSignedIn, isLoaded } = useUser();
 
@@ -17,21 +19,21 @@ export default function Footer() {
           href="/guide"
           className="hover:text-cyan-300 transition-colors"
         >
-          Manual
+          {t("manual")}
         </Link>
         <span className="text-slate-800">·</span>
         <Link
           href="/privacy"
           className="hover:text-cyan-300 transition-colors"
         >
-          Privacy
+          {t("privacy")}
         </Link>
         <span className="text-slate-800">·</span>
         <Link
           href="/terms"
           className="hover:text-cyan-300 transition-colors"
         >
-          Terms
+          {t("terms")}
         </Link>
       </div>
     </footer>

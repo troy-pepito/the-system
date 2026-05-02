@@ -3,15 +3,37 @@
     "status": "Estado",
     "portals": "Portales",
     "feed": "Comunidad",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "levelLabel": "Lvl. {level}"
   },
   "settings": {
     "title": "Ajustes",
+    "hunterPath": "Camino del Cazador",
     "appearance": "Apariencia",
+    "atmosphereTitle": "Atmósfera",
+    "atmosphereDescription": "Grano de película, scanlines y viñeta. Desactiva para una vista más limpia y plana.",
     "notifications": "Notificaciones",
     "install": "Instalar",
     "language": "Idioma",
     "languageHint": "Elige el idioma en el que el Sistema te habla. Las traducciones siguen llegando — el inglés es el más completo."
+  },
+  "hunterTypePicker": {
+    "intro": "Elige un camino para desbloquear sus programas de entrenamiento. Toca tu camino seleccionado de nuevo para volver a Sin Afiliación. Cambiar es gratis — explora.",
+    "loading": "Leyendo tu camino…",
+    "active": "Activo"
+  },
+  "footer": {
+    "manual": "Manual",
+    "privacy": "Privacidad",
+    "terms": "Términos"
+  },
+  "recentGains": {
+    "title": "Ganancias recientes",
+    "empty": "Tu registro de ganancias aparece aquí mientras completas misiones, cumples días y reclamas victorias.",
+    "justNow": "ahora mismo",
+    "minutesAgo": "hace {count}m",
+    "hoursAgo": "hace {count}h",
+    "daysAgo": "hace {count}d"
   },
   "dashboard": {
     "header": "Ventana de Estado del Jugador",

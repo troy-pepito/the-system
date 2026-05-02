@@ -3,15 +3,37 @@
     "status": "Status",
     "portals": "Portals",
     "feed": "Feed",
-    "profile": "Profile"
+    "profile": "Profile",
+    "levelLabel": "Lvl. {level}"
   },
   "settings": {
     "title": "Settings",
+    "hunterPath": "Hunter Path",
     "appearance": "Appearance",
+    "atmosphereTitle": "Atmosphere",
+    "atmosphereDescription": "Film grain, scanlines, and vignette. Disable for a cleaner, flatter view.",
     "notifications": "Notifications",
     "install": "Install",
     "language": "Language",
     "languageHint": "Choose the language the System speaks to you in. Translations are still landing — English is the most complete."
+  },
+  "hunterTypePicker": {
+    "intro": "Pick a path to unlock its training programs. Tap your selected path again to revert to Unaffiliated. Switching is free — explore.",
+    "loading": "Reading your path…",
+    "active": "Active"
+  },
+  "footer": {
+    "manual": "Manual",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "recentGains": {
+    "title": "Recent Gains",
+    "empty": "Your gain log appears here as you complete quests, clear days, and claim victories.",
+    "justNow": "just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago"
   },
   "dashboard": {
     "header": "Player Status Window",

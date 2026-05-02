@@ -10,6 +10,7 @@ import {
 
 export default function HunterTypePicker() {
   const tHunterTypes = useTranslations("hunterTypes");
+  const tPicker = useTranslations("hunterTypePicker");
   const { user, isLoaded } = useUser();
   const meta = user?.unsafeMetadata as { hunterType?: unknown } | undefined;
   const persisted: HunterType | null =
@@ -47,7 +48,7 @@ export default function HunterTypePicker() {
   if (!isLoaded || !user) {
     return (
       <p className="text-xs text-slate-500 leading-relaxed">
-        Reading your path…
+        {tPicker("loading")}
       </p>
     );
   }
@@ -55,8 +56,7 @@ export default function HunterTypePicker() {
   return (
     <div className="space-y-3">
       <p className="text-xs text-slate-400 leading-relaxed">
-        Pick a path to unlock its training programs. Tap your selected
-        path again to revert to Unaffiliated. Switching is free — explore.
+        {tPicker("intro")}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {HUNTER_TYPE_LIST.map((def) => {
@@ -80,7 +80,7 @@ export default function HunterTypePicker() {
                 </p>
                 {active && (
                   <span className="text-[9px] tracking-[0.3em] uppercase opacity-80">
-                    Active
+                    {tPicker("active")}
                   </span>
                 )}
               </div>

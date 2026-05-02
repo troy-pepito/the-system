@@ -3,15 +3,37 @@
     "status": "状态",
     "portals": "传送门",
     "feed": "社区",
-    "profile": "个人资料"
+    "profile": "个人资料",
+    "levelLabel": "Lv. {level}"
   },
   "settings": {
     "title": "设置",
+    "hunterPath": "猎人之路",
     "appearance": "外观",
+    "atmosphereTitle": "氛围",
+    "atmosphereDescription": "胶片颗粒、扫描线和暗角。关闭以获得更干净、更平的视图。",
     "notifications": "通知",
     "install": "安装",
     "language": "语言",
     "languageHint": "选择系统对你说话的语言。翻译还在持续添加中 — 英语是最完整的。"
+  },
+  "hunterTypePicker": {
+    "intro": "选择一条道路以解锁其训练计划。再次点击你选中的道路可返回未归属。切换免费 — 自由探索。",
+    "loading": "读取你的道路中…",
+    "active": "进行中"
+  },
+  "footer": {
+    "manual": "手册",
+    "privacy": "隐私",
+    "terms": "条款"
+  },
+  "recentGains": {
+    "title": "最近获得",
+    "empty": "随着你完成任务、清掉每日、宣告胜利,你的收益记录会出现在这里。",
+    "justNow": "刚刚",
+    "minutesAgo": "{count}分钟前",
+    "hoursAgo": "{count}小时前",
+    "daysAgo": "{count}天前"
   },
   "dashboard": {
     "header": "玩家状态窗口",

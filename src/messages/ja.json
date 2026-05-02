@@ -3,15 +3,37 @@
     "status": "ステータス",
     "portals": "ポータル",
     "feed": "コミュニティ",
-    "profile": "プロフィール"
+    "profile": "プロフィール",
+    "levelLabel": "Lv. {level}"
   },
   "settings": {
     "title": "設定",
+    "hunterPath": "ハンターの道",
     "appearance": "外観",
+    "atmosphereTitle": "アトモスフィア",
+    "atmosphereDescription": "フィルムグレイン、スキャンライン、ビネット。よりクリーンでフラットな表示にするにはオフ。",
     "notifications": "通知",
     "install": "インストール",
     "language": "言語",
     "languageHint": "システムがあなたに話しかける言語を選んでください。翻訳は順次追加中です — 英語が最も充実しています。"
+  },
+  "hunterTypePicker": {
+    "intro": "道を選んでトレーニング・プログラムを解放。選んだ道をもう一度タップすると無所属に戻る。切替は自由 — 試して。",
+    "loading": "あなたの道を読み取り中…",
+    "active": "アクティブ"
+  },
+  "footer": {
+    "manual": "マニュアル",
+    "privacy": "プライバシー",
+    "terms": "利用規約"
+  },
+  "recentGains": {
+    "title": "最近の獲得",
+    "empty": "クエスト達成、日々のクリア、勝利宣言などに応じてここにゲインログが表示される。",
+    "justNow": "たった今",
+    "minutesAgo": "{count}分前",
+    "hoursAgo": "{count}時間前",
+    "daysAgo": "{count}日前"
   },
   "dashboard": {
     "header": "プレイヤー・ステータス・ウィンドウ",

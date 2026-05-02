@@ -27,7 +27,7 @@ export default async function SettingsPage() {
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-            Hunter Path
+            {t("hunterPath")}
           </p>
           <HunterTypePicker />
         </Card>

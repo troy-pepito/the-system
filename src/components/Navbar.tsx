@@ -142,26 +142,6 @@ export default function Navbar() {
                 Pro
               </button>
             )}
-            <span className="flex items-center gap-1">
-              <span className="text-slate-500">Rank</span>
-              <span
-                className={`font-bold ${getRankStyle(rank).text} ${
-                  getRankStyle(rank).textClass
-                } ${getRankStyle(rank).glow}`}
-              >
-                {rank}
-              </span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="text-slate-500">Lv</span>
-              <span
-                className={`font-bold ${getRankStyle(rank).text} ${
-                  getRankStyle(rank).textClass
-                } ${getRankStyle(rank).glow}`}
-              >
-                {level}
-              </span>
-            </span>
             <WhatsNewBadge />
             <Link
               href="/settings"
@@ -197,6 +177,13 @@ export default function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <p
+            className={`text-[10px] font-bold whitespace-nowrap ${
+              getRankStyle(rank).text
+            } ${getRankStyle(rank).textClass} ${getRankStyle(rank).glow}`}
+          >
+            {t("levelLabel", { level })}
+          </p>
           <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full shadow-[0_0_6px_rgba(34,211,238,0.6)]"
