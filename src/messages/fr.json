@@ -74,7 +74,25 @@
     "quest_cardio": "Marcher / Courir (10+ min)",
     "quest_journal": "Note de Journal",
     "quest_read": "Étudier / Lire (10+ pages)",
-    "quest_clean_room": "Ranger la Chambre"
+    "quest_clean_room": "Ranger la Chambre",
+    "dailyCombo": "Combo Quotidien",
+    "dayLabel": "{count, plural, one {Jour} other {Jours}}",
+    "startCombo": "Termine {threshold}+ quêtes pour démarrer un combo.",
+    "comboExtended": "Combo prolongé · À demain",
+    "keepAlive": "Encore {count} pour garder le combo en vie",
+    "bonusTooltip": "Base {base} + bonus de combo {bonus}",
+    "comboSource": "🔥 Combo de {days} jours"
+  },
+  "profile": {
+    "recordHeader": "Bilan — {label}",
+    "rangeWeek": "7 derniers jours",
+    "rangeMonth": "30 derniers jours",
+    "rangeAll": "À vie",
+    "earnedFromQuests": "Gagné via les quêtes quotidiennes et les rangs de donjon validés."
+  },
+  "heatmap": {
+    "less": "moins",
+    "more": "plus"
   },
   "dungeons": {
     "caffeine": {

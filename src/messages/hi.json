@@ -74,7 +74,25 @@
     "quest_cardio": "चलना / दौड़ना (10+ मिनट)",
     "quest_journal": "डायरी प्रविष्टि",
     "quest_read": "अध्ययन / पढ़ें (10+ पृष्ठ)",
-    "quest_clean_room": "कमरा साफ़ करें"
+    "quest_clean_room": "कमरा साफ़ करें",
+    "dailyCombo": "दैनिक कॉम्बो",
+    "dayLabel": "{count, plural, one {दिन} other {दिन}}",
+    "startCombo": "कॉम्बो शुरू करने के लिए {threshold}+ क्वेस्ट पूरी करें।",
+    "comboExtended": "कॉम्बो जारी · कल मिलते हैं",
+    "keepAlive": "कॉम्बो जीवित रखने के लिए और {count} चाहिए",
+    "bonusTooltip": "आधार {base} + कॉम्बो बोनस {bonus}",
+    "comboSource": "🔥 {days}-दिन कॉम्बो"
+  },
+  "profile": {
+    "recordHeader": "रिकॉर्ड — {label}",
+    "rangeWeek": "पिछले 7 दिन",
+    "rangeMonth": "पिछले 30 दिन",
+    "rangeAll": "आजीवन",
+    "earnedFromQuests": "दैनिक क्वेस्ट और पूर्ण किए गए डंजन रैंकों से अर्जित।"
+  },
+  "heatmap": {
+    "less": "कम",
+    "more": "अधिक"
   },
   "dungeons": {
     "caffeine": {

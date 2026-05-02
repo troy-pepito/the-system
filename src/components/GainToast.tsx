@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { REWARD_EVENT, type RewardDelta } from "@/lib/player";
 
 type Kind = "xp" | "body" | "mind" | "emotion" | "energy" | "spirit";
@@ -24,6 +25,7 @@ interface Pill {
 let nextId = 1;
 
 export default function GainToast() {
+  const tDimensions = useTranslations("guide.dimensions");
   const [pills, setPills] = useState<Pill[]>([]);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function GainToast() {
           key={p.id}
           className={`font-mono font-bold px-3 py-1.5 border rounded text-sm tracking-[0.15em] uppercase animate-gain-pop ${STYLE[p.kind]}`}
         >
-          +{p.value} {p.kind === "xp" ? "XP" : p.kind.toUpperCase()}
+          +{p.value} {p.kind === "xp" ? "XP" : tDimensions(`${p.kind}.name`)}
         </div>
       ))}
     </div>

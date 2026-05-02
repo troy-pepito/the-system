@@ -74,7 +74,25 @@
     "quest_cardio": "Caminar / Correr (10+ min)",
     "quest_journal": "Entrada de Diario",
     "quest_read": "Estudiar / Leer (10+ páginas)",
-    "quest_clean_room": "Limpiar la Habitación"
+    "quest_clean_room": "Limpiar la Habitación",
+    "dailyCombo": "Combo Diario",
+    "dayLabel": "{count, plural, one {Día} other {Días}}",
+    "startCombo": "Completa {threshold}+ misiones para iniciar un combo.",
+    "comboExtended": "Combo extendido · Nos vemos mañana",
+    "keepAlive": "{count} más para mantener el combo vivo",
+    "bonusTooltip": "Base {base} + bono de combo {bonus}",
+    "comboSource": "🔥 Combo de {days} días"
+  },
+  "profile": {
+    "recordHeader": "Récord — {label}",
+    "rangeWeek": "Últimos 7 días",
+    "rangeMonth": "Últimos 30 días",
+    "rangeAll": "Vida entera",
+    "earnedFromQuests": "Ganado de misiones diarias y rangos de mazmorra superados."
+  },
+  "heatmap": {
+    "less": "menos",
+    "more": "más"
   },
   "dungeons": {
     "caffeine": {

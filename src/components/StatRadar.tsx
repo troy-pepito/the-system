@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useTweenNumber } from "@/lib/useTweenNumber";
 
 const DIMS = [
-  { key: "body", label: "BODY", color: "#ef4444" },
-  { key: "mind", label: "MIND", color: "#60a5fa" },
-  { key: "emotion", label: "EMOTION", color: "#f472b6" },
-  { key: "energy", label: "ENERGY", color: "#fbbf24" },
-  { key: "spirit", label: "SPIRIT", color: "#a78bfa" },
+  { key: "body", color: "#ef4444" },
+  { key: "mind", color: "#60a5fa" },
+  { key: "emotion", color: "#f472b6" },
+  { key: "energy", color: "#fbbf24" },
+  { key: "spirit", color: "#a78bfa" },
 ] as const;
 
 type DimKey = (typeof DIMS)[number]["key"];
@@ -45,6 +46,7 @@ function readSnapshot(): Record<DimKey, number> | null {
 }
 
 export default function StatRadar({ values }: StatRadarProps) {
+  const tDimensions = useTranslations("guide.dimensions");
   const containerRef = useRef<SVGSVGElement>(null);
   const [previous] = useState<Record<DimKey, number> | null>(() => readSnapshot());
   const [visible, setVisible] = useState(false);
@@ -197,7 +199,7 @@ export default function StatRadar({ values }: StatRadarProps) {
             letterSpacing="0.15em"
             fill={a.dim.color}
           >
-            {a.dim.label}
+            {tDimensions(`${a.dim.key}.name`)}
           </text>
           <text
             x={a.labelX}

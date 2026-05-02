@@ -74,7 +74,25 @@
     "quest_cardio": "ウォーキング / ランニング(10分以上)",
     "quest_journal": "日記を書く",
     "quest_read": "学習 / 読書(10ページ以上)",
-    "quest_clean_room": "部屋の掃除"
+    "quest_clean_room": "部屋の掃除",
+    "dailyCombo": "デイリーコンボ",
+    "dayLabel": "{count, plural, other {日}}",
+    "startCombo": "{threshold}個以上のクエストを完了してコンボを開始しよう。",
+    "comboExtended": "コンボ延長 · また明日",
+    "keepAlive": "あと {count} 個でコンボ継続",
+    "bonusTooltip": "基本 {base} + コンボ・ボーナス {bonus}",
+    "comboSource": "🔥 {days}日コンボ"
+  },
+  "profile": {
+    "recordHeader": "記録 — {label}",
+    "rangeWeek": "直近7日間",
+    "rangeMonth": "直近30日間",
+    "rangeAll": "通算",
+    "earnedFromQuests": "デイリークエストとダンジョン・ランクの達成で獲得。"
+  },
+  "heatmap": {
+    "less": "少",
+    "more": "多"
   },
   "dungeons": {
     "caffeine": {

@@ -74,7 +74,25 @@
     "quest_cardio": "步行 / 跑步(10分钟以上)",
     "quest_journal": "写日志",
     "quest_read": "学习 / 阅读(10页以上)",
-    "quest_clean_room": "整理房间"
+    "quest_clean_room": "整理房间",
+    "dailyCombo": "每日连击",
+    "dayLabel": "{count, plural, other {天}}",
+    "startCombo": "完成 {threshold}+ 项任务以开启连击。",
+    "comboExtended": "连击延续 · 明日再见",
+    "keepAlive": "再完成 {count} 项以保持连击",
+    "bonusTooltip": "基础 {base} + 连击加成 {bonus}",
+    "comboSource": "🔥 {days} 天连击"
+  },
+  "profile": {
+    "recordHeader": "记录 — {label}",
+    "rangeWeek": "最近 7 天",
+    "rangeMonth": "最近 30 天",
+    "rangeAll": "终身",
+    "earnedFromQuests": "通过每日任务和已通过的副本等级获得。"
+  },
+  "heatmap": {
+    "less": "少",
+    "more": "多"
   },
   "dungeons": {
     "caffeine": {

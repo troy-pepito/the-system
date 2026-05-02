@@ -1,4 +1,6 @@
 "use client";
+import { useMemo } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 interface HeatmapProps {
   activity: Record<string, number>;
@@ -16,12 +18,6 @@ const LEVEL_CLASSES = [
   "bg-cyan-300 border border-cyan-200",
 ];
 
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
-
 function dateKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
@@ -35,6 +31,35 @@ function levelFor(count: number): number {
 }
 
 export default function Heatmap({ activity }: HeatmapProps) {
+  const t = useTranslations("heatmap");
+  const locale = useLocale();
+
+  // Locale-aware month abbreviations + weekday short labels. We pin
+  // month names to a stable date set so re-renders during the same
+  // locale return identical strings (no flickering).
+  const months = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale, { month: "short" });
+    return Array.from({ length: 12 }, (_, m) =>
+      fmt.format(new Date(Date.UTC(2024, m, 15)))
+    );
+  }, [locale]);
+
+  // Sunday=0, Monday=1, ..., Saturday=6. Heatmap labels rows 1, 3, 5
+  // (Mon / Wed / Fri); the rest are blank to reduce visual noise.
+  const dayLabels = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale, { weekday: "short" });
+    const out: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      if (i === 1 || i === 3 || i === 5) {
+        // Reference: Sun Jan 7 2024 = day 0; +i steps to that weekday.
+        out.push(fmt.format(new Date(Date.UTC(2024, 0, 7 + i))));
+      } else {
+        out.push("");
+      }
+    }
+    return out;
+  }, [locale]);
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const todayDow = today.getDay();
@@ -56,8 +81,8 @@ export default function Heatmap({ activity }: HeatmapProps) {
 
   const monthLabels = columns.map((col, i) => {
     const m = col[0].date.getMonth();
-    if (i === 0) return MONTHS[m];
-    return columns[i - 1][0].date.getMonth() !== m ? MONTHS[m] : null;
+    if (i === 0) return months[m];
+    return columns[i - 1][0].date.getMonth() !== m ? months[m] : null;
   });
 
   return (
@@ -84,7 +109,7 @@ export default function Heatmap({ activity }: HeatmapProps) {
               className="flex flex-col shrink-0"
               style={{ gap: GAP, width: 24 }}
             >
-              {DAY_LABELS.map((lbl, i) => (
+              {dayLabels.map((lbl, i) => (
                 <div
                   key={i}
                   style={{ height: CELL }}
@@ -125,7 +150,7 @@ export default function Heatmap({ activity }: HeatmapProps) {
       </div>
 
       <div className="flex items-center gap-1.5 mt-4 justify-center select-none pointer-events-none">
-        <span className="text-[9px] text-slate-600 tracking-wider mr-1">less</span>
+        <span className="text-[9px] text-slate-600 tracking-wider mr-1">{t("less")}</span>
         {LEVEL_CLASSES.map((c, i) => (
           <div
             key={i}
@@ -133,7 +158,7 @@ export default function Heatmap({ activity }: HeatmapProps) {
             className={`shrink-0 rounded-[2px] ${c}`}
           />
         ))}
-        <span className="text-[9px] text-slate-600 tracking-wider ml-1">more</span>
+        <span className="text-[9px] text-slate-600 tracking-wider ml-1">{t("more")}</span>
       </div>
     </div>
   );

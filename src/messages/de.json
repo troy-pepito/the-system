@@ -74,7 +74,25 @@
     "quest_cardio": "Gehen / Laufen (10+ Min)",
     "quest_journal": "Tagebuch-Eintrag",
     "quest_read": "Lernen / Lesen (10+ Seiten)",
-    "quest_clean_room": "Zimmer Aufräumen"
+    "quest_clean_room": "Zimmer Aufräumen",
+    "dailyCombo": "Tagescombo",
+    "dayLabel": "{count, plural, one {Tag} other {Tage}}",
+    "startCombo": "Schließe {threshold}+ Quests ab, um eine Combo zu starten.",
+    "comboExtended": "Combo verlängert · Bis morgen",
+    "keepAlive": "Noch {count}, um die Combo am Leben zu halten",
+    "bonusTooltip": "Basis {base} + Combo-Bonus {bonus}",
+    "comboSource": "🔥 {days}-Tage-Combo"
+  },
+  "profile": {
+    "recordHeader": "Bilanz — {label}",
+    "rangeWeek": "Letzte 7 Tage",
+    "rangeMonth": "Letzte 30 Tage",
+    "rangeAll": "Lebenszeit",
+    "earnedFromQuests": "Verdient durch Daily Quests und bestandene Dungeon-Ränge."
+  },
+  "heatmap": {
+    "less": "weniger",
+    "more": "mehr"
   },
   "dungeons": {
     "caffeine": {

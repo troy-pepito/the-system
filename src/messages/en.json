@@ -573,7 +573,25 @@
     "quest_cardio": "Walk / Run (10+ min)",
     "quest_journal": "Journal Entry",
     "quest_read": "Study / Read (10+ pages)",
-    "quest_clean_room": "Clean Room"
+    "quest_clean_room": "Clean Room",
+    "dailyCombo": "Daily Combo",
+    "dayLabel": "{count, plural, one {Day} other {Days}}",
+    "startCombo": "Complete {threshold}+ quests to start a combo.",
+    "comboExtended": "Combo extended · See you tomorrow",
+    "keepAlive": "{count} more to keep the combo alive",
+    "bonusTooltip": "Base {base} + Combo bonus {bonus}",
+    "comboSource": "🔥 {days}-Day Combo"
+  },
+  "profile": {
+    "recordHeader": "Record — {label}",
+    "rangeWeek": "Past 7 Days",
+    "rangeMonth": "Past 30 Days",
+    "rangeAll": "Lifetime",
+    "earnedFromQuests": "Earned from daily quests and dungeon ranks cleared."
+  },
+  "heatmap": {
+    "less": "less",
+    "more": "more"
   },
   "dungeons": {
     "caffeine": {

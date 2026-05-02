@@ -28,6 +28,7 @@ function relativeTime(ts: number, t: RelativeT): string {
 
 export default function RecentGains() {
   const t = useTranslations("recentGains");
+  const tDimensions = useTranslations("guide.dimensions");
   const gains = useGains();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
@@ -106,7 +107,7 @@ export default function RecentGains() {
                         className={`text-[9px] font-bold uppercase tracking-[0.2em] px-1.5 py-0.5 border rounded-sm ${DIM_STYLE[k]}`}
                       >
                         {v > 0 ? "+" : ""}
-                        {v} {k}
+                        {v} {tDimensions(`${k}.name`)}
                       </span>
                     );
                   })}

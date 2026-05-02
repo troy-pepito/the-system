@@ -135,7 +135,7 @@ export default function DailyQuests({
             setTimeout(() => {
               notifyReward({
                 xp: milestone.xp,
-                source: `🔥 ${milestone.days}-Day Combo`,
+                source: t("comboSource", { days: milestone.days }),
               });
               notifyStatsUpdated({ xpDelta: milestone.xp });
             }, 900);
@@ -200,7 +200,7 @@ export default function DailyQuests({
               }`}
               title={
                 questBonus > 0
-                  ? `Base ${quest.xp} + Combo bonus ${questBonus}`
+                  ? t("bonusTooltip", { base: quest.xp, bonus: questBonus })
                   : undefined
               }
             >
@@ -214,7 +214,7 @@ export default function DailyQuests({
     <div className="border-t border-cyan-500/10 pt-4 flex flex-col items-center gap-1">
       <div className="flex items-center gap-3">
         <span className="text-[10px] text-cyan-400/70 tracking-[0.3em] uppercase">
-          Daily Combo
+          {t("dailyCombo")}
         </span>
         <span
           className={`text-2xl font-bold tabular-nums ${
@@ -226,20 +226,20 @@ export default function DailyQuests({
           {comboDays}
         </span>
         <span className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
-          {comboDays === 1 ? "Day" : "Days"}
+          {t("dayLabel", { count: comboDays })}
         </span>
       </div>
       {comboDays === 0 ? (
         <p className="text-[10px] text-slate-500 tracking-wider text-center">
-          Complete {COMBO_THRESHOLD}+ quests to start a combo.
+          {t("startCombo", { threshold: COMBO_THRESHOLD })}
         </p>
       ) : todayQualifies ? (
         <p className="text-[10px] text-emerald-400/80 tracking-[0.2em] uppercase">
-          Combo extended · See you tomorrow
+          {t("comboExtended")}
         </p>
       ) : (
         <p className="text-[10px] text-amber-400/80 tracking-[0.2em] uppercase">
-          {remainingForCombo} more to keep the combo alive
+          {t("keepAlive", { count: remainingForCombo })}
         </p>
       )}
     </div>

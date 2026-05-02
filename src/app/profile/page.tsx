@@ -14,6 +14,7 @@ import {
   type AchievementDef,
 } from "@/lib/achievements";
 import { DUNGEONS } from "@/lib/dungeons";
+import { dungeonKey } from "@/lib/i18nKeys";
 import {
   getProfilePageData,
   type ProfilePageData,
@@ -34,6 +35,9 @@ const JOURNAL_CACHE_KEY = "journal";
 type Range = "week" | "month" | "all";
 
 export default function ProfilePage() {
+  const tProfile = useTranslations("publicProfile");
+  const tProfileOwn = useTranslations("profile");
+  const tDungeons = useTranslations("dungeons");
   // Important: initialize to null/[] both server- and client-side so the
   // first render matches between SSR and hydration. Cache is read inside
   // useEffect AFTER the initial render commits.
@@ -103,14 +107,18 @@ export default function ProfilePage() {
             perfectQuestDays: stats.perfectQuestDays,
           };
   const rangeLabel =
-    range === "week" ? "Past 7 Days" : range === "month" ? "Past 30 Days" : "Lifetime";
+    range === "week"
+      ? tProfileOwn("rangeWeek")
+      : range === "month"
+        ? tProfileOwn("rangeMonth")
+        : tProfileOwn("rangeAll");
 
   return (
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
-            Hunter Profile
+            {tProfile("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
@@ -122,33 +130,33 @@ export default function ProfilePage() {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
-              Record — {rangeLabel}
+              {tProfileOwn("recordHeader", { label: rangeLabel })}
             </p>
             <RangeToggle value={range} onChange={setRange} />
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <StatLine label="Active Dungeons" value={stats.activeRunCount} />
-            <StatLine label="Dungeons Cleared" value={stats.completedRunCount} />
-            <StatLine label="Workouts Logged" value={windowed.workoutTotal} />
-            <StatLine label="Exposures Logged" value={windowed.exposureTotal} />
-            <StatLine label="Quests Completed" value={windowed.questTotal} />
-            <StatLine label="Perfect Days" value={windowed.perfectQuestDays} />
+            <StatLine label={tProfile("stats.activeDungeons")} value={stats.activeRunCount} />
+            <StatLine label={tProfile("stats.dungeonsCleared")} value={stats.completedRunCount} />
+            <StatLine label={tProfile("stats.workoutsLogged")} value={windowed.workoutTotal} />
+            <StatLine label={tProfile("stats.exposuresLogged")} value={windowed.exposureTotal} />
+            <StatLine label={tProfile("stats.questsCompleted")} value={windowed.questTotal} />
+            <StatLine label={tProfile("stats.perfectDays")} value={windowed.perfectQuestDays} />
           </div>
         </Card>
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-            Dimensions
+            {tProfile("dimensions")}
           </p>
           <StatRadar values={stats.dimensions} />
           <p className="text-[10px] text-slate-500 text-center mt-3 tracking-wider">
-            Earned from daily quests and dungeon ranks cleared.
+            {tProfileOwn("earnedFromQuests")}
           </p>
         </Card>
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-            Activity — Last 8 Weeks
+            {tProfile("activityHeader")}
           </p>
           <Heatmap activity={data.heatmap} />
         </Card>
@@ -168,7 +176,7 @@ export default function ProfilePage() {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
-              Trophies
+              {tProfile("trophies")}
             </p>
             <p className="text-xs text-slate-400">
               <span className="text-amber-300 font-bold">{unlockedCount}</span>
@@ -184,17 +192,17 @@ export default function ProfilePage() {
           </div>
 
           <TrophySection
-            label="Foundations"
+            label={tProfile("categories.foundations")}
             defs={foundations}
             unlockedMap={unlockedMap}
           />
           <TrophySection
-            label="Hunter Progression"
+            label={tProfile("categories.progression")}
             defs={progression}
             unlockedMap={unlockedMap}
           />
           <TrophySection
-            label="Training"
+            label={tProfile("categories.training")}
             defs={training}
             unlockedMap={unlockedMap}
           />
@@ -202,7 +210,7 @@ export default function ProfilePage() {
             <div className="flex items-center gap-4 mb-5">
               <div className="flex-1 h-px bg-gradient-to-r from-transparent to-cyan-500/40" />
               <p className="font-display text-[10px] tracking-[0.4em] uppercase text-cyan-300/80 shrink-0 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
-                Dungeon Mastery
+                {tProfile("categories.dungeonMastery")}
               </p>
               <div className="flex-1 h-px bg-gradient-to-l from-transparent to-cyan-500/40" />
             </div>
@@ -213,7 +221,7 @@ export default function ProfilePage() {
                 return (
                   <TrophySection
                     key={d.id}
-                    label={d.name}
+                    label={tDungeons(`${dungeonKey(d.id)}.name`)}
                     defs={defs}
                     unlockedMap={unlockedMap}
                     nested

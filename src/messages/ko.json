@@ -74,7 +74,25 @@
     "quest_cardio": "걷기 / 달리기 (10분 이상)",
     "quest_journal": "일지 작성",
     "quest_read": "공부 / 독서 (10쪽 이상)",
-    "quest_clean_room": "방 청소"
+    "quest_clean_room": "방 청소",
+    "dailyCombo": "데일리 콤보",
+    "dayLabel": "{count, plural, other {일}}",
+    "startCombo": "콤보를 시작하려면 {threshold}개 이상의 퀘스트를 완료하세요.",
+    "comboExtended": "콤보 연장 · 내일 봐요",
+    "keepAlive": "콤보를 유지하려면 {count}개 더 필요",
+    "bonusTooltip": "기본 {base} + 콤보 보너스 {bonus}",
+    "comboSource": "🔥 {days}일 콤보"
+  },
+  "profile": {
+    "recordHeader": "기록 — {label}",
+    "rangeWeek": "최근 7일",
+    "rangeMonth": "최근 30일",
+    "rangeAll": "전체",
+    "earnedFromQuests": "일일 퀘스트와 클리어한 던전 등급에서 획득."
+  },
+  "heatmap": {
+    "less": "적음",
+    "more": "많음"
   },
   "dungeons": {
     "caffeine": {
