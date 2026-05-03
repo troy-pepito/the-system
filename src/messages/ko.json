@@ -693,6 +693,7 @@
     "section6P1": "매일 시스템은 작은 퀘스트의 회전 세트를 제공한다 — 각각 차원에 묶여 있다. 완료해 차원 점수와 XP를 얻어라.",
     "section6P2": "하루에 <b>{threshold}</b> 개 이상의 퀘스트를 완료하면 그 날은 콤보 자격을 얻는다. 연속 자격일이 콤보 스트릭을 만든다. 각 마일스톤마다 보너스 XP가 상태 창에 토스트로 떨어진다:",
     "section6Footnote": "1–2 퀘스트의 날은 유예일 — 쌓이지도 무너지지도 않는다. 완전한 무위만이 콤보를 리셋한다.",
+    "section6PerfectDay": "Complete every quest in a single day and a Perfect Day celebration drops on top of the per-quest XP. Cadence dungeons (Training Regimen, the Daily-floor starters) drop a Full Clear bonus the same way — tick every workout in the window and the System rewards a flawless run.",
     "section7Title": "7. 흩어짐 디버프",
     "section7P1": "하루에 0 퀘스트로 끝내면 다음 날 <scattered>⚠ 흩어짐</scattered> 상태로 깨어난다 — 헌터 카드에 보이는 표식.",
     "section7P2": "흩어짐은 처벌이 아니다. XP를 깎지 않는다. 다른 헌터에게 보이지 않는다. 그것은 거울이다. 당신은 부재했고, 시스템은 돌아올 때까지 그 사실을 비춘다.",

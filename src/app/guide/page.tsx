@@ -247,6 +247,9 @@ export default async function GuidePage() {
           <p className="mt-5 text-xs text-slate-500 leading-relaxed">
             {t("section6Footnote")}
           </p>
+          <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+            {t("section6PerfectDay")}
+          </p>
         </Section>
 
         <Section title={t("section7Title")}>

@@ -10,8 +10,9 @@ const KNOWN_SIGNED_IN_EVENT = "shivaliva:known-signed-in-change";
  * awakening flag can never leak into another account's session.
  *
  * Device-level prefs (atmosphere toggle, PWA install dismissal,
- * the known-signed-in marker itself) are intentionally preserved —
- * those track the device, not the player.
+ * the known-signed-in marker itself, the changelog-seen marker —
+ * which tracks the app version, not the player) are intentionally
+ * preserved — those track the device, not the player.
  */
 function wipeUserScopedStorage(): void {
   try {
@@ -24,7 +25,6 @@ function wipeUserScopedStorage(): void {
         k === "shivaliva:queue" ||
         k === "system:awakened" ||
         k === "system:gains-log" ||
-        k === "system:changelog-seen" ||
         k === "system:reminder-auto-asked" ||
         k === "radar:last-snapshot" ||
         k.startsWith("tier-celebrated:") ||

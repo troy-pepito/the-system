@@ -693,6 +693,7 @@
     "section6P1": "Cada día el Sistema ofrece un conjunto rotatorio de pequeñas misiones — cada una ligada a una dimensión. Complétalas para ganar puntos de dimensión y XP.",
     "section6P2": "Completa <b>{threshold}</b> o más misiones en un solo día y ese día califica para tu combo. Días consecutivos que califican forman una racha de combo. En cada hito, la XP de bonificación cae como un toast en tu Ventana de Estado:",
     "section6Footnote": "Un día con 1 o 2 misiones es un día de gracia — no construyes, pero tampoco rompes. Solo un fallo total reinicia el combo.",
+    "section6PerfectDay": "Complete every quest in a single day and a Perfect Day celebration drops on top of the per-quest XP. Cadence dungeons (Training Regimen, the Daily-floor starters) drop a Full Clear bonus the same way — tick every workout in the window and the System rewards a flawless run.",
     "section7Title": "7. El debuff Disperso",
     "section7P1": "Completa cero misiones en un día y mañana despertarás <scattered>⚠ Disperso</scattered> — una marca visible en tu Tarjeta de Cazador.",
     "section7P2": "Disperso no es un castigo. No cuesta XP. No revela nada a otros cazadores. Es un espejo. Estuviste ausente, y el Sistema te muestra ese hecho hasta que regreses.",

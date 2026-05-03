@@ -21,19 +21,19 @@ const STEPS = [
     num: "01",
     title: "Awaken",
     description:
-      "Name your hunter and enter the System. Your run begins the moment you accept.",
+      "Name your hunter, choose a Path, and enter the System. Your run begins the moment you accept.",
   },
   {
     num: "02",
     title: "Pick Your Dungeons",
     description:
-      "A dungeon is a habit you're fighting — NoFap, no doomscroll, gym, diet, social anxiety. Pick the ones that matter.",
+      "A dungeon is a habit you're fighting — NoFap, no doomscroll, sensory reset, gym, diet, social anxiety. Pick the ones that matter.",
   },
   {
     num: "03",
-    title: "Check In Daily",
+    title: "Show Up Daily",
     description:
-      "Confirm each day cleared or relapsed on the calendar. Banked progress stacks. Climb ranks E → S.",
+      "Check in cleared days, tick workouts, log exposures. Banked progress stacks. Climb ranks E → S.",
   },
 ];
 
@@ -140,7 +140,7 @@ export default function LandingPage() {
 
       <section className="max-w-3xl mx-auto px-6 py-16 border-t border-slate-800/60">
         <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-10">
-          Seven Portals
+          The Portals
         </p>
         <div className="grid sm:grid-cols-2 gap-4">
           {DUNGEONS.map((d) => (
@@ -148,8 +148,13 @@ export default function LandingPage() {
               key={d.id}
               className="border border-slate-800 bg-slate-900/40 p-5"
             >
-              <p className="font-display text-sm font-bold text-cyan-100 mb-2">
-                {tDungeons(`${dungeonKey(d.id)}.name`)}
+              <p className="font-display text-sm font-bold text-cyan-100 mb-2 flex items-center gap-2">
+                {d.icon && (
+                  <span aria-hidden className="leading-none">
+                    {d.icon}
+                  </span>
+                )}
+                <span>{tDungeons(`${dungeonKey(d.id)}.name`)}</span>
               </p>
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {dungeonDims(d).map((dim) => (

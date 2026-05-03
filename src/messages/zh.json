@@ -693,6 +693,7 @@
     "section6P1": "每天系统提供一组轮换的小任务 — 每个都绑定一个维度。完成它们以获得维度积分和 XP。",
     "section6P2": "在一天内完成 <b>{threshold}</b> 个或更多任务,该日就具备连击资格。连续合格日构成连击。每达到一个里程碑,奖励 XP 会作为通知出现在你的状态窗口中:",
     "section6Footnote": "一天 1 个或 2 个任务的日子是宽限日 — 不会构建,也不会破坏。只有完全错失才会重置连击。",
+    "section6PerfectDay": "Complete every quest in a single day and a Perfect Day celebration drops on top of the per-quest XP. Cadence dungeons (Training Regimen, the Daily-floor starters) drop a Full Clear bonus the same way — tick every workout in the window and the System rewards a flawless run.",
     "section7Title": "7. 散乱减益",
     "section7P1": "若一天完成零任务,明天你将以 <scattered>⚠ 散乱</scattered> 状态醒来 — 一个出现在猎人卡上的可见印记。",
     "section7P2": "散乱不是惩罚。它不消耗 XP。其他猎人看不到。它是一面镜子。你曾缺席,系统会向你映出这一事实,直到你回来。",

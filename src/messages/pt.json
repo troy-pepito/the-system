@@ -693,6 +693,7 @@
     "section6P1": "Todo dia o Sistema oferece um conjunto rotativo de pequenas quests — cada uma ligada a uma dimensão. Conclua-as para ganhar pontos de dimensão e XP.",
     "section6P2": "Conclua <b>{threshold}</b> ou mais quests em um único dia e esse dia se qualifica para seu combo. Dias qualificantes consecutivos formam uma sequência de combo. A cada marco, XP bônus aparece como toast em sua Janela de Status:",
     "section6Footnote": "Um dia de 1 ou 2 quests é um dia de graça — você não constrói, mas também não quebra. Só uma falha total reinicia o combo.",
+    "section6PerfectDay": "Complete every quest in a single day and a Perfect Day celebration drops on top of the per-quest XP. Cadence dungeons (Training Regimen, the Daily-floor starters) drop a Full Clear bonus the same way — tick every workout in the window and the System rewards a flawless run.",
     "section7Title": "7. O debuff Disperso",
     "section7P1": "Conclua zero quests em um dia e amanhã você acordará <scattered>⚠ Disperso</scattered> — uma marca visível no seu Cartão de Caçador.",
     "section7P2": "Disperso não é punição. Não custa XP. Não revela nada a outros caçadores. É um espelho. Você esteve ausente, e o Sistema mostra esse fato até você voltar.",

@@ -693,6 +693,7 @@
     "section6P1": "Chaque jour, le Système propose un ensemble tournant de petites quêtes — chacune liée à une dimension. Termine-les pour gagner des points de dimension et de l'XP.",
     "section6P2": "Termine <b>{threshold}</b> quêtes ou plus en une journée et ce jour qualifie pour ton combo. Des jours qualifiants consécutifs construisent une série de combo. À chaque palier, l'XP bonus tombe en toast sur ta Fenêtre de Statut :",
     "section6Footnote": "Un jour à 1 ou 2 quêtes est un jour de grâce — tu ne construis pas, mais tu ne casses pas non plus. Seul un échec total réinitialise le combo.",
+    "section6PerfectDay": "Complete every quest in a single day and a Perfect Day celebration drops on top of the per-quest XP. Cadence dungeons (Training Regimen, the Daily-floor starters) drop a Full Clear bonus the same way — tick every workout in the window and the System rewards a flawless run.",
     "section7Title": "7. Le debuff Dispersé",
     "section7P1": "Termine zéro quête en un jour et demain tu te réveilleras <scattered>⚠ Dispersé</scattered> — une marque visible sur ta Carte de Chasseur.",
     "section7P2": "Dispersé n'est pas une punition. Ça ne coûte pas d'XP. Ça ne révèle rien aux autres chasseurs. C'est un miroir. Tu étais absent, et le Système te montre ce fait jusqu'à ton retour.",

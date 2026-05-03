@@ -696,6 +696,7 @@
     "section6P1": "हर दिन सिस्टम छोटी-छोटी क्वेस्ट का एक घूमता हुआ सेट प्रदान करता है — हर एक एक आयाम से जुड़ी। आयाम अंक और XP कमाने के लिए उन्हें पूरा करें।",
     "section6P2": "एक ही दिन में <b>{threshold}</b> या अधिक क्वेस्ट पूरी करें और वह दिन आपके कॉम्बो के लिए योग्य है। लगातार योग्य दिन एक कॉम्बो श्रृंखला बनाते हैं। हर मील पर, बोनस XP आपकी स्थिति विंडो पर एक टोस्ट के रूप में आती है:",
     "section6Footnote": "1-क्वेस्ट या 2-क्वेस्ट का दिन एक रियायत दिन है — आप निर्माण नहीं करेंगे, लेकिन तोड़ेंगे भी नहीं। केवल पूर्ण चूक कॉम्बो को रीसेट करती है।",
+    "section6PerfectDay": "Complete every quest in a single day and a Perfect Day celebration drops on top of the per-quest XP. Cadence dungeons (Training Regimen, the Daily-floor starters) drop a Full Clear bonus the same way — tick every workout in the window and the System rewards a flawless run.",
     "section7Title": "7. बिखरा हुआ डिबफ",
     "section7P1": "एक दिन में शून्य क्वेस्ट पूरी करें, और कल आप <scattered>⚠ बिखरे हुए</scattered> उठेंगे — आपकी हंटर कार्ड पर एक दृश्यमान निशान।",
     "section7P2": "बिखरा हुआ कोई सजा नहीं है। इसमें कोई XP खर्च नहीं होता। यह अन्य हंटरों को कुछ नहीं दिखाता। यह एक दर्पण है। आप अनुपस्थित थे, और सिस्टम आपको यह तथ्य तब तक दिखाता है जब तक आप वापस नहीं आते।",

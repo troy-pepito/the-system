@@ -693,6 +693,7 @@
     "section6P1": "毎日システムは小さなクエストの巡回セットを提供する — 各々がディメンションに紐づく。それを完了してディメンション点とXPを得る。",
     "section6P2": "1日に <b>{threshold}</b> 個以上のクエストを完了すると、その日はコンボの資格を得る。連続する資格日でコンボ・ストリークが伸びる。各マイルストーンでボーナスXPがステータス・ウィンドウにトーストとして落ちる:",
     "section6Footnote": "1〜2クエストの日は猶予日 — 積み上がらないが崩れもしない。完全な空振りだけがコンボをリセットする。",
+    "section6PerfectDay": "Complete every quest in a single day and a Perfect Day celebration drops on top of the per-quest XP. Cadence dungeons (Training Regimen, the Daily-floor starters) drop a Full Clear bonus the same way — tick every workout in the window and the System rewards a flawless run.",
     "section7Title": "7. 散漫デバフ",
     "section7P1": "1日にゼロクエストで終わると、翌日 <scattered>⚠ 散漫</scattered> として目覚める — ハンター・カードに見える印。",
     "section7P2": "散漫は罰ではない。XPは減らない。他のハンターには何も見えない。それは鏡だ。あなたは不在で、システムは戻るまでその事実を映す。",

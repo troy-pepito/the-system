@@ -693,6 +693,7 @@
     "section6P1": "Jeden Tag bietet das System eine rotierende Auswahl kleiner Quests — jede an eine Dimension gebunden. Erfülle sie, um Dimensionspunkte und XP zu verdienen.",
     "section6P2": "Schließe <b>{threshold}</b> oder mehr Quests an einem Tag ab und der Tag qualifiziert sich für deine Combo. Aufeinanderfolgende qualifizierende Tage bauen eine Combo-Strähne. An jedem Meilenstein landet Bonus-XP als Toast in deinem Status-Fenster:",
     "section6Footnote": "Ein Tag mit 1 oder 2 Quests ist ein Gnadentag — du baust nichts auf, aber du brichst auch nichts. Nur ein vollständiger Ausfall setzt die Combo zurück.",
+    "section6PerfectDay": "Complete every quest in a single day and a Perfect Day celebration drops on top of the per-quest XP. Cadence dungeons (Training Regimen, the Daily-floor starters) drop a Full Clear bonus the same way — tick every workout in the window and the System rewards a flawless run.",
     "section7Title": "7. Der Zerstreut-Debuff",
     "section7P1": "Erfülle keine Quest an einem Tag, und morgen wachst du <scattered>⚠ Zerstreut</scattered> auf — ein sichtbares Zeichen auf deiner Jäger-Karte.",
     "section7P2": "Zerstreut ist keine Strafe. Es kostet keine XP. Es zeigt anderen Jägern nichts. Es ist ein Spiegel. Du warst abwesend, und das System zeigt dir diese Tatsache, bis du zurück bist.",
