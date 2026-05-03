@@ -48,7 +48,20 @@
     "footerTerms": "Terms",
     "footerInstall": "Install App",
     "footerContact": "Contact",
-    "languageLabel": "Language"
+    "languageLabel": "Language",
+    "portalsHeader": "The Portals",
+    "statusWindow": "Hunter Status Window",
+    "statusRank": "Rank",
+    "statusLevel": "Level",
+    "statusProgress": "Progress",
+    "sampleNofap": "NoFap · Day Cleared",
+    "sampleQuest": "Daily Quest · Morning Walk",
+    "sampleTraining": "Training Regimen · Full Body",
+    "sampleCombo": "14-Day Combo",
+    "whyHeader": "Why this exists",
+    "whyP1": "I made this during a dark chapter — for myself, first. I needed a system that made discipline feel less like willpower and more like a game I could show up to every day.",
+    "whyP2": "Now it's here for anyone yearning for the same: people fighting compulsions, people losing to procrastination, people who know they need accountability but have no one to hold them to it.",
+    "whyWelcome": "If that's you, welcome."
   },
   "recentGains": {
     "title": "Recent Gains",

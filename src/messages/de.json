@@ -48,7 +48,20 @@
     "footerTerms": "Bedingungen",
     "footerInstall": "App installieren",
     "footerContact": "Kontakt",
-    "languageLabel": "Sprache"
+    "languageLabel": "Sprache",
+    "portalsHeader": "Die Portale",
+    "statusWindow": "Jäger-Statusfenster",
+    "statusRank": "Rang",
+    "statusLevel": "Level",
+    "statusProgress": "Fortschritt",
+    "sampleNofap": "NoFap · Tag Bestanden",
+    "sampleQuest": "Tägliche Quest · Morgenspaziergang",
+    "sampleTraining": "Trainingsplan · Ganzkörper",
+    "sampleCombo": "14-Tage-Combo",
+    "whyHeader": "Warum es das gibt",
+    "whyP1": "Ich habe das während eines dunklen Kapitels gemacht — zuerst für mich selbst. Ich brauchte ein System, das Disziplin weniger nach Willenskraft anfühlt und mehr nach einem Spiel, zu dem ich jeden Tag erscheinen konnte.",
+    "whyP2": "Jetzt ist es da für alle, die sich nach demselben sehnen: Menschen, die gegen Zwänge kämpfen, Menschen, die gegen Aufschieberitis verlieren, Menschen, die wissen, dass sie Verantwortung brauchen, aber niemanden haben, der sie ihnen abverlangt.",
+    "whyWelcome": "Wenn das du bist, willkommen."
   },
   "recentGains": {
     "title": "Aktuelle Gewinne",

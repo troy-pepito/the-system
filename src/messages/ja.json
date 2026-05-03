@@ -48,7 +48,20 @@
     "footerTerms": "利用規約",
     "footerInstall": "アプリをインストール",
     "footerContact": "連絡先",
-    "languageLabel": "言語"
+    "languageLabel": "言語",
+    "portalsHeader": "ポータル",
+    "statusWindow": "ハンター・ステータスウィンドウ",
+    "statusRank": "ランク",
+    "statusLevel": "レベル",
+    "statusProgress": "進行度",
+    "sampleNofap": "NoFap · 1日達成",
+    "sampleQuest": "デイリークエスト · 朝の散歩",
+    "sampleTraining": "トレーニング計画 · 全身",
+    "sampleCombo": "14日コンボ",
+    "whyHeader": "なぜこれが存在するのか",
+    "whyP1": "暗い章の中で、まず自分のためにこれを作った。意志力ではなく、毎日顔を出せるゲームのように規律を感じられる仕組みが必要だった。",
+    "whyP2": "今は同じものを求めるすべての人のためにある — 衝動と戦う人、先延ばしに負ける人、責任を求められる相手がいないと知っている人。",
+    "whyWelcome": "それが君なら、ようこそ。"
   },
   "recentGains": {
     "title": "最近の獲得",

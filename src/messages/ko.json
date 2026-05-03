@@ -48,7 +48,20 @@
     "footerTerms": "약관",
     "footerInstall": "앱 설치",
     "footerContact": "문의",
-    "languageLabel": "언어"
+    "languageLabel": "언어",
+    "portalsHeader": "포털",
+    "statusWindow": "헌터 상태창",
+    "statusRank": "랭크",
+    "statusLevel": "레벨",
+    "statusProgress": "진행도",
+    "sampleNofap": "NoFap · 하루 달성",
+    "sampleQuest": "데일리 퀘스트 · 아침 산책",
+    "sampleTraining": "훈련 루틴 · 전신",
+    "sampleCombo": "14일 콤보",
+    "whyHeader": "이게 왜 존재하는가",
+    "whyP1": "어두운 시기에 만들었다 — 우선은 나 자신을 위해. 의지력이 아니라, 매일 출근할 수 있는 게임처럼 규율을 느끼게 하는 시스템이 필요했다.",
+    "whyP2": "이제 같은 것을 갈망하는 누구에게나 열려 있다 — 충동과 싸우는 사람, 미루기에 지는 사람, 책임감이 필요하다는 걸 알지만 그것을 요구해줄 사람이 없는 사람.",
+    "whyWelcome": "그게 너라면, 환영한다."
   },
   "recentGains": {
     "title": "최근 획득",

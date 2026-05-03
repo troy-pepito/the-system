@@ -120,7 +120,7 @@ export default function LandingPage() {
 
       <section className="max-w-3xl mx-auto px-6 py-16 border-t border-slate-800/60">
         <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-10">
-          The Portals
+          {tLanding("portalsHeader")}
         </p>
         <div className="grid sm:grid-cols-2 gap-4">
           {DUNGEONS.map((d) => (
@@ -157,21 +157,16 @@ export default function LandingPage() {
       <section className="max-w-2xl mx-auto px-6 py-16 border-t border-slate-800/60">
         <div className="border border-slate-800 bg-slate-900/40 p-8">
           <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 mb-5">
-            Why this exists
+            {tLanding("whyHeader")}
           </p>
           <p className="text-sm text-slate-300 leading-relaxed mb-3">
-            I made this during a dark chapter — for myself, first. I needed a
-            system that made discipline feel less like willpower and more
-            like a game I could show up to every day.
+            {tLanding("whyP1")}
           </p>
           <p className="text-sm text-slate-300 leading-relaxed mb-3">
-            Now it&apos;s here for anyone yearning for the same: people
-            fighting compulsions, people losing to procrastination, people
-            who know they need accountability but have no one to hold them
-            to it.
+            {tLanding("whyP2")}
           </p>
           <p className="text-sm text-slate-400 leading-relaxed">
-            If that&apos;s you, welcome.
+            {tLanding("whyWelcome")}
             <br />
             — Trojan Bulldog
           </p>
@@ -288,11 +283,12 @@ function InstallFooterLink() {
 }
 
 function StatusWindowPreview() {
+  const t = useTranslations("landing");
   const entries: { label: string; xp: string; tone: "cyan" | "amber" }[] = [
-    { label: "NoFap · Day Cleared", xp: "+10 XP", tone: "cyan" },
-    { label: "Daily Quest · Morning Walk", xp: "+15 XP", tone: "cyan" },
-    { label: "Training Regimen · Full Body", xp: "+25 XP", tone: "cyan" },
-    { label: "14-Day Combo", xp: "+100 XP", tone: "amber" },
+    { label: t("sampleNofap"), xp: "+10 XP", tone: "cyan" },
+    { label: t("sampleQuest"), xp: "+15 XP", tone: "cyan" },
+    { label: t("sampleTraining"), xp: "+25 XP", tone: "cyan" },
+    { label: t("sampleCombo"), xp: "+100 XP", tone: "amber" },
   ];
   return (
     <div className="relative mx-auto max-w-md mt-16 text-left">
@@ -302,12 +298,12 @@ function StatusWindowPreview() {
       <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-400 z-10 pointer-events-none" />
       <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.25),inset_0_0_20px_rgba(34,211,238,0.05)] p-5 sm:p-6">
         <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase mb-5">
-          Hunter Status Window
+          {t("statusWindow")}
         </p>
         <div className="flex items-center gap-6 mb-5">
           <div>
             <p className="text-[9px] text-slate-500 tracking-widest uppercase">
-              Rank
+              {t("statusRank")}
             </p>
             <div className="relative w-12 h-12 mt-1 flex items-center justify-center">
               <div
@@ -331,7 +327,7 @@ function StatusWindowPreview() {
           <div className="h-10 w-px bg-slate-700" />
           <div>
             <p className="text-[9px] text-slate-500 tracking-widest uppercase">
-              Level
+              {t("statusLevel")}
             </p>
             <p className="text-3xl font-bold text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.7)] leading-none mt-1">
               34
@@ -340,7 +336,7 @@ function StatusWindowPreview() {
           <div className="h-10 w-px bg-slate-700" />
           <div className="flex-1 min-w-0">
             <div className="flex justify-between text-[9px] text-slate-500 uppercase tracking-wider mb-1.5">
-              <span>Progress</span>
+              <span>{t("statusProgress")}</span>
               <span className="font-mono text-amber-300/80">420 / 900</span>
             </div>
             <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">

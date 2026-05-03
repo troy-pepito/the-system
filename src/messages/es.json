@@ -48,7 +48,20 @@
     "footerTerms": "Términos",
     "footerInstall": "Instalar app",
     "footerContact": "Contacto",
-    "languageLabel": "Idioma"
+    "languageLabel": "Idioma",
+    "portalsHeader": "Los Portales",
+    "statusWindow": "Ventana de Estado del Cazador",
+    "statusRank": "Rango",
+    "statusLevel": "Nivel",
+    "statusProgress": "Progreso",
+    "sampleNofap": "NoFap · Día Cumplido",
+    "sampleQuest": "Misión Diaria · Caminata Matutina",
+    "sampleTraining": "Régimen de Entrenamiento · Cuerpo Completo",
+    "sampleCombo": "Combo de 14 Días",
+    "whyHeader": "Por qué existe esto",
+    "whyP1": "Lo hice durante un capítulo oscuro — para mí mismo, primero. Necesitaba un sistema que hiciera que la disciplina se sintiera menos como fuerza de voluntad y más como un juego al que pudiera aparecer cada día.",
+    "whyP2": "Ahora está aquí para cualquiera que anhele lo mismo: gente que pelea contra compulsiones, gente que pierde contra la procrastinación, gente que sabe que necesita rendir cuentas pero no tiene a nadie que se las pida.",
+    "whyWelcome": "Si esa eres tú, bienvenido."
   },
   "recentGains": {
     "title": "Ganancias recientes",

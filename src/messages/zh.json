@@ -48,7 +48,20 @@
     "footerTerms": "条款",
     "footerInstall": "安装应用",
     "footerContact": "联系",
-    "languageLabel": "语言"
+    "languageLabel": "语言",
+    "portalsHeader": "传送门",
+    "statusWindow": "猎人状态窗",
+    "statusRank": "阶位",
+    "statusLevel": "等级",
+    "statusProgress": "进度",
+    "sampleNofap": "NoFap · 当日通过",
+    "sampleQuest": "每日任务 · 晨间散步",
+    "sampleTraining": "训练计划 · 全身",
+    "sampleCombo": "14 天连击",
+    "whyHeader": "为什么有这个",
+    "whyP1": "我是在一段黑暗的章节里做出这个的 — 先是为了我自己。我需要一个让纪律感觉不像意志力,更像我每天都能赴约的游戏的系统。",
+    "whyP2": "现在它属于所有渴望同样东西的人:与冲动搏斗的人、败给拖延的人、明知需要被监督却无人监督的人。",
+    "whyWelcome": "如果那就是你,欢迎。"
   },
   "recentGains": {
     "title": "最近获得",

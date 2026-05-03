@@ -48,7 +48,20 @@
     "footerTerms": "Conditions",
     "footerInstall": "Installer l'app",
     "footerContact": "Contact",
-    "languageLabel": "Langue"
+    "languageLabel": "Langue",
+    "portalsHeader": "Les Portails",
+    "statusWindow": "Fenêtre de Statut du Chasseur",
+    "statusRank": "Rang",
+    "statusLevel": "Niveau",
+    "statusProgress": "Progression",
+    "sampleNofap": "NoFap · Jour Validé",
+    "sampleQuest": "Quête Quotidienne · Marche Matinale",
+    "sampleTraining": "Régime d'Entraînement · Corps Complet",
+    "sampleCombo": "Combo de 14 Jours",
+    "whyHeader": "Pourquoi ça existe",
+    "whyP1": "J'ai créé ça pendant un chapitre sombre — pour moi-même d'abord. J'avais besoin d'un système qui rende la discipline moins comme de la volonté pure et plus comme un jeu auquel je pouvais me présenter chaque jour.",
+    "whyP2": "Maintenant c'est là pour quiconque aspire à la même chose : les gens qui combattent des compulsions, les gens qui perdent face à la procrastination, les gens qui savent qu'ils ont besoin d'être tenus responsables mais qui n'ont personne pour le faire.",
+    "whyWelcome": "Si c'est toi, bienvenue."
   },
   "recentGains": {
     "title": "Gains récents",
