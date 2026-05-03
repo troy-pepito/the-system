@@ -16,29 +16,11 @@ import {
   type InstallState,
 } from "@/lib/pwaInstall";
 
-const STEPS = [
-  {
-    num: "01",
-    title: "Awaken",
-    description:
-      "Name your hunter, choose a Path, and enter the System. Your run begins the moment you accept.",
-  },
-  {
-    num: "02",
-    title: "Pick Your Dungeons",
-    description:
-      "A dungeon is a habit you're fighting — NoFap, no doomscroll, sensory reset, gym, diet, social anxiety. Pick the ones that matter.",
-  },
-  {
-    num: "03",
-    title: "Show Up Daily",
-    description:
-      "Check in cleared days, tick workouts, log exposures. Banked progress stacks. Climb ranks E → S.",
-  },
-];
+const STEP_NUMS = ["01", "02", "03"] as const;
 
 export default function LandingPage() {
   const tDungeons = useTranslations("dungeons");
+  const tLanding = useTranslations("landing");
   const { openSignIn } = useClerk();
   const { isSignedIn } = useUser();
   const router = useRouter();
@@ -71,17 +53,15 @@ export default function LandingPage() {
             className="font-display text-aberration text-3xl sm:text-5xl font-bold tracking-tight text-cyan-100 leading-tight mb-6 animate-reveal"
             style={{ animationDelay: "0.2s" }}
           >
-            Face your shadows.
+            {tLanding("h1Line1")}
             <br />
-            Rank up in real life.
+            {tLanding("h1Line2")}
           </h1>
           <p
             className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed animate-reveal"
             style={{ animationDelay: "0.45s" }}
           >
-            A gamified self-improvement system for the compulsions
-            nobody&apos;s watching. Built for hunters who want real progress,
-            not streaks on paper.
+            {tLanding("subtitle")}
           </p>
           <button
             onClick={handleAccept}
@@ -89,7 +69,7 @@ export default function LandingPage() {
             style={{ animationDelay: "0.7s" }}
           >
             <span className="absolute inset-0 bg-cyan-400/20 opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
-            <span className="relative">Accept the System</span>
+            <span className="relative">{tLanding("accept")}</span>
           </button>
           <div
             className="mt-5 animate-reveal"
@@ -99,7 +79,7 @@ export default function LandingPage() {
               href="/guide"
               className="text-[10px] tracking-[0.4em] uppercase text-slate-500 hover:text-cyan-300 transition-colors"
             >
-              Read the Hunter Guide →
+              {tLanding("readGuide")}
             </Link>
           </div>
 
@@ -116,22 +96,22 @@ export default function LandingPage() {
 
       <section className="max-w-3xl mx-auto px-6 py-16">
         <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-10">
-          How it works
+          {tLanding("howItWorks")}
         </p>
         <div className="grid sm:grid-cols-3 gap-4">
-          {STEPS.map((s) => (
+          {STEP_NUMS.map((num) => (
             <div
-              key={s.num}
+              key={num}
               className="border border-slate-800 bg-slate-900/40 p-6"
             >
               <p className="text-[10px] tracking-[0.4em] text-cyan-400/60 mb-3">
-                {s.num}
+                {num}
               </p>
               <p className="font-display text-sm font-bold text-cyan-100 uppercase tracking-wider mb-2">
-                {s.title}
+                {tLanding(`step${num}Title`)}
               </p>
               <p className="text-xs text-slate-400 leading-relaxed">
-                {s.description}
+                {tLanding(`step${num}Description`)}
               </p>
             </div>
           ))}
@@ -200,17 +180,17 @@ export default function LandingPage() {
 
       <section className="max-w-2xl mx-auto px-6 py-20 text-center border-t border-slate-800/60">
         <p className="text-sm sm:text-base text-slate-300 mb-4 tracking-widest">
-          The quest remains open.
+          {tLanding("questOpen")}
         </p>
         <p className="text-[10px] tracking-[0.4em] uppercase text-slate-500 mb-8">
-          Free to play
+          {tLanding("freeToPlay")}
         </p>
         <button
           onClick={handleAccept}
           className="group relative px-10 py-4 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-sm uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white transition-all shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:shadow-[0_0_40px_rgba(34,211,238,0.8)]"
         >
           <span className="absolute inset-0 bg-cyan-400/20 opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
-          <span className="relative">Accept the System →</span>
+          <span className="relative">{tLanding("acceptArrow")}</span>
         </button>
       </section>
 
@@ -222,26 +202,26 @@ export default function LandingPage() {
               href="/guide"
               className="hover:text-cyan-300 transition-colors"
             >
-              Guide
+              {tLanding("footerGuide")}
             </Link>
             <Link
               href="/privacy"
               className="hover:text-cyan-300 transition-colors"
             >
-              Privacy
+              {tLanding("footerPrivacy")}
             </Link>
             <Link
               href="/terms"
               className="hover:text-cyan-300 transition-colors"
             >
-              Terms
+              {tLanding("footerTerms")}
             </Link>
             <InstallFooterLink />
             <a
               href="mailto:trojanato@gmail.com"
               className="hover:text-cyan-300 transition-colors"
             >
-              Contact
+              {tLanding("footerContact")}
             </a>
           </div>
         </div>
@@ -251,6 +231,7 @@ export default function LandingPage() {
 }
 
 function LandingLanguagePicker() {
+  const t = useTranslations("landing");
   const current = useLocale() as Locale;
   const [pending, startTransition] = useTransition();
 
@@ -267,7 +248,7 @@ function LandingLanguagePicker() {
       value={current}
       onChange={handleChange}
       disabled={pending}
-      aria-label="Language"
+      aria-label={t("languageLabel")}
       className="bg-slate-900/80 backdrop-blur-sm border border-cyan-500/30 rounded text-cyan-200 text-[10px] uppercase tracking-wider px-2 py-1.5 hover:border-cyan-400/60 focus:border-cyan-400 focus:outline-none transition-colors disabled:opacity-50 cursor-pointer"
     >
       {LOCALE_OPTIONS.map((opt) => (
@@ -280,6 +261,7 @@ function LandingLanguagePicker() {
 }
 
 function InstallFooterLink() {
+  const t = useTranslations("landing");
   const [state, setState] = useState<InstallState>("loading");
 
   useEffect(() => {
@@ -300,7 +282,7 @@ function InstallFooterLink() {
       onClick={() => triggerInstall()}
       className="hover:text-cyan-300 transition-colors uppercase tracking-[0.3em]"
     >
-      Install App
+      {t("footerInstall")}
     </button>
   );
 }
