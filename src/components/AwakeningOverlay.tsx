@@ -80,13 +80,18 @@ export default function AwakeningOverlay() {
   const alreadyHasIdentity = isLoaded && isSignedIn && !!hunterName;
   useEffect(() => {
     if (!alreadyHasIdentity) return;
+    // Only backfill while we're still on the intro phase. Once the user
+    // reaches naming/path, Clerk's user.update({hunterName}) flips
+    // alreadyHasIdentity true mid-flow — backfilling there would unmount
+    // the overlay before the path picker can render.
+    if (phase !== "intro") return;
     if (typeof window === "undefined") return;
     if (localStorage.getItem(AWAKENED_KEY) === "true") return;
     try {
       localStorage.setItem(AWAKENED_KEY, "true");
       window.dispatchEvent(new Event(AWAKENED_EVENT));
     } catch {}
-  }, [alreadyHasIdentity]);
+  }, [alreadyHasIdentity, phase]);
 
   useEffect(() => {
     if (awakened) return;
