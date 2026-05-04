@@ -5,7 +5,7 @@ import {
 import {
   confirmDay,
   endRun,
-  enterDungeon,
+  replayEnterDungeon,
   logJournalEntry,
   logRungExposure,
   setRunStartDate,
@@ -67,9 +67,11 @@ async function applyMutation(m: Mutation): Promise<void> {
     case "dungeon:journalLog":
       await logJournalEntry(m.dungeonId, m.note, m.isPublic);
       return;
-    case "dungeon:enter":
-      await enterDungeon(m.dungeonId);
+    case "dungeon:enter": {
+      const enqueuedAt = parseEnqueuedAt(m.id) ?? Date.now();
+      await replayEnterDungeon(m.dungeonId, enqueuedAt);
       return;
+    }
     case "dungeon:setStartDate":
       await setRunStartDate(m.dungeonId, m.dateIso);
       return;
@@ -86,6 +88,30 @@ function isDrainable(m: Mutation): boolean {
   return !m.type.startsWith("clerk:");
 }
 
+// Mutations older than this are dropped on drain instead of being
+// applied. The mutation id is `${Date.now()}-${random}`, so the part
+// before the dash is the enqueue timestamp in millis. A genuinely
+// offline user is back online within hours; anything older than a
+// week is almost certainly leftover state from a flaky network or a
+// device that was put away for a while — replaying it can resurrect
+// dungeon runs the user has since ended (Sound Sensitization
+// auto-reappearing) or clobber check-in state (relapses overwritten
+// with cleared). Better to drop it than to silently corrupt data.
+const MUTATION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function parseEnqueuedAt(id: string): number | null {
+  const dash = id.indexOf("-");
+  if (dash <= 0) return null;
+  const ts = parseInt(id.slice(0, dash), 10);
+  return Number.isFinite(ts) ? ts : null;
+}
+
+function isStale(m: Mutation): boolean {
+  const enqueuedAt = parseEnqueuedAt(m.id);
+  if (enqueuedAt === null) return false;
+  return Date.now() - enqueuedAt > MUTATION_TTL_MS;
+}
+
 export async function drainQueue(): Promise<void> {
   if (drainInFlight) return drainInFlight;
   drainInFlight = (async () => {
@@ -94,6 +120,10 @@ export async function drainQueue(): Promise<void> {
         const queue = getQueue();
         const next = queue.find(isDrainable);
         if (!next) return;
+        if (isStale(next)) {
+          removeMutations([next.id]);
+          continue;
+        }
         try {
           await applyMutation(next);
           removeMutations([next.id]);

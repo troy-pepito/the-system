@@ -219,6 +219,52 @@ export async function enterDungeon(
   return toState(run);
 }
 
+/**
+ * Replay version of enterDungeon for the offline drain. Skips creation
+ * if any DungeonRun for this dungeon was touched after the mutation
+ * was enqueued (which means the user has since interacted with the
+ * dungeon — entered, ended, etc. — and a stale replay would resurrect
+ * a run they've moved past). Without this, a stale `dungeon:enter`
+ * mutation can recreate a dungeon the user has ended, e.g. Sound
+ * Sensitization auto-reappearing on the dashboard.
+ */
+export async function replayEnterDungeon(
+  dungeonId: string,
+  enqueuedAt: number
+): Promise<void> {
+  const userId = await requireUserId();
+  // Small grace window so a near-instant drain (mutation enqueued and
+  // immediately retried) doesn't false-positive its own server-side
+  // create as "post-enqueue activity."
+  const cutoff = new Date(enqueuedAt + 5_000);
+  const recentTouch = await prisma.dungeonRun.findFirst({
+    where: { userId, dungeonId, updatedAt: { gt: cutoff } },
+    select: { id: true },
+  });
+  if (recentTouch) return;
+
+  const existing = await prisma.dungeonRun.findFirst({
+    where: { userId, dungeonId, active: true },
+  });
+  if (existing) return;
+
+  if (isPricingEnabled()) {
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
+    if (!isUserPro(user)) {
+      const activeCount = await prisma.dungeonRun.count({
+        where: { userId, active: true },
+      });
+      if (activeCount >= FREE_DUNGEON_LIMIT) return;
+    }
+  }
+
+  await prisma.dungeonRun.create({
+    data: { userId, dungeonId, active: true },
+  });
+  updateTag(TAG);
+}
+
 export async function setRunStartDate(
   dungeonId: string,
   dateIso: string
@@ -723,6 +769,17 @@ export async function confirmDay(
       });
     }
   } else {
+    // Don't clobber a "relapsed" record with a "cleared" mark. This is
+    // almost always a stale offline mutation replaying after the user
+    // has since marked the day as a relapse — overwriting silently
+    // wipes their relapse history. Skip the upsert in that case.
+    const existing = await prisma.dungeonDayCheckIn.findUnique({
+      where: { userId_dungeonId_date: { userId, dungeonId, date } },
+    });
+    if (existing?.state === "relapsed") {
+      updateTag(TAG);
+      return;
+    }
     await prisma.dungeonDayCheckIn.upsert({
       where: { userId_dungeonId_date: { userId, dungeonId, date } },
       create: {
