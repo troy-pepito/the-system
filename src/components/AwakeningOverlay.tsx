@@ -271,7 +271,7 @@ export default function AwakeningOverlay() {
 
               <div
                 key="path-controls"
-                className={`mt-6 space-y-2 transition-all duration-700 ${
+                className={`mt-3 space-y-3 transition-all duration-700 ${
                   complete
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-2 pointer-events-none"
