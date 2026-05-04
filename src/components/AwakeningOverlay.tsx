@@ -192,8 +192,11 @@ export default function AwakeningOverlay() {
   if (!isLoaded) return null;
   if (!isSignedIn) return null;
   // Already-completed awakening — render nothing while the effect
-  // above backfills the localStorage flag.
-  if (alreadyHasIdentity) return null;
+  // above backfills the localStorage flag. Only fires on intro phase:
+  // during naming/path, alreadyHasIdentity flips true mid-flow as
+  // soon as user.update({hunterName}) resolves, and we must keep the
+  // overlay mounted so the path picker can render.
+  if (alreadyHasIdentity && phase === "intro") return null;
 
   const complete = lineIdx >= activeLines.length;
 
