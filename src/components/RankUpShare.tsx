@@ -3,26 +3,18 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { RANK_UP_EVENT } from "@/lib/player";
+import {
+  RANK_UP_SHARE_EVENT,
+  type RankUpSharePair,
+} from "@/lib/rankUpShareEvent";
 
-const SHARE_PROMPT_EVENT = "system:rank-up-share";
 // Celebration overlay (RankUpCelebration) fires ~700ms after RANK_UP
 // and lingers up to 5s before auto-dismissing. Slip the share prompt
 // in just after that ceremony settles so it doesn't compete for the
 // player's attention while the rank letter is on screen.
 const PRE_SHARE_DELAY_MS = 6000;
 
-interface RankPair {
-  from: string;
-  to: string;
-}
-
-/** Fired by the dev panel to test the prompt without an actual rank-up. */
-export function fireRankUpSharePrompt(detail: RankPair) {
-  if (typeof window === "undefined") return;
-  window.dispatchEvent(
-    new CustomEvent<RankPair>(SHARE_PROMPT_EVENT, { detail })
-  );
-}
+type RankPair = RankUpSharePair;
 
 export default function RankUpShare() {
   const t = useTranslations("toasts");
@@ -50,10 +42,10 @@ export default function RankUpShare() {
     };
 
     window.addEventListener(RANK_UP_EVENT, onRankUp);
-    window.addEventListener(SHARE_PROMPT_EVENT, onDirect);
+    window.addEventListener(RANK_UP_SHARE_EVENT, onDirect);
     return () => {
       window.removeEventListener(RANK_UP_EVENT, onRankUp);
-      window.removeEventListener(SHARE_PROMPT_EVENT, onDirect);
+      window.removeEventListener(RANK_UP_SHARE_EVENT, onDirect);
       if (timer) clearTimeout(timer);
     };
   }, []);

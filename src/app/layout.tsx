@@ -15,12 +15,8 @@ import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import GrainOverlay from "@/components/GrainOverlay";
 import PageTransition from "@/components/PageTransition";
 import GainToast from "@/components/GainToast";
-import BigCelebration from "@/components/BigCelebration";
 import SystemNoticeToast from "@/components/SystemNoticeToast";
-import RankUpGlitch from "@/components/RankUpGlitch";
-import RankUpCelebration from "@/components/RankUpCelebration";
-import RankUpShare from "@/components/RankUpShare";
-import LevelUpToast from "@/components/LevelUpToast";
+import LazyCelebrations from "@/components/LazyCelebrations";
 import DevTestPanel from "@/components/DevTestPanel";
 import BackToTop from "@/components/BackToTop";
 import OfflineBanner from "@/components/OfflineBanner";
@@ -119,12 +115,8 @@ export default async function RootLayout({
                 <GainsLogger />
                 <AchievementToast />
                 <GainToast />
-                <BigCelebration />
                 <SystemNoticeToast />
-                <RankUpGlitch />
-                <RankUpCelebration />
-                <RankUpShare />
-                <LevelUpToast />
+                <LazyCelebrations />
                 <BackToTop />
                 <PwaInstallPrompt />
                 <DevTestPanel />

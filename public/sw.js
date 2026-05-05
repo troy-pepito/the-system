@@ -1,5 +1,10 @@
-const STATIC_CACHE = "system-static-v2";
-const RUNTIME_CACHE = "system-runtime-v2";
+// BUILD_ID is rewritten by scripts/stamp-sw.mjs at build time so the
+// cache keys change on every deploy. Without this, old /_next/static
+// chunks live in cacheFirst storage indefinitely and users keep
+// running stale JS days after a deploy.
+const BUILD_ID = "dev";
+const STATIC_CACHE = `system-static-${BUILD_ID}`;
+const RUNTIME_CACHE = `system-runtime-${BUILD_ID}`;
 
 const PRECACHE_URLS = ["/", "/portals", "/profile"];
 

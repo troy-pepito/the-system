@@ -7,7 +7,7 @@ import {
   notifyStatsUpdated,
 } from "@/lib/player";
 import { sendTestPush } from "@/app/actions/push";
-import { fireRankUpSharePrompt } from "@/components/RankUpShare";
+import { fireRankUpSharePrompt } from "@/lib/rankUpShareEvent";
 import { COMBO_MILESTONES } from "@/lib/quests";
 import { TIER_BONUS_XP } from "@/lib/dungeons";
 
