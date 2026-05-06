@@ -320,7 +320,7 @@ function TrophySection({
                 </span>
                 <div className="flex-1 min-w-0">
                   <p
-                    className={`text-xs font-bold uppercase tracking-wider truncate ${
+                    className={`text-xs font-bold uppercase tracking-wider leading-tight ${
                       isUnlocked ? style.text : "text-slate-600"
                     }`}
                   >
