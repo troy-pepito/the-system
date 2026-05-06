@@ -24,6 +24,7 @@ import {
   type HunterType,
 } from "@/lib/hunterType";
 import { getRankStyle } from "@/lib/rankStyle";
+import Tooltip from "@/components/Tooltip";
 
 const RANKS = ["E", "D", "C", "B", "A", "S"] as const;
 const LEVELS_PER_RANK = 10;
@@ -295,13 +296,12 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 {t("name")}
               </p>
               {scattered && (
-                <span
-                  title={t("scatteredHelp")}
-                  className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm"
-                >
-                  <span aria-hidden>⚠</span>
-                  <span>{t("scattered")}</span>
-                </span>
+                <Tooltip content={t("scatteredHelp")}>
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm">
+                    <span aria-hidden>⚠</span>
+                    <span>{t("scattered")}</span>
+                  </span>
+                </Tooltip>
               )}
             </div>
             {editingName ? (
