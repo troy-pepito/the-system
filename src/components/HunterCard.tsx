@@ -291,7 +291,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
           )}
         </div>
 
-        <div className="flex items-start gap-5">
+        <div className="flex items-center gap-5">
           <div className="flex flex-col items-center gap-2 shrink-0">
           <button
             type="button"
