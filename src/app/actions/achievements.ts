@@ -13,6 +13,7 @@ import {
   QUESTS,
   SIDE_QUESTS,
   COMBO_THRESHOLD,
+  PERFECT_DAY_BONUS_XP,
   computeComboRuns,
   totalMilestoneXp,
   milestoneIdsForRuns,
@@ -416,6 +417,13 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     }
   }
 
+  // Perfect-day bonus: +30 XP for every date where all 7 daily quests
+  // were completed. Mirrors what DailyQuests.tsx celebrates client-side
+  // with notifyStatsUpdated({ xpDelta: PERFECT_DAY_BONUS_XP }) — without
+  // counting it here the bonus was a phantom that disappeared on the
+  // next server refetch (Lv 2 dropping back to Lv 1 after a refresh).
+  const perfectDayBonusXp = perfectQuestDays * PERFECT_DAY_BONUS_XP;
+
   const totalXp =
     activeStreakTotal * XP_PER_STREAK_DAY +
     bankedStreakDays * XP_PER_STREAK_DAY +
@@ -425,6 +433,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     completedRunCount * XP_PER_COMPLETION +
     questXpTotal +
     comboMilestoneXp +
+    perfectDayBonusXp +
     dungeonTierBonusTotal +
     dungeonPerActionBonusTotal;
 
