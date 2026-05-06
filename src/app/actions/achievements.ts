@@ -8,6 +8,7 @@ import {
   DIMENSION_RANK_MULTIPLIERS,
   TIER_BONUS_XP,
   TIER_PER_ACTION_BONUS,
+  CADENCE_FULL_CLEAR_BONUS_XP,
 } from "@/lib/dungeons";
 import {
   QUESTS,
@@ -424,6 +425,51 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   // next server refetch (Lv 2 dropping back to Lv 1 after a refresh).
   const perfectDayBonusXp = perfectQuestDays * PERFECT_DAY_BONUS_XP;
 
+  // Cadence full-clear bonus: +20 XP for every cadence-window in which
+  // the player completed every required workout type for that dungeon.
+  // CadenceDungeonCard.tsx awards this client-side via notifyStatsUpdated
+  // — same phantom-XP problem as perfect-day. Count it here so it sticks
+  // across refreshes.
+  //
+  // Window key:
+  // - daily-cadence dungeons (cadence.window === "day") — UTC date.
+  // - weekly-cadence dungeons — UTC Monday of the event's week.
+  // Counted via deduped workout types per window: a window is "full
+  // clear" when the set size matches cadence.workouts.length.
+  function windowKeyFor(date: Date, window: "day" | "week"): string {
+    if (window === "day") return date.toISOString().split("T")[0];
+    const day = date.getUTCDay();
+    const offsetToMonday = (day + 6) % 7;
+    const monday = new Date(
+      Date.UTC(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate() - offsetToMonday
+      )
+    );
+    return monday.toISOString().split("T")[0];
+  }
+  let cadenceFullClearCount = 0;
+  for (const d of DUNGEONS) {
+    if (d.ruleType !== "cadence" || !d.cadence) continue;
+    const requiredCount = d.cadence.workouts.length;
+    if (requiredCount === 0) continue;
+    const window = d.cadence.window;
+    const byWindow: Record<string, Set<string>> = {};
+    for (const e of events) {
+      if (e.run.dungeonId !== d.id) continue;
+      if (!workoutIds.has(e.type)) continue;
+      const key = windowKeyFor(e.date, window);
+      if (!byWindow[key]) byWindow[key] = new Set();
+      byWindow[key].add(e.type);
+    }
+    for (const set of Object.values(byWindow)) {
+      if (set.size >= requiredCount) cadenceFullClearCount++;
+    }
+  }
+  const cadenceFullClearBonusXp =
+    cadenceFullClearCount * CADENCE_FULL_CLEAR_BONUS_XP;
+
   const totalXp =
     activeStreakTotal * XP_PER_STREAK_DAY +
     bankedStreakDays * XP_PER_STREAK_DAY +
@@ -434,6 +480,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     questXpTotal +
     comboMilestoneXp +
     perfectDayBonusXp +
+    cadenceFullClearBonusXp +
     dungeonTierBonusTotal +
     dungeonPerActionBonusTotal;
 
