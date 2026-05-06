@@ -50,6 +50,26 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
   const [nameDraft, setNameDraft] = useState("");
   const [savingName, setSavingName] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onPointerDown(e: PointerEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
 
   const rank = getRank(level);
   const rankIdx = RANKS.indexOf(rank as (typeof RANKS)[number]);
@@ -228,21 +248,45 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
             {t("id")}
           </p>
           {user && (
-            <div className="flex items-center gap-3 text-[9px] tracking-[0.3em] uppercase shrink-0">
+            <div ref={menuRef} className="relative shrink-0">
               <button
                 type="button"
-                onClick={handleShare}
-                className="text-slate-500 hover:text-cyan-300 transition-colors"
+                onClick={() => setMenuOpen((v) => !v)}
+                aria-label="More actions"
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+                className="flex flex-col items-center justify-center w-7 h-7 -m-1 rounded text-slate-500 hover:text-cyan-300 hover:bg-slate-900/60 transition-colors"
               >
-                {shareCopied ? t("shareCopied") : t("share")}
+                <span className="block w-1 h-1 rounded-full bg-current mb-0.5" />
+                <span className="block w-1 h-1 rounded-full bg-current mb-0.5" />
+                <span className="block w-1 h-1 rounded-full bg-current" />
               </button>
-              <span className="text-slate-700">·</span>
-              <Link
-                href={`/h/${user.id}`}
-                className="text-slate-500 hover:text-cyan-300 transition-colors"
-              >
-                {t("viewPublic")}
-              </Link>
+              {menuOpen && (
+                <div
+                  role="menu"
+                  className="absolute top-full right-0 mt-1.5 z-50 min-w-[140px] py-1 bg-slate-900/95 border border-slate-700 rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                >
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      handleShare();
+                    }}
+                    className="w-full text-left px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-slate-300 hover:bg-slate-800 hover:text-cyan-200 transition-colors"
+                  >
+                    {shareCopied ? t("shareCopied") : t("share")}
+                  </button>
+                  <Link
+                    href={`/h/${user.id}`}
+                    role="menuitem"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-slate-300 hover:bg-slate-800 hover:text-cyan-200 transition-colors"
+                  >
+                    {t("viewPublic")}
+                  </Link>
+                </div>
+              )}
             </div>
           )}
         </div>
