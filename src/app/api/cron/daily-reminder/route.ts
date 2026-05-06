@@ -14,7 +14,7 @@ const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const FALLBACK_TIMEZONE = "Asia/Dubai";
 const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://trojanatoplat-system.vercel.app";
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://shivalivaleveling.com";
 
 function startOfUtcDay(d: Date): Date {
   return new Date(

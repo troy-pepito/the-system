@@ -13,6 +13,7 @@ import SignInGate from "@/components/SignInGate";
 import PostHogProvider from "@/components/PostHogProvider";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import GrainOverlay from "@/components/GrainOverlay";
+import MigrationBanner from "@/components/MigrationBanner";
 import PageTransition from "@/components/PageTransition";
 import GainToast from "@/components/GainToast";
 import SystemNoticeToast from "@/components/SystemNoticeToast";
@@ -97,6 +98,7 @@ export default async function RootLayout({
           <NextIntlClientProvider locale={locale} messages={messages}>
             <PostHogProvider>
               <ServiceWorkerRegistration />
+              <MigrationBanner />
               <OfflineBanner />
               <GrainOverlay />
               <AwakeningOverlay />
