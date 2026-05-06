@@ -247,7 +247,8 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-start gap-5">
+          <div className="flex flex-col items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
@@ -289,20 +290,21 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
               className="hidden"
             />
           </button>
+          {scattered && (
+            <Tooltip content={t("scatteredHelp")}>
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm">
+                <span aria-hidden>⚠</span>
+                <span>{t("scattered")}</span>
+              </span>
+            </Tooltip>
+          )}
+          </div>
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap mb-1.5">
               <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
                 {t("name")}
               </p>
-              {scattered && (
-                <Tooltip content={t("scatteredHelp")}>
-                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm">
-                    <span aria-hidden>⚠</span>
-                    <span>{t("scattered")}</span>
-                  </span>
-                </Tooltip>
-              )}
             </div>
             {editingName ? (
               <input
