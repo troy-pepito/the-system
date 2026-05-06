@@ -125,8 +125,15 @@ const getComboStateCached = unstable_cache(
     const pastRuns = computeComboRuns(pastQualifying);
 
     const yesterdayIso = addDaysISO(todayIso, -1);
-    const hasAnyCompletion = Object.keys(byDate).length > 0;
-    const scattered = hasAnyCompletion && !byDate[yesterdayIso];
+    // "Scattered" = user broke their cadence by missing yesterday.
+    // For that to be meaningful they must have been active BEFORE
+    // yesterday — otherwise a brand-new user who only did quests today
+    // would falsely get flagged as scattered just because yesterday is
+    // empty (they weren't on the system yet).
+    const hasActivityBeforeYesterday = Object.keys(byDate).some(
+      (d) => d < yesterdayIso
+    );
+    const scattered = hasActivityBeforeYesterday && !byDate[yesterdayIso];
 
     return {
       priorComboDays: computePriorComboDays(pastRuns, todayIso),
