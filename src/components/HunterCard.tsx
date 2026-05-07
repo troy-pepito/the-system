@@ -29,24 +29,6 @@ import Tooltip from "@/components/Tooltip";
 const RANKS = ["E", "D", "C", "B", "A", "S"] as const;
 const LEVELS_PER_RANK = 10;
 
-/**
- * Cosmetic ID number derived from the Clerk userId. Looks like
- * "HID-3CDI-ZOSY-B31S" — purely visual flavor, not used for anything.
- * Stable across sessions because it's a deterministic slice of the
- * userId. No DB column, no security implications.
- */
-function formatLicenseNo(userId: string | null | undefined): string {
-  if (!userId) return "HID-————-————-————";
-  const cleaned = userId
-    .replace(/^user_/, "")
-    .replace(/[^a-zA-Z0-9]/g, "")
-    .toUpperCase();
-  const a = cleaned.slice(0, 4) || "————";
-  const b = cleaned.slice(4, 8) || "————";
-  const c = cleaned.slice(8, 12) || "————";
-  return `HID-${a}-${b}-${c}`;
-}
-
 interface HunterCardProps {
   totalXp: number;
   scattered?: boolean;
@@ -261,16 +243,6 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
       <div
         className={`relative bg-slate-950/80 border p-5 sm:p-6 transition-shadow duration-700 ${rankFrame.cardBorder} ${rankFrame.cardGlow}`}
       >
-        {/* Cosmetic right-edge barcode strip — pure flavor, gives the
-            card "official document" feel a la Hunter's License canon. */}
-        <div
-          aria-hidden
-          className="absolute right-2 top-3 bottom-3 w-[2px] opacity-30 pointer-events-none"
-          style={{
-            background:
-              "repeating-linear-gradient(to bottom, rgba(34,211,238,0.8) 0, rgba(34,211,238,0.8) 2px, transparent 2px, transparent 5px)",
-          }}
-        />
         <div className="flex items-center justify-between mb-4 gap-3">
           <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
             {t("id")}
@@ -323,14 +295,6 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                     className="block px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-slate-300 hover:bg-slate-800 hover:text-cyan-200 transition-colors"
                   >
                     {t("viewPublic")}
-                  </Link>
-                  <Link
-                    href="/settings"
-                    role="menuitem"
-                    onClick={() => setMenuOpen(false)}
-                    className="block px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-slate-300 hover:bg-slate-800 hover:text-cyan-200 transition-colors"
-                  >
-                    Settings
                   </Link>
                 </div>
               )}
@@ -392,12 +356,6 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
           </div>
 
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] text-slate-500 tracking-[0.3em] uppercase">
-              License No.
-            </p>
-            <p className="font-mono text-[11px] text-cyan-300/70 tracking-wider mt-0.5 mb-3 truncate">
-              {formatLicenseNo(user?.id)}
-            </p>
             <div className="flex items-center gap-3 flex-wrap mb-1.5">
               <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
                 {t("name")}

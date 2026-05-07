@@ -12,9 +12,18 @@ import {
 
 interface Props {
   hunterId: string;
+  /**
+   * "default" renders the full pill buttons (used when the actions
+   * are the only thing in their row). "compact" renders small
+   * icon-style buttons that fit inside another header — used in the
+   * Hunter ID card top-right slot, mirroring where the kebab sits on
+   * the owner's view.
+   */
+  variant?: "default" | "compact";
 }
 
-export default function FriendActions({ hunterId }: Props) {
+export default function FriendActions({ hunterId, variant = "default" }: Props) {
+  const compact = variant === "compact";
   const t = useTranslations("friends");
   const [status, setStatus] = useState<FriendStatus | "loading">("loading");
   const [busy, setBusy] = useState(false);
@@ -62,25 +71,39 @@ export default function FriendActions({ hunterId }: Props) {
 
   if (status === "loading" || status === "self") return null;
 
+  // Compact = a small square icon-style button (or two side by side
+  // for pending_in / unfriend confirm). Sized to sit next to the kebab
+  // dots in the Hunter ID header. Default = the full pill button block
+  // used elsewhere (e.g. older layouts that called this without a
+  // variant prop).
+  const pillCls = compact
+    ? "flex items-center justify-center w-7 h-7 rounded text-[12px] leading-none"
+    : "px-4 py-2 text-xs tracking-[0.3em] rounded";
+  const pillBase = compact ? "" : "uppercase";
+
   if (status === "friends") {
     if (confirmingUnfriend) {
       return (
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <button
             type="button"
             disabled={busy}
             onClick={() => run(() => removeFriend(hunterId), "none")}
-            className="px-4 py-2 border border-red-500/50 bg-red-500/15 text-red-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-red-500/25 transition-colors disabled:opacity-50"
+            aria-label={t("unfriend")}
+            title={t("unfriend")}
+            className={`border border-red-500/50 bg-red-500/15 text-red-300 hover:bg-red-500/25 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
           >
-            {t("unfriend")}
+            {compact ? <span aria-hidden>✕</span> : t("unfriend")}
           </button>
           <button
             type="button"
             disabled={busy}
             onClick={() => setConfirmingUnfriend(false)}
-            className="px-4 py-2 border border-slate-700 text-slate-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-slate-800/60 transition-colors disabled:opacity-50"
+            aria-label={t("cancel")}
+            title={t("cancel")}
+            className={`border border-slate-700 text-slate-300 hover:bg-slate-800/60 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
           >
-            {t("cancel")}
+            {compact ? <span aria-hidden>↶</span> : t("cancel")}
           </button>
         </div>
       );
@@ -90,9 +113,11 @@ export default function FriendActions({ hunterId }: Props) {
         type="button"
         disabled={busy}
         onClick={() => setConfirmingUnfriend(true)}
-        className="px-4 py-2 border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 text-xs uppercase tracking-[0.3em] rounded hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+        aria-label={t("isFriend")}
+        title={t("isFriend")}
+        className={`border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
       >
-        {t("isFriend")}
+        {compact ? <span aria-hidden>✓</span> : t("isFriend")}
       </button>
     );
   }
@@ -102,31 +127,37 @@ export default function FriendActions({ hunterId }: Props) {
       <button
         type="button"
         disabled
-        className="px-4 py-2 border border-slate-700 text-slate-500 text-xs uppercase tracking-[0.3em] rounded cursor-not-allowed"
+        aria-label={t("requestSent")}
+        title={t("requestSent")}
+        className={`border border-slate-700 text-slate-500 cursor-not-allowed ${pillCls} ${pillBase}`}
       >
-        {t("requestSent")}
+        {compact ? <span aria-hidden>⋯</span> : t("requestSent")}
       </button>
     );
   }
 
   if (status === "pending_in") {
     return (
-      <div className="flex gap-2">
+      <div className="flex gap-1.5">
         <button
           type="button"
           disabled={busy}
           onClick={() => run(() => acceptFriend(hunterId), "friends")}
-          className="px-4 py-2 border border-cyan-400/60 bg-cyan-500/20 text-cyan-200 text-xs uppercase tracking-[0.3em] rounded hover:bg-cyan-500/30 transition-colors disabled:opacity-50"
+          aria-label={t("accept")}
+          title={t("accept")}
+          className={`border border-cyan-400/60 bg-cyan-500/20 text-cyan-200 hover:bg-cyan-500/30 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
         >
-          {t("accept")}
+          {compact ? <span aria-hidden>✓</span> : t("accept")}
         </button>
         <button
           type="button"
           disabled={busy}
           onClick={() => run(() => declineFriend(hunterId), "none")}
-          className="px-4 py-2 border border-slate-700 text-slate-400 text-xs uppercase tracking-[0.3em] rounded hover:bg-slate-800/60 transition-colors disabled:opacity-50"
+          aria-label={t("decline")}
+          title={t("decline")}
+          className={`border border-slate-700 text-slate-400 hover:bg-slate-800/60 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
         >
-          {t("decline")}
+          {compact ? <span aria-hidden>✕</span> : t("decline")}
         </button>
       </div>
     );
@@ -137,9 +168,11 @@ export default function FriendActions({ hunterId }: Props) {
       type="button"
       disabled={busy}
       onClick={() => run(() => requestFriend(hunterId), "pending_out")}
-      className="px-4 py-2 border border-cyan-400/60 bg-cyan-500/10 text-cyan-200 text-xs uppercase tracking-[0.3em] rounded hover:bg-cyan-500/20 transition-colors disabled:opacity-50"
+      aria-label={t("addFriend")}
+      title={t("addFriend")}
+      className={`border border-cyan-400/60 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
     >
-      {t("addFriend")}
+      {compact ? <span aria-hidden>＋</span> : t("addFriend")}
     </button>
   );
 }

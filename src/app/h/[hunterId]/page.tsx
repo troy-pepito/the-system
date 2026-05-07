@@ -99,9 +99,12 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
           <div
             className={`relative bg-slate-950/80 border p-5 sm:p-6 ${rankFrame.cardBorder} ${rankFrame.cardGlow}`}
               >
-            <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase mb-4">
-              {tHunterCard("id")}
-            </p>
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
+                {tHunterCard("id")}
+              </p>
+              <FriendActions hunterId={data.hunterId} variant="compact" />
+            </div>
             <div className="flex items-center gap-5">
               <div className="shrink-0 w-24 h-24 sm:w-28 sm:h-28 overflow-hidden border border-cyan-400/50 bg-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.25)]">
                 {data.imageUrl ? (
@@ -176,10 +179,6 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="flex justify-center">
-          <FriendActions hunterId={data.hunterId} />
         </div>
 
         <Card className="p-6">
