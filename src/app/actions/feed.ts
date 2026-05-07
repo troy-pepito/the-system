@@ -7,6 +7,20 @@ import {
   REACTION_EMOJI_SET,
   type ReactionSummary,
 } from "@/lib/reactions";
+import legacyAuthors from "@/data/legacy-authors.json";
+
+// Snapshot of dev-instance Clerk users captured at the prod cutover
+// (2026-05-07). Their userIds still live on DungeonRun rows from the
+// pre-migration era, so the feed needs a name + avatar fallback when
+// prod Clerk doesn't recognize them. Built from
+// scripts/snapshot-legacy-authors.mjs (now deleted).
+const LEGACY_AUTHOR_MAP = new Map(
+  (legacyAuthors as Array<{
+    id: string;
+    hunterName: string;
+    imageUrl: string | null;
+  }>).map((u) => [u.id, u])
+);
 
 export interface FeedEntry {
   id: number;
@@ -111,7 +125,12 @@ export async function getPublicFeed(
   }
 
   const entries: FeedEntry[] = slice.map((e) => {
-    const u = usersById.get(e.run.userId);
+    // Try prod Clerk first, then the dev-era legacy snapshot. Without
+    // the fallback every pre-migration journal entry would render with
+    // the "Hunter" placeholder + ? avatar even though we still have
+    // each author's name and avatar URL captured.
+    const u =
+      usersById.get(e.run.userId) ?? LEGACY_AUTHOR_MAP.get(e.run.userId);
     return {
       id: e.id,
       hunterId: e.run.userId,
