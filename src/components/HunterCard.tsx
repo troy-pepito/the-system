@@ -29,6 +29,24 @@ import Tooltip from "@/components/Tooltip";
 const RANKS = ["E", "D", "C", "B", "A", "S"] as const;
 const LEVELS_PER_RANK = 10;
 
+/**
+ * Cosmetic ID number derived from the Clerk userId. Looks like
+ * "HID-3CDI-ZOSY-B31S" — purely visual flavor, not used for anything.
+ * Stable across sessions because it's a deterministic slice of the
+ * userId. No DB column, no security implications.
+ */
+function formatLicenseNo(userId: string | null | undefined): string {
+  if (!userId) return "HID-————-————-————";
+  const cleaned = userId
+    .replace(/^user_/, "")
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toUpperCase();
+  const a = cleaned.slice(0, 4) || "————";
+  const b = cleaned.slice(4, 8) || "————";
+  const c = cleaned.slice(8, 12) || "————";
+  return `HID-${a}-${b}-${c}`;
+}
+
 interface HunterCardProps {
   totalXp: number;
   scattered?: boolean;
@@ -243,6 +261,16 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
       <div
         className={`relative bg-slate-950/80 border p-5 sm:p-6 transition-shadow duration-700 ${rankFrame.cardBorder} ${rankFrame.cardGlow}`}
       >
+        {/* Cosmetic right-edge barcode strip — pure flavor, gives the
+            card "official document" feel a la Hunter's License canon. */}
+        <div
+          aria-hidden
+          className="absolute right-2 top-3 bottom-3 w-[2px] opacity-30 pointer-events-none"
+          style={{
+            background:
+              "repeating-linear-gradient(to bottom, rgba(34,211,238,0.8) 0, rgba(34,211,238,0.8) 2px, transparent 2px, transparent 5px)",
+          }}
+        />
         <div className="flex items-center justify-between mb-4 gap-3">
           <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
             {t("id")}
@@ -264,8 +292,19 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
               {menuOpen && (
                 <div
                   role="menu"
-                  className="absolute top-full right-0 mt-1.5 z-50 min-w-[140px] py-1 bg-slate-900/95 border border-slate-700 rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                  className="absolute top-full right-0 mt-1.5 z-50 min-w-[160px] py-1 bg-slate-900/95 border border-slate-700 rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                 >
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      startEditName();
+                    }}
+                    className="w-full text-left px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-slate-300 hover:bg-slate-800 hover:text-cyan-200 transition-colors"
+                  >
+                    {t("rename")}
+                  </button>
                   <button
                     type="button"
                     role="menuitem"
@@ -284,6 +323,14 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                     className="block px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-slate-300 hover:bg-slate-800 hover:text-cyan-200 transition-colors"
                   >
                     {t("viewPublic")}
+                  </Link>
+                  <Link
+                    href="/settings"
+                    role="menuitem"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-slate-300 hover:bg-slate-800 hover:text-cyan-200 transition-colors"
+                  >
+                    Settings
                   </Link>
                 </div>
               )}
@@ -345,6 +392,12 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
           </div>
 
           <div className="flex-1 min-w-0">
+            <p className="text-[9px] text-slate-500 tracking-[0.3em] uppercase">
+              License No.
+            </p>
+            <p className="font-mono text-[11px] text-cyan-300/70 tracking-wider mt-0.5 mb-3 truncate">
+              {formatLicenseNo(user?.id)}
+            </p>
             <div className="flex items-center gap-3 flex-wrap mb-1.5">
               <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
                 {t("name")}
@@ -371,36 +424,16 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 className="w-full bg-transparent border-b border-cyan-400/60 text-lg sm:text-xl font-bold text-cyan-100 tracking-wider focus:outline-none focus:border-cyan-300 disabled:opacity-60"
               />
             ) : (
-              <button
-                type="button"
-                onClick={startEditName}
-                title={t("rename")}
-                className="group flex items-center gap-2 w-full text-left"
-              >
-                <span className="font-display text-lg sm:text-xl font-bold text-cyan-100 truncate tracking-wider group-hover:text-white transition-colors">
-                  {displayName}
-                </span>
-                <span className="text-[9px] text-slate-600 tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                  {t("edit")}
-                </span>
-              </button>
+              <p className="font-display text-lg sm:text-xl font-bold text-cyan-100 truncate tracking-wider">
+                {displayName}
+              </p>
             )}
             {hunterTypeDef && (
-              <Link
-                href="/settings"
-                title={t("changePath")}
+              <span
                 className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${hunterTypeDef.badgeStyle}`}
               >
                 <span>{tHunterTypes(`${hunterTypeDef.id}.label`)}</span>
-              </Link>
-            )}
-            {!hunterTypeDef && isLoaded && user && (
-              <Link
-                href="/settings"
-                className="inline-block mt-2 text-[9px] tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-300 border-b border-slate-700 hover:border-cyan-400/50 transition-colors pb-0.5"
-              >
-                {t("choosePath")}
-              </Link>
+              </span>
             )}
             <div className="flex items-center gap-4 mt-5">
               <Link
@@ -408,7 +441,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 title={t("viewAllRanks")}
                 className="group cursor-pointer px-3 py-2 border border-cyan-500/40 rounded bg-slate-900/40 hover:border-cyan-400/80 hover:bg-cyan-500/10 hover:shadow-[0_0_15px_rgba(34,211,238,0.35)] transition-all"
               >
-                <p className="text-[9px] text-slate-500 tracking-widest uppercase group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
                   <span>{t("rank")}</span>
                   <span
                     aria-hidden
@@ -426,7 +459,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 </p>
               </Link>
               <div>
-                <p className="text-[9px] text-slate-500 tracking-widest uppercase">
+                <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
                   {t("level")}
                 </p>
                 <p className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)] leading-none mt-1">
