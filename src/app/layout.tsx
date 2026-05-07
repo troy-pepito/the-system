@@ -23,6 +23,7 @@ import BackToTop from "@/components/BackToTop";
 import OfflineBanner from "@/components/OfflineBanner";
 import CacheWarmer from "@/components/CacheWarmer";
 import OfflineSyncManager from "@/components/OfflineSyncManager";
+import CrossTabSync from "@/components/CrossTabSync";
 import DailyReminderAutoEnroll from "@/components/DailyReminderAutoEnroll";
 import GainsLogger from "@/components/GainsLogger";
 import { SignedIn, SignedOut } from "@/components/AuthGate";
@@ -113,6 +114,7 @@ export default async function RootLayout({
               <SignedIn>
                 <CacheWarmer />
                 <OfflineSyncManager />
+                <CrossTabSync />
                 <DailyReminderAutoEnroll />
                 <GainsLogger />
                 <AchievementToast />
