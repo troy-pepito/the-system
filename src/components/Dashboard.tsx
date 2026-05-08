@@ -54,11 +54,13 @@ export default function Dashboard() {
   const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      // Long-press to lift, so taps on buttons inside the card (Log
-      // Exposure, +Quest, Undo) still register as taps. 250ms is the
-      // shortest delay that doesn't fight with quick double-taps;
-      // tolerance lets the finger wiggle 5px without cancelling.
-      activationConstraint: { delay: 250, tolerance: 5 },
+      // 5px distance constraint instead of a hold delay: drag is
+      // handle-only now (the grip in the top-right of each card has
+      // touch-action:none + setActivatorNodeRef), so we don't need to
+      // distinguish a tap-on-card from a drag-on-card. Short distance
+      // gate is enough to swallow accidental click-without-move on
+      // the handle.
+      activationConstraint: { distance: 5 },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
