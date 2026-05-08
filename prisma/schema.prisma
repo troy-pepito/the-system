@@ -83,10 +83,16 @@ model QuestCompletion {
 }
 
 model Achievement {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   userId         String
   achievementId  String
-  unlockedAt     DateTime @default(now())
+  unlockedAt     DateTime  @default(now())
+  // null = unclaimed (player has earned it but hasn't tapped Claim yet
+  // and hasn't been awarded the rarity-based XP). Set to now() the
+  // moment the player claims it. Existing rows get null on migration —
+  // every previously-unlocked trophy becomes claimable as a one-time
+  // batch moment, which is intended.
+  claimedAt      DateTime?
 
   @@unique([userId, achievementId])
 }

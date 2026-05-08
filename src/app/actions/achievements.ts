@@ -25,6 +25,7 @@ import {
 } from "@/lib/quests";
 import {
   ACHIEVEMENTS,
+  TROPHY_XP_BY_RARITY,
   type PlayerSnapshot,
 } from "@/lib/achievements";
 import { requireUserId } from "@/lib/auth";
@@ -44,10 +45,12 @@ const TAG = "player:stats";
 export interface UnlockedAchievement {
   id: string;
   unlockedAt: string;
+  /** ISO string when the player tapped Claim and was awarded XP. null = unclaimed. */
+  claimedAt: string | null;
 }
 
 async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
-  const [runs, events, quests, allCheckIns] = await Promise.all([
+  const [runs, events, quests, allCheckIns, claimedTrophies] = await Promise.all([
     prisma.dungeonRun.findMany({
       where: { userId },
       select: {
@@ -75,6 +78,13 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       by: ["dungeonId"],
       where: { userId, state: "cleared" },
       _count: { _all: true },
+    }),
+    // Claimed trophies — XP source. Unclaimed rows don't contribute
+    // to totalXp until the player taps Claim, then this list grows
+    // and the next snapshot includes the rarity-mapped XP.
+    prisma.achievement.findMany({
+      where: { userId, claimedAt: { not: null } },
+      select: { achievementId: true },
     }),
   ]);
 
@@ -470,6 +480,17 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   const cadenceFullClearBonusXp =
     cadenceFullClearCount * CADENCE_FULL_CLEAR_BONUS_XP;
 
+  // Claimed trophy XP — sum of rarity-mapped values for every
+  // achievement the player has tapped Claim on. Unclaimed trophies
+  // contribute zero. Persisted via Achievement.claimedAt, so this
+  // calc is deterministic across refetches (no phantom-XP risk).
+  const achievementById = new Map(ACHIEVEMENTS.map((a) => [a.id, a]));
+  const claimedTrophyXp = claimedTrophies.reduce((sum, row) => {
+    const def = achievementById.get(row.achievementId);
+    if (!def) return sum;
+    return sum + (TROPHY_XP_BY_RARITY[def.rarity] ?? 0);
+  }, 0);
+
   const totalXp =
     activeStreakTotal * XP_PER_STREAK_DAY +
     bankedStreakDays * XP_PER_STREAK_DAY +
@@ -481,6 +502,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     comboMilestoneXp +
     perfectDayBonusXp +
     cadenceFullClearBonusXp +
+    claimedTrophyXp +
     dungeonTierBonusTotal +
     dungeonPerActionBonusTotal;
 
@@ -569,7 +591,7 @@ export async function evaluateAchievements(): Promise<string[]> {
 }
 
 const getUnlockedAchievementsCached = unstable_cache(
-  async (userId: string) => {
+  async (userId: string): Promise<UnlockedAchievement[]> => {
     const rows = await prisma.achievement.findMany({
       where: { userId },
       orderBy: { unlockedAt: "desc" },
@@ -577,11 +599,46 @@ const getUnlockedAchievementsCached = unstable_cache(
     return rows.map((r) => ({
       id: r.achievementId,
       unlockedAt: r.unlockedAt.toISOString(),
+      claimedAt: r.claimedAt ? r.claimedAt.toISOString() : null,
     }));
   },
   ["unlocked-achievements"],
   { tags: [TAG] }
 );
+
+/**
+ * Mark an achievement as claimed and award the rarity-based XP. The
+ * server XP calc in buildSnapshot reads claimedAt rows and sums the
+ * rarity-mapped XP into totalXp — that's the persistence path. This
+ * action just flips the row.
+ *
+ * Idempotent: re-claiming a row that already has claimedAt set
+ * touches no rows (the where clause filters claimedAt: null).
+ */
+export async function claimAchievement(achievementId: string): Promise<void> {
+  const userId = await requireUserId();
+  await prisma.achievement.updateMany({
+    where: { userId, achievementId, claimedAt: null },
+    data: { claimedAt: new Date() },
+  });
+  updateTag(TAG);
+}
+
+/** Used by the navbar badge — single integer count, dirt cheap. */
+const getUnclaimedTrophyCountCached = unstable_cache(
+  async (userId: string): Promise<number> => {
+    return prisma.achievement.count({
+      where: { userId, claimedAt: null },
+    });
+  },
+  ["unclaimed-trophy-count"],
+  { tags: [TAG] }
+);
+
+export async function getUnclaimedTrophyCount(): Promise<number> {
+  const userId = await requireUserId();
+  return getUnclaimedTrophyCountCached(userId);
+}
 
 export async function getUnlockedAchievements(): Promise<UnlockedAchievement[]> {
   const userId = await requireUserId();
@@ -715,6 +772,7 @@ const getProfilePageDataCached = unstable_cache(
       unlocked: rows.map((r) => ({
         id: r.achievementId,
         unlockedAt: r.unlockedAt.toISOString(),
+        claimedAt: r.claimedAt ? r.claimedAt.toISOString() : null,
       })),
       heatmap,
     };
@@ -906,6 +964,7 @@ export async function getPublicHunterData(
     unlocked: achievementRows.map((r) => ({
       id: r.achievementId,
       unlockedAt: r.unlockedAt.toISOString(),
+      claimedAt: r.claimedAt ? r.claimedAt.toISOString() : null,
     })),
     heatmap,
     publicJournal: publicEvents.map((e) => ({

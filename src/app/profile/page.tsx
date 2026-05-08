@@ -11,11 +11,13 @@ import {
   isComboAchievementId,
   rarityStyle,
   resolveAchievementLabels,
+  TROPHY_XP_BY_RARITY,
   type AchievementDef,
 } from "@/lib/achievements";
 import { DUNGEONS } from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
 import {
+  claimAchievement,
   getProfilePageData,
   type ProfilePageData,
 } from "@/app/actions/achievements";
@@ -26,7 +28,7 @@ import {
 import JournalSection from "@/components/JournalSection";
 import RecentGains from "@/components/RecentGains";
 import FriendsSection from "@/components/FriendsSection";
-import { STATS_UPDATED_EVENT } from "@/lib/player";
+import { STATS_UPDATED_EVENT, notifyStatsUpdated } from "@/lib/player";
 import { readCache, writeCache } from "@/lib/offlineCache";
 
 const PROFILE_CACHE_KEY = "profile";
@@ -74,7 +76,14 @@ export default function ProfilePage() {
 
   const { stats, unlocked } = data;
   const trophyUnlocked = unlocked.filter((u) => !isComboAchievementId(u.id));
-  const unlockedMap = new Map(trophyUnlocked.map((u) => [u.id, u.unlockedAt]));
+  // Map: achievement id → { unlockedAt, claimedAt }. The `claimedAt
+  // === null` case is what powers the unclaimed/Claim UI in
+  // TrophySection.
+  const unlockedMap = new Map(
+    trophyUnlocked.map(
+      (u) => [u.id, { unlockedAt: u.unlockedAt, claimedAt: u.claimedAt }] as const
+    )
+  );
   const totalCount = ACHIEVEMENTS.length;
   const unlockedCount = trophyUnlocked.length;
   const completion = Math.round((unlockedCount / totalCount) * 100);
@@ -241,6 +250,11 @@ export default function ProfilePage() {
   );
 }
 
+interface UnlockedEntry {
+  unlockedAt: string;
+  claimedAt: string | null;
+}
+
 function TrophySection({
   label,
   defs,
@@ -249,7 +263,7 @@ function TrophySection({
 }: {
   label: string;
   defs: AchievementDef[];
-  unlockedMap: Map<string, unknown>;
+  unlockedMap: Map<string, UnlockedEntry>;
   nested?: boolean;
 }) {
   const tAchievements = useTranslations("achievements");
@@ -257,6 +271,35 @@ function TrophySection({
   const tRungs = useTranslations("rungs");
   const tRarity = useTranslations("rarityLabels");
   const [expanded, setExpanded] = useState(false);
+  // Tracks ids the player has just tapped Claim on, so the UI flips
+  // to claimed instantly without waiting for the server action +
+  // refetch round trip. Server state catches up via notifyStatsUpdated.
+  const [claimedLocal, setClaimedLocal] = useState<Set<string>>(new Set());
+  const [claiming, setClaiming] = useState<string | null>(null);
+
+  async function handleClaim(id: string) {
+    if (claiming) return;
+    setClaiming(id);
+    setClaimedLocal((prev) => new Set(prev).add(id));
+    try {
+      await claimAchievement(id);
+      // Drives every page that listens (Dashboard, Profile,
+      // Navbar's totalXp, etc.) to refetch — so the claim XP shows
+      // up everywhere within a render or two.
+      notifyStatsUpdated();
+    } catch {
+      // Roll back the optimistic claim on failure so the button
+      // re-appears for the player to retry.
+      setClaimedLocal((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    } finally {
+      setClaiming(null);
+    }
+  }
+
   if (defs.length === 0) return null;
   const unlockedHere = defs.filter((d) => unlockedMap.has(d.id)).length;
   return (
@@ -293,9 +336,13 @@ function TrophySection({
       {expanded && (
       <div className="grid grid-cols-2 gap-3">
         {defs.map((def) => {
-          const unlockedAt = unlockedMap.get(def.id);
+          const entry = unlockedMap.get(def.id);
           const style = rarityStyle(def.rarity);
-          const isUnlocked = !!unlockedAt;
+          const isUnlocked = !!entry;
+          const isClaimed =
+            (entry && entry.claimedAt !== null) || claimedLocal.has(def.id);
+          const isUnclaimed = isUnlocked && !isClaimed;
+          const xpReward = TROPHY_XP_BY_RARITY[def.rarity];
           const labels = resolveAchievementLabels(
             def.id,
             tAchievements,
@@ -307,7 +354,9 @@ function TrophySection({
             <div
               key={def.id}
               className={`relative border rounded-lg p-3 transition-all ${
-                isUnlocked
+                isUnclaimed
+                  ? `${style.bg} ${style.border} shadow-[0_0_20px_rgba(251,191,36,0.5)] animate-pulse-slow`
+                  : isUnlocked
                   ? `${style.bg} ${style.border} ${style.glow}`
                   : "bg-slate-900/50 border-slate-800"
               }`}
@@ -346,6 +395,16 @@ function TrophySection({
                   </p>
                 </div>
               </div>
+              {isUnclaimed && (
+                <button
+                  type="button"
+                  onClick={() => handleClaim(def.id)}
+                  disabled={claiming === def.id}
+                  className="mt-3 w-full px-3 py-1.5 bg-amber-500/20 border border-amber-400/70 text-amber-200 text-[10px] tracking-[0.3em] uppercase font-bold rounded hover:bg-amber-500/30 hover:text-amber-100 transition-colors disabled:opacity-50 disabled:cursor-wait shadow-[0_0_12px_rgba(251,191,36,0.4)]"
+                >
+                  {claiming === def.id ? "Claiming…" : `Claim · +${xpReward} XP`}
+                </button>
+              )}
             </div>
           );
         })}

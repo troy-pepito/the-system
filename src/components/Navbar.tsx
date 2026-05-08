@@ -17,7 +17,10 @@ import {
   notifyLevelUp,
 } from "@/lib/player";
 import { useTweenNumber } from "@/lib/useTweenNumber";
-import { getProfileStats } from "@/app/actions/achievements";
+import {
+  getProfileStats,
+  getUnclaimedTrophyCount,
+} from "@/app/actions/achievements";
 import { readCache, writeCache } from "@/lib/offlineCache";
 
 const TOTAL_XP_CACHE_KEY = "totalXp";
@@ -26,22 +29,31 @@ export default function Navbar() {
   // Initialize 0 on both server and client so the SSR'd HTML matches
   // the first client render. Cache hydration happens in the useEffect.
   const [totalXp, setTotalXp] = useState<number>(0);
+  const [unclaimedTrophyCount, setUnclaimedTrophyCount] = useState<number>(0);
   const pathname = usePathname();
   const t = useTranslations("nav");
 
-  const navLink = (href: string, label: string) => {
+  const navLink = (href: string, label: string, badgeCount?: number) => {
     const isActive =
       href === "/" ? pathname === "/" : pathname.startsWith(href);
     return (
       <Link
         href={href}
-        className={`transition-colors ${
+        className={`relative transition-colors ${
           isActive
             ? "text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.5)]"
             : "text-slate-400 hover:text-cyan-300"
         }`}
       >
         {label}
+        {!!badgeCount && badgeCount > 0 && (
+          <span
+            aria-label={`${badgeCount} unclaimed`}
+            className="absolute -top-1.5 -right-2.5 min-w-[14px] h-[14px] px-1 flex items-center justify-center bg-amber-400 text-slate-950 text-[8px] font-bold rounded-full shadow-[0_0_6px_rgba(251,191,36,0.7)]"
+          >
+            {badgeCount > 9 ? "9+" : badgeCount}
+          </span>
+        )}
       </Link>
     );
   };
@@ -58,6 +70,13 @@ export default function Navbar() {
         if (hasPendingMutations()) return;
         writeCache(TOTAL_XP_CACHE_KEY, stats.totalXp);
         setTotalXp(stats.totalXp);
+      } catch {}
+      try {
+        // Trophy count is cheap (single COUNT query, server-cached) so
+        // pulling it on the same recompute trigger is fine. Fires
+        // alongside totalXp on every STATS_UPDATED_EVENT.
+        const count = await getUnclaimedTrophyCount();
+        setUnclaimedTrophyCount(count);
       } catch {}
     };
     const onEvent = (e: Event) => {
@@ -131,7 +150,7 @@ export default function Navbar() {
             {navLink("/", t("status"))}
             {navLink("/portals", t("portals"))}
             {navLink("/feed", t("feed"))}
-            {navLink("/profile", t("profile"))}
+            {navLink("/profile", t("profile"), unclaimedTrophyCount)}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
             {showUpgrade && (
@@ -198,7 +217,7 @@ export default function Navbar() {
           {navLink("/", t("status"))}
           {navLink("/portals", t("portals"))}
           {navLink("/feed", t("feed"))}
-          {navLink("/profile", t("profile"))}
+          {navLink("/profile", t("profile"), unclaimedTrophyCount)}
         </div>
       </div>
       <Paywall open={paywallOpen} onClose={() => setPaywallOpen(false)} />
