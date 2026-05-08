@@ -33,6 +33,12 @@ interface DailyQuestsProps {
   priorComboDays: number;
   /** Per-quest XP bonus from the player's highest combo milestone. */
   questBonus?: number;
+  /**
+   * True when the player has prior activity but missed yesterday — drives
+   * the red-tinted header treatment so they notice the gap and pick the
+   * cadence back up today. Computed server-side in getComboState.
+   */
+  scattered?: boolean;
   onRewardsChange?: (rewards: QuestRewards) => void;
 }
 
@@ -48,6 +54,7 @@ export default function DailyQuests({
   initialLifetime,
   priorComboDays,
   questBonus = 0,
+  scattered = false,
   onRewardsChange,
 }: DailyQuestsProps) {
   const t = useTranslations("dailyQuests");
@@ -217,10 +224,20 @@ export default function DailyQuests({
   return (
   <div className="bg-slate-900/80 border border-cyan-500/20 rounded-xl p-6 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
     <div className="text-center mb-6">
-      <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-2">
+      <p
+        className={`text-[10px] tracking-[0.4em] uppercase mb-2 ${
+          scattered
+            ? "text-red-400 drop-shadow-[0_0_6px_rgba(248,113,113,0.6)]"
+            : "text-cyan-400/70"
+        }`}
+      >
         {t("header")}
       </p>
-      <h2 className="font-display text-base font-bold uppercase tracking-wider text-cyan-100">
+      <h2
+        className={`font-display text-base font-bold uppercase tracking-wider ${
+          scattered ? "text-red-200" : "text-cyan-100"
+        }`}
+      >
         {t("subheader")}
       </h2>
     </div>

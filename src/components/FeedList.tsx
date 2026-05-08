@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getDungeon } from "@/lib/dungeons";
@@ -10,6 +10,9 @@ import {
   type FeedEntry,
 } from "@/app/actions/feed";
 import { REACTION_EMOJIS, type ReactionSummary } from "@/lib/reactions";
+import { readCache, writeCache } from "@/lib/offlineCache";
+
+const FEED_CACHE_KEY = "feed";
 
 interface FeedListProps {
   initialEntries: FeedEntry[];
@@ -24,6 +27,34 @@ export default function FeedList({
   const [entries, setEntries] = useState<FeedEntry[]>(initialEntries);
   const [cursor, setCursor] = useState<number | null>(initialCursor);
   const [loading, setLoading] = useState(false);
+
+  // Cache-first hydration. If the SSR fetch failed (offline / DB blip)
+  // we'll have empty initialEntries — read from localStorage cache to
+  // surface the last-known feed. Then re-fetch fresh from the server
+  // and overwrite. Same shape as Dashboard's hydration pattern.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (initialEntries.length === 0) {
+      const cached = readCache<FeedEntry[]>(FEED_CACHE_KEY);
+      if (cached && cached.length > 0) setEntries(cached);
+    } else {
+      // SSR succeeded — write what we just got into cache for the next
+      // offline visit.
+      writeCache(FEED_CACHE_KEY, initialEntries);
+    }
+
+    // Re-fetch in the background to catch any updates since SSR. Skip
+    // if offline so we don't spam errors.
+    if (!navigator.onLine) return;
+    getPublicFeed()
+      .then((page) => {
+        setEntries(page.entries);
+        setCursor(page.nextCursor);
+        writeCache(FEED_CACHE_KEY, page.entries);
+      })
+      .catch(() => {});
+  }, [initialEntries]);
 
   async function loadMore() {
     if (loading || cursor === null) return;

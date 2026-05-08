@@ -180,6 +180,7 @@ export default function Dashboard() {
             initialLifetime={dashboard.lifetimeRewards}
             priorComboDays={dashboard.priorComboDays}
             questBonus={dashboard.questBonus}
+            scattered={dashboard.scattered}
           />
         )}
 

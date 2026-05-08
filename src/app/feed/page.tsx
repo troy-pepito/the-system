@@ -16,7 +16,20 @@ export default async function FeedPage() {
   }
 
   const t = await getTranslations("feed");
-  const initial = await getPublicFeed();
+  // Tolerate getPublicFeed failure (offline / Clerk hiccup / DB blip)
+  // — without this, the whole page renders as Next's error fallback,
+  // which Troy hit when going offline. Fall back to empty initial
+  // entries; FeedList hydrates from its localStorage cache on mount,
+  // so the user still sees their last-known feed instead of a crash.
+  let initial: { entries: Awaited<ReturnType<typeof getPublicFeed>>["entries"]; nextCursor: number | null } = {
+    entries: [],
+    nextCursor: null,
+  };
+  try {
+    initial = await getPublicFeed();
+  } catch {
+    // empty fallback intentional — FeedList does its own cache hydration
+  }
 
   return (
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">

@@ -6,7 +6,7 @@ const BUILD_ID = "dev";
 const STATIC_CACHE = `system-static-${BUILD_ID}`;
 const RUNTIME_CACHE = `system-runtime-${BUILD_ID}`;
 
-const PRECACHE_URLS = ["/", "/portals", "/profile"];
+const PRECACHE_URLS = ["/", "/portals", "/profile", "/feed"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

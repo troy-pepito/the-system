@@ -39,17 +39,17 @@ export default function Navbar() {
     return (
       <Link
         href={href}
-        className={`relative transition-colors ${
+        className={`inline-flex items-center gap-1.5 transition-colors ${
           isActive
             ? "text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.5)]"
             : "text-slate-400 hover:text-cyan-300"
         }`}
       >
-        {label}
+        <span>{label}</span>
         {!!badgeCount && badgeCount > 0 && (
           <span
             aria-label={`${badgeCount} unclaimed`}
-            className="absolute -top-1.5 -right-2.5 min-w-[14px] h-[14px] px-1 flex items-center justify-center bg-amber-400 text-slate-950 text-[8px] font-bold rounded-full shadow-[0_0_6px_rgba(251,191,36,0.7)]"
+            className="min-w-[14px] h-[14px] px-1 flex items-center justify-center bg-amber-400 text-slate-950 text-[8px] font-bold rounded-full shadow-[0_0_6px_rgba(251,191,36,0.7)]"
           >
             {badgeCount > 9 ? "9+" : badgeCount}
           </span>
