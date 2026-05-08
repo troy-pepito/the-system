@@ -296,6 +296,14 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                   >
                     {t("viewPublic")}
                   </Link>
+                  <Link
+                    href="/ranks"
+                    role="menuitem"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-slate-300 hover:bg-slate-800 hover:text-cyan-200 transition-colors"
+                  >
+                    {t("viewAllRanks")}
+                  </Link>
                 </div>
               )}
             </div>
@@ -394,19 +402,9 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
               </span>
             )}
             <div className="flex items-center gap-4 mt-5">
-              <Link
-                href="/ranks"
-                title={t("viewAllRanks")}
-                className="group cursor-pointer px-3 py-2 border border-cyan-500/40 rounded bg-slate-900/40 hover:border-cyan-400/80 hover:bg-cyan-500/10 hover:shadow-[0_0_15px_rgba(34,211,238,0.35)] transition-all"
-              >
-                <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
-                  <span>{t("rank")}</span>
-                  <span
-                    aria-hidden
-                    className="text-cyan-400/80 group-hover:translate-x-0.5 transition-transform"
-                  >
-                    ↗
-                  </span>
+              <div className="px-3 py-2 border border-cyan-500/40 rounded bg-slate-900/40">
+                <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
+                  {t("rank")}
                 </p>
                 <p
                   className={`text-2xl font-bold leading-none mt-1 ${
@@ -415,7 +413,7 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 >
                   {rank}
                 </p>
-              </Link>
+              </div>
               <div>
                 <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
                   {t("level")}
