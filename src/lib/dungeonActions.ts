@@ -14,6 +14,7 @@ import {
   notifySystemMessage,
   XP_PER_COMPLETION,
 } from "@/lib/player";
+import { injectPendingJournalEntry } from "@/lib/journalCacheOps";
 
 /**
  * setStartDate with offline fallback. Card decides what to do with
@@ -71,6 +72,17 @@ export function useJournalAction({
   async function handleSubmit(note: string | null, isPublic?: boolean) {
     setIsOpen(false);
     if (!note) return;
+
+    // Optimistic inject so the entry appears in the journal section
+    // immediately, regardless of online state. Server refetch
+    // overwrites with authoritative data when it lands.
+    injectPendingJournalEntry({
+      dungeonId,
+      type: "journal",
+      note,
+      isPublic: isPublic ?? false,
+    });
+
     try {
       await logJournalEntry(dungeonId, note, isPublic ?? false);
     } catch {
@@ -92,6 +104,11 @@ export function useJournalAction({
       body: `Logged to ${dungeonName}. The System remembers.`,
       link: { href: "/journal", label: "Open Journal" },
     });
+    // Drives the Profile page's journal section to refetch (or
+    // re-read its cache, which we just updated). Without this, the
+    // entry doesn't appear until manual refresh — same root cause as
+    // Troy's "is it saved at all?" anxiety.
+    notifyStatsUpdated();
   }
 
   return {

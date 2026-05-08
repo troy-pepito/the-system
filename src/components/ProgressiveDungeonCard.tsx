@@ -7,10 +7,12 @@ import {
   notifyStatsUpdated,
   notifyReward,
   notifyCelebration,
+  notifySystemMessage,
   beginMutation,
   endMutation,
   XP_PER_EXPOSURE,
 } from "@/lib/player";
+import { injectPendingJournalEntry } from "@/lib/journalCacheOps";
 import {
   enterDungeon,
   logRungExposure,
@@ -160,6 +162,26 @@ export default function ProgressiveDungeonCard({
       if (onComplete) onComplete();
     }
 
+    // If the player attached a note to this exposure log, treat it
+    // like a journal entry: inject it into the journal cache and
+    // surface the [Reflection Recorded] notice. Without this the
+    // note vanishes from the UI when offline (Troy's bug 2026-05-08
+    // — "did a journal logging in exposure therapy offline, didn't
+    // show toast, didn't appear in journal entry").
+    if (note) {
+      injectPendingJournalEntry({
+        dungeonId,
+        type: "exposure",
+        note,
+        isPublic: isPublic ?? false,
+      });
+      notifySystemMessage({
+        headline: "Reflection Recorded",
+        body: `Logged to ${dungeonName}. The System remembers.`,
+        link: { href: "/journal", label: "Open Journal" },
+      });
+    }
+
     beginMutation();
     try {
       await handleEnsureActive();
@@ -192,6 +214,11 @@ export default function ProgressiveDungeonCard({
       drainQueue().catch(() => {});
     } finally {
       endMutation();
+      // Triggers Profile journal section + Navbar XP to refetch — same
+      // signal the rest of the app uses for "stats may have changed".
+      // Without it, the optimistic cache write isn't picked up until
+      // the next focus/tab event.
+      notifyStatsUpdated();
       setBusy(false);
     }
   }
