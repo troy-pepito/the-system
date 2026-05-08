@@ -26,6 +26,57 @@ export interface ChangelogChange {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.0.0",
+    date: "2026-05-08",
+    title: "Production",
+    changes: [
+      {
+        kind: "feature",
+        text: "Shivaliva Leveling is live at its official domain: shivalivaleveling.com. The system is real now.",
+      },
+      {
+        kind: "feature",
+        text: "Report a Bug button in the footer. Stuck or seeing something off? Send a note straight from the app — your hunter ID and current page get attached automatically.",
+      },
+      {
+        kind: "feature",
+        text: "Hunter Card redesign: kebab menu groups Rename / Share / View Public / View Ranks, the Scattered badge sits under your portrait, and a new Badges row shows your dominant dimension as a Hunter title.",
+      },
+      {
+        kind: "feature",
+        text: "Achievement unlock toasts are now tappable — open your profile to see the trophy you just earned.",
+      },
+      {
+        kind: "feature",
+        text: "Public profiles get a small friend-action icon next to the kebab dots in the Hunter ID header — sleeker than the old pill button under the card.",
+      },
+      {
+        kind: "fix",
+        text: "Awakening: choosing your Hunter Path actually works now. The flow was silently skipping the path picker for new sign-ins.",
+      },
+      {
+        kind: "fix",
+        text: "Streaks and dungeons no longer mysteriously reset. Old offline mutations could clobber relapse marks or resurrect ended dungeons — both are now structurally impossible.",
+      },
+      {
+        kind: "fix",
+        text: "Perfect Day (+30 XP) and Cadence Full Clear (+20 XP) bonuses persist across refreshes. They used to flash a level-up then vanish on the next page load.",
+      },
+      {
+        kind: "polish",
+        text: "Cross-tab sync: actions on one tab update other open tabs within a second. Long-idle tabs auto-refresh every minute, no manual reload required.",
+      },
+      {
+        kind: "polish",
+        text: "Trophy names wrap onto two lines on small screens instead of getting cut off with an ellipsis.",
+      },
+      {
+        kind: "polish",
+        text: "Service Worker bumps its cache key on every deploy, so users always get the latest JS without hitting refresh.",
+      },
+    ],
+  },
+  {
     version: "0.8.0",
     date: "2026-05-01",
     title: "Hunter Path",
