@@ -123,7 +123,11 @@ export default function ProfilePage() {
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
 
-        <HunterCard totalXp={stats.totalXp} scattered={stats.scattered} />
+        <HunterCard
+          totalXp={stats.totalXp}
+          scattered={stats.scattered}
+          dimensions={stats.dimensions}
+        />
 
         <RecentGains />
 

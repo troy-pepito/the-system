@@ -32,9 +32,52 @@ const LEVELS_PER_RANK = 10;
 interface HunterCardProps {
   totalXp: number;
   scattered?: boolean;
+  /**
+   * Dimension totals (body / mind / emotion / energy / spirit). Used
+   * to compute the "dominant dimension" badge in the Badges row. Pass
+   * undefined to hide the row entirely (e.g. before stats load).
+   */
+  dimensions?: {
+    body: number;
+    mind: number;
+    emotion: number;
+    energy: number;
+    spirit: number;
+  };
 }
 
-export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
+const DIMENSION_ORDER: ReadonlyArray<HunterType> = [
+  "body",
+  "mind",
+  "emotion",
+  "energy",
+  "spirit",
+];
+
+/** Returns the highest-scoring dimension, or null if every dimension is 0. */
+function dominantDimension(
+  dims: HunterCardProps["dimensions"]
+): HunterType | null {
+  if (!dims) return null;
+  let best: HunterType | null = null;
+  let bestScore = 0;
+  // Iterate in canonical order so ties resolve deterministically (body
+  // wins a tie over mind, etc.) — feels less random than alphabetical.
+  for (const d of DIMENSION_ORDER) {
+    const score = dims[d];
+    if (score > bestScore) {
+      best = d;
+      bestScore = score;
+    }
+  }
+  return best;
+}
+
+export default function HunterCard({
+  totalXp,
+  scattered,
+  dimensions,
+}: HunterCardProps) {
   const t = useTranslations("hunterCard");
   const tHunterTypes = useTranslations("hunterTypes");
   const tweenedXp = useTweenNumber(totalXp, 700);
@@ -423,6 +466,31 @@ export default function HunterCard({ totalXp, scattered }: HunterCardProps) {
                 </p>
               </div>
             </div>
+
+            {/* Badges row — shows derived/earned badges. Currently just
+                the dominant-dimension hunter badge; later we'll add
+                Shadow Monarch (premium) and Elite Player (foundations
+                100%) etc. Hidden entirely when there's nothing yet. */}
+            {(() => {
+              const dominant = dominantDimension(dimensions);
+              if (!dominant) return null;
+              const def = HUNTER_TYPE_DEFS[dominant];
+              return (
+                <div className="mt-5">
+                  <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
+                    Badges
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span
+                      title={`Dominant dimension: ${def.label}`}
+                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${def.badgeStyle}`}
+                    >
+                      <span>{def.label}</span>
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
 
