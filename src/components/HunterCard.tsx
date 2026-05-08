@@ -437,7 +437,7 @@ export default function HunterCard({
               </span>
             )}
             <div className="flex items-center gap-4 mt-5">
-              <div className="px-3 py-2 border border-cyan-500/40 rounded bg-slate-900/40">
+              <div>
                 <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
                   {t("rank")}
                 </p>
