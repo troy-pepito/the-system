@@ -287,25 +287,30 @@ function TrophySection({
     const xpReward = def ? TROPHY_XP_BY_RARITY[def.rarity] : 0;
     setClaiming(id);
     setClaimedLocal((prev) => new Set(prev).add(id));
+    // Optimistic: fire the floating "+N XP" GainToast and the XP-delta
+    // event BEFORE awaiting the server action. Same pattern DailyQuests
+    // uses — the visual is instant on tap, the server confirms in the
+    // background. Without this, the toast waited 1-1.5s for the server
+    // roundtrip, which felt sluggish vs the quest tick.
+    if (xpReward > 0) {
+      notifyReward({
+        xp: xpReward,
+        source: "🏆 Trophy Claimed",
+      });
+      // Optimistic XP-delta drives the Navbar XP bar bump immediately.
+      notifyStatsUpdated({ xpDelta: xpReward });
+    }
     try {
       await claimAchievement(id);
-      // Floating "+N XP" popup via the existing GainToast system —
-      // same flow that fires on quest completion, perfect day, etc.
-      // Includes a sourceKey so the toast can label where the XP
-      // came from (e.g. "Trophy Claimed").
-      if (xpReward > 0) {
-        notifyReward({
-          xp: xpReward,
-          source: "🏆 Trophy Claimed",
-        });
-      }
-      // Drives every page that listens (Dashboard, Profile,
-      // Navbar's totalXp, etc.) to refetch — so the claim XP shows
-      // up everywhere within a render or two.
+      // No-delta refetch confirms with the server's authoritative
+      // numbers (catches edge cases where the optimistic delta drifts
+      // from server truth — shouldn't happen here, but defensive).
       notifyStatsUpdated();
     } catch {
-      // Roll back the optimistic claim on failure so the button
-      // re-appears for the player to retry.
+      // Rollback: undo the optimistic XP and re-show the Claim button.
+      if (xpReward > 0) {
+        notifyStatsUpdated({ xpDelta: -xpReward });
+      }
       setClaimedLocal((prev) => {
         const next = new Set(prev);
         next.delete(id);
