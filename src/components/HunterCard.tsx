@@ -429,13 +429,6 @@ export default function HunterCard({
                 {displayName}
               </p>
             )}
-            {hunterTypeDef && (
-              <span
-                className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${hunterTypeDef.badgeStyle}`}
-              >
-                <span>{tHunterTypes(`${hunterTypeDef.id}.label`)}</span>
-              </span>
-            )}
             <div className="flex items-center gap-4 mt-5">
               <div>
                 <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
@@ -459,33 +452,50 @@ export default function HunterCard({
               </div>
             </div>
 
-            {/* Badges row — derived/earned status. Currently:
-                - Dominant-dimension hunter (Body/Mind/Emotion/Energy/Spirit)
+            {/* Badges row — every status badge for this hunter lives here.
+                Currently:
+                - Path (the Hunter Type the player chose, if any)
+                - Dominant-dimension (derived from accumulated stats)
                 - Scattered (missed yesterday after prior activity)
                 Future slots: Shadow Monarch (premium), Elite Player
                 (Foundations 100%), etc. Row is hidden entirely when
-                no badges qualify. */}
+                no badges qualify. All badges share the same shape so
+                the row reads as a coherent set. */}
             {(() => {
               const dominant = dominantDimension(dimensions);
-              const def = dominant ? HUNTER_TYPE_DEFS[dominant] : null;
-              if (!def && !scattered) return null;
+              const dominantDef = dominant ? HUNTER_TYPE_DEFS[dominant] : null;
+              const showPath = !!hunterTypeDef;
+              const showDominant = !!dominantDef && !!dominant;
+              if (!showPath && !showDominant && !scattered) return null;
+              const badgeBase =
+                "inline-flex items-center gap-1 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold";
               return (
                 <div className="mt-5">
                   <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
                     Badges
                   </p>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {def && dominant && (
+                    {showPath && hunterTypeDef && (
                       <span
-                        title={`Your strongest dimension is ${def.label.replace(" Hunter", "")}`}
-                        className={`inline-flex items-center gap-1.5 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${def.badgeStyle}`}
+                        title={`Chosen path: ${hunterTypeDef.label}`}
+                        className={`${badgeBase} ${hunterTypeDef.badgeStyle}`}
+                      >
+                        <span>{tHunterTypes(`${hunterTypeDef.id}.label`)}</span>
+                      </span>
+                    )}
+                    {showDominant && dominantDef && (
+                      <span
+                        title={`Your strongest dimension is ${dominantDef.label.replace(" Hunter", "")}`}
+                        className={`${badgeBase} ${dominantDef.badgeStyle}`}
                       >
                         <span>{dominant}-Dominant</span>
                       </span>
                     )}
                     {scattered && (
                       <Tooltip content={t("scatteredHelp")}>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.3em] uppercase rounded-sm font-bold">
+                        <span
+                          className={`${badgeBase} border-red-500/50 bg-red-500/10 text-red-300`}
+                        >
                           <span aria-hidden>⚠</span>
                           <span>{t("scattered")}</span>
                         </span>
