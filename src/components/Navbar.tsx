@@ -151,6 +151,7 @@ export default function Navbar() {
             {navLink("/portals", t("portals"))}
             {navLink("/feed", t("feed"))}
             {navLink("/guilds", "Guilds")}
+            {navLink("/leaderboard", "Board")}
             {navLink("/profile", t("profile"), unclaimedTrophyCount)}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
@@ -214,11 +215,12 @@ export default function Navbar() {
             {currentXp} / {xpToNext} XP
           </p>
         </div>
-        <div className="sm:hidden flex justify-center gap-5 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
+        <div className="sm:hidden flex justify-center gap-4 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
           {navLink("/", t("status"))}
           {navLink("/portals", t("portals"))}
           {navLink("/feed", t("feed"))}
           {navLink("/guilds", "Guilds")}
+          {navLink("/leaderboard", "Board")}
           {navLink("/profile", t("profile"), unclaimedTrophyCount)}
         </div>
       </div>
