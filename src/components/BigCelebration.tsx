@@ -52,14 +52,16 @@ export default function BigCelebration() {
       if (!detail) return;
       const id = nextId++;
       setQueue((prev) => [...prev, { ...detail, id }]);
-      // Auto-dismiss after the animation finishes.
-      setTimeout(() => {
-        setQueue((prev) => prev.filter((x) => x.id !== id));
-      }, 2700);
+      // No auto-dismiss — celebrations linger until the player taps
+      // to close. Troy: "our toasts shouldn't be shy".
     };
     window.addEventListener(CELEBRATION_EVENT, handler);
     return () => window.removeEventListener(CELEBRATION_EVENT, handler);
   }, []);
+
+  function dismiss(id: number) {
+    setQueue((prev) => prev.filter((x) => x.id !== id));
+  }
 
   if (queue.length === 0) return null;
 
@@ -77,8 +79,16 @@ export default function BigCelebration() {
               aria-hidden
             />
             <div
-              className={`relative bg-slate-950/95 border-2 ${tone.border} ${tone.glow} px-10 py-6 rounded-lg animate-celebration-pop text-center`}
+              className={`relative bg-slate-950/95 border-2 ${tone.border} ${tone.glow} px-10 py-6 rounded-lg animate-celebration-pop text-center pointer-events-auto`}
             >
+              <button
+                type="button"
+                onClick={() => dismiss(c.id)}
+                aria-label="Dismiss"
+                className={`absolute -top-3 -right-3 z-10 w-7 h-7 flex items-center justify-center rounded-full bg-slate-950 border-2 ${tone.border} ${tone.accent} text-base leading-none hover:brightness-150 transition-all shadow-lg`}
+              >
+                ✕
+              </button>
               <p
                 className={`font-display text-2xl sm:text-3xl font-black uppercase tracking-[0.3em] ${tone.accent}`}
               >

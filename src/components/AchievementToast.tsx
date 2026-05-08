@@ -47,14 +47,6 @@ export default function AchievementToast() {
     };
   }, []);
 
-  useEffect(() => {
-    if (queue.length === 0) return;
-    const t = setTimeout(() => {
-      setQueue((prev) => prev.slice(1));
-    }, 5000);
-    return () => clearTimeout(t);
-  }, [queue]);
-
   if (queue.length === 0) return null;
   const current = queue[0];
   const def = getAchievement(current.id);
@@ -69,14 +61,27 @@ export default function AchievementToast() {
   );
   const rarityLabel = tRarity(def.rarity);
 
+  function dismiss() {
+    setQueue((prev) => prev.slice(1));
+  }
+
   return (
     <div className="fixed top-20 right-4 z-[100] animate-[toast-slide_0.5s_ease-out]">
-      <Link
-        href="/profile"
-        onClick={() => setQueue((prev) => prev.slice(1))}
-        aria-label={t("achievementUnlocked")}
-        className={`block ${style.bg} ${style.border} border-2 rounded-lg px-5 py-4 min-w-[280px] max-w-[360px] backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] ${style.glow} cursor-pointer hover:brightness-125 transition-all`}
-      >
+      <div className="relative">
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Dismiss"
+          className={`absolute -top-2 -right-2 z-10 w-6 h-6 flex items-center justify-center rounded-full bg-slate-950 border ${style.border} ${style.text} text-sm leading-none hover:brightness-150 transition-all shadow-md`}
+        >
+          ✕
+        </button>
+        <Link
+          href="/profile"
+          onClick={dismiss}
+          aria-label={t("achievementUnlocked")}
+          className={`block ${style.bg} ${style.border} border-2 rounded-lg px-5 py-4 min-w-[280px] max-w-[360px] backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] ${style.glow} cursor-pointer hover:brightness-125 transition-all`}
+        >
         <p className={`text-[10px] tracking-[0.3em] uppercase ${style.text} mb-1`}>
           {t("achievementUnlocked")}
         </p>
@@ -99,6 +104,7 @@ export default function AchievementToast() {
           </div>
         </div>
       </Link>
+      </div>
       <style jsx>{`
         @keyframes toast-slide {
           from {

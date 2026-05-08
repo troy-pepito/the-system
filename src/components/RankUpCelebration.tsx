@@ -38,10 +38,6 @@ export default function RankUpCelebration() {
       // Let the glitch effect breathe first.
       setTimeout(() => {
         setActive(change);
-        if (dismissTimer.current) clearTimeout(dismissTimer.current);
-        dismissTimer.current = setTimeout(() => {
-          setActive((prev) => (prev?.id === change.id ? null : prev));
-        }, 5000);
       }, 700);
     };
     window.addEventListener(RANK_UP_EVENT, handler);

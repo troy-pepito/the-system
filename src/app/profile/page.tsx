@@ -28,7 +28,11 @@ import {
 import JournalSection from "@/components/JournalSection";
 import RecentGains from "@/components/RecentGains";
 import FriendsSection from "@/components/FriendsSection";
-import { STATS_UPDATED_EVENT, notifyStatsUpdated } from "@/lib/player";
+import {
+  STATS_UPDATED_EVENT,
+  notifyReward,
+  notifyStatsUpdated,
+} from "@/lib/player";
 import { readCache, writeCache } from "@/lib/offlineCache";
 
 const PROFILE_CACHE_KEY = "profile";
@@ -279,10 +283,22 @@ function TrophySection({
 
   async function handleClaim(id: string) {
     if (claiming) return;
+    const def = ACHIEVEMENTS.find((a) => a.id === id);
+    const xpReward = def ? TROPHY_XP_BY_RARITY[def.rarity] : 0;
     setClaiming(id);
     setClaimedLocal((prev) => new Set(prev).add(id));
     try {
       await claimAchievement(id);
+      // Floating "+N XP" popup via the existing GainToast system —
+      // same flow that fires on quest completion, perfect day, etc.
+      // Includes a sourceKey so the toast can label where the XP
+      // came from (e.g. "Trophy Claimed").
+      if (xpReward > 0) {
+        notifyReward({
+          xp: xpReward,
+          source: "🏆 Trophy Claimed",
+        });
+      }
       // Drives every page that listens (Dashboard, Profile,
       // Navbar's totalXp, etc.) to refetch — so the claim XP shows
       // up everywhere within a render or two.

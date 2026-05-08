@@ -10,7 +10,6 @@ interface ActiveLevelUp {
 
 let nextId = 1;
 
-const VISIBLE_MS = 2200;
 const FADE_MS = 420;
 
 /**
@@ -40,21 +39,18 @@ export default function LevelUpToast() {
     return () => window.removeEventListener(LEVEL_UP_EVENT, handler);
   }, []);
 
-  // Schedule the leaving animation, then the unmount, whenever a fresh
-  // toast lands. Cleanup cancels both timers if a new toast supersedes
-  // this one before it finishes.
-  useEffect(() => {
+  // Toast stays until the player taps the dismiss button. No more
+  // setTimeout-driven auto-fade — Troy's note "our toasts shouldn't
+  // be shy" means the level-up moment lingers as long as it needs to.
+  function dismiss() {
     if (!active) return;
-    const fadeAt = setTimeout(() => setLeaving(true), VISIBLE_MS);
-    const unmountAt = setTimeout(() => {
-      setActive((prev) => (prev?.id === active.id ? null : prev));
+    const id = active.id;
+    setLeaving(true);
+    setTimeout(() => {
+      setActive((prev) => (prev?.id === id ? null : prev));
       setLeaving(false);
-    }, VISIBLE_MS + FADE_MS);
-    return () => {
-      clearTimeout(fadeAt);
-      clearTimeout(unmountAt);
-    };
-  }, [active]);
+    }, FADE_MS);
+  }
 
   if (!active) return null;
 
@@ -71,6 +67,15 @@ export default function LevelUpToast() {
         <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-emerald-300" />
         <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-emerald-300" />
         <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-emerald-300" />
+
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Dismiss"
+          className="absolute -top-3 -right-3 z-10 w-6 h-6 flex items-center justify-center rounded-full bg-slate-950 border border-emerald-400/60 text-emerald-300 text-sm leading-none hover:brightness-150 transition-all shadow-md pointer-events-auto"
+        >
+          ✕
+        </button>
 
         <p className="font-mono text-[9px] tracking-[0.4em] uppercase text-emerald-300/90 text-center mb-1">
           {t("levelUp")}

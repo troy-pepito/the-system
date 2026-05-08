@@ -26,9 +26,8 @@ export default function SystemNoticeToast() {
       if (!detail || !detail.headline) return;
       const id = nextId++;
       setNotices((prev) => [...prev, { ...detail, id }]);
-      setTimeout(() => {
-        setNotices((prev) => prev.filter((n) => n.id !== id));
-      }, 4500);
+      // No auto-dismiss — notices stay until the player taps the X
+      // (or follows the CTA link). "Our toasts shouldn't be shy."
     };
     window.addEventListener(NOTICE_EVENT, handler);
     return () => window.removeEventListener(NOTICE_EVENT, handler);
@@ -60,6 +59,15 @@ function NoticeCard({
       <div className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-cyan-300 pointer-events-none" />
       <div className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
       <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
+
+      <button
+        type="button"
+        onClick={onDismiss}
+        aria-label="Dismiss"
+        className="absolute -top-2.5 -right-2.5 z-10 w-6 h-6 flex items-center justify-center rounded-full bg-slate-950 border border-cyan-400/60 text-cyan-300 text-sm leading-none hover:brightness-150 transition-all shadow-md"
+      >
+        ✕
+      </button>
 
       <p className="font-mono text-[10px] tracking-[0.35em] uppercase text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.7)] text-center">
         [ {notice.headline} ]
