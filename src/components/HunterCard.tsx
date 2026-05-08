@@ -396,14 +396,6 @@ export default function HunterCard({
               className="hidden"
             />
           </button>
-          {scattered && (
-            <Tooltip content={t("scatteredHelp")}>
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm">
-                <span aria-hidden>⚠</span>
-                <span>{t("scattered")}</span>
-              </span>
-            </Tooltip>
-          )}
           </div>
 
           <div className="flex-1 min-w-0">
@@ -467,26 +459,38 @@ export default function HunterCard({
               </div>
             </div>
 
-            {/* Badges row — shows derived/earned badges. Currently just
-                the dominant-dimension hunter badge; later we'll add
-                Shadow Monarch (premium) and Elite Player (foundations
-                100%) etc. Hidden entirely when there's nothing yet. */}
+            {/* Badges row — derived/earned status. Currently:
+                - Dominant-dimension hunter (Body/Mind/Emotion/Energy/Spirit)
+                - Scattered (missed yesterday after prior activity)
+                Future slots: Shadow Monarch (premium), Elite Player
+                (Foundations 100%), etc. Row is hidden entirely when
+                no badges qualify. */}
             {(() => {
               const dominant = dominantDimension(dimensions);
-              if (!dominant) return null;
-              const def = HUNTER_TYPE_DEFS[dominant];
+              const def = dominant ? HUNTER_TYPE_DEFS[dominant] : null;
+              if (!def && !scattered) return null;
               return (
                 <div className="mt-5">
                   <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
                     Badges
                   </p>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    <span
-                      title={`Dominant dimension: ${def.label}`}
-                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${def.badgeStyle}`}
-                    >
-                      <span>{def.label}</span>
-                    </span>
+                    {def && (
+                      <span
+                        title={`Dominant dimension: ${def.label}`}
+                        className={`inline-flex items-center gap-1.5 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${def.badgeStyle}`}
+                      >
+                        <span>{def.label}</span>
+                      </span>
+                    )}
+                    {scattered && (
+                      <Tooltip content={t("scatteredHelp")}>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.3em] uppercase rounded-sm font-bold">
+                          <span aria-hidden>⚠</span>
+                          <span>{t("scattered")}</span>
+                        </span>
+                      </Tooltip>
+                    )}
                   </div>
                 </div>
               );
