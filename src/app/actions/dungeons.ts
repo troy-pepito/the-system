@@ -585,6 +585,13 @@ export async function logRungExposure(
   });
   const rungCleared = count >= rung.target;
 
+  // Mastery is computed but the run is intentionally NOT marked complete
+  // here. Auto-completion stripped the player of any chance to undo an
+  // accidental final-rung log — the card vanished from the dashboard
+  // before they could react. Now the run stays active in the
+  // [Ladder Mastered] state until the player explicitly retires it via
+  // endRun({ reason: "completed" }), which claims the +completion XP
+  // and clears the card.
   let dungeonCleared = false;
   if (rungCleared) {
     const allCounts = await prisma.dungeonEvent.groupBy({
@@ -597,12 +604,6 @@ export async function logRungExposure(
     dungeonCleared = dungeon.progressive.rungs.every(
       (r) => (countMap[r.id] ?? 0) >= r.target
     );
-    if (dungeonCleared) {
-      await prisma.dungeonRun.update({
-        where: { id: run.id },
-        data: { active: false, endReason: "completed" },
-      });
-    }
   }
 
   updateTag(TAG);

@@ -101,6 +101,21 @@ export default function ProgressiveDungeonCard({
       onRelapse?.();
     },
   });
+  // "Retire Ladder" — explicit completion claim from the mastered state.
+  // Replaces the old auto-complete: by waiting for an explicit tap, the
+  // mastered card stays on the dashboard long enough for the player to
+  // hit Undo if the final-rung log was an accident.
+  const victory = useEndRunAction({
+    dungeonId,
+    dungeonName,
+    reason: "completed",
+    ruleType: "progressive",
+    onLocalReset: () => {
+      setActive(false);
+      endRunInCache(dungeonId);
+      onComplete?.();
+    },
+  });
 
   async function handleEnsureActive() {
     if (!active) {
@@ -154,13 +169,10 @@ export default function ProgressiveDungeonCard({
       }, 1100);
     }
 
-    const allCleared =
-      RUNGS.length > 0 && RUNGS.every((r) => (nextCounts[r.id] ?? 0) >= r.target);
-    if (allCleared) {
-      setActive(false);
-      endRunInCache(dungeonId);
-      if (onComplete) onComplete();
-    }
+    // Note: we no longer auto-complete the run when allCleared. The
+    // mastered card stays on the dashboard until the player taps Retire
+    // (handleRetire below), so an accidental final-rung log can still
+    // be walked back with Undo.
 
     // If the player attached a note to this exposure log, treat it
     // like a journal entry: inject it into the journal cache and
@@ -185,17 +197,13 @@ export default function ProgressiveDungeonCard({
     beginMutation();
     try {
       await handleEnsureActive();
-      const { count, dungeonCleared: cleared } = await logRungExposure(
+      const { count } = await logRungExposure(
         dungeonId,
         rungId,
         note ?? undefined,
         isPublic ?? false
       );
       setCounts((prev) => ({ ...prev, [rungId]: count }));
-      if (cleared) {
-        setActive(false);
-        if (onComplete) onComplete();
-      }
     } catch {
       if (wasInactive) {
         enqueueMutation({
@@ -307,13 +315,33 @@ export default function ProgressiveDungeonCard({
       </p>
 
       {dungeonCleared ? (
-        <div className="py-6 space-y-2">
-          <p className="text-sm text-amber-300 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] animate-pulse">
-            {tRun("ladderMastered")}
-          </p>
-          <p className="text-xs text-slate-500">
-            {tRun("ladderRetired", { count: RUNGS.length })}
-          </p>
+        <div className="py-6 space-y-4">
+          <div className="space-y-2">
+            <p className="text-sm text-amber-300 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] animate-pulse">
+              {tRun("ladderMastered")}
+            </p>
+            <p className="text-xs text-slate-500">
+              {tRun("ladderRetired", { count: RUNGS.length })}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={victory.open}
+              className="flex-1 px-4 py-3 bg-amber-500/20 border border-amber-400/60 rounded text-amber-200 text-sm uppercase tracking-widest hover:bg-amber-500/30 transition-colors drop-shadow-[0_0_10px_rgba(251,191,36,0.4)]"
+            >
+              {tRun("claimVictory")}
+            </button>
+            {undoableRung && (
+              <button
+                onClick={handleUndo}
+                disabled={busy}
+                title={`Undo last ${rungName(undoableRung.id, undoableRung.name)}`}
+                className="px-3 py-3 bg-slate-800/60 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-wider hover:bg-slate-700/60 transition-colors disabled:opacity-50"
+              >
+                {tRun("undo")}
+              </button>
+            )}
+          </div>
         </div>
       ) : currentRung ? (
         <div className="space-y-4">
@@ -449,6 +477,7 @@ export default function ProgressiveDungeonCard({
         onCancel={() => setLogModalOpen(false)}
       />
       <NoteModal {...relapse.modalProps} />
+      <NoteModal {...victory.modalProps} />
       <NoteModal {...journal.modalProps} />
     </div>
   );
