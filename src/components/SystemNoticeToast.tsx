@@ -54,7 +54,7 @@ function NoticeCard({
   onDismiss: () => void;
 }) {
   return (
-    <div className="pointer-events-auto w-full bg-slate-950/90 backdrop-blur-sm border border-cyan-400/60 shadow-[0_0_24px_rgba(34,211,238,0.45),inset_0_0_18px_rgba(34,211,238,0.06)] px-4 py-3 animate-gain-pop relative">
+    <div className="pointer-events-auto w-full bg-slate-950/90 backdrop-blur-sm border border-cyan-400/60 shadow-[0_0_24px_rgba(34,211,238,0.45),inset_0_0_18px_rgba(34,211,238,0.06)] px-4 py-3 animate-gain-pop-in relative">
       <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-cyan-300 pointer-events-none" />
       <div className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-cyan-300 pointer-events-none" />
       <div className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />

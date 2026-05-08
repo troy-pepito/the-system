@@ -223,10 +223,29 @@ export default function ProgressiveDungeonCard({
     }
   }
 
-  async function handleUndo() {
-    if (!currentRung || busy) return;
+  // Find the rung the undo button should target. Prefers the current
+  // rung, but falls back to the most-recent populated rung walking
+  // backwards. Without this, after over-logging Presence (6/5) the
+  // pointer moves to Acknowledge (0/7) and the undo button vanishes,
+  // stranding the user with no way to walk back the accidental log.
+  const undoableRungIndex = (() => {
+    if (currentRung && (counts[currentRung.id] ?? 0) > 0) {
+      return currentRungIndex;
+    }
+    const startIdx =
+      currentRungIndex >= 0 ? currentRungIndex - 1 : RUNGS.length - 1;
+    for (let i = startIdx; i >= 0; i--) {
+      if ((counts[RUNGS[i].id] ?? 0) > 0) return i;
+    }
+    return -1;
+  })();
+  const undoableRung =
+    undoableRungIndex >= 0 ? RUNGS[undoableRungIndex] : null;
 
-    const rungId = currentRung.id;
+  async function handleUndo() {
+    if (!undoableRung || busy) return;
+
+    const rungId = undoableRung.id;
     const prevCount = counts[rungId] ?? 0;
     if (prevCount === 0) return;
 
@@ -235,16 +254,22 @@ export default function ProgressiveDungeonCard({
     adjustRungCountInCache(dungeonId, rungId, -1);
     notifyStatsUpdated({ xpDelta: -XP_PER_EXPOSURE });
 
+    // If we're undoing on a rung that was already cleared, the dungeon
+    // may have been marked complete — flip the local active flag back
+    // on so the card returns to its in-progress treatment.
+    if (dungeonCleared) {
+      setActive(true);
+    }
+
     // Refund the rung-clear bonus if the undo drops us back below the
     // rung target. Symmetric with the credit branch in handleExposure;
     // without it, log-to-target then undo lets the player keep the
     // tier bonus indefinitely.
     if (
-      prevCount >= currentRung.target &&
-      prevCount - 1 < currentRung.target
+      prevCount >= undoableRung.target &&
+      prevCount - 1 < undoableRung.target
     ) {
-      const tierIdx = currentRungIndex;
-      const bonus = TIER_BONUS_XP[tierIdx] ?? 0;
+      const bonus = TIER_BONUS_XP[undoableRungIndex] ?? 0;
       if (bonus > 0) notifyStatsUpdated({ xpDelta: -bonus });
     }
 
@@ -334,10 +359,11 @@ export default function ProgressiveDungeonCard({
             >
               {tRun("logExposure")}
             </button>
-            {currentCount > 0 && (
+            {undoableRung && (
               <button
                 onClick={handleUndo}
                 disabled={busy}
+                title={`Undo last ${rungName(undoableRung.id, undoableRung.name)}`}
                 className="px-3 py-3 bg-slate-800/60 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-wider hover:bg-slate-700/60 transition-colors disabled:opacity-50"
               >
                 {tRun("undo")}

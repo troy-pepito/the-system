@@ -55,12 +55,12 @@ function NoteModalInner({
   const resolvedConfirm = confirmLabel ?? t("defaultConfirm");
   const resolvedSkip = skipLabel ?? t("defaultSkip");
   const taRef = useRef<HTMLTextAreaElement>(null);
+  const cancel = onCancel ?? (() => onSubmit(null));
 
   useEffect(() => {
     const frame = requestAnimationFrame(() =>
       taRef.current?.focus({ preventScroll: true })
     );
-    const cancel = onCancel ?? (() => onSubmit(null));
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
@@ -72,7 +72,7 @@ function NoteModalInner({
       cancelAnimationFrame(frame);
       window.removeEventListener("keydown", handler);
     };
-  }, [onCancel, onSubmit]);
+  }, [cancel]);
 
   const confirmClass =
     tone === "danger"
@@ -88,12 +88,27 @@ function NoteModalInner({
   }
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-md bg-slate-900/95 border border-cyan-400/40 shadow-[0_0_40px_rgba(34,211,238,0.25)] p-5">
+    <div
+      className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4"
+      onClick={cancel}
+    >
+      <div
+        className="relative w-full max-w-md bg-slate-900/95 border border-cyan-400/40 shadow-[0_0_40px_rgba(34,211,238,0.25)] p-5"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-300 pointer-events-none" />
         <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-cyan-300 pointer-events-none" />
         <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
         <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
+
+        <button
+          type="button"
+          onClick={cancel}
+          aria-label="Close"
+          className="absolute -top-2.5 -right-2.5 z-10 w-7 h-7 flex items-center justify-center rounded-full bg-slate-950 border border-cyan-400/60 text-cyan-300 text-sm leading-none hover:brightness-150 transition-all shadow-md"
+        >
+          ✕
+        </button>
 
         <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-2">
           {t("chrome")}

@@ -79,7 +79,7 @@ export default function BigCelebration() {
               aria-hidden
             />
             <div
-              className={`relative bg-slate-950/95 border-2 ${tone.border} ${tone.glow} px-10 py-6 rounded-lg animate-celebration-pop text-center pointer-events-auto`}
+              className={`relative bg-slate-950/95 border-2 ${tone.border} ${tone.glow} px-10 py-6 rounded-lg animate-celebration-pop-in text-center pointer-events-auto`}
             >
               <button
                 type="button"

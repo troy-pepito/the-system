@@ -26,6 +26,7 @@ import {
 import {
   ACHIEVEMENTS,
   TROPHY_XP_BY_RARITY,
+  isComboAchievementId,
   type PlayerSnapshot,
 } from "@/lib/achievements";
 import { requireUserId } from "@/lib/auth";
@@ -579,11 +580,38 @@ export async function evaluateAchievements(): Promise<string[]> {
     if (!existingIds.has(id)) newlyUnlocked.push(id);
   }
 
+  // Revoke achievements whose underlying condition is no longer true
+  // (e.g. user undid the exposure log, unticked the only daily quest,
+  // exited the dungeon that was their first run). If the row was
+  // already claimed, deleting it also removes the trophy XP since
+  // claimedTrophyXp in buildSnapshot only sums existing rows.
+  //
+  // Combo milestones are excluded — they're point-in-time markers for
+  // a streak that genuinely happened. Unticking today's quest shouldn't
+  // erase a 30-day combo earned weeks ago.
+  const definedById = new Map(ACHIEVEMENTS.map((a) => [a.id, a]));
+  const toRevoke: string[] = [];
+  for (const id of existingIds) {
+    if (isComboAchievementId(id)) continue;
+    const def = definedById.get(id);
+    if (!def) continue;
+    if (!def.check(snapshot)) toRevoke.push(id);
+  }
+
+  if (toRevoke.length > 0) {
+    await prisma.achievement.deleteMany({
+      where: { userId, achievementId: { in: toRevoke } },
+    });
+  }
+
   if (newlyUnlocked.length > 0) {
     await prisma.achievement.createMany({
       data: newlyUnlocked.map((id) => ({ userId, achievementId: id })),
       skipDuplicates: true,
     });
+  }
+
+  if (newlyUnlocked.length > 0 || toRevoke.length > 0) {
     updateTag(TAG);
   }
 

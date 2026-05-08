@@ -78,6 +78,14 @@ body {
   100% { opacity: 0; transform: translateY(-28px); }
 }
 
+/* Entry-only variant for persistent notices that should NOT auto-fade.
+   Same overshoot intro, then settles and stays put. */
+@keyframes gain-pop-in {
+  0% { opacity: 0; transform: translateX(24px) scale(0.85); }
+  60% { opacity: 1; transform: translateX(0) scale(1.08); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
 /* Big-moment celebration banner. Overshoots on entry, settles, holds,
    then drifts up + fades. Total run: 2600ms. */
 @keyframes celebration-pop {
@@ -87,6 +95,14 @@ body {
   32% { transform: scale(1); }
   82% { opacity: 1; transform: scale(1) translateY(0); }
   100% { opacity: 0; transform: scale(1.05) translateY(-30px); }
+}
+
+/* Entry-only celebration variant — overshoot and settle, then hold. */
+@keyframes celebration-pop-in {
+  0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+  45% { opacity: 1; transform: scale(1.18) translateY(0); }
+  70% { transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* Soft halo that pulses behind the celebration card. */
@@ -146,8 +162,16 @@ body {
   animation: gain-pop 1.8s ease-out both;
 }
 
+@utility animate-gain-pop-in {
+  animation: gain-pop-in 0.55s ease-out both;
+}
+
 @utility animate-celebration-pop {
   animation: celebration-pop 2.6s ease-out both;
+}
+
+@utility animate-celebration-pop-in {
+  animation: celebration-pop-in 0.7s ease-out both;
 }
 
 @utility animate-celebration-halo {
