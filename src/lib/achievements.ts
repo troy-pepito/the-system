@@ -26,6 +26,13 @@ export interface WindowStats {
   workoutTotal: number;
   exposureTotal: number;
   perfectQuestDays: number;
+  /** Weighted action total for the leaderboard. Computed once in
+   *  buildSnapshot from the ACTIVITY_POINTS table; the leaderboard
+   *  reads this directly instead of recomputing per-row. Set on the
+   *  week window only — month/all-time aren't ranked yet. Optional
+   *  on the type so legacy callers reading the month window aren't
+   *  forced to handle a field that's never populated for them. */
+  activityPoints?: number;
 }
 
 export interface PlayerSnapshot {

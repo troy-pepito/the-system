@@ -7,6 +7,7 @@ import {
   REACTION_EMOJI_SET,
   type ReactionSummary,
 } from "@/lib/reactions";
+import { resolveHunterDisplay } from "@/lib/hunterDisplay";
 import legacyAuthors from "@/data/legacy-authors.json";
 
 // Snapshot of dev-instance Clerk users captured at the prod cutover
@@ -88,14 +89,7 @@ export async function getPublicFeed(
     const client = await clerkClient();
     const list = await client.users.getUserList({ userId: userIds });
     for (const u of list.data) {
-      const meta = u.unsafeMetadata as { hunterName?: string } | undefined;
-      const name =
-        meta?.hunterName ||
-        u.firstName ||
-        u.username ||
-        u.primaryEmailAddress?.emailAddress.split("@")[0] ||
-        "Hunter";
-      usersById.set(u.id, { hunterName: name, imageUrl: u.imageUrl ?? null });
+      usersById.set(u.id, resolveHunterDisplay(u));
     }
   } catch {
     // If Clerk is unreachable, fall through with empty map — entries

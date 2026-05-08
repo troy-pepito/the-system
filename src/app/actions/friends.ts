@@ -3,7 +3,11 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
-import { getPlayerLevelForUser } from "@/app/actions/achievements";
+import {
+  getHunterSummariesByIds,
+  type HunterSummary,
+} from "@/app/actions/achievements";
+import { resolveHunterDisplay } from "@/lib/hunterDisplay";
 import { sendPushToUser } from "@/lib/push";
 
 export type FriendStatus =
@@ -13,42 +17,13 @@ export type FriendStatus =
   | "pending_out"
   | "none";
 
-export interface FriendCard {
-  hunterId: string;
-  hunterName: string;
-  imageUrl: string | null;
-  level: number;
-  rank: string;
-}
+export type FriendCard = HunterSummary;
 
 export interface PendingRequest {
   requesterId: string;
   hunterName: string;
   imageUrl: string | null;
   createdAt: string;
-}
-
-function clerkDisplayName(user: {
-  unsafeMetadata: unknown;
-  firstName: string | null;
-  username: string | null;
-  primaryEmailAddress: { emailAddress: string } | null;
-}): string {
-  const meta = user.unsafeMetadata as { hunterName?: string } | undefined;
-  return (
-    meta?.hunterName ||
-    user.firstName ||
-    user.username ||
-    user.primaryEmailAddress?.emailAddress.split("@")[0] ||
-    "Hunter"
-  );
-}
-
-async function levelForUser(
-  userId: string
-): Promise<{ level: number; rank: string }> {
-  const { level, rank } = await getPlayerLevelForUser(userId);
-  return { level, rank };
 }
 
 export async function requestFriend(targetId: string): Promise<void> {
@@ -77,7 +52,7 @@ export async function requestFriend(targetId: string): Promise<void> {
   try {
     const client = await clerkClient();
     const requester = await client.users.getUser(userId);
-    const name = clerkDisplayName(requester);
+    const { hunterName: name } = resolveHunterDisplay(requester);
     await sendPushToUser(targetId, {
       title: "⚔ Friend Request",
       body: `${name} wants to connect.`,
@@ -101,7 +76,7 @@ export async function acceptFriend(requesterId: string): Promise<void> {
   try {
     const client = await clerkClient();
     const accepter = await client.users.getUser(userId);
-    const name = clerkDisplayName(accepter);
+    const { hunterName: name } = resolveHunterDisplay(accepter);
     await sendPushToUser(requesterId, {
       title: "✓ Friend Request Accepted",
       body: `${name} accepted your request.`,
@@ -169,25 +144,12 @@ export async function getFriends(): Promise<FriendCard[]> {
     r.requesterId === userId ? r.addresseeId : r.requesterId
   );
 
-  const client = await clerkClient();
-  const cards = await Promise.all(
-    friendIds.map(async (id): Promise<FriendCard | null> => {
-      try {
-        const user = await client.users.getUser(id);
-        const { level, rank } = await levelForUser(id);
-        return {
-          hunterId: id,
-          hunterName: clerkDisplayName(user),
-          imageUrl: user.imageUrl ?? null,
-          level,
-          rank,
-        };
-      } catch {
-        return null;
-      }
-    })
-  );
-  return cards.filter((c): c is FriendCard => c !== null);
+  // Batch fetch — one Clerk getUserList for the whole friend set,
+  // snapshots run in parallel inside getHunterSummariesByIds. Replaces
+  // the previous N+1 (one Clerk roundtrip per friend) which got bad
+  // fast at 20+ friends and would have been brutal for 50-member
+  // guilds reusing the same shape.
+  return getHunterSummariesByIds(friendIds);
 }
 
 export async function getPendingRequests(): Promise<PendingRequest[]> {
@@ -198,21 +160,34 @@ export async function getPendingRequests(): Promise<PendingRequest[]> {
   });
   if (rows.length === 0) return [];
 
-  const client = await clerkClient();
-  const out = await Promise.all(
-    rows.map(async (row): Promise<PendingRequest | null> => {
-      try {
-        const user = await client.users.getUser(row.requesterId);
-        return {
-          requesterId: row.requesterId,
-          hunterName: clerkDisplayName(user),
-          imageUrl: user.imageUrl ?? null,
-          createdAt: row.createdAt.toISOString(),
-        };
-      } catch {
-        return null;
-      }
-    })
+  const requesterIds = rows.map((r) => r.requesterId);
+  const createdById = new Map(
+    rows.map((r) => [r.requesterId, r.createdAt.toISOString()])
   );
-  return out.filter((r): r is PendingRequest => r !== null);
+
+  let users: Array<{
+    id: string;
+    unsafeMetadata: unknown;
+    firstName: string | null;
+    username: string | null;
+    primaryEmailAddress: { emailAddress: string } | null;
+    imageUrl?: string | null;
+  }> = [];
+  try {
+    const client = await clerkClient();
+    const list = await client.users.getUserList({ userId: requesterIds });
+    users = list.data;
+  } catch {
+    return [];
+  }
+
+  return users.map((u) => {
+    const display = resolveHunterDisplay(u);
+    return {
+      requesterId: u.id,
+      hunterName: display.hunterName,
+      imageUrl: display.imageUrl,
+      createdAt: createdById.get(u.id) ?? new Date(0).toISOString(),
+    };
+  });
 }

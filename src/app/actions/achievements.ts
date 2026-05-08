@@ -29,6 +29,8 @@ import {
   isComboAchievementId,
   type PlayerSnapshot,
 } from "@/lib/achievements";
+import { ACTIVITY_POINTS } from "@/lib/leaderboard";
+import { resolveHunterDisplay } from "@/lib/hunterDisplay";
 import { requireUserId } from "@/lib/auth";
 
 import {
@@ -51,7 +53,15 @@ export interface UnlockedAchievement {
 }
 
 async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
-  const [runs, events, quests, allCheckIns, claimedTrophies] = await Promise.all([
+  // Defer weekCutoff calc to inline below; we need it for the parallel
+  // weekly check-in count too.
+  const _now = new Date();
+  _now.setHours(0, 0, 0, 0);
+  const weekCutoffEarly = new Date(_now);
+  weekCutoffEarly.setDate(weekCutoffEarly.getDate() - 6);
+
+  const [runs, events, quests, allCheckIns, claimedTrophies, weekClearedDays] =
+    await Promise.all([
     prisma.dungeonRun.findMany({
       where: { userId },
       select: {
@@ -86,6 +96,17 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     prisma.achievement.findMany({
       where: { userId, claimedAt: { not: null } },
       select: { achievementId: true },
+    }),
+    // Weekly cleared-day count — feeds the leaderboard activity-points
+    // calc (1pt per cleared day per ACTIVITY_POINTS.dayCleared). Done
+    // as a separate count rather than reading allCheckIns rows so the
+    // existing groupBy stays cheap.
+    prisma.dungeonDayCheckIn.count({
+      where: {
+        userId,
+        state: "cleared",
+        date: { gte: weekCutoffEarly },
+      },
     }),
   ]);
 
@@ -260,6 +281,11 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   const monthByDate: Record<string, Set<string>> = {};
   let weekQuestTotal = 0;
   let monthQuestTotal = 0;
+  // Split daily vs side for the leaderboard — daily quests are 1pt
+  // each (baseline morning routine) while side quests weigh more
+  // (intentional, less frequent).
+  let weekDailyQuests = 0;
+  let weekSideQuests = 0;
   for (const q of quests) {
     const key = q.date.toISOString().split("T")[0];
     const isDaily = !sideQuestIds.has(q.questId);
@@ -276,6 +302,8 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     }
     if (q.date >= weekCutoff) {
       weekQuestTotal++;
+      if (isDaily) weekDailyQuests++;
+      else weekSideQuests++;
       if (isDaily) {
         if (!weekByDate[key]) weekByDate[key] = new Set();
         weekByDate[key].add(q.questId);
@@ -461,6 +489,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     return monday.toISOString().split("T")[0];
   }
   let cadenceFullClearCount = 0;
+  let weekCadenceFullClearCount = 0;
   for (const d of DUNGEONS) {
     if (d.ruleType !== "cadence" || !d.cadence) continue;
     const requiredCount = d.cadence.workouts.length;
@@ -474,8 +503,14 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       if (!byWindow[key]) byWindow[key] = new Set();
       byWindow[key].add(e.type);
     }
-    for (const set of Object.values(byWindow)) {
-      if (set.size >= requiredCount) cadenceFullClearCount++;
+    for (const [keyDate, set] of Object.entries(byWindow)) {
+      if (set.size < requiredCount) continue;
+      cadenceFullClearCount++;
+      // Window key is a YYYY-MM-DD string (day-cadence) or the Monday
+      // of the week (week-cadence). Comparing the parsed date against
+      // weekCutoff catches both shapes — a weekly-cadence Monday
+      // before the cutoff means that whole window is in the past.
+      if (new Date(keyDate) >= weekCutoff) weekCadenceFullClearCount++;
     }
   }
   const cadenceFullClearBonusXp =
@@ -528,6 +563,17 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
         workoutTotal: weekWorkout,
         exposureTotal: weekExposure,
         perfectQuestDays: weekPerfect,
+        // Weighted total — leaderboard ranks on this. Pulls weights
+        // from ACTIVITY_POINTS so the table is the single source of
+        // truth and any rebalance lands in one place.
+        activityPoints:
+          weekDailyQuests * ACTIVITY_POINTS.dailyQuest +
+          weekSideQuests * ACTIVITY_POINTS.sideQuest +
+          weekClearedDays * ACTIVITY_POINTS.dayCleared +
+          weekWorkout * ACTIVITY_POINTS.workout +
+          weekCadenceFullClearCount * ACTIVITY_POINTS.cadenceFullClear +
+          weekExposure * ACTIVITY_POINTS.exposure +
+          weekPerfect * ACTIVITY_POINTS.perfectDay,
       },
       month: {
         questTotal: monthQuestTotal,
@@ -558,6 +604,75 @@ export async function getPlayerLevelForUser(
 ): Promise<{ level: number; rank: string; totalXp: number }> {
   const snap = await buildSnapshot(userId);
   return { level: snap.level, rank: getRank(snap.level), totalXp: snap.totalXp };
+}
+
+export interface HunterSummary {
+  hunterId: string;
+  hunterName: string;
+  imageUrl: string | null;
+  level: number;
+  rank: string;
+  /** Activity points earned in the rolling last-7-days window. Drives
+   *  the weekly leaderboard ranking. Sourced from
+   *  PlayerSnapshot.windows.week.activityPoints. */
+  weeklyActivityPoints: number;
+}
+
+/**
+ * Lean leaderboard / friend-row reader. Returns just the fields a
+ * leaderboard row needs — name, avatar, level, rank, weekly activity
+ * points. Powers the future weekly leaderboard and is a drop-in
+ * replacement for the heavier per-row data the friends list currently
+ * builds out of getPlayerLevelForUser + a separate Clerk lookup.
+ *
+ * For batch use, prefer getHunterSummariesByIds — it issues a single
+ * Clerk getUserList for the whole set instead of N round-trips.
+ */
+export async function getHunterSummariesByIds(
+  hunterIds: string[]
+): Promise<HunterSummary[]> {
+  await requireUserId();
+  if (hunterIds.length === 0) return [];
+
+  const [snapshots, clerkUsers] = await Promise.all([
+    Promise.all(hunterIds.map((id) => buildSnapshot(id))),
+    (async () => {
+      try {
+        const client = await clerkClient();
+        const list = await client.users.getUserList({ userId: hunterIds });
+        return list.data;
+      } catch {
+        return [];
+      }
+    })(),
+  ]);
+
+  const clerkById = new Map(clerkUsers.map((u) => [u.id, u]));
+  const summaries: HunterSummary[] = [];
+  for (let i = 0; i < hunterIds.length; i++) {
+    const id = hunterIds[i];
+    const snap = snapshots[i];
+    const u = clerkById.get(id);
+    const display = u
+      ? resolveHunterDisplay(u)
+      : { hunterName: "Hunter", imageUrl: null };
+    summaries.push({
+      hunterId: id,
+      hunterName: display.hunterName,
+      imageUrl: display.imageUrl,
+      level: snap.level,
+      rank: getRank(snap.level),
+      weeklyActivityPoints: snap.windows.week.activityPoints ?? 0,
+    });
+  }
+  return summaries;
+}
+
+export async function getHunterSummary(
+  hunterId: string
+): Promise<HunterSummary | null> {
+  const [s] = await getHunterSummariesByIds([hunterId]);
+  return s ?? null;
 }
 
 export async function evaluateAchievements(): Promise<string[]> {
