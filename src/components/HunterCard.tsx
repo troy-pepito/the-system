@@ -475,12 +475,12 @@ export default function HunterCard({
                     Badges
                   </p>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {def && (
+                    {def && dominant && (
                       <span
-                        title={`Dominant dimension: ${def.label}`}
+                        title={`Your strongest dimension is ${def.label.replace(" Hunter", "")}`}
                         className={`inline-flex items-center gap-1.5 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${def.badgeStyle}`}
                       >
-                        <span>{def.label}</span>
+                        <span>{dominant}-Dominant</span>
                       </span>
                     )}
                     {scattered && (
