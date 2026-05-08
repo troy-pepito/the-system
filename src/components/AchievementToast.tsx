@@ -77,7 +77,7 @@ export default function AchievementToast() {
           ✕
         </button>
         <Link
-          href="/profile"
+          href={`/profile#trophy-${current.id}`}
           onClick={dismiss}
           aria-label={t("achievementUnlocked")}
           className={`block ${style.bg} ${style.border} border-2 rounded-lg px-5 py-4 min-w-[280px] max-w-[360px] backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] ${style.glow} cursor-pointer hover:brightness-125 transition-all`}

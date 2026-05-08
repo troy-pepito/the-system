@@ -178,6 +178,15 @@ body {
   animation: celebration-halo 2.6s ease-out both;
 }
 
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+@utility animate-pulse-slow {
+  animation: pulse-slow 2.4s ease-in-out infinite;
+}
+
 @utility animate-vignette-breathe {
   animation: vignette-breathe 5s ease-in-out infinite;
   will-change: opacity;

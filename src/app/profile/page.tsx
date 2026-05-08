@@ -50,6 +50,17 @@ export default function ProfilePage() {
   const [data, setData] = useState<ProfilePageData | null>(null);
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [range, setRange] = useState<Range>("all");
+  // Hash-driven deep link from AchievementToast: clicking the toast
+  // sends the player to /profile#trophy-{id}. We capture the id once
+  // on mount and pipe it down so the matching section auto-expands
+  // and scrolls into view — without this, the link landed at the top
+  // of /profile with the trophy panel still collapsed.
+  const [highlightId, setHighlightId] = useState<string | null>(null);
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.startsWith("#trophy-")) return;
+    setHighlightId(hash.slice("#trophy-".length));
+  }, []);
 
   useEffect(() => {
     const cachedData = readCache<ProfilePageData>(PROFILE_CACHE_KEY);
@@ -212,16 +223,19 @@ export default function ProfilePage() {
             label={tProfile("categories.foundations")}
             defs={foundations}
             unlockedMap={unlockedMap}
+            highlightId={highlightId}
           />
           <TrophySection
             label={tProfile("categories.progression")}
             defs={progression}
             unlockedMap={unlockedMap}
+            highlightId={highlightId}
           />
           <TrophySection
             label={tProfile("categories.training")}
             defs={training}
             unlockedMap={unlockedMap}
+            highlightId={highlightId}
           />
           <div className="mt-8">
             <div className="flex items-center gap-4 mb-5">
@@ -242,6 +256,7 @@ export default function ProfilePage() {
                     defs={defs}
                     unlockedMap={unlockedMap}
                     nested
+                    highlightId={highlightId}
                   />
                 );
               })}
@@ -264,17 +279,35 @@ function TrophySection({
   defs,
   unlockedMap,
   nested,
+  highlightId,
 }: {
   label: string;
   defs: AchievementDef[];
   unlockedMap: Map<string, UnlockedEntry>;
   nested?: boolean;
+  /** Achievement id from window.location.hash. If it matches a trophy in
+   *  this section, the section auto-expands on mount and scrolls into
+   *  view — driven by AchievementToast deep-linking to /profile#trophy-X. */
+  highlightId?: string | null;
 }) {
   const tAchievements = useTranslations("achievements");
   const tDungeons = useTranslations("dungeons");
   const tRungs = useTranslations("rungs");
   const tRarity = useTranslations("rarityLabels");
-  const [expanded, setExpanded] = useState(false);
+  const containsHighlight =
+    !!highlightId && defs.some((d) => d.id === highlightId);
+  const [expanded, setExpanded] = useState(containsHighlight);
+
+  useEffect(() => {
+    if (!containsHighlight) return;
+    setExpanded(true);
+    // Wait for the expand to render before scrolling.
+    const t = setTimeout(() => {
+      const el = document.getElementById(`trophy-${highlightId}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+    return () => clearTimeout(t);
+  }, [containsHighlight, highlightId]);
   // Tracks ids the player has just tapped Claim on, so the UI flips
   // to claimed instantly without waiting for the server action +
   // refetch round trip. Server state catches up via notifyStatsUpdated.
@@ -323,6 +356,13 @@ function TrophySection({
 
   if (defs.length === 0) return null;
   const unlockedHere = defs.filter((d) => unlockedMap.has(d.id)).length;
+  // Unclaimed = unlocked but the player hasn't tapped Claim yet.
+  // Drives the amber dot/count next to the section header so the
+  // player can find their pending trophies without opening every panel.
+  const unclaimedHere = defs.filter((d) => {
+    const entry = unlockedMap.get(d.id);
+    return entry && entry.claimedAt === null && !claimedLocal.has(d.id);
+  }).length;
   return (
     <div className={nested ? "" : "mt-6 first:mt-0"}>
       <button
@@ -333,13 +373,23 @@ function TrophySection({
           expanded ? "mb-3" : "mb-0"
         }`}
       >
-        <p
-          className={`tracking-[0.3em] uppercase text-left ${
-            nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-400"
-          }`}
-        >
-          {label}
-        </p>
+        <div className="flex items-center gap-2 min-w-0">
+          <p
+            className={`tracking-[0.3em] uppercase text-left ${
+              nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-400"
+            }`}
+          >
+            {label}
+          </p>
+          {unclaimedHere > 0 && (
+            <span
+              className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1.5 rounded-full bg-amber-500/30 border border-amber-400/70 text-amber-200 text-[10px] font-bold tabular-nums shadow-[0_0_8px_rgba(251,191,36,0.6)] animate-pulse-slow"
+              aria-label={`${unclaimedHere} unclaimed`}
+            >
+              {unclaimedHere}
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-2 shrink-0">
           <p className="text-[10px] text-slate-500 font-mono">
             <span className="text-amber-300">{unlockedHere}</span>
@@ -374,7 +424,8 @@ function TrophySection({
           return (
             <div
               key={def.id}
-              className={`relative border rounded-lg p-3 transition-all ${
+              id={`trophy-${def.id}`}
+              className={`relative border rounded-lg p-3 transition-all scroll-mt-32 sm:scroll-mt-24 ${
                 isUnclaimed
                   ? `${style.bg} ${style.border} shadow-[0_0_20px_rgba(251,191,36,0.5)] animate-pulse-slow`
                   : isUnlocked
