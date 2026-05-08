@@ -150,6 +150,7 @@ export default function Navbar() {
             {navLink("/", t("status"))}
             {navLink("/portals", t("portals"))}
             {navLink("/feed", t("feed"))}
+            {navLink("/guilds", "Guilds")}
             {navLink("/profile", t("profile"), unclaimedTrophyCount)}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
@@ -217,6 +218,7 @@ export default function Navbar() {
           {navLink("/", t("status"))}
           {navLink("/portals", t("portals"))}
           {navLink("/feed", t("feed"))}
+          {navLink("/guilds", "Guilds")}
           {navLink("/profile", t("profile"), unclaimedTrophyCount)}
         </div>
       </div>

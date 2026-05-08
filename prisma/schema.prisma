@@ -131,3 +131,48 @@ model Friendship {
   @@index([addresseeId])
   @@index([status])
 }
+
+model Guild {
+  id          Int           @id @default(autoincrement())
+  // URL-safe identifier derived from name (lowercased, hyphenated).
+  // Powers /g/{slug} routes. Globally unique so guild URLs can't
+  // collide; uniqueness on `name` enforced separately so two guilds
+  // can't pick the same display name even with different slugs.
+  slug        String        @unique
+  name        String        @unique
+  description String?
+  // Clerk userId of the creator. Drives ownership semantics — the
+  // owner can rename / disband / kick. One owner per guild for now;
+  // a future admin role can land without schema changes.
+  ownerId     String
+  members     GuildMember[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([ownerId])
+}
+
+model GuildMember {
+  id       Int      @id @default(autoincrement())
+  guildId  Int
+  guild    Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId   String
+  // "owner" | "member" — owner is set on guild creation, all others
+  // start as "member" once approved. Kept as a string instead of an
+  // enum so adding "admin" later is a server-side change only.
+  role     String
+  // "pending" (requested to join, awaiting owner approval) |
+  // "accepted" (in the guild). The "one guild per user" cap is
+  // enforced at the action layer on transition pending→accepted, not
+  // in schema, since a user can have multiple pending requests across
+  // guilds before one is approved.
+  status   String
+  joinedAt DateTime @default(now())
+
+  // Prevent duplicate rows per (guild, user) — second join request to
+  // the same guild is a no-op rather than a DB error path the action
+  // has to special-case.
+  @@unique([guildId, userId])
+  @@index([userId])
+  @@index([guildId, status])
+}
