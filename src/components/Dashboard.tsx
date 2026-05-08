@@ -1,10 +1,27 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useUser } from "@clerk/nextjs";
+import {
+  DndContext,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import StreakCard from "@/components/StreakCard";
 import DailyQuests from "@/components/DailyQuests";
 import SideQuests from "@/components/SideQuests";
+import SortableDungeonItem from "@/components/SortableDungeonItem";
 import {
   STATS_UPDATED_EVENT,
   hasPendingMutations,
@@ -24,10 +41,29 @@ import { drainQueue } from "@/lib/offlineDrain";
 
 export default function Dashboard() {
   const t = useTranslations("dashboard");
+  const { user } = useUser();
   // Initialize null both server- and client-side to keep SSR and first
   // client render identical. Cache hydration happens in the useEffect
   // below before the server fetch completes.
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
+  // Saved dungeon ordering, keyed by Clerk unsafeMetadata.dungeonOrder.
+  // Cross-device because it lives on the user record, not localStorage.
+  // Local override exists so drag-and-drop reorders feel instant —
+  // we mirror the server write into local state on drag end and let
+  // Clerk's metadata catch up in the background.
+  const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      // Long-press to lift, so taps on buttons inside the card (Log
+      // Exposure, +Quest, Undo) still register as taps. 250ms is the
+      // shortest delay that doesn't fight with quick double-taps;
+      // tolerance lets the finger wiggle 5px without cancelling.
+      activationConstraint: { delay: 250, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const reload = () => {
     drainQueue()
@@ -160,8 +196,53 @@ export default function Dashboard() {
     };
   }, [dashboard]);
 
-  const activeRuns = dashboard?.activeRuns ?? [];
+  const rawActiveRuns = dashboard?.activeRuns ?? [];
   const details = dashboard?.details ?? {};
+  // Apply saved order: local override (just-dragged) > Clerk metadata >
+  // server default order. Runs not present in the saved order list
+  // (newly entered dungeons) drift to the bottom but keep relative
+  // dashboard order so the new card lands somewhere predictable.
+  const savedOrder =
+    orderOverride ??
+    ((user?.unsafeMetadata?.dungeonOrder as string[] | undefined) ?? []);
+  const orderIndex = new Map(savedOrder.map((id, i) => [id, i]));
+  const activeRuns = useMemo(
+    () =>
+      [...rawActiveRuns].sort((a, b) => {
+        const ai = orderIndex.has(a.dungeonId)
+          ? orderIndex.get(a.dungeonId)!
+          : Number.POSITIVE_INFINITY;
+        const bi = orderIndex.has(b.dungeonId)
+          ? orderIndex.get(b.dungeonId)!
+          : Number.POSITIVE_INFINITY;
+        return ai - bi;
+      }),
+    [rawActiveRuns, orderIndex]
+  );
+  const dungeonIds = activeRuns.map((r) => r.dungeonId);
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = dungeonIds.indexOf(String(active.id));
+    const newIndex = dungeonIds.indexOf(String(over.id));
+    if (oldIndex < 0 || newIndex < 0) return;
+    const nextOrder = arrayMove(dungeonIds, oldIndex, newIndex);
+    // Optimistic local override so the card snaps into place instantly.
+    setOrderOverride(nextOrder);
+    // Cross-device sync via Clerk metadata. Best-effort: if the write
+    // fails (offline / Clerk hiccup), the local override still drives
+    // the UI for this session and the next refresh falls back to the
+    // last successfully-synced order.
+    user
+      ?.update({
+        unsafeMetadata: {
+          ...user.unsafeMetadata,
+          dungeonOrder: nextOrder,
+        },
+      })
+      .catch(() => {});
+  }
 
   return (
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
@@ -224,64 +305,74 @@ export default function Dashboard() {
           </div>
         )}
 
-        {dashboard &&
-          activeRuns.map((run) => {
-            const d = getDungeon(run.dungeonId);
-            if (!d) return null;
-            const detail = details[run.dungeonId] ?? {};
-            const handleEnded = () => handleRunEnded(run.dungeonId);
-            let card: React.ReactNode = null;
-            if (d.ruleType === "continuous_streak") {
-              card = (
-                <StreakCard
-                  dungeonId={run.dungeonId}
-                  initialRun={run}
-                  onStreakChange={reload}
-                  onExit={handleEnded}
-                />
-              );
-            } else if (d.ruleType === "timed") {
-              card = (
-                <TimedDungeonCard
-                  dungeonId={run.dungeonId}
-                  initialRun={run}
-                  onStreakChange={reload}
-                  onExit={handleEnded}
-                  onComplete={handleEnded}
-                />
-              );
-            } else if (d.ruleType === "cadence") {
-              card = (
-                <CadenceDungeonCard
-                  dungeonId={run.dungeonId}
-                  initialRun={run}
-                  initialWeekWorkouts={detail.weekWorkouts ?? []}
-                  onStreakChange={reload}
-                  onExit={handleEnded}
-                />
-              );
-            } else if (d.ruleType === "progressive") {
-              card = (
-                <ProgressiveDungeonCard
-                  dungeonId={run.dungeonId}
-                  initialActive={run.active}
-                  initialRungCounts={detail.rungCounts ?? {}}
-                  onRelapse={handleEnded}
-                  onComplete={handleEnded}
-                />
-              );
-            }
-            if (!card) return null;
-            return (
-              <div
-                key={run.dungeonId}
-                id={`dungeon-${run.dungeonId}`}
-                className="scroll-mt-32 sm:scroll-mt-24"
-              >
-                {card}
+        {dashboard && activeRuns.length > 0 && (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={dungeonIds}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-8">
+                {activeRuns.map((run) => {
+                  const d = getDungeon(run.dungeonId);
+                  if (!d) return null;
+                  const detail = details[run.dungeonId] ?? {};
+                  const handleEnded = () => handleRunEnded(run.dungeonId);
+                  let card: React.ReactNode = null;
+                  if (d.ruleType === "continuous_streak") {
+                    card = (
+                      <StreakCard
+                        dungeonId={run.dungeonId}
+                        initialRun={run}
+                        onStreakChange={reload}
+                        onExit={handleEnded}
+                      />
+                    );
+                  } else if (d.ruleType === "timed") {
+                    card = (
+                      <TimedDungeonCard
+                        dungeonId={run.dungeonId}
+                        initialRun={run}
+                        onStreakChange={reload}
+                        onExit={handleEnded}
+                        onComplete={handleEnded}
+                      />
+                    );
+                  } else if (d.ruleType === "cadence") {
+                    card = (
+                      <CadenceDungeonCard
+                        dungeonId={run.dungeonId}
+                        initialRun={run}
+                        initialWeekWorkouts={detail.weekWorkouts ?? []}
+                        onStreakChange={reload}
+                        onExit={handleEnded}
+                      />
+                    );
+                  } else if (d.ruleType === "progressive") {
+                    card = (
+                      <ProgressiveDungeonCard
+                        dungeonId={run.dungeonId}
+                        initialActive={run.active}
+                        initialRungCounts={detail.rungCounts ?? {}}
+                        onRelapse={handleEnded}
+                        onComplete={handleEnded}
+                      />
+                    );
+                  }
+                  if (!card) return null;
+                  return (
+                    <SortableDungeonItem key={run.dungeonId} id={run.dungeonId}>
+                      {card}
+                    </SortableDungeonItem>
+                  );
+                })}
               </div>
-            );
-          })}
+            </SortableContext>
+          </DndContext>
+        )}
       </div>
     </main>
   );
