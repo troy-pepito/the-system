@@ -4,49 +4,18 @@ import { unstable_cache, updateTag } from "next/cache";
 import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
-import {
-  getHunterSummariesByIds,
-  type HunterSummary,
-} from "@/app/actions/achievements";
+import { getHunterSummariesByIds } from "@/app/actions/achievements";
 import { resolveHunterDisplay } from "@/lib/hunterDisplay";
 import { sendPushToUser } from "@/lib/push";
+import {
+  GUILD_MEMBER_CAP,
+  slugifyGuildName,
+  type GuildDetail,
+  type GuildSummary,
+  type GuildListItem,
+} from "@/lib/guilds";
 
 const TAG = "guild";
-
-/** Hard cap from spec — keeps guild chat / leaderboard tractable and
- *  forces meaningful curation on the owner. */
-export const GUILD_MEMBER_CAP = 50;
-
-export interface GuildSummary {
-  id: number;
-  slug: string;
-  name: string;
-  description: string | null;
-  ownerId: string;
-  memberCount: number;
-  pendingCount: number;
-  /** Authenticated viewer's relationship to this guild — drives the
-   *  request/approve/leave UI in one read. */
-  viewerStatus: "owner" | "member" | "pending" | "none";
-}
-
-export interface GuildDetail extends GuildSummary {
-  members: HunterSummary[];
-  pending: HunterSummary[];
-  createdAt: string;
-}
-
-/** Lowercase + hyphenated slug derived from a guild name. Strips
- *  diacritics + punctuation so "Dawn Walkers!" → "dawn-walkers". */
-function slugify(name: string): string {
-  return name
-    .normalize("NFKD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 60);
-}
 
 /** "One guild per user" rule — checks for any accepted membership. */
 async function hasAcceptedMembership(userId: string): Promise<boolean> {
@@ -66,7 +35,7 @@ export async function createGuild(input: {
   if (name.length < 3 || name.length > 32) {
     throw new Error("Guild name must be 3–32 characters");
   }
-  const slug = slugify(name);
+  const slug = slugifyGuildName(name);
   if (slug.length < 3) {
     throw new Error("Guild name must contain at least 3 letters/numbers");
   }
@@ -351,15 +320,6 @@ export async function disbandGuild(slug: string): Promise<void> {
   // FK cascade on GuildMember.guildId removes the membership rows.
   await prisma.guild.delete({ where: { id: guildId } });
   updateTag(TAG);
-}
-
-export interface GuildListItem {
-  slug: string;
-  name: string;
-  description: string | null;
-  memberCount: number;
-  /** Cap minus accepted, so the UI can show "12 spots left". */
-  spotsLeft: number;
 }
 
 const _browseGuilds = async (): Promise<GuildListItem[]> => {

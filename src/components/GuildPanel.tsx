@@ -8,8 +8,8 @@ import {
   disbandGuild,
   leaveGuild,
   requestJoinGuild,
-  type GuildDetail,
 } from "@/app/actions/guilds";
+import type { GuildDetail } from "@/lib/guilds";
 import { getRankStyle } from "@/lib/rankStyle";
 
 interface GuildPanelProps {
