@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { STATS_UPDATED_EVENT } from "@/lib/player";
 import { evaluateAchievements } from "@/app/actions/achievements";
@@ -69,9 +70,12 @@ export default function AchievementToast() {
   const rarityLabel = tRarity(def.rarity);
 
   return (
-    <div className="fixed top-20 right-4 z-[100] pointer-events-none animate-[toast-slide_0.5s_ease-out]">
-      <div
-        className={`${style.bg} ${style.border} border-2 rounded-lg px-5 py-4 min-w-[280px] max-w-[360px] backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] ${style.glow}`}
+    <div className="fixed top-20 right-4 z-[100] animate-[toast-slide_0.5s_ease-out]">
+      <Link
+        href="/profile"
+        onClick={() => setQueue((prev) => prev.slice(1))}
+        aria-label={t("achievementUnlocked")}
+        className={`block ${style.bg} ${style.border} border-2 rounded-lg px-5 py-4 min-w-[280px] max-w-[360px] backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] ${style.glow} cursor-pointer hover:brightness-125 transition-all`}
       >
         <p className={`text-[10px] tracking-[0.3em] uppercase ${style.text} mb-1`}>
           {t("achievementUnlocked")}
@@ -94,7 +98,7 @@ export default function AchievementToast() {
             </p>
           </div>
         </div>
-      </div>
+      </Link>
       <style jsx>{`
         @keyframes toast-slide {
           from {
