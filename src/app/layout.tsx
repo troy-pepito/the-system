@@ -45,7 +45,7 @@ const chakraPetch = Chakra_Petch({
 });
 
 export const metadata: Metadata = {
-  title: "Shivaliva Leveling: The System",
+  title: "The System",
   description: "Face your shadows. Rank up in real life.",
   appleWebApp: {
     capable: true,
@@ -53,15 +53,15 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   openGraph: {
-    title: "Shivaliva Leveling: The System",
+    title: "The System",
     description:
       "A gamified self-improvement system for the battles nobody's watching.",
     type: "website",
-    siteName: "Shivaliva Leveling: The System",
+    siteName: "The System",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shivaliva Leveling: The System",
+    title: "The System",
     description:
       "A gamified self-improvement system for the battles nobody's watching.",
   },

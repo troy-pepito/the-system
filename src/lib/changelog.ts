@@ -26,6 +26,69 @@ export interface ChangelogChange {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "2.0.0",
+    date: "2026-05-09",
+    title: "Guilds + Leaderboards",
+    changes: [
+      {
+        kind: "feature",
+        text: "Guilds: form a band of up to 50 hunters, request-and-approve to join, with each guild on its own /g/{slug} page. Owners can edit, kick, transfer ownership, or disband — all from a single Manage Guild panel.",
+      },
+      {
+        kind: "feature",
+        text: "Guild Feed: members' public journal entries land in a guild-scoped timeline, separate from the rest of the system. Your hunters see what your hunters are doing, and only them.",
+      },
+      {
+        kind: "feature",
+        text: "Weekly Leaderboard at /leaderboard — Global / Friends / Guild / Guilds. Ranked by activity points: 1pt for a daily quest or cleared day, 2pt for a workout or side quest, 3pt for an exposure or perfect day. Resets every 7 days. Your rank shows even when you're outside the top 50.",
+      },
+      {
+        kind: "feature",
+        text: "Cross-guild competition: guilds race each other on total weekly points, with per-member average displayed so small-but-active guilds aren't drowned out.",
+      },
+      {
+        kind: "feature",
+        text: "Reorder dungeons on the Status page — long-press the grip icon on any card and drag it where you want. Order syncs across devices via your hunter profile.",
+      },
+      {
+        kind: "feature",
+        text: "Mastered ladders are now undoable. Cleared the final rung by accident? Tap Undo from the Mastered state instead of being locked out — claim Victory only when you mean it.",
+      },
+      {
+        kind: "fix",
+        text: "Achievements re-lock when the underlying action is undone. Untick a quest, walk back an exposure — the trophies that hinged on it disappear with it (combo milestones stay, since those mark a streak that genuinely happened).",
+      },
+      {
+        kind: "polish",
+        text: "Significant toasts (achievement unlock, Reflection Recorded, big celebrations) no longer auto-fade. Tap the X to dismiss, or follow the link — they wait for you.",
+      },
+      {
+        kind: "polish",
+        text: "Achievement toast taps now scroll you to the actual trophy on your profile and auto-expand its section, instead of dropping you at the top of the page.",
+      },
+      {
+        kind: "polish",
+        text: "Profile trophy sections show an amber count badge for unclaimed trophies, so you can find pending claims without opening every panel.",
+      },
+      {
+        kind: "polish",
+        text: "Note modal can be cancelled via X / click-outside / ESC, separate from \"Skip Note\" (which still means log without writing).",
+      },
+      {
+        kind: "polish",
+        text: "Navbar redesigned with icons + labels. Hunter's Path moved out of Settings to its own /path page, accessible from /portals.",
+      },
+      {
+        kind: "polish",
+        text: "Permanent \"+ Enter Another Dungeon\" CTA at the bottom of the Status page when you have active runs — Portals link removed from the navbar to declutter.",
+      },
+      {
+        kind: "polish",
+        text: "Global Feed retired. Public journal entries from guild members surface in their guild's feed; otherwise they live on each hunter's public profile (/h/{hunterId}). Community is intimate now — small bands, not anonymous broadcast.",
+      },
+    ],
+  },
+  {
     version: "1.0.0",
     date: "2026-05-08",
     title: "Production",

@@ -375,6 +375,15 @@ export default function Dashboard() {
             </SortableContext>
           </DndContext>
         )}
+
+        {dashboard && activeRuns.length > 0 && (
+          <Link
+            href="/portals"
+            className="block w-full text-center px-6 py-4 bg-slate-900/60 border border-cyan-500/30 rounded-md text-cyan-300 text-[10px] uppercase tracking-[0.4em] hover:bg-cyan-500/10 hover:border-cyan-400/60 transition-all"
+          >
+            + Enter Another Dungeon
+          </Link>
+        )}
       </div>
     </main>
   );

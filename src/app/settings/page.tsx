@@ -4,10 +4,9 @@ import AtmosphereToggle from "@/components/AtmosphereToggle";
 import NotificationSettings from "@/components/NotificationSettings";
 import InstallAppButton from "@/components/InstallAppButton";
 import LanguagePicker from "@/components/LanguagePicker";
-import HunterTypePicker from "@/components/HunterTypePicker";
 
 export const metadata = {
-  title: "Settings — Shivaliva Leveling",
+  title: "Settings — The System",
   description:
     "Tune notifications, install the app, and adjust the look of your hunter window.",
 };
@@ -24,13 +23,6 @@ export default async function SettingsPage() {
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
-
-        <Card className="p-6">
-          <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
-            {t("hunterPath")}
-          </p>
-          <HunterTypePicker />
-        </Card>
 
         <Card className="p-6">
           <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">

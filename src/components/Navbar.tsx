@@ -33,30 +33,124 @@ export default function Navbar() {
   const pathname = usePathname();
   const t = useTranslations("nav");
 
-  const navLink = (href: string, label: string, badgeCount?: number) => {
+  /**
+   * Navbar item: icon + label, with active-state glow + an optional
+   * amber count badge (used by Profile for unclaimed trophies). The
+   * desktop layout puts icon and label side-by-side; the mobile
+   * bottom row stacks icon over a smaller label.
+   */
+  const navItem = (
+    href: string,
+    label: string,
+    icon: React.ReactNode,
+    options?: { badgeCount?: number; layout?: "row" | "stack" }
+  ) => {
     const isActive =
       href === "/" ? pathname === "/" : pathname.startsWith(href);
+    const layout = options?.layout ?? "row";
+    const badgeCount = options?.badgeCount;
     return (
       <Link
         href={href}
-        className={`inline-flex items-center gap-1.5 transition-colors ${
+        className={`relative inline-flex transition-colors ${
+          layout === "stack"
+            ? "flex-col items-center gap-0.5"
+            : "items-center gap-1.5"
+        } ${
           isActive
             ? "text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.5)]"
             : "text-slate-400 hover:text-cyan-300"
         }`}
       >
-        <span>{label}</span>
-        {!!badgeCount && badgeCount > 0 && (
-          <span
-            aria-label={`${badgeCount} unclaimed`}
-            className="min-w-[14px] h-[14px] px-1 flex items-center justify-center bg-amber-400 text-slate-950 text-[8px] font-bold rounded-full shadow-[0_0_6px_rgba(251,191,36,0.7)]"
-          >
-            {badgeCount > 9 ? "9+" : badgeCount}
-          </span>
-        )}
+        <span className="relative inline-flex">
+          {icon}
+          {!!badgeCount && badgeCount > 0 && (
+            <span
+              aria-label={`${badgeCount} unclaimed`}
+              className="absolute -top-1.5 -right-2 min-w-[14px] h-[14px] px-1 flex items-center justify-center bg-amber-400 text-slate-950 text-[8px] font-bold rounded-full shadow-[0_0_6px_rgba(251,191,36,0.7)]"
+            >
+              {badgeCount > 9 ? "9+" : badgeCount}
+            </span>
+          )}
+        </span>
+        <span className={layout === "stack" ? "text-[8px]" : ""}>
+          {label}
+        </span>
       </Link>
     );
   };
+
+  // SVG props are kept tiny and consistent — 18px in the desktop row,
+  // 20px in the mobile stack via classes on the wrapper. Stroke-only
+  // shapes match the existing settings-gear icon's vibe.
+  const iconClass = "w-[18px] h-[18px]";
+  const statusIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={iconClass}
+      aria-hidden
+    >
+      <path d="M3 12h4l2-7 4 14 2-7h6" />
+    </svg>
+  );
+  const guildsIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={iconClass}
+      aria-hidden
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+  const boardIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={iconClass}
+      aria-hidden
+    >
+      {/* Stepped bar chart — short, medium, tall — leans into the
+          ranking metaphor rather than the trophy/printer the previous
+          icon was reading as. */}
+      <line x1="6" y1="20" x2="6" y2="14" />
+      <line x1="12" y1="20" x2="12" y2="9" />
+      <line x1="18" y1="20" x2="18" y2="4" />
+      <line x1="3" y1="20" x2="21" y2="20" />
+    </svg>
+  );
+  const profileIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={iconClass}
+      aria-hidden
+    >
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c0-4 4-7 8-7s8 3 8 7" />
+    </svg>
+  );
 
   useEffect(() => {
     // Hydrate XP from cache after mount so the bar fills in instantly,
@@ -147,12 +241,12 @@ export default function Navbar() {
             The System
           </Link>
           <div className="hidden sm:flex gap-5 text-[10px] uppercase tracking-widest">
-            {navLink("/", t("status"))}
-            {navLink("/portals", t("portals"))}
-            {navLink("/feed", t("feed"))}
-            {navLink("/guilds", "Guilds")}
-            {navLink("/leaderboard", "Board")}
-            {navLink("/profile", t("profile"), unclaimedTrophyCount)}
+            {navItem("/", t("status"), statusIcon)}
+            {navItem("/guilds", "Guilds", guildsIcon)}
+            {navItem("/leaderboard", "Board", boardIcon)}
+            {navItem("/profile", t("profile"), profileIcon, {
+              badgeCount: unclaimedTrophyCount,
+            })}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
             {showUpgrade && (
@@ -215,13 +309,14 @@ export default function Navbar() {
             {currentXp} / {xpToNext} XP
           </p>
         </div>
-        <div className="sm:hidden flex justify-center gap-4 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
-          {navLink("/", t("status"))}
-          {navLink("/portals", t("portals"))}
-          {navLink("/feed", t("feed"))}
-          {navLink("/guilds", "Guilds")}
-          {navLink("/leaderboard", "Board")}
-          {navLink("/profile", t("profile"), unclaimedTrophyCount)}
+        <div className="sm:hidden flex justify-around gap-2 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
+          {navItem("/", t("status"), statusIcon, { layout: "stack" })}
+          {navItem("/guilds", "Guilds", guildsIcon, { layout: "stack" })}
+          {navItem("/leaderboard", "Board", boardIcon, { layout: "stack" })}
+          {navItem("/profile", t("profile"), profileIcon, {
+            layout: "stack",
+            badgeCount: unclaimedTrophyCount,
+          })}
         </div>
       </div>
       <Paywall open={paywallOpen} onClose={() => setPaywallOpen(false)} />

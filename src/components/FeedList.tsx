@@ -4,24 +4,28 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getDungeon } from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
-import {
-  getPublicFeed,
-  toggleReaction,
-  type FeedEntry,
-} from "@/app/actions/feed";
+import { toggleReaction } from "@/app/actions/feed";
+import type { FeedEntry, FeedPage } from "@/lib/feed";
 import { REACTION_EMOJIS, type ReactionSummary } from "@/lib/reactions";
 import { readCache, writeCache } from "@/lib/offlineCache";
-
-const FEED_CACHE_KEY = "feed";
 
 interface FeedListProps {
   initialEntries: FeedEntry[];
   initialCursor: number | null;
+  /** Fetcher driving load-more + background refresh. Required — every
+   *  caller passes its own (guild-scoped fetcher today; future scopes
+   *  e.g. friends-only would slot in here). */
+  fetcher: (cursor?: number) => Promise<FeedPage>;
+  /** Cache key for the offline localStorage stash. Different feed
+   *  scopes need different keys so they don't shadow each other. */
+  cacheKey: string;
 }
 
 export default function FeedList({
   initialEntries,
   initialCursor,
+  fetcher,
+  cacheKey,
 }: FeedListProps) {
   const t = useTranslations("feed");
   const [entries, setEntries] = useState<FeedEntry[]>(initialEntries);
@@ -36,31 +40,27 @@ export default function FeedList({
     if (typeof window === "undefined") return;
 
     if (initialEntries.length === 0) {
-      const cached = readCache<FeedEntry[]>(FEED_CACHE_KEY);
+      const cached = readCache<FeedEntry[]>(cacheKey);
       if (cached && cached.length > 0) setEntries(cached);
     } else {
-      // SSR succeeded — write what we just got into cache for the next
-      // offline visit.
-      writeCache(FEED_CACHE_KEY, initialEntries);
+      writeCache(cacheKey, initialEntries);
     }
 
-    // Re-fetch in the background to catch any updates since SSR. Skip
-    // if offline so we don't spam errors.
     if (!navigator.onLine) return;
-    getPublicFeed()
+    fetcher()
       .then((page) => {
         setEntries(page.entries);
         setCursor(page.nextCursor);
-        writeCache(FEED_CACHE_KEY, page.entries);
+        writeCache(cacheKey, page.entries);
       })
       .catch(() => {});
-  }, [initialEntries]);
+  }, [initialEntries, fetcher, cacheKey]);
 
   async function loadMore() {
     if (loading || cursor === null) return;
     setLoading(true);
     try {
-      const page = await getPublicFeed(cursor);
+      const page = await fetcher(cursor);
       setEntries((prev) => [...prev, ...page.entries]);
       setCursor(page.nextCursor);
     } finally {

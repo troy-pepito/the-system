@@ -216,7 +216,7 @@ export default function PortalsPage() {
             </Link>
           ) : locked && pathDef ? (
             <Link
-              href="/settings"
+              href="/path"
               onClick={(e) => e.stopPropagation()}
               className="block w-full text-center px-4 py-3 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-widest hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
             >
@@ -289,14 +289,24 @@ export default function PortalsPage() {
             }
           />
           {yourPath.length > 0 ? (
-            <div className="space-y-4">{yourPath.map((d) => renderDungeonCard(d))}</div>
+            <div className="space-y-4">
+              {yourPath.map((d) => renderDungeonCard(d))}
+              <div className="text-center">
+                <Link
+                  href="/path"
+                  className="inline-block text-[10px] tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-300 transition-colors border-b border-slate-700 hover:border-cyan-400/60 pb-0.5"
+                >
+                  Change Your Path →
+                </Link>
+              </div>
+            </div>
           ) : (
             <Card className="p-5 text-center bg-slate-900/40 border-slate-800">
               <p className="text-xs text-slate-400 leading-relaxed mb-3">
                 {t("yourPathEmpty")}
               </p>
               <Link
-                href="/settings"
+                href="/path"
                 className="inline-block px-4 py-2 border border-cyan-500/40 rounded text-cyan-300 text-[10px] uppercase tracking-[0.3em] hover:bg-cyan-500/15 transition-colors"
               >
                 {t("yourPathCta")}
