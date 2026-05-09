@@ -137,7 +137,9 @@
     "cancel": "Cancel",
     "isFriend": "✓ Friends",
     "requestSent": "Request Sent",
-    "addFriend": "+ Add Friend"
+    "addFriend": "+ Add Friend",
+    "confirmAdd": "Send Request?",
+    "cancelRequest": "Cancel Request"
   },
   "installApp": {
     "title": "Install App",
@@ -891,6 +893,10 @@
     "awaitingApproval": "Awaiting Owner Approval",
     "leaving": "Leaving…",
     "leaveGuild": "Leave Guild",
+    "confirmJoin": "Send Request?",
+    "cancel": "Cancel",
+    "cancelRequest": "Cancel Request",
+    "confirmLeave": "Leave for real?",
     "editGuildAria": "Edit guild",
     "pendingHeader": "Pending Requests · {count}",
     "approve": "Approve",

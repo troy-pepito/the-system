@@ -215,6 +215,28 @@ export async function requestJoinGuild(slug: string): Promise<void> {
   } catch {}
 }
 
+/**
+ * Withdraw a pending join request the viewer sent. Idempotent — a
+ * request that's already been approved or declined leaves no row to
+ * delete. Mirrors declineJoin but caller is the applicant.
+ */
+export async function cancelJoinGuildRequest(slug: string): Promise<void> {
+  const userId = await requireUserId();
+  const guild = await prisma.guild.findUnique({
+    where: { slug },
+    select: { id: true },
+  });
+  if (!guild) return;
+  await prisma.guildMember.deleteMany({
+    where: {
+      guildId: guild.id,
+      userId,
+      status: "pending",
+    },
+  });
+  updateTag(TAG);
+}
+
 async function requireOwner(slug: string): Promise<{
   guildId: number;
   ownerId: string;

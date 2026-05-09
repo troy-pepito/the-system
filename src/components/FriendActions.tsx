@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   acceptFriend,
+  cancelFriendRequest,
   declineFriend,
   getFriendStatus,
   removeFriend,
@@ -28,7 +29,9 @@ export default function FriendActions({ hunterId, variant = "default" }: Props) 
   const [status, setStatus] = useState<FriendStatus | "loading">("loading");
   const [busy, setBusy] = useState(false);
   const [confirmingUnfriend, setConfirmingUnfriend] = useState(false);
+  const [confirmingAdd, setConfirmingAdd] = useState(false);
   const confirmTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const addTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,12 +59,27 @@ export default function FriendActions({ hunterId, variant = "default" }: Props) 
     };
   }, [confirmingUnfriend]);
 
+  // Same auto-revert for the add-friend confirm. Single-tap on "+ Add
+  // Friend" used to fire the request immediately — too easy to hit by
+  // accident on a hunter profile. Now it arms a confirm; the user has
+  // to tap again within 5s for the request to actually go out.
+  useEffect(() => {
+    if (!confirmingAdd) return;
+    addTimer.current = setTimeout(() => {
+      setConfirmingAdd(false);
+    }, 5000);
+    return () => {
+      if (addTimer.current) clearTimeout(addTimer.current);
+    };
+  }, [confirmingAdd]);
+
   async function run<T>(fn: () => Promise<T>, next: FriendStatus) {
     setBusy(true);
     try {
       await fn();
       setStatus(next);
       setConfirmingUnfriend(false);
+      setConfirmingAdd(false);
     } catch {
       // leave status as-is
     } finally {
@@ -126,12 +144,13 @@ export default function FriendActions({ hunterId, variant = "default" }: Props) 
     return (
       <button
         type="button"
-        disabled
-        aria-label={t("requestSent")}
-        title={t("requestSent")}
-        className={`border border-slate-700 text-slate-500 cursor-not-allowed ${pillCls} ${pillBase}`}
+        disabled={busy}
+        onClick={() => run(() => cancelFriendRequest(hunterId), "none")}
+        aria-label={t("cancelRequest")}
+        title={t("cancelRequest")}
+        className={`border border-amber-400/40 bg-amber-500/10 text-amber-300/90 hover:bg-amber-500/20 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
       >
-        {compact ? <span aria-hidden>⋯</span> : t("requestSent")}
+        {compact ? <span aria-hidden>⋯</span> : t("cancelRequest")}
       </button>
     );
   }
@@ -163,11 +182,38 @@ export default function FriendActions({ hunterId, variant = "default" }: Props) 
     );
   }
 
+  if (confirmingAdd) {
+    return (
+      <div className="flex gap-1.5">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => run(() => requestFriend(hunterId), "pending_out")}
+          aria-label={t("confirmAdd")}
+          title={t("confirmAdd")}
+          className={`border border-cyan-400/70 bg-cyan-500/25 text-cyan-100 hover:bg-cyan-500/35 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
+        >
+          {compact ? <span aria-hidden>✓</span> : t("confirmAdd")}
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => setConfirmingAdd(false)}
+          aria-label={t("cancel")}
+          title={t("cancel")}
+          className={`border border-slate-700 text-slate-300 hover:bg-slate-800/60 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
+        >
+          {compact ? <span aria-hidden>↶</span> : t("cancel")}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <button
       type="button"
       disabled={busy}
-      onClick={() => run(() => requestFriend(hunterId), "pending_out")}
+      onClick={() => setConfirmingAdd(true)}
       aria-label={t("addFriend")}
       title={t("addFriend")}
       className={`border border-cyan-400/60 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}

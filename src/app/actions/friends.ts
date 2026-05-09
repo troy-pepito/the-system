@@ -85,6 +85,22 @@ export async function acceptFriend(requesterId: string): Promise<void> {
   } catch {}
 }
 
+/**
+ * Cancel a friend request the viewer sent (status pending_out). Same
+ * shape as declineFriend but addressed-from rather than addressed-to:
+ * the viewer is the requester, deletes their own outbound row.
+ */
+export async function cancelFriendRequest(targetId: string): Promise<void> {
+  const userId = await requireUserId();
+  await prisma.friendship.deleteMany({
+    where: {
+      requesterId: userId,
+      addresseeId: targetId,
+      status: "pending",
+    },
+  });
+}
+
 export async function declineFriend(requesterId: string): Promise<void> {
   const userId = await requireUserId();
   await prisma.friendship.deleteMany({

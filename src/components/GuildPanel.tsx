@@ -1,10 +1,11 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   approveJoin,
+  cancelJoinGuildRequest,
   declineJoin,
   disbandGuild,
   editGuild,
@@ -43,6 +44,22 @@ export default function GuildPanel({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  // Two-tap confirms for the destructive / one-shot actions on the
+  // viewer's own state. First tap arms the confirm; second tap fires.
+  // Auto-reverts to default after 5s of indecision — same pattern as
+  // FriendActions.unfriend so accidental presses are recoverable.
+  const [confirmingJoin, setConfirmingJoin] = useState(false);
+  const [confirmingLeave, setConfirmingLeave] = useState(false);
+  useEffect(() => {
+    if (!confirmingJoin) return;
+    const timer = setTimeout(() => setConfirmingJoin(false), 5000);
+    return () => clearTimeout(timer);
+  }, [confirmingJoin]);
+  useEffect(() => {
+    if (!confirmingLeave) return;
+    const timer = setTimeout(() => setConfirmingLeave(false), 5000);
+    return () => clearTimeout(timer);
+  }, [confirmingLeave]);
   const guild = initial;
 
   function runAction(fn: () => Promise<void>) {
@@ -123,32 +140,78 @@ export default function GuildPanel({
 
         {!isOwner && (
           <div className="flex gap-2 pt-2">
-            {isStranger && (
+            {isStranger && !confirmingJoin && (
               <button
-                onClick={() => runAction(() => requestJoinGuild(slug))}
+                onClick={() => setConfirmingJoin(true)}
                 disabled={pending || guild.memberCount >= GUILD_MEMBER_CAP}
                 className="flex-1 px-4 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.3em] hover:bg-cyan-500/40 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {guild.memberCount >= GUILD_MEMBER_CAP
                   ? t("guildFull")
-                  : pending
-                  ? t("sending")
                   : t("requestToJoin")}
               </button>
             )}
-            {isPending && (
-              <p className="flex-1 px-4 py-3 border border-amber-400/40 text-amber-300/80 text-xs uppercase tracking-[0.3em] text-center">
-                {t("awaitingApproval")}
-              </p>
+            {isStranger && confirmingJoin && (
+              <>
+                <button
+                  onClick={() => {
+                    setConfirmingJoin(false);
+                    runAction(() => requestJoinGuild(slug));
+                  }}
+                  disabled={pending}
+                  className="flex-1 px-4 py-3 bg-cyan-500/30 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.3em] hover:bg-cyan-500/40 transition-all disabled:opacity-40"
+                >
+                  {pending ? t("sending") : t("confirmJoin")}
+                </button>
+                <button
+                  onClick={() => setConfirmingJoin(false)}
+                  disabled={pending}
+                  className="px-4 py-3 border border-slate-700 text-slate-300 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors disabled:opacity-40"
+                >
+                  {t("cancel")}
+                </button>
+              </>
             )}
-            {isMember && (
+            {isPending && (
               <button
-                onClick={() => runAction(leaveGuild)}
+                onClick={() => runAction(() => cancelJoinGuildRequest(slug))}
+                disabled={pending}
+                className="flex-1 px-4 py-3 border border-amber-400/40 bg-amber-500/10 text-amber-300/90 text-xs uppercase tracking-[0.3em] text-center hover:bg-amber-500/20 transition-colors disabled:opacity-40"
+              >
+                {pending
+                  ? t("sending")
+                  : `${t("awaitingApproval")} · ${t("cancelRequest")}`}
+              </button>
+            )}
+            {isMember && !confirmingLeave && (
+              <button
+                onClick={() => setConfirmingLeave(true)}
                 disabled={pending}
                 className="flex-1 px-4 py-3 bg-red-500/10 border border-red-500/40 text-red-300 text-xs uppercase tracking-[0.3em] hover:bg-red-500/20 transition-all disabled:opacity-40"
               >
-                {pending ? t("leaving") : t("leaveGuild")}
+                {t("leaveGuild")}
               </button>
+            )}
+            {isMember && confirmingLeave && (
+              <>
+                <button
+                  onClick={() => {
+                    setConfirmingLeave(false);
+                    runAction(leaveGuild);
+                  }}
+                  disabled={pending}
+                  className="flex-1 px-4 py-3 bg-red-500/20 border border-red-500/60 text-red-200 text-xs uppercase tracking-[0.3em] hover:bg-red-500/30 transition-all disabled:opacity-40"
+                >
+                  {pending ? t("leaving") : t("confirmLeave")}
+                </button>
+                <button
+                  onClick={() => setConfirmingLeave(false)}
+                  disabled={pending}
+                  className="px-4 py-3 border border-slate-700 text-slate-300 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors disabled:opacity-40"
+                >
+                  {t("cancel")}
+                </button>
+              </>
             )}
           </div>
         )}
