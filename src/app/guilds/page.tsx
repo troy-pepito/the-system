@@ -1,11 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { browseGuilds, getMyGuild } from "@/app/actions/guilds";
 import GuildCreateForm from "@/components/GuildCreateForm";
 import { GUILD_MEMBER_CAP } from "@/lib/guilds";
 
 export const metadata = {
-  title: "Guilds — Shivaliva Leveling",
+  title: "Guilds — The System",
   description:
     "Find your hunters. Guilds are small bands of allies pushing the same kind of training together.",
 };
@@ -14,9 +15,11 @@ export default async function GuildsPage() {
   const { userId } = await auth();
   if (!userId) return <main className="min-h-screen bg-slate-950" />;
 
-  // Tolerate failures the same way feed.tsx does — if either of these
-  // throws (offline / DB blip), the page still renders something
-  // useful instead of dropping into Next's error fallback.
+  const t = await getTranslations("guildsPage");
+
+  // Tolerate failures — if either throws (offline / DB blip), the page
+  // still renders something useful instead of dropping into Next's
+  // error fallback.
   let myGuild: Awaited<ReturnType<typeof getMyGuild>> = null;
   let directory: Awaited<ReturnType<typeof browseGuilds>> = [];
   try {
@@ -30,11 +33,11 @@ export default async function GuildsPage() {
       <div className="max-w-2xl mx-auto w-full space-y-6">
         <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
-            Guilds
+            {t("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
           <p className="text-[11px] text-slate-400 mt-3 max-w-sm mx-auto leading-relaxed">
-            Small bands of hunters pushing the same kind of training together.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -42,13 +45,11 @@ export default async function GuildsPage() {
 
         <div>
           <p className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-3">
-            {myGuild ? "Other Guilds" : "Browse"}
+            {myGuild ? t("otherGuilds") : t("browse")}
           </p>
           {directory.length === 0 ? (
             <div className="border border-slate-800 rounded-lg p-6 text-center">
-              <p className="text-xs text-slate-500">
-                No guilds yet. Be the first to forge one.
-              </p>
+              <p className="text-xs text-slate-500">{t("empty")}</p>
             </div>
           ) : (
             <ul className="space-y-2">
@@ -73,7 +74,7 @@ export default async function GuildsPage() {
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-[10px] tracking-widest uppercase text-slate-500">
-                            {g.memberCount} member{g.memberCount === 1 ? "" : "s"}
+                            {t("membersShort", { count: g.memberCount })}
                           </p>
                           <p
                             className={`text-[9px] tracking-[0.2em] uppercase mt-0.5 ${
@@ -83,8 +84,8 @@ export default async function GuildsPage() {
                             }`}
                           >
                             {g.spotsLeft === 0
-                              ? "Full"
-                              : `${g.spotsLeft} spots left`}
+                              ? t("full")
+                              : t("spotsLeft", { count: g.spotsLeft })}
                           </p>
                         </div>
                       </div>
@@ -99,11 +100,12 @@ export default async function GuildsPage() {
   );
 }
 
-function YourGuildCard({
+async function YourGuildCard({
   guild,
 }: {
   guild: NonNullable<Awaited<ReturnType<typeof getMyGuild>>>;
 }) {
+  const t = await getTranslations("guildsPage");
   return (
     <Link
       href={`/g/${guild.slug}`}
@@ -115,7 +117,7 @@ function YourGuildCard({
       <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
 
       <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70">
-        Your Guild
+        {t("yourGuild")}
       </p>
       <p className="font-display text-lg font-bold uppercase tracking-wider text-cyan-100 mt-1">
         {guild.name}
@@ -127,16 +129,19 @@ function YourGuildCard({
       )}
       <div className="flex items-center gap-3 mt-3 text-[10px] tracking-widest uppercase text-slate-400">
         <span>
-          {guild.memberCount} / {GUILD_MEMBER_CAP} members
+          {t("membersCount", {
+            count: guild.memberCount,
+            cap: GUILD_MEMBER_CAP,
+          })}
         </span>
         {guild.viewerStatus === "owner" && guild.pendingCount > 0 && (
           <span className="inline-flex items-center gap-1 text-amber-300">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.7)]" />
-            {guild.pendingCount} pending
+            {t("pending", { count: guild.pendingCount })}
           </span>
         )}
         {guild.viewerStatus === "owner" && (
-          <span className="text-cyan-400/70">Owner</span>
+          <span className="text-cyan-400/70">{t("owner")}</span>
         )}
       </div>
     </Link>

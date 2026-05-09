@@ -4,6 +4,8 @@
     "portals": "Portals",
     "feed": "Feed",
     "profile": "Profile",
+    "guilds": "Guilds",
+    "board": "Board",
     "levelLabel": "Lvl. {level}"
   },
   "settings": {
@@ -848,5 +850,115 @@
     "relapse": "Relapse",
     "completed": "Completed",
     "journal": "Journal"
+  },
+  "guildsPage": {
+    "title": "Guilds",
+    "subtitle": "Small bands of hunters pushing the same kind of training together.",
+    "yourGuild": "Your Guild",
+    "owner": "Owner",
+    "pending": "{count} pending",
+    "membersCount": "{count} / {cap} members",
+    "otherGuilds": "Other Guilds",
+    "browse": "Browse",
+    "empty": "No guilds yet. Be the first to forge one.",
+    "membersShort": "{count, plural, one {# member} other {# members}}",
+    "spotsLeft": "{count} spots left",
+    "full": "Full"
+  },
+  "guildCreate": {
+    "header": "Forge a Guild",
+    "intro": "Name your band of hunters. You'll be the owner — accept new members one request at a time.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Dawn Walkers",
+    "nameHelp": "3–32 characters. URL becomes /g/{slug}.",
+    "nameHelpFallback": "your-guild",
+    "descLabel": "Description (optional)",
+    "descPlaceholder": "What's your guild about?",
+    "submit": "Create Guild",
+    "submitting": "Forging…",
+    "errorGeneric": "Could not create guild"
+  },
+  "guildPanel": {
+    "backToAll": "← All Guilds",
+    "guildLabel": "Guild",
+    "ownerYou": "You're the owner",
+    "memberYou": "You're a member",
+    "requestPending": "Request pending",
+    "errorGeneric": "Something went wrong",
+    "guildFull": "Guild Full",
+    "sending": "Sending…",
+    "requestToJoin": "Request to Join",
+    "awaitingApproval": "Awaiting Owner Approval",
+    "leaving": "Leaving…",
+    "leaveGuild": "Leave Guild",
+    "editGuildAria": "Edit guild",
+    "pendingHeader": "Pending Requests · {count}",
+    "approve": "Approve",
+    "decline": "Decline",
+    "membersHeader": "Members",
+    "ownerBadge": "Owner",
+    "memberLevel": "Lvl {level}",
+    "pts": "pts",
+    "kickAria": "Kick from guild",
+    "kick": "Kick",
+    "kickConfirm": "Kick {name} from the guild? They can request to rejoin later.",
+    "guildFeed": "Guild Feed",
+    "feedEmpty": "Nothing here yet. Members' public journal entries land in this feed — flip the Share toggle on a journal to drop one in."
+  },
+  "guildModal": {
+    "close": "Close",
+    "header": "Manage Guild",
+    "slugLocked": "/g/{slug} · slug locked",
+    "detailsHeader": "Details",
+    "nameLabel": "Name",
+    "descLabel": "Description",
+    "saving": "Saving…",
+    "saveChanges": "Save Changes",
+    "noChanges": "No Changes",
+    "transferHeader": "Transfer Ownership",
+    "transferIntro": "Hand the guild over to another member. You'll become a regular member; only they can transfer it back.",
+    "transferSelect": "Select a new owner…",
+    "transferOption": "{name} (Lvl {level})",
+    "transferring": "Transferring…",
+    "transferAction": "Transfer Ownership",
+    "transferConfirm": "Transfer ownership to {name}? You'll become a regular member and can't undo this without their cooperation.",
+    "dangerHeader": "Danger Zone",
+    "dangerIntro": "Permanently deletes the guild and ejects every member. The slug becomes available for someone else to claim.",
+    "disbanding": "Disbanding…",
+    "disband": "Disband Guild",
+    "disbandConfirm": "Disband {name}? Every member will be ejected and the guild will be deleted. This can't be undone.",
+    "errorSave": "Could not save changes",
+    "errorTransfer": "Could not transfer ownership",
+    "errorDisband": "Could not disband"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Weekly activity ranking. Exposures and perfect days move you most.",
+    "scopeGlobal": "Global",
+    "scopeFriends": "Friends",
+    "scopeGuild": "Guild",
+    "scopeGuilds": "Guilds",
+    "yourRank": "Your Rank",
+    "yourGuild": "Your Guild",
+    "pts": "pts",
+    "avg": "avg",
+    "memberLevel": "Lvl {level}",
+    "membersShort": "{count, plural, one {# member} other {# members}}",
+    "emptyFriends": "Add friends to see how you stack up against your circle this week.",
+    "emptyGuild": "Join a guild first to see its weekly activity ranking.",
+    "emptyGuilds": "No guilds yet — forge the first one and start a rivalry.",
+    "emptyGlobal": "No hunters tracked yet — be the first to post a number."
+  },
+  "hunterPathPage": {
+    "metaDescription": "Choose the hunter type that fits the version of yourself you're building. Each path unlocks a starter dungeon tuned to that dimension."
+  },
+  "dashboard2": {
+    "enterAnother": "+ Enter Another Dungeon"
+  },
+  "sortableDungeon": {
+    "dragToReorder": "Drag to reorder"
+  },
+  "portalsExtra": {
+    "changePath": "Change Your Path →"
   }
 }

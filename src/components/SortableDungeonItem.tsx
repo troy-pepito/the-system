@@ -1,6 +1,7 @@
 "use client";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useTranslations } from "next-intl";
 
 interface SortableDungeonItemProps {
   id: string;
@@ -22,6 +23,7 @@ export default function SortableDungeonItem({
   id,
   children,
 }: SortableDungeonItemProps) {
+  const t = useTranslations("sortableDungeon");
   const {
     attributes,
     listeners,
@@ -52,7 +54,7 @@ export default function SortableDungeonItem({
       <button
         ref={setActivatorNodeRef}
         type="button"
-        aria-label="Drag to reorder"
+        aria-label={t("dragToReorder")}
         style={{ touchAction: "none" }}
         className="absolute top-2 right-2 z-20 w-8 h-8 flex items-center justify-center rounded text-slate-500 hover:text-cyan-300 hover:bg-cyan-500/10 active:bg-cyan-500/20 active:text-cyan-200 transition-colors cursor-grab active:cursor-grabbing"
         {...attributes}

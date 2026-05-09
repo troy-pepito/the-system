@@ -242,8 +242,8 @@ export default function Navbar() {
           </Link>
           <div className="hidden sm:flex gap-5 text-[10px] uppercase tracking-widest">
             {navItem("/", t("status"), statusIcon)}
-            {navItem("/guilds", "Guilds", guildsIcon)}
-            {navItem("/leaderboard", "Board", boardIcon)}
+            {navItem("/guilds", t("guilds"), guildsIcon)}
+            {navItem("/leaderboard", t("board"), boardIcon)}
             {navItem("/profile", t("profile"), profileIcon, {
               badgeCount: unclaimedTrophyCount,
             })}
@@ -311,8 +311,8 @@ export default function Navbar() {
         </div>
         <div className="sm:hidden flex justify-around gap-2 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
           {navItem("/", t("status"), statusIcon, { layout: "stack" })}
-          {navItem("/guilds", "Guilds", guildsIcon, { layout: "stack" })}
-          {navItem("/leaderboard", "Board", boardIcon, { layout: "stack" })}
+          {navItem("/guilds", t("guilds"), guildsIcon, { layout: "stack" })}
+          {navItem("/leaderboard", t("board"), boardIcon, { layout: "stack" })}
           {navItem("/profile", t("profile"), profileIcon, {
             layout: "stack",
             badgeCount: unclaimedTrophyCount,

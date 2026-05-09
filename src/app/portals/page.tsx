@@ -28,6 +28,7 @@ export default function PortalsPage() {
   const t = useTranslations("portals");
   const tDungeons = useTranslations("dungeons");
   const tHunterTypes = useTranslations("hunterTypes");
+  const tPortalsExtra = useTranslations("portalsExtra");
   const router = useRouter();
   const { user } = useUser();
   const meta = user?.unsafeMetadata as { hunterType?: string } | undefined;
@@ -296,7 +297,7 @@ export default function PortalsPage() {
                   href="/path"
                   className="inline-block text-[10px] tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-300 transition-colors border-b border-slate-700 hover:border-cyan-400/60 pb-0.5"
                 >
-                  Change Your Path →
+                  {tPortalsExtra("changePath")}
                 </Link>
               </div>
             </div>

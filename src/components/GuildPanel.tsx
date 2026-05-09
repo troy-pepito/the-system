@@ -2,6 +2,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   approveJoin,
   declineJoin,
@@ -37,6 +38,7 @@ export default function GuildPanel({
   initialFeed,
   initialFeedCursor,
 }: GuildPanelProps) {
+  const t = useTranslations("guildPanel");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +52,7 @@ export default function GuildPanel({
         await fn();
         router.refresh();
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
+        setError(err instanceof Error ? err.message : t("errorGeneric"));
       }
     });
   }
@@ -66,7 +68,7 @@ export default function GuildPanel({
         href="/guilds"
         className="inline-flex items-center text-[10px] tracking-[0.3em] uppercase text-slate-500 hover:text-cyan-300 transition-colors"
       >
-        ← All Guilds
+        {t("backToAll")}
       </Link>
 
       <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.2),inset_0_0_20px_rgba(34,211,238,0.05)] p-6 space-y-3">
@@ -79,8 +81,8 @@ export default function GuildPanel({
           <button
             type="button"
             onClick={() => setEditOpen(true)}
-            aria-label="Edit guild"
-            title="Edit guild"
+            aria-label={t("editGuildAria")}
+            title={t("editGuildAria")}
             className="absolute top-3 right-3 z-10 w-7 h-7 flex items-center justify-center rounded text-slate-500 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors"
           >
             <span className="text-base leading-none" aria-hidden>
@@ -90,7 +92,7 @@ export default function GuildPanel({
         )}
 
         <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70">
-          Guild
+          {t("guildLabel")}
         </p>
         <p className="font-display text-2xl font-bold uppercase tracking-wider text-cyan-100">
           {guild.name}
@@ -104,9 +106,15 @@ export default function GuildPanel({
           <span>
             {guild.memberCount} / {GUILD_MEMBER_CAP} members
           </span>
-          {isOwner && <span className="text-cyan-300/80">You're the owner</span>}
-          {isMember && <span className="text-cyan-300/80">You're a member</span>}
-          {isPending && <span className="text-amber-300/80">Request pending</span>}
+          {isOwner && (
+            <span className="text-cyan-300/80">{t("ownerYou")}</span>
+          )}
+          {isMember && (
+            <span className="text-cyan-300/80">{t("memberYou")}</span>
+          )}
+          {isPending && (
+            <span className="text-amber-300/80">{t("requestPending")}</span>
+          )}
         </div>
 
         {error && (
@@ -122,15 +130,15 @@ export default function GuildPanel({
                 className="flex-1 px-4 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.3em] hover:bg-cyan-500/40 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {guild.memberCount >= GUILD_MEMBER_CAP
-                  ? "Guild Full"
+                  ? t("guildFull")
                   : pending
-                  ? "Sending…"
-                  : "Request to Join"}
+                  ? t("sending")
+                  : t("requestToJoin")}
               </button>
             )}
             {isPending && (
               <p className="flex-1 px-4 py-3 border border-amber-400/40 text-amber-300/80 text-xs uppercase tracking-[0.3em] text-center">
-                Awaiting Owner Approval
+                {t("awaitingApproval")}
               </p>
             )}
             {isMember && (
@@ -139,7 +147,7 @@ export default function GuildPanel({
                 disabled={pending}
                 className="flex-1 px-4 py-3 bg-red-500/10 border border-red-500/40 text-red-300 text-xs uppercase tracking-[0.3em] hover:bg-red-500/20 transition-all disabled:opacity-40"
               >
-                {pending ? "Leaving…" : "Leave Guild"}
+                {pending ? t("leaving") : t("leaveGuild")}
               </button>
             )}
           </div>
@@ -149,7 +157,7 @@ export default function GuildPanel({
       {isOwner && guild.pending.length > 0 && (
         <div className="bg-slate-900/60 border border-amber-400/40 rounded-lg p-5 space-y-3 shadow-[0_0_20px_rgba(251,191,36,0.15)]">
           <p className="text-[10px] tracking-[0.4em] uppercase text-amber-300/80">
-            Pending Requests · {guild.pending.length}
+            {t("pendingHeader", { count: guild.pending.length })}
           </p>
           <ul className="space-y-2">
             {guild.pending.map((p) => (
@@ -163,7 +171,7 @@ export default function GuildPanel({
                     {p.hunterName}
                   </p>
                   <p className="text-[10px] text-slate-500 tracking-widest uppercase">
-                    Lvl {p.level} · {p.rank}
+                    {t("memberLevel", { level: p.level })} · {p.rank}
                   </p>
                 </div>
                 <button
@@ -173,7 +181,7 @@ export default function GuildPanel({
                   disabled={pending}
                   className="px-3 py-1.5 bg-cyan-500/20 border border-cyan-400/60 text-cyan-200 text-[10px] uppercase tracking-[0.2em] hover:bg-cyan-500/30 transition-colors disabled:opacity-40"
                 >
-                  Approve
+                  {t("approve")}
                 </button>
                 <button
                   onClick={() =>
@@ -182,7 +190,7 @@ export default function GuildPanel({
                   disabled={pending}
                   className="px-3 py-1.5 border border-slate-700 text-slate-400 text-[10px] uppercase tracking-[0.2em] hover:bg-slate-800/60 transition-colors disabled:opacity-40"
                 >
-                  Decline
+                  {t("decline")}
                 </button>
               </li>
             ))}
@@ -192,7 +200,7 @@ export default function GuildPanel({
 
       <div>
         <p className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-3">
-          Members
+          {t("membersHeader")}
         </p>
         <ul className="space-y-2">
           {guild.members.map((m) => {
@@ -213,17 +221,17 @@ export default function GuildPanel({
                       {m.hunterName}
                       {m.hunterId === guild.ownerId && (
                         <span className="ml-2 text-[9px] tracking-[0.2em] uppercase text-amber-300">
-                          Owner
+                          {t("ownerBadge")}
                         </span>
                       )}
                     </p>
                     <p className="text-[10px] tracking-widest uppercase text-slate-500">
-                      Lvl {m.level} ·{" "}
+                      {t("memberLevel", { level: m.level })} ·{" "}
                       <span className={rankStyle.text}>{m.rank}</span>
                     </p>
                   </div>
                   <p className="text-[10px] tracking-widest uppercase text-cyan-400/70 tabular-nums shrink-0">
-                    {m.weeklyActivityPoints} pts
+                    {m.weeklyActivityPoints} {t("pts")}
                   </p>
                 </Link>
                 {canKick && (
@@ -231,18 +239,16 @@ export default function GuildPanel({
                     type="button"
                     onClick={() => {
                       if (
-                        confirm(
-                          `Kick ${m.hunterName} from the guild? They can request to rejoin later.`
-                        )
+                        confirm(t("kickConfirm", { name: m.hunterName }))
                       ) {
                         runAction(() => kickMember(slug, m.hunterId));
                       }
                     }}
                     disabled={pending}
-                    title="Kick from guild"
+                    title={t("kickAria")}
                     className="shrink-0 px-2 py-1 text-[9px] tracking-[0.2em] uppercase text-red-400/70 border border-red-500/30 rounded hover:bg-red-500/10 hover:text-red-300 transition-colors disabled:opacity-40"
                   >
-                    Kick
+                    {t("kick")}
                   </button>
                 )}
               </li>
@@ -254,13 +260,12 @@ export default function GuildPanel({
       {(isOwner || isMember) && (
         <div>
           <p className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-3">
-            Guild Feed
+            {t("guildFeed")}
           </p>
           {initialFeed.length === 0 ? (
             <div className="border border-slate-800 rounded-lg p-6 text-center">
               <p className="text-xs text-slate-500 leading-relaxed">
-                Nothing here yet. Members' public journal entries land in this
-                feed — flip the Share toggle on a journal to drop one in.
+                {t("feedEmpty")}
               </p>
             </div>
           ) : (
@@ -305,6 +310,7 @@ function EditGuildModal({
   slug,
   onSaved,
 }: EditGuildModalProps) {
+  const t = useTranslations("guildModal");
   const router = useRouter();
   const [name, setName] = useState(guild.name);
   const [description, setDescription] = useState(guild.description ?? "");
@@ -332,7 +338,7 @@ function EditGuildModal({
         await editGuild(slug, { name, description });
         onSaved();
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Could not save changes");
+        setError(err instanceof Error ? err.message : t("errorSave"));
       }
     });
   }
@@ -341,11 +347,7 @@ function EditGuildModal({
     if (!transferTo) return;
     const target = guild.members.find((m) => m.hunterId === transferTo);
     if (!target) return;
-    if (
-      !confirm(
-        `Transfer ownership to ${target.hunterName}? You'll become a regular member and can't undo this without their cooperation.`
-      )
-    ) {
+    if (!confirm(t("transferConfirm", { name: target.hunterName }))) {
       return;
     }
     setError(null);
@@ -354,19 +356,13 @@ function EditGuildModal({
         await transferOwnership(slug, transferTo);
         onSaved();
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Could not transfer ownership"
-        );
+        setError(err instanceof Error ? err.message : t("errorTransfer"));
       }
     });
   }
 
   function disband() {
-    if (
-      !confirm(
-        `Disband ${guild.name}? Every member will be ejected and the guild will be deleted. This can't be undone.`
-      )
-    ) {
+    if (!confirm(t("disbandConfirm", { name: guild.name }))) {
       return;
     }
     setError(null);
@@ -377,7 +373,7 @@ function EditGuildModal({
         // route would 404 if we just refreshed.
         router.push("/guilds");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Could not disband");
+        setError(err instanceof Error ? err.message : t("errorDisband"));
       }
     });
   }
@@ -402,7 +398,7 @@ function EditGuildModal({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("close")}
           className="absolute -top-3 -right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-slate-950 border border-cyan-400/60 text-cyan-300 text-sm leading-none hover:brightness-150 transition-all shadow-md"
         >
           ✕
@@ -415,24 +411,24 @@ function EditGuildModal({
           {/* Header */}
           <div className="px-6 pt-6 pb-4 border-b border-slate-800">
             <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-1">
-              Manage Guild
+              {t("header")}
             </p>
             <p className="font-display text-lg font-bold uppercase tracking-wider text-cyan-100">
               {guild.name}
             </p>
             <p className="text-[10px] text-slate-500 mt-1 font-mono">
-              /g/{slug} <span className="text-slate-700">· slug locked</span>
+              {t("slugLocked", { slug })}
             </p>
           </div>
 
           {/* Details section */}
           <section className="px-6 py-5 border-b border-slate-800 space-y-4">
             <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70">
-              Details
+              {t("detailsHeader")}
             </p>
             <div>
               <label className="block text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-1.5">
-                Name
+                {t("nameLabel")}
               </label>
               <input
                 type="text"
@@ -444,7 +440,7 @@ function EditGuildModal({
             </div>
             <div>
               <label className="block text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-1.5">
-                Description
+                {t("descLabel")}
               </label>
               <textarea
                 value={description}
@@ -460,7 +456,11 @@ function EditGuildModal({
               disabled={pending || !dirty || name.trim().length < 3}
               className="w-full px-4 py-2.5 bg-cyan-500/20 border border-cyan-400/60 text-cyan-200 text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-cyan-500/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed rounded-sm"
             >
-              {pending ? "Saving…" : dirty ? "Save Changes" : "No Changes"}
+              {pending
+                ? t("saving")
+                : dirty
+                ? t("saveChanges")
+                : t("noChanges")}
             </button>
           </section>
 
@@ -469,11 +469,10 @@ function EditGuildModal({
             <section className="px-6 py-5 border-b border-slate-800 space-y-3">
               <div>
                 <p className="text-[10px] tracking-[0.4em] uppercase text-amber-300/80">
-                  Transfer Ownership
+                  {t("transferHeader")}
                 </p>
                 <p className="text-[10px] text-slate-500 leading-relaxed mt-1.5">
-                  Hand the guild over to another member. You'll become a regular
-                  member; only they can transfer it back.
+                  {t("transferIntro")}
                 </p>
               </div>
               <select
@@ -481,10 +480,13 @@ function EditGuildModal({
                 onChange={(e) => setTransferTo(e.target.value)}
                 className="w-full bg-slate-950/80 border border-slate-700 focus:border-amber-400/60 focus:outline-none text-sm text-slate-200 px-3 py-2 rounded-sm"
               >
-                <option value="">Select a new owner…</option>
+                <option value="">{t("transferSelect")}</option>
                 {transferCandidates.map((m) => (
                   <option key={m.hunterId} value={m.hunterId}>
-                    {m.hunterName} (Lvl {m.level})
+                    {t("transferOption", {
+                      name: m.hunterName,
+                      level: m.level,
+                    })}
                   </option>
                 ))}
               </select>
@@ -494,7 +496,7 @@ function EditGuildModal({
                 disabled={pending || !transferTo}
                 className="w-full px-4 py-2.5 bg-amber-500/15 border border-amber-400/50 text-amber-200 text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-amber-500/25 transition-colors disabled:opacity-40 disabled:cursor-not-allowed rounded-sm"
               >
-                {pending ? "Transferring…" : "Transfer Ownership"}
+                {pending ? t("transferring") : t("transferAction")}
               </button>
             </section>
           ) : null}
@@ -503,11 +505,10 @@ function EditGuildModal({
           <section className="px-6 py-5 space-y-3 bg-red-500/[0.03]">
             <div>
               <p className="text-[10px] tracking-[0.4em] uppercase text-red-400/80">
-                Danger Zone
+                {t("dangerHeader")}
               </p>
               <p className="text-[10px] text-slate-500 leading-relaxed mt-1.5">
-                Permanently deletes the guild and ejects every member. The slug
-                becomes available for someone else to claim.
+                {t("dangerIntro")}
               </p>
             </div>
             <button
@@ -516,7 +517,7 @@ function EditGuildModal({
               disabled={pending}
               className="w-full px-4 py-2.5 bg-red-500/10 border border-red-500/40 text-red-300 text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-red-500/20 transition-colors disabled:opacity-40 rounded-sm"
             >
-              {pending ? "Disbanding…" : "Disband Guild"}
+              {pending ? t("disbanding") : t("disband")}
             </button>
           </section>
 

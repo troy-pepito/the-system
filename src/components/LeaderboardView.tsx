@@ -1,6 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   getLeaderboard,
   type GuildLeaderboardRow,
@@ -14,13 +15,6 @@ interface LeaderboardViewProps {
   initial: LeaderboardResult;
 }
 
-const SCOPES: { id: LeaderboardScope; label: string }[] = [
-  { id: "global", label: "Global" },
-  { id: "friends", label: "Friends" },
-  { id: "guild", label: "Guild" },
-  { id: "guilds", label: "Guilds" },
-];
-
 /**
  * Tabbed leaderboard. Switching scope re-runs the server action via
  * useTransition so the rest of the page stays interactive while the
@@ -29,8 +23,18 @@ const SCOPES: { id: LeaderboardScope; label: string }[] = [
  * `kind` discriminator on LeaderboardResult.
  */
 export default function LeaderboardView({ initial }: LeaderboardViewProps) {
+  const t = useTranslations("leaderboard");
   const [data, setData] = useState<LeaderboardResult>(initial);
   const [pending, startTransition] = useTransition();
+
+  // Built inside the component so each tab label translates with the
+  // viewer's locale. Order is fixed; only the labels are i18n.
+  const SCOPES: { id: LeaderboardScope; label: string }[] = [
+    { id: "global", label: t("scopeGlobal") },
+    { id: "friends", label: t("scopeFriends") },
+    { id: "guild", label: t("scopeGuild") },
+    { id: "guilds", label: t("scopeGuilds") },
+  ];
 
   function switchScope(scope: LeaderboardScope) {
     if (data.scope === scope || pending) return;
@@ -70,18 +74,29 @@ export default function LeaderboardView({ initial }: LeaderboardViewProps) {
         })}
       </div>
 
-      {data.kind === "guilds"
-        ? renderGuilds(data.rows, data.viewerRow)
-        : renderHunters(data.rows, data.viewerRow, data.scope)}
+      {data.kind === "guilds" ? (
+        <GuildsList rows={data.rows} viewerRow={data.viewerRow} />
+      ) : (
+        <HuntersList
+          rows={data.rows}
+          viewerRow={data.viewerRow}
+          scope={data.scope}
+        />
+      )}
     </div>
   );
 }
 
-function renderHunters(
-  rows: LeaderboardRow[],
-  viewerRow: LeaderboardRow | null,
-  scope: "global" | "friends" | "guild"
-) {
+function HuntersList({
+  rows,
+  viewerRow,
+  scope,
+}: {
+  rows: LeaderboardRow[];
+  viewerRow: LeaderboardRow | null;
+  scope: "global" | "friends" | "guild";
+}) {
+  const t = useTranslations("leaderboard");
   if (rows.length === 0) return <EmptyState scope={scope} />;
   const viewerInList = !!viewerRow && rows.some((r) => r.isViewer);
   return (
@@ -93,7 +108,7 @@ function renderHunters(
       </ul>
       {viewerRow && !viewerInList && (
         <>
-          <YourRankDivider />
+          <YourRankDivider label={t("yourRank")} />
           <ul className="space-y-1.5">
             <HunterRowCard row={viewerRow} />
           </ul>
@@ -103,10 +118,14 @@ function renderHunters(
   );
 }
 
-function renderGuilds(
-  rows: GuildLeaderboardRow[],
-  viewerRow: GuildLeaderboardRow | null
-) {
+function GuildsList({
+  rows,
+  viewerRow,
+}: {
+  rows: GuildLeaderboardRow[];
+  viewerRow: GuildLeaderboardRow | null;
+}) {
+  const t = useTranslations("leaderboard");
   if (rows.length === 0) return <EmptyState scope="guilds" />;
   const viewerInList = !!viewerRow && rows.some((r) => r.isViewerGuild);
   return (
@@ -118,7 +137,7 @@ function renderGuilds(
       </ul>
       {viewerRow && !viewerInList && (
         <>
-          <YourRankDivider label="Your Guild" />
+          <YourRankDivider label={t("yourGuild")} />
           <ul className="space-y-1.5">
             <GuildRowCard row={viewerRow} />
           </ul>
@@ -128,7 +147,7 @@ function renderGuilds(
   );
 }
 
-function YourRankDivider({ label = "Your Rank" }: { label?: string }) {
+function YourRankDivider({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-2 pt-2">
       <div className="flex-1 h-px bg-cyan-500/20" />
@@ -149,6 +168,7 @@ function positionStyle(pos: number): string {
 }
 
 function HunterRowCard({ row }: { row: LeaderboardRow }) {
+  const t = useTranslations("leaderboard");
   const rankStyle = getRankStyle(row.rank);
   return (
     <li>
@@ -184,7 +204,7 @@ function HunterRowCard({ row }: { row: LeaderboardRow }) {
             {row.hunterName}
           </p>
           <p className="text-[10px] tracking-widest uppercase text-slate-500">
-            Lvl {row.level} ·{" "}
+            {t("memberLevel", { level: row.level })} ·{" "}
             <span className={rankStyle.text}>{row.rank}</span>
           </p>
         </div>
@@ -193,7 +213,7 @@ function HunterRowCard({ row }: { row: LeaderboardRow }) {
             {row.weeklyActivityPoints}
           </span>
           <span className="ml-1 text-[9px] tracking-[0.25em] uppercase text-slate-500">
-            pts
+            {t("pts")}
           </span>
         </p>
       </Link>
@@ -202,6 +222,7 @@ function HunterRowCard({ row }: { row: LeaderboardRow }) {
 }
 
 function GuildRowCard({ row }: { row: GuildLeaderboardRow }) {
+  const t = useTranslations("leaderboard");
   return (
     <li>
       <Link
@@ -222,9 +243,9 @@ function GuildRowCard({ row }: { row: GuildLeaderboardRow }) {
             {row.name}
           </p>
           <p className="text-[10px] tracking-widest uppercase text-slate-500">
-            {row.memberCount} member{row.memberCount === 1 ? "" : "s"} ·{" "}
+            {t("membersShort", { count: row.memberCount })} ·{" "}
             <span className="text-cyan-300/70">{row.avgActivityPoints}</span>{" "}
-            avg
+            {t("avg")}
           </p>
         </div>
         <p className="shrink-0 text-right">
@@ -232,7 +253,7 @@ function GuildRowCard({ row }: { row: GuildLeaderboardRow }) {
             {row.totalActivityPoints}
           </span>
           <span className="ml-1 text-[9px] tracking-[0.25em] uppercase text-slate-500">
-            pts
+            {t("pts")}
           </span>
         </p>
       </Link>
@@ -241,16 +262,12 @@ function GuildRowCard({ row }: { row: GuildLeaderboardRow }) {
 }
 
 function EmptyState({ scope }: { scope: LeaderboardScope }) {
+  const t = useTranslations("leaderboard");
   let copy: string;
-  if (scope === "friends") {
-    copy = "Add friends to see how you stack up against your circle this week.";
-  } else if (scope === "guild") {
-    copy = "Join a guild first to see its weekly activity ranking.";
-  } else if (scope === "guilds") {
-    copy = "No guilds yet — forge the first one and start a rivalry.";
-  } else {
-    copy = "No hunters tracked yet — be the first to post a number.";
-  }
+  if (scope === "friends") copy = t("emptyFriends");
+  else if (scope === "guild") copy = t("emptyGuild");
+  else if (scope === "guilds") copy = t("emptyGuilds");
+  else copy = t("emptyGlobal");
   return (
     <div className="border border-slate-800 rounded-lg p-6 text-center">
       <p className="text-xs text-slate-500 leading-relaxed">{copy}</p>

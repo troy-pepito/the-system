@@ -1,9 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
+import { getTranslations } from "next-intl/server";
 import { getLeaderboard } from "@/app/actions/leaderboard";
 import LeaderboardView from "@/components/LeaderboardView";
 
 export const metadata = {
-  title: "Leaderboard — Shivaliva Leveling",
+  title: "Leaderboard — The System",
   description:
     "Weekly activity ranking. Action counts weighted by difficulty — exposures and perfect days move you the most.",
 };
@@ -11,6 +12,8 @@ export const metadata = {
 export default async function LeaderboardPage() {
   const { userId } = await auth();
   if (!userId) return <main className="min-h-screen bg-slate-950" />;
+
+  const t = await getTranslations("leaderboard");
 
   // Default to the global view on the server. The client component
   // re-fetches when the viewer switches scope so the initial paint is
@@ -32,11 +35,11 @@ export default async function LeaderboardPage() {
       <div className="max-w-2xl mx-auto w-full space-y-6">
         <div className="text-center">
           <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
-            Leaderboard
+            {t("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
           <p className="text-[11px] text-slate-400 mt-3 max-w-sm mx-auto leading-relaxed">
-            Weekly activity ranking. Exposures and perfect days move you most.
+            {t("subtitle")}
           </p>
         </div>
 
