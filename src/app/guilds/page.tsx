@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { browseGuilds, getMyGuild } from "@/app/actions/guilds";
 import GuildCreateForm from "@/components/GuildCreateForm";
+import { GUILD_MEMBER_CAP } from "@/lib/guilds";
 
 export const metadata = {
   title: "Guilds — Shivaliva Leveling",
@@ -125,7 +126,9 @@ function YourGuildCard({
         </p>
       )}
       <div className="flex items-center gap-3 mt-3 text-[10px] tracking-widest uppercase text-slate-400">
-        <span>{guild.memberCount} / 50 members</span>
+        <span>
+          {guild.memberCount} / {GUILD_MEMBER_CAP} members
+        </span>
         {guild.viewerStatus === "owner" && guild.pendingCount > 0 && (
           <span className="inline-flex items-center gap-1 text-amber-300">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.7)]" />

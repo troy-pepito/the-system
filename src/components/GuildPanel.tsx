@@ -15,7 +15,7 @@ import {
 } from "@/app/actions/guilds";
 import type { FeedEntry } from "@/lib/feed";
 import FeedList from "@/components/FeedList";
-import type { GuildDetail } from "@/lib/guilds";
+import { GUILD_MEMBER_CAP, type GuildDetail } from "@/lib/guilds";
 import { getRankStyle } from "@/lib/rankStyle";
 
 interface GuildPanelProps {
@@ -101,7 +101,9 @@ export default function GuildPanel({
           </p>
         )}
         <div className="flex items-center gap-3 text-[10px] tracking-widest uppercase text-slate-400 pt-2">
-          <span>{guild.memberCount} / 50 members</span>
+          <span>
+            {guild.memberCount} / {GUILD_MEMBER_CAP} members
+          </span>
           {isOwner && <span className="text-cyan-300/80">You're the owner</span>}
           {isMember && <span className="text-cyan-300/80">You're a member</span>}
           {isPending && <span className="text-amber-300/80">Request pending</span>}
@@ -116,10 +118,10 @@ export default function GuildPanel({
             {isStranger && (
               <button
                 onClick={() => runAction(() => requestJoinGuild(slug))}
-                disabled={pending || guild.memberCount >= 50}
+                disabled={pending || guild.memberCount >= GUILD_MEMBER_CAP}
                 className="flex-1 px-4 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.3em] hover:bg-cyan-500/40 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {guild.memberCount >= 50
+                {guild.memberCount >= GUILD_MEMBER_CAP
                   ? "Guild Full"
                   : pending
                   ? "Sending…"

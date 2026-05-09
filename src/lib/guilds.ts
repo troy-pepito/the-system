@@ -1,8 +1,11 @@
 import type { HunterSummary } from "@/app/actions/achievements";
 
-/** Hard cap from spec — keeps guild chat / leaderboard tractable and
- *  forces meaningful curation on the owner. */
-export const GUILD_MEMBER_CAP = 50;
+/** Hard cap. Started at 50, dropped to 10 on 2026-05-09 — Troy:
+ *  "embarrassing how almost nobody uses this app a lot yet, so maybe
+ *  we can change that to 50 later on". A small cap makes a 2-3 hunter
+ *  guild feel close-to-full instead of cavernously empty. Bump back
+ *  up once usage justifies it. */
+export const GUILD_MEMBER_CAP = 10;
 
 export interface GuildSummary {
   id: number;

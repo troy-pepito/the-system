@@ -46,7 +46,11 @@ export default function LeaderboardView({ initial }: LeaderboardViewProps) {
 
   return (
     <div className="space-y-4">
-      <div className="inline-flex items-center gap-1 p-1 bg-slate-900/60 border border-slate-800 rounded-md flex-wrap">
+      {/* Full-width row with equal-share tabs. Stops the orphaned-
+          GUILDS-on-its-own-row look on mobile (the previous flex-wrap
+          layout broke the 4-tab line under ~360px) and gives the
+          leaderboard a cleaner top edge across all viewports. */}
+      <div className="flex items-stretch gap-1 p-1 bg-slate-900/60 border border-slate-800 rounded-md">
         {SCOPES.map((s) => {
           const active = data.scope === s.id;
           return (
@@ -54,7 +58,7 @@ export default function LeaderboardView({ initial }: LeaderboardViewProps) {
               key={s.id}
               onClick={() => switchScope(s.id)}
               disabled={pending}
-              className={`px-4 py-1.5 text-[10px] tracking-[0.25em] font-bold rounded transition-all uppercase ${
+              className={`flex-1 min-w-0 px-1 sm:px-3 py-1.5 text-[10px] tracking-[0.15em] sm:tracking-[0.25em] font-bold rounded transition-all uppercase truncate ${
                 active
                   ? "bg-cyan-500/20 text-cyan-200 border border-cyan-400/50 shadow-[0_0_10px_rgba(34,211,238,0.35)]"
                   : "text-slate-500 border border-transparent hover:text-slate-300 hover:bg-slate-800/60"
