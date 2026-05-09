@@ -8,6 +8,10 @@ import {
   type ReactionSummary,
 } from "@/lib/reactions";
 import { resolveHunterDisplay } from "@/lib/hunterDisplay";
+import {
+  type FeedEntry,
+  type RawFeedEvent,
+} from "@/lib/feed";
 import legacyAuthors from "@/data/legacy-authors.json";
 
 // Snapshot of dev-instance Clerk users captured at the prod cutover
@@ -23,63 +27,19 @@ const LEGACY_AUTHOR_MAP = new Map(
   }>).map((u) => [u.id, u])
 );
 
-export interface FeedEntry {
-  id: number;
-  hunterId: string;
-  hunterName: string;
-  imageUrl: string | null;
-  dungeonId: string;
-  type: string; // "journal" | "relapse" | "completed"
-  date: string;
-  note: string;
-  createdAt: string;
-  reactions: ReactionSummary[];
-}
-
-export interface FeedPage {
-  entries: FeedEntry[];
-  /** id of the last returned entry — pass back to fetch the next page. null when there are no more. */
-  nextCursor: number | null;
-}
-
-const PAGE_SIZE = 20;
-
 /**
- * Fetches public hunter journal entries (notes flagged isPublic) across
- * every hunter, newest first. Cursor-paginated by event id — events are
- * append-only and id is monotonic, so id < cursor is a safe ordering.
- *
- * Reads Clerk in batch for the slice's authors so each page is one
- * Postgres query + one Clerk batch lookup, not N round-trips.
+ * Shared post-fetch assembly: takes a slice of dungeon events and
+ * returns the FeedEntry shape the UI consumes. Used by both the
+ * public feed (global) and the guild-scoped feed — the WHERE clause
+ * differs but everything after (Clerk batch lookup, reactions
+ * aggregation, entry mapping, legacy-author fallback) is identical.
  */
-export async function getPublicFeed(
-  cursor?: number
-): Promise<FeedPage> {
-  const viewerId = await requireUserId();
+export async function assembleFeedEntries(
+  slice: RawFeedEvent[],
+  viewerId: string
+): Promise<FeedEntry[]> {
+  if (slice.length === 0) return [];
 
-  const events = await prisma.dungeonEvent.findMany({
-    where: {
-      isPublic: true,
-      note: { not: null },
-      ...(cursor ? { id: { lt: cursor } } : {}),
-    },
-    include: { run: { select: { userId: true, dungeonId: true } } },
-    orderBy: { id: "desc" },
-    // +1 so we can tell whether another page exists without a count query.
-    take: PAGE_SIZE + 1,
-  });
-
-  const slice = events.slice(0, PAGE_SIZE);
-  const nextCursor =
-    events.length > PAGE_SIZE && slice.length > 0
-      ? slice[slice.length - 1].id
-      : null;
-
-  if (slice.length === 0) {
-    return { entries: [], nextCursor: null };
-  }
-
-  // Hunter info: one batched Clerk lookup for the page's authors.
   const userIds = Array.from(new Set(slice.map((e) => e.run.userId)));
   const usersById = new Map<
     string,
@@ -96,8 +56,6 @@ export async function getPublicFeed(
     // render with the "Hunter" placeholder rather than crashing.
   }
 
-  // Reactions: one query for the whole page's events, then aggregate
-  // in memory into per-entry summaries.
   const reactionRows = await prisma.reaction.findMany({
     where: { eventId: { in: slice.map((e) => e.id) } },
     select: { eventId: true, userId: true, emoji: true },
@@ -118,11 +76,7 @@ export async function getPublicFeed(
     if (r.userId === viewerId) summary.userReacted = true;
   }
 
-  const entries: FeedEntry[] = slice.map((e) => {
-    // Try prod Clerk first, then the dev-era legacy snapshot. Without
-    // the fallback every pre-migration journal entry would render with
-    // the "Hunter" placeholder + ? avatar even though we still have
-    // each author's name and avatar URL captured.
+  return slice.map((e) => {
     const u =
       usersById.get(e.run.userId) ?? LEGACY_AUTHOR_MAP.get(e.run.userId);
     return {
@@ -138,8 +92,6 @@ export async function getPublicFeed(
       reactions: reactionsByEvent.get(e.id) ?? [],
     };
   });
-
-  return { entries, nextCursor };
 }
 
 /**

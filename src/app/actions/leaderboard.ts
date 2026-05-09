@@ -10,7 +10,7 @@ import {
 
 const TAG = "player:stats";
 
-export type LeaderboardScope = "global" | "friends" | "guild";
+export type LeaderboardScope = "global" | "friends" | "guild" | "guilds";
 
 export interface LeaderboardRow extends HunterSummary {
   /** 1-indexed position within the returned list. Named `position`
@@ -22,13 +22,34 @@ export interface LeaderboardRow extends HunterSummary {
   isViewer: boolean;
 }
 
-export interface LeaderboardResult {
-  scope: LeaderboardScope;
-  rows: LeaderboardRow[];
-  /** Viewer's row even when it's outside the top-N — null when the
-   *  viewer doesn't qualify (e.g. friends scope with no friends). */
-  viewerRow: LeaderboardRow | null;
+/** Cross-guild ranking row — different shape from the hunter rows
+ *  because we're ranking guilds against each other, not individuals. */
+export interface GuildLeaderboardRow {
+  position: number;
+  slug: string;
+  name: string;
+  memberCount: number;
+  totalActivityPoints: number;
+  /** Per-member average. Surfaces small-but-active guilds that would
+   *  otherwise be drowned out by larger ones. */
+  avgActivityPoints: number;
+  /** True when the viewer is in this guild. */
+  isViewerGuild: boolean;
 }
+
+export type LeaderboardResult =
+  | {
+      scope: "global" | "friends" | "guild";
+      kind: "hunters";
+      rows: LeaderboardRow[];
+      viewerRow: LeaderboardRow | null;
+    }
+  | {
+      scope: "guilds";
+      kind: "guilds";
+      rows: GuildLeaderboardRow[];
+      viewerRow: GuildLeaderboardRow | null;
+    };
 
 /** Source-of-truth for who shows up on the global board: anyone who
  *  has touched any tracked surface. Pulling from DB instead of Clerk's
@@ -100,12 +121,13 @@ export async function getLeaderboard(
 ): Promise<LeaderboardResult> {
   const viewerId = await requireUserId();
 
+  if (scope === "guilds") {
+    return getGuildsLeaderboard(viewerId);
+  }
+
   let candidateIds: string[];
   if (scope === "friends") {
     const friends = await getAcceptedFriendIds(viewerId);
-    // Always include the viewer in their own friends-board so they
-    // see where they stand; else a brand-new account with one friend
-    // would show a list of one with no self-context.
     candidateIds = Array.from(new Set([viewerId, ...friends]));
   } else if (scope === "guild") {
     candidateIds = await getMyGuildMemberIds(viewerId);
@@ -114,13 +136,10 @@ export async function getLeaderboard(
   }
 
   if (candidateIds.length === 0) {
-    return { scope, rows: [], viewerRow: null };
+    return { scope, kind: "hunters", rows: [], viewerRow: null };
   }
 
   const summaries = await getHunterSummariesByIds(candidateIds);
-  // Stable secondary sort by hunterId so ties don't shuffle between
-  // requests (matters when viewer's "your rank" line has to match
-  // their position in the rendered list).
   const sorted = [...summaries].sort((a, b) => {
     if (b.weeklyActivityPoints !== a.weeklyActivityPoints) {
       return b.weeklyActivityPoints - a.weeklyActivityPoints;
@@ -137,5 +156,90 @@ export async function getLeaderboard(
   const viewerInTop = top.find((r) => r.isViewer);
   const viewerRow = viewerInTop ?? rows.find((r) => r.isViewer) ?? null;
 
-  return { scope, rows: top, viewerRow };
+  return { scope, kind: "hunters", rows: top, viewerRow };
+}
+
+/**
+ * Cross-guild ranking. Sums each guild's accepted-member weekly points,
+ * then sorts guilds by total. The viewer's guild always shows even if
+ * it's outside the top-N, so a small guild's owner can still see where
+ * they stand.
+ *
+ * Heavy: runs buildSnapshot per member of every guild on the board.
+ * unstable_cache on buildSnapshot keeps repeat loads cheap, but cold
+ * cache after a TAG bump will hit the DB once per member. Acceptable
+ * at private-beta scale; revisit when guilds × members crosses ~500.
+ */
+async function getGuildsLeaderboard(
+  viewerId: string
+): Promise<LeaderboardResult> {
+  const guilds = await prisma.guild.findMany({
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      members: {
+        where: { status: "accepted" },
+        select: { userId: true },
+      },
+    },
+    take: 200,
+  });
+  if (guilds.length === 0) {
+    return { scope: "guilds", kind: "guilds", rows: [], viewerRow: null };
+  }
+
+  // Resolve all member ids across all guilds in one batched call so
+  // each user's snapshot is computed at most once even if they're in
+  // multiple guilds (today only one per user, but the dedupe is cheap).
+  const allMemberIds = Array.from(
+    new Set(guilds.flatMap((g) => g.members.map((m) => m.userId)))
+  );
+  const summaries = await getHunterSummariesByIds(allMemberIds);
+  const pointsByUser = new Map(
+    summaries.map((s) => [s.hunterId, s.weeklyActivityPoints])
+  );
+
+  const aggregated = guilds
+    .map((g) => {
+      const memberCount = g.members.length;
+      const totalActivityPoints = g.members.reduce(
+        (sum, m) => sum + (pointsByUser.get(m.userId) ?? 0),
+        0
+      );
+      const avgActivityPoints =
+        memberCount > 0
+          ? Math.round(totalActivityPoints / memberCount)
+          : 0;
+      const isViewerGuild = g.members.some((m) => m.userId === viewerId);
+      return {
+        slug: g.slug,
+        name: g.name,
+        memberCount,
+        totalActivityPoints,
+        avgActivityPoints,
+        isViewerGuild,
+      };
+    })
+    .sort((a, b) => {
+      if (b.totalActivityPoints !== a.totalActivityPoints) {
+        return b.totalActivityPoints - a.totalActivityPoints;
+      }
+      // Tie-break by avg, then by name — keeps order stable across
+      // requests so the viewer's row position doesn't shuffle.
+      if (b.avgActivityPoints !== a.avgActivityPoints) {
+        return b.avgActivityPoints - a.avgActivityPoints;
+      }
+      return a.name.localeCompare(b.name);
+    });
+
+  const rows: GuildLeaderboardRow[] = aggregated.map((g, i) => ({
+    ...g,
+    position: i + 1,
+  }));
+  const top = rows.slice(0, TOP_N);
+  const viewerInTop = top.find((r) => r.isViewerGuild);
+  const viewerRow = viewerInTop ?? rows.find((r) => r.isViewerGuild) ?? null;
+
+  return { scope: "guilds", kind: "guilds", rows: top, viewerRow };
 }

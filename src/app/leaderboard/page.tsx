@@ -17,6 +17,7 @@ export default async function LeaderboardPage() {
   // useful even before hydration.
   let initial: Awaited<ReturnType<typeof getLeaderboard>> = {
     scope: "global",
+    kind: "hunters",
     rows: [],
     viewerRow: null,
   };

@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
-import { getGuildBySlug } from "@/app/actions/guilds";
+import { getGuildBySlug, getGuildFeed } from "@/app/actions/guilds";
 import GuildPanel from "@/components/GuildPanel";
 
 interface PageProps {
@@ -9,10 +9,8 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  // Title-only metadata read — full guild detail is fetched on the
-  // page itself with the viewer's auth context.
   return {
-    title: `${slug} — Shivaliva Leveling`,
+    title: `${slug} — The System`,
     description: "Guild page — members, requests, weekly activity.",
   };
 }
@@ -30,10 +28,24 @@ export default async function GuildPage({ params }: PageProps) {
   }
   if (!guild) notFound();
 
+  // Guild feed is server-side membership-gated — pending applicants and
+  // strangers get an empty page back, so we can fetch it eagerly without
+  // leaking who's posted what.
+  const isMember =
+    guild.viewerStatus === "owner" || guild.viewerStatus === "member";
+  const feed = isMember
+    ? await getGuildFeed(slug).catch(() => ({ entries: [], nextCursor: null }))
+    : { entries: [], nextCursor: null };
+
   return (
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-6">
-        <GuildPanel initial={guild} slug={slug} />
+        <GuildPanel
+          initial={guild}
+          slug={slug}
+          initialFeed={feed.entries}
+          initialFeedCursor={feed.nextCursor}
+        />
       </div>
     </main>
   );
