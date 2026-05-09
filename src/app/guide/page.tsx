@@ -302,6 +302,43 @@ export default async function GuidePage() {
           </p>
         </Section>
 
+        <Section title={t("sectionGuildsTitle")}>
+          <p className="mb-4">{t("sectionGuildsIntro")}</p>
+          <p>
+            <span className="text-cyan-300 font-bold">
+              {t("sectionGuildsLabel")}
+            </span>{" "}
+            {t.rich("sectionGuildsBody", {
+              guildsLink: (chunks) => (
+                <Link
+                  href="/guilds"
+                  className="text-cyan-300 hover:text-cyan-200 underline underline-offset-2"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
+          <p className="mt-3">
+            <span className="text-cyan-300 font-bold">
+              {t("sectionBoardLabel")}
+            </span>{" "}
+            {t.rich("sectionBoardBody", {
+              code: (chunks) => (
+                <span className="font-mono text-cyan-300">{chunks}</span>
+              ),
+              boardLink: (chunks) => (
+                <Link
+                  href="/leaderboard"
+                  className="text-cyan-300 hover:text-cyan-200 underline underline-offset-2"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
+        </Section>
+
         <Section title={t("section9Title")}>
           <p>
             <span className="text-cyan-300 font-bold">{t("section9DailyLabel")}</span>{" "}

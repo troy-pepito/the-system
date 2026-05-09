@@ -154,6 +154,62 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <section className="max-w-3xl mx-auto px-6 py-16 border-t border-slate-800/60">
+        <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-3">
+          {tLanding("communityHeader")}
+        </p>
+        <p className="text-sm text-slate-400 text-center max-w-xl mx-auto mb-10 leading-relaxed">
+          {tLanding("communityIntro")}
+        </p>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="border border-slate-800 bg-slate-900/40 p-6">
+            <p className="font-display text-sm font-bold text-cyan-100 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-4 h-4 text-cyan-400"
+                aria-hidden
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              {tLanding("communityGuildsTitle")}
+            </p>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              {tLanding("communityGuildsBody")}
+            </p>
+          </div>
+          <div className="border border-slate-800 bg-slate-900/40 p-6">
+            <p className="font-display text-sm font-bold text-cyan-100 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-4 h-4 text-cyan-400"
+                aria-hidden
+              >
+                <line x1="6" y1="20" x2="6" y2="14" />
+                <line x1="12" y1="20" x2="12" y2="9" />
+                <line x1="18" y1="20" x2="18" y2="4" />
+                <line x1="3" y1="20" x2="21" y2="20" />
+              </svg>
+              {tLanding("communityBoardTitle")}
+            </p>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              {tLanding("communityBoardBody")}
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section className="max-w-2xl mx-auto px-6 py-16 border-t border-slate-800/60">
         <div className="border border-slate-800 bg-slate-900/40 p-8">
           <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 mb-5">
