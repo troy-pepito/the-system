@@ -634,6 +634,11 @@ export async function getHunterSummariesByIds(
   await requireUserId();
   if (hunterIds.length === 0) return [];
 
+  // Distinguish "batch fetch failed" (return null) from "batch returned
+  // but this user isn't in it" (orphan, filter). Without the null
+  // sentinel a transient Clerk failure would erase every hunter from
+  // the leaderboard / friends list — way worse than leaving in a few
+  // orphan placeholders.
   const [snapshots, clerkUsers] = await Promise.all([
     Promise.all(hunterIds.map((id) => buildSnapshot(id))),
     (async () => {
@@ -642,17 +647,26 @@ export async function getHunterSummariesByIds(
         const list = await client.users.getUserList({ userId: hunterIds });
         return list.data;
       } catch {
-        return [];
+        return null;
       }
     })(),
   ]);
 
-  const clerkById = new Map(clerkUsers.map((u) => [u.id, u]));
+  const batchFailed = clerkUsers === null;
+  const clerkById = new Map(
+    (clerkUsers ?? []).map((u) => [u.id, u])
+  );
   const summaries: HunterSummary[] = [];
   for (let i = 0; i < hunterIds.length; i++) {
     const id = hunterIds[i];
     const snap = snapshots[i];
     const u = clerkById.get(id);
+    // If Clerk responded but this id wasn't in the result, the
+    // account has been deleted upstream — drop the row instead of
+    // showing a "Hunter" / "?" orphan tile in the leaderboard. If
+    // the whole batch failed (Clerk down), keep the row with a
+    // placeholder so a transient outage doesn't wipe the board.
+    if (!u && !batchFailed) continue;
     const display = u
       ? resolveHunterDisplay(u)
       : { hunterName: "Hunter", imageUrl: null };

@@ -199,11 +199,19 @@ async function getGuildsLeaderboard(
   const pointsByUser = new Map(
     summaries.map((s) => [s.hunterId, s.weeklyActivityPoints])
   );
+  // Only count members whose Clerk record still exists. Orphans
+  // (Clerk-deleted accounts whose GuildMember row hasn't been cleaned
+  // up yet) shouldn't inflate memberCount or drag the average down —
+  // they can't contribute points either way.
+  const validMemberIds = new Set(summaries.map((s) => s.hunterId));
 
   const aggregated = guilds
     .map((g) => {
-      const memberCount = g.members.length;
-      const totalActivityPoints = g.members.reduce(
+      const liveMembers = g.members.filter((m) =>
+        validMemberIds.has(m.userId)
+      );
+      const memberCount = liveMembers.length;
+      const totalActivityPoints = liveMembers.reduce(
         (sum, m) => sum + (pointsByUser.get(m.userId) ?? 0),
         0
       );
@@ -211,7 +219,7 @@ async function getGuildsLeaderboard(
         memberCount > 0
           ? Math.round(totalActivityPoints / memberCount)
           : 0;
-      const isViewerGuild = g.members.some((m) => m.userId === viewerId);
+      const isViewerGuild = liveMembers.some((m) => m.userId === viewerId);
       return {
         slug: g.slug,
         name: g.name,

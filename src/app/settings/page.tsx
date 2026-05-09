@@ -4,6 +4,7 @@ import AtmosphereToggle from "@/components/AtmosphereToggle";
 import NotificationSettings from "@/components/NotificationSettings";
 import InstallAppButton from "@/components/InstallAppButton";
 import LanguagePicker from "@/components/LanguagePicker";
+import DangerZone from "@/components/DangerZone";
 
 export const metadata = {
   title: "Settings — The System",
@@ -50,6 +51,13 @@ export default async function SettingsPage() {
             {t("install")}
           </p>
           <InstallAppButton />
+        </Card>
+
+        {/* Danger zone always sits last so it's not the first thing
+            the eye lands on. Red border distinguishes it from the
+            cyan-themed cards above. */}
+        <Card className="p-6 border-red-500/30">
+          <DangerZone />
         </Card>
       </div>
     </main>

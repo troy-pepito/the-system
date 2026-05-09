@@ -17,6 +17,17 @@
     "notifications": "Notifications",
     "install": "Install",
     "language": "Language",
+    "dangerZone": "Danger Zone",
+    "deleteAccount": "Delete Account",
+    "deleteAccountIntro": "Permanently delete your account. Every dungeon run, journal entry, friendship, guild membership, and trophy will be erased. If you own a guild, it will be disbanded and every member ejected. This can't be undone.",
+    "deleteAccountButton": "Delete My Account",
+    "deleteAccountConfirmHeader": "Are you absolutely sure?",
+    "deleteAccountConfirmBody": "Type your hunter name below to confirm. This action is permanent.",
+    "deleteAccountTypePlaceholder": "Type your hunter name",
+    "deleteAccountConfirmButton": "Delete Forever",
+    "deleteAccountCancel": "Cancel",
+    "deleteAccountDeleting": "Deleting…",
+    "deleteAccountError": "Could not delete account. Try again or email trojanato@gmail.com.",
     "languageHint": "Choose the language the System speaks to you in. Translations are still landing — English is the most complete."
   },
   "hunterTypePicker": {
