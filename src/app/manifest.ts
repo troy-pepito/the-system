@@ -32,15 +32,28 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
       {
+        src: "/apple-icon",
+        sizes: "180x180",
+        type: "image/png",
+      },
+      // 512×512 served twice — once as `any` (all browsers / OG-style
+      // contexts) and once as `maskable` (Android adaptive icon, what
+      // the TWA on Play Store pulls for the launcher). Same source
+      // file; icon1.tsx is laid out with a safe zone so the asset
+      // works for both purposes. The Next.js manifest type rejects
+      // space-separated purposes despite the W3C spec allowing them,
+      // so we split into two entries instead of "any maskable".
+      {
         src: "/icon1",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/apple-icon",
-        sizes: "180x180",
+        src: "/icon1",
+        sizes: "512x512",
         type: "image/png",
+        purpose: "maskable",
       },
     ],
   };
