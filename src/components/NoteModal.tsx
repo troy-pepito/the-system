@@ -141,7 +141,7 @@ function NoteModalInner({
               onChange={(e) => setIsPublic(e.target.checked)}
               className="w-4 h-4 accent-cyan-400 cursor-pointer"
             />
-            <span className="text-[10px] tracking-[0.25em] uppercase text-slate-400">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-slate-300">
               {t("sharePublic")}
             </span>
           </label>
@@ -153,7 +153,7 @@ function NoteModalInner({
             onClick={() =>
               cancelOnSkip ? onCancel?.() : onSubmit(null)
             }
-            className="px-4 py-2 border border-slate-700 text-slate-400 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors"
+            className="px-4 py-2 border border-slate-700 text-slate-300 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors"
           >
             {resolvedSkip}
           </button>

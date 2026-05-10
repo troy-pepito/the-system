@@ -181,7 +181,7 @@ export default function SideQuests({
                   <p className="text-xs text-amber-200/80 italic mb-3 leading-relaxed">
                     {quest.tagline}
                   </p>
-                  <ul className="space-y-1.5 text-xs text-slate-400">
+                  <ul className="space-y-1.5 text-xs text-slate-300">
                     {quest.rules.map((rule, i) => (
                       <li key={i} className="flex gap-2">
                         <span className="text-amber-400/70 mt-0.5">▸</span>

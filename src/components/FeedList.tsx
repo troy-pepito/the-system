@@ -243,7 +243,7 @@ function ReactionPicker({
       <button
         onClick={() => onOpenChange(!open)}
         aria-label={addReactionLabel}
-        className="px-2 py-0.5 border border-slate-700 rounded-full text-slate-400 text-[11px] hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
+        className="px-2 py-0.5 border border-slate-700 rounded-full text-slate-300 text-[11px] hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
       >
         +
       </button>

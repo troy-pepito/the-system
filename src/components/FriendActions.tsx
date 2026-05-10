@@ -174,7 +174,7 @@ export default function FriendActions({ hunterId, variant = "default" }: Props) 
           onClick={() => run(() => declineFriend(hunterId), "none")}
           aria-label={t("decline")}
           title={t("decline")}
-          className={`border border-slate-700 text-slate-400 hover:bg-slate-800/60 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
+          className={`border border-slate-700 text-slate-300 hover:bg-slate-800/60 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
         >
           {compact ? <span aria-hidden>✕</span> : t("decline")}
         </button>

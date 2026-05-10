@@ -206,7 +206,7 @@ export default function ProfilePage() {
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
               {tProfile("trophies")}
             </p>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300">
               <span className="text-amber-300 font-bold">{unlockedCount}</span>
               <span className="text-slate-600"> / {totalCount}</span>
               <span className="text-slate-500 ml-2">({completion}%)</span>
@@ -376,7 +376,7 @@ function TrophySection({
         <div className="flex items-center gap-2 min-w-0">
           <p
             className={`tracking-[0.3em] uppercase text-left ${
-              nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-400"
+              nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-300"
             }`}
           >
             {label}

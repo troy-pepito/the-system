@@ -38,7 +38,7 @@ export default async function LeaderboardPage() {
             {t("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-          <p className="text-[11px] text-slate-400 mt-3 max-w-sm mx-auto leading-relaxed">
+          <p className="text-[11px] text-slate-300 mt-3 max-w-sm mx-auto leading-relaxed">
             {t("subtitle")}
           </p>
         </div>

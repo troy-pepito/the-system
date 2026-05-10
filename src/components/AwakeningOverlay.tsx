@@ -241,7 +241,7 @@ export default function AwakeningOverlay() {
           {declined ? (
             <div className="min-h-[260px] flex flex-col items-center justify-center space-y-6 font-mono text-center">
               <p className="text-[10px] tracking-[0.5em] text-slate-500">{t("standbyHeader")}</p>
-              <p className="text-sm tracking-widest text-slate-400">
+              <p className="text-sm tracking-widest text-slate-300">
                 {t("standbyMessage")}
               </p>
               <p className="text-xs tracking-wider text-slate-600 max-w-xs">
@@ -299,7 +299,7 @@ export default function AwakeningOverlay() {
                   type="button"
                   onClick={() => handlePathChoice(null)}
                   disabled={submitting}
-                  className="w-full p-2 border border-slate-700 rounded text-slate-400 text-[10px] uppercase tracking-[0.3em] hover:border-slate-500 hover:text-slate-200 transition-colors disabled:opacity-50"
+                  className="w-full p-2 border border-slate-700 rounded text-slate-300 text-[10px] uppercase tracking-[0.3em] hover:border-slate-500 hover:text-slate-200 transition-colors disabled:opacity-50"
                 >
                   {t("noPath")}
                 </button>

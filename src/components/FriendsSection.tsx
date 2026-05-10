@@ -116,7 +116,7 @@ export default function FriendsSection() {
                     type="button"
                     onClick={() => handleDecline(req.requesterId)}
                     disabled={busyId === req.requesterId}
-                    className="px-3 py-1.5 border border-slate-700 text-slate-400 text-[10px] uppercase tracking-[0.25em] rounded hover:bg-slate-800/60 transition-colors disabled:opacity-50"
+                    className="px-3 py-1.5 border border-slate-700 text-slate-300 text-[10px] uppercase tracking-[0.25em] rounded hover:bg-slate-800/60 transition-colors disabled:opacity-50"
                   >
                     {t("decline")}
                   </button>

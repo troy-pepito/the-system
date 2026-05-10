@@ -142,7 +142,7 @@ export default function PortalsPage() {
             <h2
               className={`font-display text-xl font-bold uppercase tracking-wider flex items-center gap-2 ${
                 locked
-                  ? "text-slate-400"
+                  ? "text-slate-300"
                   : "text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"
               }`}
             >
@@ -172,7 +172,7 @@ export default function PortalsPage() {
                 key={t.rank}
                 className="text-center bg-slate-800/50 border border-slate-700 rounded py-1.5 sm:py-2"
               >
-                <div className="text-xs sm:text-sm font-bold text-slate-400">
+                <div className="text-xs sm:text-sm font-bold text-slate-300">
                   {t.rank}
                 </div>
                 <div className="text-[9px] sm:text-[10px] text-slate-600">
@@ -219,7 +219,7 @@ export default function PortalsPage() {
             <Link
               href="/path"
               onClick={(e) => e.stopPropagation()}
-              className="block w-full text-center px-4 py-3 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-widest hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
+              className="block w-full text-center px-4 py-3 border border-slate-700 rounded text-slate-300 text-xs uppercase tracking-widest hover:border-cyan-500/40 hover:text-cyan-300 transition-colors"
             >
               {t("switchTo", {
                 label: tHunterTypes(`${pathDef.id}.label`),

@@ -65,7 +65,7 @@ export default async function GuidePage() {
           <h1 className="font-display text-aberration text-3xl sm:text-4xl font-bold tracking-tight text-cyan-100 mb-4">
             {t("title")}
           </h1>
-          <p className="text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+          <p className="text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
             {t("subtitle")}
           </p>
         </header>
@@ -158,7 +158,7 @@ export default async function GuidePage() {
           <p className="mt-5 text-xs text-slate-300 leading-relaxed">
             {t("xpDropsIntro")}
           </p>
-          <ul className="mt-3 space-y-1.5 text-xs text-slate-400">
+          <ul className="mt-3 space-y-1.5 text-xs text-slate-300">
             <li className="flex gap-3">
               <span className="text-cyan-400/60 mt-0.5">▸</span>
               <span>
@@ -350,7 +350,7 @@ export default async function GuidePage() {
             <span className="text-cyan-300 font-bold">{t("section9InstallLabel")}</span>{" "}
             {t("section9InstallIntro")}
           </p>
-          <ul className="mt-3 space-y-2 text-xs text-slate-400">
+          <ul className="mt-3 space-y-2 text-xs text-slate-300">
             <li className="flex gap-3">
               <span className="text-cyan-400/60 mt-0.5">▸</span>
               <span>

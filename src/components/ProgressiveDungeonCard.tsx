@@ -336,7 +336,7 @@ export default function ProgressiveDungeonCard({
                 onClick={handleUndo}
                 disabled={busy}
                 title={`Undo last ${rungName(undoableRung.id, undoableRung.name)}`}
-                className="px-3 py-3 bg-slate-800/60 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-wider hover:bg-slate-700/60 transition-colors disabled:opacity-50"
+                className="px-3 py-3 bg-slate-800/60 border border-slate-700 rounded text-slate-300 text-xs uppercase tracking-wider hover:bg-slate-700/60 transition-colors disabled:opacity-50"
               >
                 {tRun("undo")}
               </button>
@@ -392,7 +392,7 @@ export default function ProgressiveDungeonCard({
                 onClick={handleUndo}
                 disabled={busy}
                 title={`Undo last ${rungName(undoableRung.id, undoableRung.name)}`}
-                className="px-3 py-3 bg-slate-800/60 border border-slate-700 rounded text-slate-400 text-xs uppercase tracking-wider hover:bg-slate-700/60 transition-colors disabled:opacity-50"
+                className="px-3 py-3 bg-slate-800/60 border border-slate-700 rounded text-slate-300 text-xs uppercase tracking-wider hover:bg-slate-700/60 transition-colors disabled:opacity-50"
               >
                 {tRun("undo")}
               </button>
@@ -447,7 +447,7 @@ export default function ProgressiveDungeonCard({
             <div className="flex flex-col gap-2 items-stretch">
               <button
                 onClick={journal.open}
-                className="px-4 py-2 border border-slate-700 rounded text-slate-400 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
+                className="px-4 py-2 border border-slate-700 rounded text-slate-300 text-[11px] uppercase tracking-[0.3em] hover:text-cyan-200 hover:border-cyan-500/40 transition-colors"
               >
                 {tRun("journalEntry")}
               </button>

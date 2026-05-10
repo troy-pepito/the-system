@@ -58,7 +58,7 @@ export default function LandingPage() {
             {tLanding("h1Line2")}
           </h1>
           <p
-            className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed animate-reveal"
+            className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto mb-10 leading-relaxed animate-reveal"
             style={{ animationDelay: "0.45s" }}
           >
             {tLanding("subtitle")}
@@ -158,7 +158,7 @@ export default function LandingPage() {
         <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-3">
           {tLanding("communityHeader")}
         </p>
-        <p className="text-sm text-slate-400 text-center max-w-xl mx-auto mb-10 leading-relaxed">
+        <p className="text-sm text-slate-300 text-center max-w-xl mx-auto mb-10 leading-relaxed">
           {tLanding("communityIntro")}
         </p>
         <div className="grid sm:grid-cols-2 gap-4">

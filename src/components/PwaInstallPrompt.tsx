@@ -75,7 +75,7 @@ export default function PwaInstallPrompt() {
         </p>
         {platform === "android" ? (
           <>
-            <p className="text-xs text-slate-400 mb-3 leading-relaxed">
+            <p className="text-xs text-slate-300 mb-3 leading-relaxed">
               One-tap access. No app store required.
             </p>
             <button

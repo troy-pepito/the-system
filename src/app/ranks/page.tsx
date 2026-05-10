@@ -46,7 +46,7 @@ export default async function RanksPage() {
             {t("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-          <p className="text-[11px] text-slate-400 mt-3 max-w-sm mx-auto leading-relaxed">
+          <p className="text-[11px] text-slate-300 mt-3 max-w-sm mx-auto leading-relaxed">
             {t("subtitle")}
           </p>
         </div>
@@ -107,7 +107,7 @@ export default async function RanksPage() {
                       </p>
                       <p
                         className={`text-[9px] tracking-[0.3em] uppercase mt-2 ${
-                          earned ? "text-slate-400" : "text-slate-700"
+                          earned ? "text-slate-300" : "text-slate-700"
                         }`}
                       >
                         {labels.flavor}

@@ -146,7 +146,7 @@ export default function DungeonCalendar({
         >
           ‹
         </button>
-        <p className="text-[11px] tracking-[0.3em] uppercase text-slate-400">
+        <p className="text-[11px] tracking-[0.3em] uppercase text-slate-300">
           {monthLabel}
         </p>
         <button

@@ -119,7 +119,7 @@ export default function GuildPanel({
             {guild.description}
           </p>
         )}
-        <div className="flex items-center gap-3 text-[10px] tracking-widest uppercase text-slate-400 pt-2">
+        <div className="flex items-center gap-3 text-[10px] tracking-widest uppercase text-slate-300 pt-2">
           <span>
             {guild.memberCount} / {GUILD_MEMBER_CAP} members
           </span>
@@ -251,7 +251,7 @@ export default function GuildPanel({
                     runAction(() => declineJoin(slug, p.hunterId))
                   }
                   disabled={pending}
-                  className="px-3 py-1.5 border border-slate-700 text-slate-400 text-[10px] uppercase tracking-[0.2em] hover:bg-slate-800/60 transition-colors disabled:opacity-40"
+                  className="px-3 py-1.5 border border-slate-700 text-slate-300 text-[10px] uppercase tracking-[0.2em] hover:bg-slate-800/60 transition-colors disabled:opacity-40"
                 >
                   {t("decline")}
                 </button>
@@ -262,7 +262,7 @@ export default function GuildPanel({
       )}
 
       <div>
-        <p className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-3">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-3">
           {t("membersHeader")}
         </p>
         <ul className="space-y-2">
@@ -322,7 +322,7 @@ export default function GuildPanel({
 
       {(isOwner || isMember) && (
         <div>
-          <p className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-3">
+          <p className="text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-3">
             {t("guildFeed")}
           </p>
           {initialFeed.length === 0 ? (
@@ -490,7 +490,7 @@ function EditGuildModal({
               {t("detailsHeader")}
             </p>
             <div>
-              <label className="block text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-1.5">
+              <label className="block text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-1.5">
                 {t("nameLabel")}
               </label>
               <input
@@ -502,7 +502,7 @@ function EditGuildModal({
               />
             </div>
             <div>
-              <label className="block text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-1.5">
+              <label className="block text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-1.5">
                 {t("descLabel")}
               </label>
               <textarea

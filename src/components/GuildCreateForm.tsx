@@ -50,7 +50,7 @@ export default function GuildCreateForm() {
       <div>
         <label
           htmlFor="guild-name"
-          className="block text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-1"
+          className="block text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-1"
         >
           {t("nameLabel")}
         </label>
@@ -72,7 +72,7 @@ export default function GuildCreateForm() {
       <div>
         <label
           htmlFor="guild-description"
-          className="block text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-1"
+          className="block text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-1"
         >
           {t("descLabel")}
         </label>

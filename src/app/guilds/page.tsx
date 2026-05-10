@@ -36,7 +36,7 @@ export default async function GuildsPage() {
             {t("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-          <p className="text-[11px] text-slate-400 mt-3 max-w-sm mx-auto leading-relaxed">
+          <p className="text-[11px] text-slate-300 mt-3 max-w-sm mx-auto leading-relaxed">
             {t("subtitle")}
           </p>
         </div>
@@ -44,7 +44,7 @@ export default async function GuildsPage() {
         {myGuild ? <YourGuildCard guild={myGuild} /> : <GuildCreateForm />}
 
         <div>
-          <p className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-3">
+          <p className="text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-3">
             {myGuild ? t("otherGuilds") : t("browse")}
           </p>
           {directory.length === 0 ? (
@@ -127,7 +127,7 @@ async function YourGuildCard({
           {guild.description}
         </p>
       )}
-      <div className="flex items-center gap-3 mt-3 text-[10px] tracking-widest uppercase text-slate-400">
+      <div className="flex items-center gap-3 mt-3 text-[10px] tracking-widest uppercase text-slate-300">
         <span>
           {t("membersCount", {
             count: guild.memberCount,

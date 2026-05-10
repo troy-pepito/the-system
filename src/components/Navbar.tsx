@@ -59,7 +59,7 @@ export default function Navbar() {
         } ${
           isActive
             ? "text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.5)]"
-            : "text-slate-400 hover:text-cyan-300"
+            : "text-slate-300 hover:text-cyan-300"
         }`}
       >
         <span className="relative inline-flex">
@@ -264,7 +264,7 @@ export default function Navbar() {
               className={`flex items-center justify-center w-6 h-6 rounded-sm transition-colors ${
                 pathname.startsWith("/settings")
                   ? "text-cyan-300"
-                  : "text-slate-400 hover:text-cyan-300"
+                  : "text-slate-300 hover:text-cyan-300"
               }`}
             >
               <svg

@@ -108,7 +108,7 @@ export default function DangerZone() {
             <div>
               <label
                 htmlFor="confirm-name"
-                className="block text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-1.5"
+                className="block text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-1.5"
               >
                 {hunterName}
               </label>

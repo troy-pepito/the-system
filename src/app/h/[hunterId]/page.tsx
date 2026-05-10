@@ -290,7 +290,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
             <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
               {tProfile("trophies")}
             </p>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300">
               <span className="text-amber-300 font-bold">
                 {unlockedCount}
               </span>
@@ -396,7 +396,7 @@ async function TrophyList({
       <div className="flex items-center justify-between gap-3 py-2 mb-3">
         <p
           className={`tracking-[0.3em] uppercase text-left ${
-            nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-400"
+            nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-300"
           }`}
         >
           {label}

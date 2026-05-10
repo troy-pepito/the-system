@@ -122,7 +122,7 @@ export default function RankUpShare() {
           <button
             type="button"
             onClick={dismiss}
-            className="px-3 py-2 border border-slate-700 text-slate-400 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors"
+            className="px-3 py-2 border border-slate-700 text-slate-300 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60 transition-colors"
           >
             {t("later")}
           </button>

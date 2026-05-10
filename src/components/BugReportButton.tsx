@@ -155,7 +155,7 @@ export default function BugReportButton() {
                       type="button"
                       onClick={closeModal}
                       disabled={status.kind === "submitting"}
-                      className="px-5 py-2 border border-slate-700 text-slate-400 text-[10px] uppercase tracking-[0.3em] hover:border-slate-500 hover:text-slate-200 transition-colors disabled:opacity-50"
+                      className="px-5 py-2 border border-slate-700 text-slate-300 text-[10px] uppercase tracking-[0.3em] hover:border-slate-500 hover:text-slate-200 transition-colors disabled:opacity-50"
                     >
                       Cancel
                     </button>
