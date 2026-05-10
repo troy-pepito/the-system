@@ -45,25 +45,41 @@ const chakraPetch = Chakra_Petch({
 });
 
 export const metadata: Metadata = {
-  title: "The System",
-  description: "Real life is the dungeon. Show up anyway.",
+  metadataBase: new URL("https://shivalivaleveling.com"),
+  title: "Shivaliva Leveling · Self-Improvement RPG App",
+  description:
+    "Shivaliva Leveling is a free self-improvement RPG app. Pick your dungeons (NoFap, doomscroll detox, training, exposure therapy), earn XP, rank up E to S. Web + Android.",
+  applicationName: "Shivaliva Leveling",
+  keywords: [
+    "Shivaliva Leveling",
+    "self-improvement app",
+    "habit tracker app",
+    "gamified self-improvement",
+    "Solo Leveling app",
+    "NoFap app",
+    "discipline app",
+    "addiction recovery app",
+    "hunter ranks",
+    "dungeon habit tracker",
+  ],
   appleWebApp: {
     capable: true,
     title: "The System",
     statusBarStyle: "black-translucent",
   },
   openGraph: {
-    title: "The System",
+    title: "Shivaliva Leveling · Self-Improvement RPG App",
     description:
-      "A gamified self-improvement system for the battles nobody's watching.",
+      "A gamified self-improvement app for the battles nobody's watching. Real life is the dungeon. Show up anyway.",
     type: "website",
-    siteName: "The System",
+    siteName: "Shivaliva Leveling",
+    url: "https://shivalivaleveling.com",
   },
   twitter: {
     card: "summary_large_image",
-    title: "The System",
+    title: "Shivaliva Leveling · Self-Improvement RPG App",
     description:
-      "A gamified self-improvement system for the battles nobody's watching.",
+      "A gamified self-improvement app for the battles nobody's watching. Real life is the dungeon. Show up anyway.",
   },
 };
 
@@ -83,6 +99,35 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
 
+  // JSON-LD structured data so Google classifies the site as a
+  // SoftwareApplication. Without it, the site has no canonical signal
+  // that "shivalivaleveling.com is an app" beyond the meta tags, so
+  // queries like "Shivaliva Leveling app" fall back to whichever pages
+  // mention the word, usually external marketing posts. With this
+  // block in place, Google can surface the site directly for
+  // app-intent queries.
+  const softwareApplicationSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Shivaliva Leveling",
+    alternateName: "Shivaliva Leveling: The System",
+    description:
+      "A gamified self-improvement RPG app. Pick your dungeons, earn XP, rank up E to S. Free to play, no ads, no paywalls on the core loop.",
+    applicationCategory: "HealthApplication",
+    applicationSubCategory: "Self-Improvement",
+    operatingSystem: "Web, Android",
+    url: "https://shivalivaleveling.com",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    author: {
+      "@type": "Person",
+      name: "Troy Pepito",
+    },
+  };
+
   return (
     <ClerkProvider>
       <html
@@ -90,6 +135,12 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${chakraPetch.variable} h-full antialiased`}
       >
         <body className="min-h-full flex flex-col">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(softwareApplicationSchema),
+            }}
+          />
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[300] focus:px-4 focus:py-2 focus:bg-cyan-400 focus:text-slate-950 focus:text-xs focus:font-bold focus:uppercase focus:tracking-[0.3em] focus:rounded focus:shadow-[0_0_24px_rgba(34,211,238,0.7)]"
