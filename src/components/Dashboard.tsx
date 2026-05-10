@@ -287,26 +287,38 @@ export default function Dashboard() {
             );
           })()}
 
-        {dashboard && activeRuns.length === 0 && (
-          <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.2),inset_0_0_20px_rgba(34,211,238,0.05)] p-6 text-center">
-            <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-300 pointer-events-none" />
-            <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-cyan-300 pointer-events-none" />
-            <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
-            <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-3">
-              {t("noActiveDungeons")}
-            </p>
-            <p className="text-sm text-slate-300 leading-relaxed mb-5 max-w-sm mx-auto">
-              {t("noActiveDungeonsBody")}
-            </p>
-            <Link
-              href="/portals"
-              className="inline-block px-6 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white transition-all shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:shadow-[0_0_30px_rgba(34,211,238,0.8)]"
-            >
-              {t("enterRegistry")}
-            </Link>
-          </div>
-        )}
+        {dashboard && activeRuns.length === 0 && (() => {
+          // Fresh hunter detection: zero active runs AND zero lifetime
+          // quest XP. They've awakened but haven't done anything yet —
+          // the generic "Portal Registry Awaits" empty state didn't
+          // tell them where to start. Returning hunters who've exited
+          // all their dungeons keep the original copy.
+          const isFreshHunter = dashboard.lifetimeRewards.xp === 0;
+          return (
+            <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.2),inset_0_0_20px_rgba(34,211,238,0.05)] p-6 text-center">
+              <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-300 pointer-events-none" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-cyan-300 pointer-events-none" />
+              <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
+              <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-3">
+                {isFreshHunter
+                  ? t("firstHunterHeader")
+                  : t("noActiveDungeons")}
+              </p>
+              <p className="text-sm text-slate-300 leading-relaxed mb-5 max-w-sm mx-auto">
+                {isFreshHunter
+                  ? t("firstHunterBody")
+                  : t("noActiveDungeonsBody")}
+              </p>
+              <Link
+                href="/portals"
+                className="inline-block px-6 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-100 text-xs uppercase tracking-[0.4em] hover:bg-cyan-500/40 hover:text-white transition-all shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:shadow-[0_0_30px_rgba(34,211,238,0.8)]"
+              >
+                {t("enterRegistry")}
+              </Link>
+            </div>
+          );
+        })()}
 
         {dashboard && activeRuns.length > 0 && (
           <DndContext

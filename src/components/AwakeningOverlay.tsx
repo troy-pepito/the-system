@@ -180,7 +180,15 @@ export default function AwakeningOverlay() {
       setTimeout(() => {
         localStorage.setItem(AWAKENED_KEY, "true");
         window.dispatchEvent(new Event(AWAKENED_EVENT));
-        router.push("/guide");
+        // Land on Status (the dashboard) instead of /guide. The
+        // previous /guide destination dropped a freshly-awakened
+        // hunter into an 11-section manual before they'd done a
+        // single thing — high bounce risk. Status shows Daily
+        // Quests immediately + the Portal Registry CTA, so the
+        // first action is one tap away. /guide is still linked
+        // from the landing-page footer and from /portals for
+        // hunters who want the manual.
+        router.push("/");
       }, 900);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("pathFailed"));

@@ -111,6 +111,21 @@ export default function DailyQuests({
         quest_id: quest.id,
         quest_xp: scaledQuestXp,
       });
+      // Once-per-account funnel event: when this is the hunter's
+      // first-ever quest tick, fire a separate event so the
+      // post-awakening → first-action drop-off can be measured. Gated
+      // by localStorage so a re-tick after refresh doesn't double-fire.
+      if (
+        typeof window !== "undefined" &&
+        !localStorage.getItem("system:first_quest_completed")
+      ) {
+        try {
+          localStorage.setItem("system:first_quest_completed", "1");
+        } catch {}
+        track("first_quest_completed", {
+          quest_id: quest.id,
+        });
+      }
       notifyReward({
         xp: scaledQuestXp,
         body: quest.body,

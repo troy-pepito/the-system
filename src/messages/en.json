@@ -94,7 +94,9 @@
     "header": "Player Status Window",
     "noActiveDungeons": "[ Portal Registry Awaits ]",
     "noActiveDungeonsBody": "No active dungeons yet. Choose your first portal to begin shaping your hunter's path.",
-    "enterRegistry": "Enter Portal Registry →"
+    "enterRegistry": "Enter Portal Registry →",
+    "firstHunterHeader": "[ First Quest Available ]",
+    "firstHunterBody": "Welcome, hunter. Your first action is one tap above — tick any Daily Quest to bank your first XP. Or open the Portal Registry below to take on a dungeon."
   },
   "hunterCard": {
     "id": "Hunter ID",

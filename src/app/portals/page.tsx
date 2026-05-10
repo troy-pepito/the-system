@@ -80,6 +80,20 @@ export default function PortalsPage() {
       return next;
     });
     track("dungeon_entered", { dungeon_id: dungeonId });
+    // Once-per-account funnel event — same gating pattern as
+    // first_quest_completed. Together they let us measure the
+    // post-awakening → first-action conversion rate, and which of
+    // the two paths (quest tick vs dungeon enter) hunters reach
+    // first.
+    if (
+      typeof window !== "undefined" &&
+      !localStorage.getItem("system:first_dungeon_entered")
+    ) {
+      try {
+        localStorage.setItem("system:first_dungeon_entered", "1");
+      } catch {}
+      track("first_dungeon_entered", { dungeon_id: dungeonId });
+    }
     router.push(`/#dungeon-${dungeonId}`);
   }
 
