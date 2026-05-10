@@ -68,40 +68,30 @@ function toState(run: {
   };
 }
 
-const getActiveRunCached = unstable_cache(
-  async (userId: string, dungeonId: string) => {
-    const run = await prisma.dungeonRun.findFirst({
-      where: { userId, dungeonId, active: true },
-      orderBy: { createdAt: "desc" },
-    });
-    return run ? toState(run) : null;
-  },
-  ["active-run"],
-  { tags: [TAG] }
-);
-
+// Direct reads (NOT unstable_cache). See note in quests.ts on
+// getTodayCompletions: per-lambda LRU cache means updateTag from a
+// mutation in one lambda doesn't invalidate other warm lambdas, so the
+// dashboard can reload and get pre-mutation state back. These queries
+// are all small per-user lookups; skip the cache to guarantee
+// read-your-own-writes correctness.
 export async function getActiveRun(
   dungeonId: string
 ): Promise<DungeonRunState | null> {
   const userId = await requireUserId();
-  return getActiveRunCached(userId, dungeonId);
+  const run = await prisma.dungeonRun.findFirst({
+    where: { userId, dungeonId, active: true },
+    orderBy: { createdAt: "desc" },
+  });
+  return run ? toState(run) : null;
 }
-
-const getAllActiveRunsCached = unstable_cache(
-  async (userId: string) => {
-    const runs = await prisma.dungeonRun.findMany({
-      where: { userId, active: true },
-      orderBy: { createdAt: "desc" },
-    });
-    return runs.map(toState);
-  },
-  ["all-active-runs"],
-  { tags: [TAG] }
-);
 
 export async function getAllActiveRuns(): Promise<DungeonRunState[]> {
   const userId = await requireUserId();
-  return getAllActiveRunsCached(userId);
+  const runs = await prisma.dungeonRun.findMany({
+    where: { userId, active: true },
+    orderBy: { createdAt: "desc" },
+  });
+  return runs.map(toState);
 }
 
 const getComboStateCached = unstable_cache(
@@ -354,29 +344,22 @@ function cadenceBoundsFor(dungeonId: string): { start: Date; end: Date } {
   return currentWeekBounds();
 }
 
-const getWeekWorkoutsCached = unstable_cache(
-  async (userId: string, dungeonId: string) => {
-    // Cross-run scope: re-entering mid-window shouldn't blank out tasks
-    // you already did. Match the same dedup the snapshot uses so XP and
-    // the UI agree.
-    const { start, end } = cadenceBoundsFor(dungeonId);
-    const events = await prisma.dungeonEvent.findMany({
-      where: {
-        run: { userId, dungeonId },
-        date: { gte: start, lt: end },
-      },
-      select: { type: true },
-      distinct: ["type"],
-    });
-    return events.map((e) => e.type);
-  },
-  ["week-workouts"],
-  { tags: [TAG] }
-);
-
+// Direct read; see top-of-file note on read-your-own-writes correctness.
 export async function getWeekWorkouts(dungeonId: string): Promise<string[]> {
   const userId = await requireUserId();
-  return getWeekWorkoutsCached(userId, dungeonId);
+  // Cross-run scope: re-entering mid-window shouldn't blank out tasks
+  // you already did. Match the same dedup the snapshot uses so XP and
+  // the UI agree.
+  const { start, end } = cadenceBoundsFor(dungeonId);
+  const events = await prisma.dungeonEvent.findMany({
+    where: {
+      run: { userId, dungeonId },
+      date: { gte: start, lt: end },
+    },
+    select: { type: true },
+    distinct: ["type"],
+  });
+  return events.map((e) => e.type);
 }
 
 export async function toggleWorkout(
@@ -518,33 +501,26 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
   return getJournalEntriesCached(userId);
 }
 
-const getRungCountsCached = unstable_cache(
-  async (userId: string, dungeonId: string) => {
-    // Cross-run scope so re-entering Exposure Therapy preserves the
-    // ladder progress. The UI reads this to find currentRungIndex; if
-    // we scoped to active run only, every re-entry would offer Rung 1
-    // (count=0) again, closes the same exit/re-enter exploit pattern
-    // we fixed for the calendar dungeons.
-    const events = await prisma.dungeonEvent.groupBy({
-      by: ["type"],
-      where: { run: { userId, dungeonId } },
-      _count: { type: true },
-    });
-    const counts: Record<string, number> = {};
-    for (const e of events) {
-      counts[e.type] = e._count.type;
-    }
-    return counts;
-  },
-  ["rung-counts"],
-  { tags: [TAG] }
-);
-
+// Direct read; see top-of-file note on read-your-own-writes correctness.
 export async function getRungCounts(
   dungeonId: string
 ): Promise<Record<string, number>> {
   const userId = await requireUserId();
-  return getRungCountsCached(userId, dungeonId);
+  // Cross-run scope so re-entering Exposure Therapy preserves the
+  // ladder progress. The UI reads this to find currentRungIndex; if
+  // we scoped to active run only, every re-entry would offer Rung 1
+  // (count=0) again, closes the same exit/re-enter exploit pattern
+  // we fixed for the calendar dungeons.
+  const events = await prisma.dungeonEvent.groupBy({
+    by: ["type"],
+    where: { run: { userId, dungeonId } },
+    _count: { type: true },
+  });
+  const counts: Record<string, number> = {};
+  for (const e of events) {
+    counts[e.type] = e._count.type;
+  }
+  return counts;
 }
 
 export async function logRungExposure(
@@ -640,30 +616,23 @@ export interface DayCheckIn {
   count: number;
 }
 
-const getCheckInsCached = unstable_cache(
-  async (userId: string, dungeonId: string) => {
-    // Scoped by (userId, dungeonId), the schema unique on
-    // (userId, dungeonId, date) means one row per calendar day, so the
-    // calendar shows the user's full history regardless of which run
-    // confirmed the day.
-    const checkIns = await prisma.dungeonDayCheckIn.findMany({
-      where: { userId, dungeonId },
-      orderBy: { date: "asc" },
-      select: { date: true, state: true, count: true },
-    });
-    return checkIns.map((c) => ({
-      date: c.date.toISOString().split("T")[0],
-      state: c.state as "cleared" | "relapsed",
-      count: c.count,
-    }));
-  },
-  ["dungeon-checkins"],
-  { tags: [TAG] }
-);
-
+// Direct read; see top-of-file note on read-your-own-writes correctness.
 export async function getCheckIns(dungeonId: string): Promise<DayCheckIn[]> {
   const userId = await requireUserId();
-  return getCheckInsCached(userId, dungeonId);
+  // Scoped by (userId, dungeonId), the schema unique on
+  // (userId, dungeonId, date) means one row per calendar day, so the
+  // calendar shows the user's full history regardless of which run
+  // confirmed the day.
+  const checkIns = await prisma.dungeonDayCheckIn.findMany({
+    where: { userId, dungeonId },
+    orderBy: { date: "asc" },
+    select: { date: true, state: true, count: true },
+  });
+  return checkIns.map((c) => ({
+    date: c.date.toISOString().split("T")[0],
+    state: c.state as "cleared" | "relapsed",
+    count: c.count,
+  }));
 }
 
 function todayDateOnly(): Date {

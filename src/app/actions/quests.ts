@@ -7,21 +7,21 @@ import { requireUserId } from "@/lib/auth";
 
 const TAG = "player:stats";
 
-const getTodayCompletionsCached = unstable_cache(
-  async (userId: string, dateIso: string) => {
-    const rows = await prisma.questCompletion.findMany({
-      where: { userId, date: new Date(dateIso) },
-      select: { questId: true },
-    });
-    return rows.map((r) => r.questId);
-  },
-  ["today-completions"],
-  { tags: [TAG] }
-);
-
+// Direct read, NOT unstable_cache. unstable_cache's tag invalidation is
+// per-Node-process; on Vercel each lambda has its own LRU, so updateTag
+// after a toggle only invalidates the lambda that ran the toggle. The
+// next request can land on a different warm lambda and serve stale
+// state, which is what caused the "tick disappears after navigating
+// back" regression. The query is tiny (indexed lookup of one user's
+// completions for one day), so skipping the cache costs ~5ms and buys
+// guaranteed read-your-own-writes.
 export async function getTodayCompletions(dateIso: string): Promise<string[]> {
   const userId = await requireUserId();
-  return getTodayCompletionsCached(userId, dateIso);
+  const rows = await prisma.questCompletion.findMany({
+    where: { userId, date: new Date(dateIso) },
+    select: { questId: true },
+  });
+  return rows.map((r) => r.questId);
 }
 
 export async function toggleQuestCompletion(

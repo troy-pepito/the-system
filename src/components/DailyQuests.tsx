@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   QUESTS,
@@ -61,6 +61,24 @@ export default function DailyQuests({
   const [completed, setCompleted] = useState<string[]>(initialTodayIds);
   const [lifetime, setLifetime] = useState<QuestRewards>(initialLifetime);
   const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
+
+  // Belt-and-suspenders sync: when Dashboard re-fetches and passes new
+  // initialTodayIds (e.g. after a server reload picks up a toggle that
+  // happened in another tab, or recovers from a stale-cache window),
+  // mirror it into local `completed`. Skipped while a toggle is in
+  // flight, the optimistic local state is the truth during that window
+  // and a stale parent prop would briefly flicker the tick off.
+  useEffect(() => {
+    if (busyIds.size > 0) return;
+    setCompleted(initialTodayIds);
+  }, [initialTodayIds, busyIds.size]);
+
+  // Same for lifetime rewards. Server reload brings authoritative XP
+  // totals; local state catches up so the gain log + display agree.
+  useEffect(() => {
+    if (busyIds.size > 0) return;
+    setLifetime(initialLifetime);
+  }, [initialLifetime, busyIds.size]);
 
   const todayQualifies = completed.length >= COMBO_THRESHOLD;
   const comboDays =
