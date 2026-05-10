@@ -644,7 +644,15 @@ export async function getHunterSummariesByIds(
     (async () => {
       try {
         const client = await clerkClient();
-        const list = await client.users.getUserList({ userId: hunterIds });
+        // Clerk's getUserList defaults to limit:10 with a max of 500.
+        // Without an explicit limit, anyone past the first 10 returns
+        // missing — and the orphan-filter below would then drop them
+        // as ghosts. That's why Troy disappeared from his own
+        // leaderboard once active hunter count crossed 10.
+        const list = await client.users.getUserList({
+          userId: hunterIds,
+          limit: Math.min(hunterIds.length, 500),
+        });
         return list.data;
       } catch {
         return null;

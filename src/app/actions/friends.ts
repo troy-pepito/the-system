@@ -191,7 +191,12 @@ export async function getPendingRequests(): Promise<PendingRequest[]> {
   }> = [];
   try {
     const client = await clerkClient();
-    const list = await client.users.getUserList({ userId: requesterIds });
+    // Explicit limit — Clerk defaults to 10. See the matching note in
+    // getHunterSummariesByIds.
+    const list = await client.users.getUserList({
+      userId: requesterIds,
+      limit: Math.min(requesterIds.length, 500),
+    });
     users = list.data;
   } catch {
     return [];

@@ -47,7 +47,12 @@ export async function assembleFeedEntries(
   >();
   try {
     const client = await clerkClient();
-    const list = await client.users.getUserList({ userId: userIds });
+    // Explicit limit — Clerk defaults to 10. See the matching note in
+    // getHunterSummariesByIds for the full story.
+    const list = await client.users.getUserList({
+      userId: userIds,
+      limit: Math.min(userIds.length, 500),
+    });
     for (const u of list.data) {
       usersById.set(u.id, resolveHunterDisplay(u));
     }

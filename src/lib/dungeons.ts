@@ -423,7 +423,12 @@ export const DUNGEONS: DungeonDef[] = [
       "Allowed: sex and orgasm with a partner — this dungeon is about compulsion, not abstinence.",
       "Check in each day on the calendar — Cleared or Relapsed. Cleared days bank XP + dimensions permanently. Relapses are markers, not resets.",
     ],
-    dimensions: { emotion: 2, spirit: 1 },
+    // Reframed 2026-05-10 from {emotion: 2, spirit: 1} to
+    // {energy: 2, emotion: 1}: NoFap's core claim is reclaiming
+    // vital energy (the description literally says so), not spiritual
+    // attainment. Emotion stays at +1 because the practice does
+    // affect mood / impulse-regulation. Spirit was the wrong tag.
+    dimensions: { energy: 2, emotion: 1 },
   },
   // Starter routines — one per Hunter Type. Tiny daily floors, three
   // boxes each, gated by Path. Designed to be doable on the worst day:

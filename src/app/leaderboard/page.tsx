@@ -6,7 +6,7 @@ import LeaderboardView from "@/components/LeaderboardView";
 export const metadata = {
   title: "Leaderboard — The System",
   description:
-    "Weekly activity ranking. Action counts weighted by difficulty — exposures and perfect days move you the most.",
+    "Weekly activity ranking. Action counts weighted by difficulty — the harder the action, the more it moves you.",
 };
 
 export default async function LeaderboardPage() {

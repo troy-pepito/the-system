@@ -950,7 +950,7 @@
   },
   "leaderboard": {
     "title": "Leaderboard",
-    "subtitle": "Weekly activity ranking. Exposures and perfect days move you most.",
+    "subtitle": "Weekly activity ranking. The harder the action, the more it moves you.",
     "scopeGlobal": "Global",
     "scopeFriends": "Friends",
     "scopeGuild": "Guild",
