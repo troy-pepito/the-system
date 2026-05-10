@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Privacy Policy, Shivaliva Leveling",
+  title: "Privacy Policy · Shivaliva Leveling",
   description: "How Shivaliva Leveling collects, uses, and protects your data.",
 };
 
@@ -104,8 +104,16 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="6. Your rights">
-          You can request access to, correction of, export of, or
-          deletion of your data at any time by emailing{" "}
+          You can delete your account and all associated data directly
+          from{" "}
+          <a
+            href="/settings"
+            className="text-cyan-300 hover:text-cyan-200 underline"
+          >
+            Settings
+          </a>{" "}
+          (Danger Zone). For access to, correction of, or export of
+          your data, email{" "}
           <a
             href="mailto:trojanato@gmail.com"
             className="text-cyan-300 hover:text-cyan-200 underline"

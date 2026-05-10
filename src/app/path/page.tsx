@@ -3,7 +3,7 @@ import Card from "@/components/Card";
 import HunterTypePicker from "@/components/HunterTypePicker";
 
 export const metadata = {
-  title: "Hunter's Path, The System",
+  title: "Hunter's Path · The System",
   description:
     "Choose the hunter type that fits the version of yourself you're building. Each path unlocks a starter dungeon tuned to that dimension.",
 };

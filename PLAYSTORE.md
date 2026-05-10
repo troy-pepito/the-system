@@ -98,7 +98,7 @@ update both places.
 
 ### Short description (80 characters max)
 
-> Face your shadows. Rank up in real life. A gamified self-improvement system.
+> Real life is the dungeon. Show up anyway. A gamified self-improvement system.
 
 (76 chars)
 

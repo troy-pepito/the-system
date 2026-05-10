@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Shivaliva Leveling, Face your shadows. Rank up in real life.";
+export const alt = "Shivaliva Leveling. Real life is the dungeon. Show up anyway.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -54,8 +54,8 @@ export default function OpengraphImage() {
             textAlign: "center",
           }}
         >
-          <div style={{ display: "flex" }}>Face your shadows.</div>
-          <div style={{ display: "flex" }}>Rank up in real life.</div>
+          <div style={{ display: "flex" }}>Real life is the dungeon.</div>
+          <div style={{ display: "flex" }}>Show up anyway.</div>
         </div>
         <div
           style={{

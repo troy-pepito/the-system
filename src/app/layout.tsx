@@ -46,7 +46,7 @@ const chakraPetch = Chakra_Petch({
 
 export const metadata: Metadata = {
   title: "The System",
-  description: "Face your shadows. Rank up in real life.",
+  description: "Real life is the dungeon. Show up anyway.",
   appleWebApp: {
     capable: true,
     title: "The System",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Terms of Service, Shivaliva Leveling",
+  title: "Terms of Service · Shivaliva Leveling",
   description: "The agreement between you and Shivaliva Leveling.",
 };
 

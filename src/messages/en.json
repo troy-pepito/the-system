@@ -41,8 +41,8 @@
     "terms": "Terms"
   },
   "landing": {
-    "h1Line1": "Face your shadows.",
-    "h1Line2": "Rank up in real life.",
+    "h1Line1": "Real life is the dungeon.",
+    "h1Line2": "Show up anyway.",
     "subtitle": "A gamified self-improvement system for the compulsions nobody's watching. Built for hunters who want real progress, not streaks on paper.",
     "accept": "Accept the System",
     "acceptArrow": "Accept the System →",
@@ -78,8 +78,8 @@
     "sampleTraining": "Training Regimen · Full Body",
     "sampleCombo": "14-Day Combo",
     "whyHeader": "Why this exists",
-    "whyP1": "I made this during a dark chapter, for myself, first. I needed a system that made discipline feel less like willpower and more like a game I could show up to every day.",
-    "whyP2": "Now it's here for anyone yearning for the same: people fighting compulsions, people losing to procrastination, people who know they need accountability but have no one to hold them to it.",
+    "whyP1": "I started building this in early 2026 when willpower had stopped being enough. I'd been losing the same fights, NoFap, doomscroll, gym, the same way every week, and the apps I tried for it all felt like spreadsheets pretending to care. So I built one for myself first, with the framing I actually responded to: a quest log instead of a habit tracker. The bad days end with something logged. The good days compound.",
+    "whyP2": "It's here for anyone fighting the kind of stuff nobody else sees. The compulsions, the procrastination, the not-showing-up. I don't think you need more willpower. I think you need a scoreboard that rewards the basics on the worst days.",
     "whyWelcome": "If that's you, welcome."
   },
   "recentGains": {

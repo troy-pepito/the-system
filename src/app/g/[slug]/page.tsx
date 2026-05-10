@@ -10,7 +10,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   return {
-    title: `${slug}, The System`,
+    title: `${slug} · The System`,
     description: "Guild page, members, requests, weekly activity.",
   };
 }

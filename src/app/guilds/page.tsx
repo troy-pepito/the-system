@@ -6,7 +6,7 @@ import GuildCreateForm from "@/components/GuildCreateForm";
 import { GUILD_MEMBER_CAP } from "@/lib/guilds";
 
 export const metadata = {
-  title: "Guilds, The System",
+  title: "Guilds · The System",
   description:
     "Find your hunters. Guilds are small bands of allies pushing the same kind of training together.",
 };
