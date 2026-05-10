@@ -23,6 +23,7 @@ import {
   isHunterType,
   type HunterType,
 } from "@/lib/hunterType";
+import { dominantDimension } from "@/lib/hunterDimensions";
 import { getRankStyle } from "@/lib/rankStyle";
 import Tooltip from "@/components/Tooltip";
 
@@ -44,33 +45,6 @@ interface HunterCardProps {
     energy: number;
     spirit: number;
   };
-}
-
-const DIMENSION_ORDER: ReadonlyArray<HunterType> = [
-  "body",
-  "mind",
-  "emotion",
-  "energy",
-  "spirit",
-];
-
-/** Returns the highest-scoring dimension, or null if every dimension is 0. */
-function dominantDimension(
-  dims: HunterCardProps["dimensions"]
-): HunterType | null {
-  if (!dims) return null;
-  let best: HunterType | null = null;
-  let bestScore = 0;
-  // Iterate in canonical order so ties resolve deterministically (body
-  // wins a tie over mind, etc.) — feels less random than alphabetical.
-  for (const d of DIMENSION_ORDER) {
-    const score = dims[d];
-    if (score > bestScore) {
-      best = d;
-      bestScore = score;
-    }
-  }
-  return best;
 }
 
 export default function HunterCard({

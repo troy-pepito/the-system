@@ -15,6 +15,7 @@ import {
 } from "@/lib/achievements";
 import { DUNGEONS, getDungeon } from "@/lib/dungeons";
 import { HUNTER_TYPE_DEFS, isHunterType } from "@/lib/hunterType";
+import { dominantDimension } from "@/lib/hunterDimensions";
 import { dungeonKey } from "@/lib/i18nKeys";
 import { getRankStyle } from "@/lib/rankStyle";
 import Card from "@/components/Card";
@@ -121,27 +122,12 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 flex-wrap mb-1.5">
-                  <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
-                    {tHunterCard("name")}
-                  </p>
-                  {data.scattered && (
-                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-red-500/50 bg-red-500/10 text-[9px] text-red-300 tracking-[0.25em] uppercase rounded-sm">
-                      <span aria-hidden>⚠</span>
-                      <span>{tHunterCard("scattered")}</span>
-                    </span>
-                  )}
-                </div>
+                <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase mb-1.5">
+                  {tHunterCard("name")}
+                </p>
                 <p className="font-display text-lg sm:text-xl font-bold text-cyan-100 truncate tracking-wider">
                   {data.hunterName}
                 </p>
-                {data.hunterType && isHunterType(data.hunterType) && (
-                  <span
-                    className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold ${HUNTER_TYPE_DEFS[data.hunterType].badgeStyle}`}
-                  >
-                    {tHunterTypes(`${data.hunterType}.label`)}
-                  </span>
-                )}
                 <div className="flex items-center gap-5 mt-5">
                   <div>
                     <p className="text-[9px] text-slate-500 tracking-widest uppercase">
@@ -176,6 +162,61 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                     </p>
                   </div>
                 </div>
+                {/* Badges row — mirrors the owner-side Hunter Card so
+                    public profiles read identically. Path + dominant
+                    + scattered, all in one block; row is hidden when
+                    no badges qualify. */}
+                {(() => {
+                  const hunterTypeDef =
+                    data.hunterType && isHunterType(data.hunterType)
+                      ? HUNTER_TYPE_DEFS[data.hunterType]
+                      : null;
+                  const dominant = dominantDimension(data.dimensions);
+                  const dominantDef = dominant
+                    ? HUNTER_TYPE_DEFS[dominant]
+                    : null;
+                  const showPath = !!hunterTypeDef;
+                  const showDominant = !!dominantDef && !!dominant;
+                  if (!showPath && !showDominant && !data.scattered)
+                    return null;
+                  const badgeBase =
+                    "inline-flex items-center gap-1 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold";
+                  return (
+                    <div className="mt-5">
+                      <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
+                        Badges
+                      </p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {showPath && hunterTypeDef && (
+                          <span
+                            className={`${badgeBase} ${hunterTypeDef.badgeStyle}`}
+                          >
+                            <span>
+                              {tHunterTypes(`${hunterTypeDef.id}.label`)}
+                            </span>
+                          </span>
+                        )}
+                        {showDominant && dominantDef && (
+                          <span
+                            className={`${badgeBase} ${dominantDef.badgeStyle}`}
+                          >
+                            <span>
+                              {dominant?.toUpperCase()}-Dominant
+                            </span>
+                          </span>
+                        )}
+                        {data.scattered && (
+                          <span
+                            className={`${badgeBase} border-red-500/50 bg-red-500/10 text-red-300`}
+                          >
+                            <span aria-hidden>⚠</span>
+                            <span>{tHunterCard("scattered")}</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           </div>
