@@ -197,7 +197,7 @@ export default function HunterCard({
         });
         return;
       } catch {
-        // User cancelled or share failed — fall through to clipboard.
+        // User cancelled or share failed, fall through to clipboard.
       }
     }
     try {
@@ -426,7 +426,7 @@ export default function HunterCard({
               </div>
             </div>
 
-            {/* Badges row — every status badge for this hunter lives here.
+            {/* Badges row, every status badge for this hunter lives here.
                 Currently:
                 - Path (the Hunter Type the player chose, if any)
                 - Dominant-dimension (derived from accumulated stats)

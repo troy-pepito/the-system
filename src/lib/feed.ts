@@ -17,11 +17,11 @@ export interface FeedEntry {
 
 export interface FeedPage {
   entries: FeedEntry[];
-  /** id of the last returned entry — pass back to fetch the next page. null when there are no more. */
+  /** id of the last returned entry, pass back to fetch the next page. null when there are no more. */
   nextCursor: number | null;
 }
 
-/** Raw shape we get back from the prisma DungeonEvent query — only the
+/** Raw shape we get back from the prisma DungeonEvent query, only the
  *  fields the feed assembler reads. Lives here so both the server
  *  actions and any future client-side helpers can share the type. */
 export interface RawFeedEvent {

@@ -8,7 +8,7 @@ export default function ServiceWorkerRegistration() {
 
     if (process.env.NODE_ENV !== "production") {
       // In dev, the SW caches Turbopack chunk filenames that change on
-      // every rebuild — leading to "module factory is not available"
+      // every rebuild, leading to "module factory is not available"
       // errors. Unregister any existing SW so dev runs against the
       // network directly.
       navigator.serviceWorker.getRegistrations().then((regs) => {

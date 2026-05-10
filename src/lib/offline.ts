@@ -10,9 +10,9 @@ const KNOWN_SIGNED_IN_EVENT = "shivaliva:known-signed-in-change";
  * awakening flag can never leak into another account's session.
  *
  * Device-level prefs (atmosphere toggle, PWA install dismissal,
- * the known-signed-in marker itself, the changelog-seen marker —
+ * the known-signed-in marker itself, the changelog-seen marker,
  * which tracks the app version, not the player) are intentionally
- * preserved — those track the device, not the player.
+ * preserved, those track the device, not the player.
  */
 function wipeUserScopedStorage(): void {
   try {
@@ -44,7 +44,7 @@ export function markKnownSignedIn(userId: string): void {
     const previous = localStorage.getItem(KNOWN_SIGNED_IN_KEY);
     if (previous === userId) return;
     if (previous && previous !== userId) {
-      // Different user signing in on this shared device — drop any
+      // Different user signing in on this shared device, drop any
       // cache or queued mutations from the previous account before
       // they get attributed to this session. This is the bug fix for
       // cross-user journal entries on shared phones.
@@ -58,7 +58,7 @@ export function markKnownSignedIn(userId: string): void {
 export function clearKnownSignedIn(): void {
   try {
     if (localStorage.getItem(KNOWN_SIGNED_IN_KEY) === null) return;
-    // Sign-out — wipe per-user state so it can't leak into the next
+    // Sign-out, wipe per-user state so it can't leak into the next
     // account that signs in (or be read by an unauthenticated session
     // sniffing localStorage).
     wipeUserScopedStorage();

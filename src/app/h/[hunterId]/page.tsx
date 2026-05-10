@@ -162,7 +162,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                     </p>
                   </div>
                 </div>
-                {/* Badges row — mirrors the owner-side Hunter Card so
+                {/* Badges row, mirrors the owner-side Hunter Card so
                     public profiles read identically. Path + dominant
                     + scattered, all in one block; row is hidden when
                     no badges qualify. */}

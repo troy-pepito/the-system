@@ -13,13 +13,13 @@ interface TooltipProps {
 /**
  * Click-to-toggle tooltip that works on both desktop and mobile. Native
  * `title=` attributes only fire on hover, which means mobile users
- * never see them — replacing those with this component lets the same
+ * never see them, replacing those with this component lets the same
  * content surface on tap.
  *
  * Click outside dismisses. Click on the trigger again toggles closed.
  * The tooltip sits below the trigger; if your trigger is near the
  * bottom of the viewport, callers can flip with the `above` prop later
- * if needed (not currently implemented — only used near top of cards).
+ * if needed (not currently implemented, only used near top of cards).
  */
 export default function Tooltip({
   content,

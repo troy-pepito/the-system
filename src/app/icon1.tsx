@@ -6,13 +6,13 @@ export const contentType = "image/png";
 /**
  * 512×512 app icon, designed to be maskable-safe for Android adaptive
  * icons. The OS crops up to 20% off each side into circle / square /
- * teardrop / squircle shapes — anything inside the inner 80% safe zone
+ * teardrop / squircle shapes, anything inside the inner 80% safe zone
  * survives. The previous version had a 16px cyan border at the edge
  * that got chopped off in the round / squircle masks.
  *
  * New layout: solid slate background fills the whole frame (no edge
  * border to lose), a cyan "S" centered inside the safe zone with its
- * own cyan ring at ~67% diameter — well within crop tolerance.
+ * own cyan ring at ~67% diameter, well within crop tolerance.
  */
 export default function IconLarge() {
   return new ImageResponse(

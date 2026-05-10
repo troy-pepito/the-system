@@ -224,7 +224,7 @@ export default function LandingPage() {
           <p className="text-sm text-slate-300 leading-relaxed">
             {tLanding("whyWelcome")}
             <br />
-            — Trojan Bulldog
+           , Trojan Bulldog
           </p>
         </div>
       </section>
@@ -321,7 +321,7 @@ function InstallFooterLink() {
     return subscribeInstallState(update);
   }, []);
 
-  // Only render when programmatic install is actually available — for
+  // Only render when programmatic install is actually available, for
   // iOS / unsupported / already-installed users, the link in the footer
   // would be confusing or redundant. iOS users find install steps via
   // the Guide link already in the same footer row.

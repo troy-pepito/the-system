@@ -17,12 +17,12 @@ export interface LeaderboardRow extends HunterSummary {
    *  rather than `rank` because HunterSummary already has a `rank`
    *  (the E/D/C/B/A/S level rank). */
   position: number;
-  /** True when the viewer is the hunter on this row — drives the
+  /** True when the viewer is the hunter on this row, drives the
    *  "your rank" highlight in the UI. */
   isViewer: boolean;
 }
 
-/** Cross-guild ranking row — different shape from the hunter rows
+/** Cross-guild ranking row, different shape from the hunter rows
  *  because we're ranking guilds against each other, not individuals. */
 export interface GuildLeaderboardRow {
   position: number;
@@ -80,7 +80,7 @@ const _globalHunterIds = unstable_cache(
   { tags: [TAG] }
 );
 
-/** Friend ids in the "accepted" status — input to the friends-scope
+/** Friend ids in the "accepted" status, input to the friends-scope
  *  leaderboard. Includes the viewer themselves (added at the call site
  *  so the cache can be shared across viewers). */
 async function getAcceptedFriendIds(viewerId: string): Promise<string[]> {
@@ -98,7 +98,7 @@ async function getAcceptedFriendIds(viewerId: string): Promise<string[]> {
   );
 }
 
-/** Guild member ids for the viewer's accepted membership — input to
+/** Guild member ids for the viewer's accepted membership, input to
  *  the guild-scope leaderboard. Empty array when the viewer isn't in
  *  a guild yet. */
 async function getMyGuildMemberIds(viewerId: string): Promise<string[]> {
@@ -201,7 +201,7 @@ async function getGuildsLeaderboard(
   );
   // Only count members whose Clerk record still exists. Orphans
   // (Clerk-deleted accounts whose GuildMember row hasn't been cleaned
-  // up yet) shouldn't inflate memberCount or drag the average down —
+  // up yet) shouldn't inflate memberCount or drag the average down,
   // they can't contribute points either way.
   const validMemberIds = new Set(summaries.map((s) => s.hunterId));
 
@@ -233,7 +233,7 @@ async function getGuildsLeaderboard(
       if (b.totalActivityPoints !== a.totalActivityPoints) {
         return b.totalActivityPoints - a.totalActivityPoints;
       }
-      // Tie-break by avg, then by name — keeps order stable across
+      // Tie-break by avg, then by name, keeps order stable across
       // requests so the viewer's row position doesn't shuffle.
       if (b.avgActivityPoints !== a.avgActivityPoints) {
         return b.avgActivityPoints - a.avgActivityPoints;

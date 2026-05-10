@@ -38,7 +38,7 @@ export default function PwaInstallPrompt() {
       return off;
     }
 
-    // iOS has no beforeinstallprompt — show the manual instruction banner
+    // iOS has no beforeinstallprompt, show the manual instruction banner
     // after a short delay so it doesn't slap users immediately on load.
     const t = setTimeout(() => setShow(true), 4000);
     return () => clearTimeout(t);

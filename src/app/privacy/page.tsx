@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Privacy Policy — Shivaliva Leveling",
+  title: "Privacy Policy, Shivaliva Leveling",
   description: "How Shivaliva Leveling collects, uses, and protects your data.",
 };
 
@@ -36,19 +36,19 @@ export default function PrivacyPage() {
         <Section title="2. What we collect">
           <ul className="list-disc list-outside pl-5 space-y-2">
             <li>
-              <strong className="text-slate-200">Account data</strong> —
+              <strong className="text-slate-200">Account data</strong>:
               name and email, provided by you via Google sign-in (handled
               by Clerk).
             </li>
             <li>
-              <strong className="text-slate-200">Hunter name</strong> — the
+              <strong className="text-slate-200">Hunter name</strong>: the
               display name you choose during Awakening.
             </li>
             <li>
               <strong className="text-slate-200">
                 Your progress records
               </strong>{" "}
-              — dungeon runs, event logs (relapses, workouts, exposures,
+             , dungeon runs, event logs (relapses, workouts, exposures,
               victories), daily quest completions, and derived statistics
               (XP, level, rank, dimension totals).
             </li>
@@ -56,10 +56,10 @@ export default function PrivacyPage() {
               <strong className="text-slate-200">
                 Optional profile picture
               </strong>{" "}
-              — if you upload one, it is stored via Clerk.
+             , if you upload one, it is stored via Clerk.
             </li>
             <li>
-              <strong className="text-slate-200">Technical data</strong> —
+              <strong className="text-slate-200">Technical data</strong>:
               browser session cookies used by Clerk for authentication.
               We do not serve third-party advertising and do not embed
               cross-site trackers.
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="3. Why we collect it">
-          Solely to operate the app on your behalf — to authenticate you,
+          Solely to operate the app on your behalf, to authenticate you,
           track your progress, display your profile, and persist your
           data between sessions. We do not sell your data, share it with
           advertisers, or use it to profile you for external purposes.
@@ -79,15 +79,15 @@ export default function PrivacyPage() {
           process data on our behalf:
           <ul className="list-disc list-outside pl-5 mt-3 space-y-2">
             <li>
-              <strong className="text-slate-200">Clerk</strong> —
+              <strong className="text-slate-200">Clerk</strong>:
               authentication and account management.
             </li>
             <li>
-              <strong className="text-slate-200">Neon</strong> — database
+              <strong className="text-slate-200">Neon</strong>: database
               hosting for your progress records.
             </li>
             <li>
-              <strong className="text-slate-200">Vercel</strong> —
+              <strong className="text-slate-200">Vercel</strong>:
               application hosting and delivery.
             </li>
           </ul>

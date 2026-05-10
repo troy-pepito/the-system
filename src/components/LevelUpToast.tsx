@@ -13,11 +13,11 @@ let nextId = 1;
 const FADE_MS = 420;
 
 /**
- * Small ceremonial moment for each level-up — distinct from rank-up
+ * Small ceremonial moment for each level-up, distinct from rank-up
  * (which gets the fullscreen RankUpCelebration). Top-center bracket
  * toast, fades in, lingers, fades out.
  *
- * Suppresses itself when a rank-up also fired this tick — the rank
+ * Suppresses itself when a rank-up also fired this tick, the rank
  * celebration is the bigger moment and the level pop would just talk
  * over it.
  */
@@ -40,7 +40,7 @@ export default function LevelUpToast() {
   }, []);
 
   // Toast stays until the player taps the dismiss button. No more
-  // setTimeout-driven auto-fade — Troy's note "our toasts shouldn't
+  // setTimeout-driven auto-fade, Troy's note "our toasts shouldn't
   // be shy" means the level-up moment lingers as long as it needs to.
   function dismiss() {
     if (!active) return;

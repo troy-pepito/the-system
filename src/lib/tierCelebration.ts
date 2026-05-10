@@ -13,12 +13,12 @@ import { TIER_BONUS_XP } from "@/lib/dungeons";
  * user action).
  *
  * On first detection per (dungeonId, startDate), the current tier is
- * silently recorded — no retro-celebration for tiers earned before
+ * silently recorded, no retro-celebration for tiers earned before
  * this feature shipped. Subsequent renders that show a higher tier
  * fire a 🏆 celebration toast + xpDelta exactly once per crossing.
  *
  * For action-based crossings (streak/timed cleared days, progressive
- * rungs cleared) use inline detection in the action handler instead —
+ * rungs cleared) use inline detection in the action handler instead,
  * those moments need synchronous feedback at the click site.
  */
 export function useTierCrossingCelebration({
@@ -46,7 +46,7 @@ export function useTierCrossingCelebration({
       return;
     }
 
-    // First detection — silent catch-up so existing high-tier players
+    // First detection, silent catch-up so existing high-tier players
     // don't get a wave of retro celebrations on this feature's first
     // load. Future tier crossings fire normally.
     if (lastSeen === null || Number.isNaN(lastSeen)) {

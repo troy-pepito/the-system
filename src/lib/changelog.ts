@@ -32,7 +32,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     changes: [
       {
         kind: "feature",
-        text: "Guilds: form a band of up to 50 hunters, request-and-approve to join, with each guild on its own /g/{slug} page. Owners can edit, kick, transfer ownership, or disband — all from a single Manage Guild panel.",
+        text: "Guilds: form a band of up to 50 hunters, request-and-approve to join, with each guild on its own /g/{slug} page. Owners can edit, kick, transfer ownership, or disband, all from a single Manage Guild panel.",
       },
       {
         kind: "feature",
@@ -40,7 +40,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Weekly Leaderboard at /leaderboard — Global / Friends / Guild / Guilds. Ranked by activity points: 1pt for a daily quest or cleared day, 2pt for a workout or side quest, 3pt for an exposure or perfect day. Resets every 7 days. Your rank shows even when you're outside the top 50.",
+        text: "Weekly Leaderboard at /leaderboard with four scopes: Global, Friends, Guild, Guilds. Ranked by activity points: 1pt for a daily quest or cleared day, 2pt for a workout or side quest, 3pt for an exposure or perfect day. Resets every 7 days. Your rank shows even when you're outside the top 50.",
       },
       {
         kind: "feature",
@@ -48,19 +48,19 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Reorder dungeons on the Status page — long-press the grip icon on any card and drag it where you want. Order syncs across devices via your hunter profile.",
+        text: "Reorder dungeons on the Status page, long-press the grip icon on any card and drag it where you want. Order syncs across devices via your hunter profile.",
       },
       {
         kind: "feature",
-        text: "Mastered ladders are now undoable. Cleared the final rung by accident? Tap Undo from the Mastered state instead of being locked out — claim Victory only when you mean it.",
+        text: "Mastered ladders are now undoable. Cleared the final rung by accident? Tap Undo from the Mastered state instead of being locked out, claim Victory only when you mean it.",
       },
       {
         kind: "fix",
-        text: "Achievements re-lock when the underlying action is undone. Untick a quest, walk back an exposure — the trophies that hinged on it disappear with it (combo milestones stay, since those mark a streak that genuinely happened).",
+        text: "Achievements re-lock when the underlying action is undone. Untick a quest, walk back an exposure, the trophies that hinged on it disappear with it (combo milestones stay, since those mark a streak that genuinely happened).",
       },
       {
         kind: "polish",
-        text: "Significant toasts (achievement unlock, Reflection Recorded, big celebrations) no longer auto-fade. Tap the X to dismiss, or follow the link — they wait for you.",
+        text: "Significant toasts (achievement unlock, Reflection Recorded, big celebrations) no longer auto-fade. Tap the X to dismiss, or follow the link, they wait for you.",
       },
       {
         kind: "polish",
@@ -80,11 +80,11 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "polish",
-        text: "Permanent \"+ Enter Another Dungeon\" CTA at the bottom of the Status page when you have active runs — Portals link removed from the navbar to declutter.",
+        text: "Permanent \"+ Enter Another Dungeon\" CTA at the bottom of the Status page when you have active runs, Portals link removed from the navbar to declutter.",
       },
       {
         kind: "polish",
-        text: "Global Feed retired. Public journal entries from guild members surface in their guild's feed; otherwise they live on each hunter's public profile (/h/{hunterId}). Community is intimate now — small bands, not anonymous broadcast.",
+        text: "Global Feed retired. Public journal entries from guild members surface in their guild's feed; otherwise they live on each hunter's public profile (/h/{hunterId}). Community is intimate now, small bands, not anonymous broadcast.",
       },
     ],
   },
@@ -99,7 +99,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Report a Bug button in the footer. Stuck or seeing something off? Send a note straight from the app — your hunter ID and current page get attached automatically.",
+        text: "Report a Bug button in the footer. Stuck or seeing something off? Send a note straight from the app, your hunter ID and current page get attached automatically.",
       },
       {
         kind: "feature",
@@ -107,11 +107,11 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Achievement unlock toasts are now tappable — open your profile to see the trophy you just earned.",
+        text: "Achievement unlock toasts are now tappable, open your profile to see the trophy you just earned.",
       },
       {
         kind: "feature",
-        text: "Public profiles get a small friend-action icon next to the kebab dots in the Hunter ID header — sleeker than the old pill button under the card.",
+        text: "Public profiles get a small friend-action icon next to the kebab dots in the Hunter ID header, sleeker than the old pill button under the card.",
       },
       {
         kind: "fix",
@@ -119,7 +119,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "fix",
-        text: "Streaks and dungeons no longer mysteriously reset. Old offline mutations could clobber relapse marks or resurrect ended dungeons — both are now structurally impossible.",
+        text: "Streaks and dungeons no longer mysteriously reset. Old offline mutations could clobber relapse marks or resurrect ended dungeons, both are now structurally impossible.",
       },
       {
         kind: "fix",
@@ -146,15 +146,15 @@ export const CHANGELOG: ChangelogEntry[] = [
     changes: [
       {
         kind: "feature",
-        text: "Pick a Hunter Path in Settings — Body, Mind, Emotion, Energy, or Spirit. Each path mirrors one of the five dimensions and unlocks its own daily routine.",
+        text: "Pick a Hunter Path in Settings: Body, Mind, Emotion, Energy, or Spirit. Each path mirrors one of the five dimensions and unlocks its own daily routine.",
       },
       {
         kind: "feature",
-        text: "Five new Daily dungeons, one per path: Daily Forge (Body), Daily Sharpening (Mind), Daily Bonds (Emotion), Daily Spark (Energy), Daily Stillness (Spirit). Three small tasks each — clear any one to bank the day.",
+        text: "Five new Daily dungeons, one per path: Daily Forge (Body), Daily Sharpening (Mind), Daily Bonds (Emotion), Daily Spark (Energy), Daily Stillness (Spirit). Three small tasks each, clear any one to bank the day.",
       },
       {
         kind: "feature",
-        text: "Daily Forge ramps with your rank — pushups, pullups, and squats grow tier-by-tier from 5/1/10 at the start to 100/40/150 at S.",
+        text: "Daily Forge ramps with your rank, pushups, pullups, and squats grow tier-by-tier from 5/1/10 at the start to 100/40/150 at S.",
       },
       {
         kind: "feature",
@@ -162,7 +162,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Path-locked dungeons in /portals show \"🔒 Path Required\" with a link to Settings — so you can see what each path unlocks before committing.",
+        text: "Path-locked dungeons in /portals show \"🔒 Path Required\" with a link to Settings, so you can see what each path unlocks before committing.",
       },
       {
         kind: "fix",
@@ -170,7 +170,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "fix",
-        text: "Cadence task ticks now drop their dimension reward in the gain toast — only XP showed before.",
+        text: "Cadence task ticks now drop their dimension reward in the gain toast, only XP showed before.",
       },
     ],
   },
@@ -185,7 +185,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Emoji reactions on feed entries — 🔥 💪 🙏 ❤️ ✨. Tap to react, tap again to take it back.",
+        text: "Emoji reactions on feed entries, 🔥 💪 🙏 ❤️ ✨. Tap to react, tap again to take it back.",
       },
       {
         kind: "feature",
@@ -193,11 +193,11 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Language picker — English and Spanish to start. More landing as translations come in.",
+        text: "Language picker, English and Spanish to start. More landing as translations come in.",
       },
       {
         kind: "feature",
-        text: "Caffeine Reboot + Diet Challenge moved to the daily check-in calendar. Same pattern as NoFap — Cleared / Relapsed each day, Exit Dungeon when you're done.",
+        text: "Caffeine Reboot + Diet Challenge moved to the daily check-in calendar. Same pattern as NoFap, Cleared / Relapsed each day, Exit Dungeon when you're done.",
       },
       {
         kind: "feature",
@@ -205,7 +205,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "XP scales with your highest tier in each dungeon — the deeper you go, the more every cleared day, workout, and exposure pays out (capped at +30/action at S).",
+        text: "XP scales with your highest tier in each dungeon, the deeper you go, the more every cleared day, workout, and exposure pays out (capped at +30/action at S).",
       },
       {
         kind: "fix",
@@ -240,7 +240,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Edit any journal entry from the profile or the journal page — text and public/private flag both update.",
+        text: "Edit any journal entry from the profile or the journal page, text and public/private flag both update.",
       },
       {
         kind: "feature",
@@ -259,11 +259,11 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Per-dungeon Outstanding push — the morning notification now names which dungeons you haven't checked into today.",
+        text: "Per-dungeon Outstanding push, the morning notification now names which dungeons you haven't checked into today.",
       },
       {
         kind: "feature",
-        text: "Wisdom-quote pool grew to 112 — matching Shiva's 112 methods of meditation. Sadhguru, Osho, Bhagavad Gita, Stoics, and more.",
+        text: "Wisdom-quote pool grew to 112, matching Shiva's 112 methods of meditation. Sadhguru, Osho, Bhagavad Gita, Stoics, and more.",
       },
       {
         kind: "polish",
@@ -278,7 +278,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     changes: [
       {
         kind: "feature",
-        text: "New Side Quest system — rare, date-conditional quests with bonus XP + dimensions.",
+        text: "New Side Quest system, rare, date-conditional quests with bonus XP + dimensions.",
       },
       {
         kind: "feature",
@@ -286,7 +286,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Recent Gains feed on the profile — see your last 10 XP/dimension drops with source and timestamp.",
+        text: "Recent Gains feed on the profile, see your last 10 XP/dimension drops with source and timestamp.",
       },
     ],
   },
@@ -301,7 +301,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "feature",
-        text: "Cleared days bank XP + dimensions permanently — relapses are markers, not run-enders.",
+        text: "Cleared days bank XP + dimensions permanently, relapses are markers, not run-enders.",
       },
       {
         kind: "feature",
@@ -311,7 +311,7 @@ export const CHANGELOG: ChangelogEntry[] = [
   },
 ];
 
-/** Latest release — newest entry in the log. */
+/** Latest release, newest entry in the log. */
 export const LATEST_VERSION = CHANGELOG[0]?.version ?? "0.0.0";
 
 const SEEN_KEY = "system:changelog-seen";

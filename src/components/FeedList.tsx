@@ -12,7 +12,7 @@ import { readCache, writeCache } from "@/lib/offlineCache";
 interface FeedListProps {
   initialEntries: FeedEntry[];
   initialCursor: number | null;
-  /** Fetcher driving load-more + background refresh. Required — every
+  /** Fetcher driving load-more + background refresh. Required, every
    *  caller passes its own (guild-scoped fetcher today; future scopes
    *  e.g. friends-only would slot in here). */
   fetcher: (cursor?: number) => Promise<FeedPage>;
@@ -33,7 +33,7 @@ export default function FeedList({
   const [loading, setLoading] = useState(false);
 
   // Cache-first hydration. If the SSR fetch failed (offline / DB blip)
-  // we'll have empty initialEntries — read from localStorage cache to
+  // we'll have empty initialEntries, read from localStorage cache to
   // surface the last-known feed. Then re-fetch fresh from the server
   // and overwrite. Same shape as Dashboard's hydration pattern.
   useEffect(() => {
@@ -283,7 +283,7 @@ function nextReactions(
       ? [...current, { emoji, count: 1, userReacted: true }]
       : current;
   }
-  // Only the viewer's own toggle moves the count — other hunters'
+  // Only the viewer's own toggle moves the count, other hunters'
   // reactions are immutable from the client's perspective.
   const delta =
     active && !existing.userReacted

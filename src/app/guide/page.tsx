@@ -16,7 +16,7 @@ import {
 import { COMBO_MILESTONES, COMBO_THRESHOLD } from "@/lib/quests";
 
 export const metadata = {
-  title: "Hunter Guide — Shivaliva Leveling",
+  title: "Hunter Guide, Shivaliva Leveling",
   description:
     "The manual for the System. Ranks, dungeons, dimensions, combos, and what Pro unlocks.",
 };

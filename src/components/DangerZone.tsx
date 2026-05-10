@@ -7,7 +7,7 @@ import { deleteAccount } from "@/app/actions/account";
 
 /**
  * In-app account deletion. Required by Play Store policy for any app
- * with user accounts — the email-based path in /privacy section 6 is
+ * with user accounts, the email-based path in /privacy section 6 is
  * the legal minimum but not store-policy compliant.
  *
  * Confirmation gate: the player has to type their hunter name (case-
@@ -37,7 +37,7 @@ export default function DangerZone() {
     startTransition(async () => {
       try {
         await deleteAccount();
-        // Clerk session is gone (the action deletes the user) — sign
+        // Clerk session is gone (the action deletes the user), sign
         // out forces the local Clerk session cookie to clear. Then
         // bounce to landing.
         await signOut({ redirectUrl: "/" });

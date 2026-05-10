@@ -38,7 +38,7 @@ export interface GainEntry {
  *   - "{dungeonName} · Day Cleared" / "Task Cleared" / "Victory"
  *   - "🏆 Rank {X} · {dungeonName}" tier bonus
  *   - "🔥 {N}-Day Combo" milestone
- * Returns null for anything we don't recognize — caller falls back to
+ * Returns null for anything we don't recognize, caller falls back to
  * displaying the legacy string verbatim.
  */
 function migrateLegacySource(
@@ -59,7 +59,7 @@ function migrateLegacySource(
     };
   }
 
-  // 3. "{prefix} · {suffix}" — covers tier bonuses and the three
+  // 3. "{prefix} · {suffix}", covers tier bonuses and the three
   //    dungeon-event sources (Day Cleared / Task Cleared / Victory).
   const dotMatch = source.match(/^(.+?) · (.+)$/);
   if (dotMatch) {
@@ -108,7 +108,7 @@ function migrateLegacySource(
  * Resolve the source label for a gain entry. Modern entries carry a
  * `sourceKey` + `sourceValues`. Pre-i18n entries with only a frozen
  * `source` string get pattern-matched back into a key/values pair so
- * they translate too — anything unmatched falls through to the legacy
+ * they translate too, anything unmatched falls through to the legacy
  * string as a last resort.
  */
 export function resolveGainSource(
@@ -187,7 +187,7 @@ function write(entries: GainEntry[]): void {
     cachedSnapshot = entries;
     window.dispatchEvent(new Event(EVENT));
   } catch {
-    // Quota or serialization failure — skip; the toast already fired.
+    // Quota or serialization failure, skip; the toast already fired.
   }
 }
 

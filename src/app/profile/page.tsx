@@ -53,7 +53,7 @@ export default function ProfilePage() {
   // Hash-driven deep link from AchievementToast: clicking the toast
   // sends the player to /profile#trophy-{id}. We capture the id once
   // on mount and pipe it down so the matching section auto-expands
-  // and scrolls into view — without this, the link landed at the top
+  // and scrolls into view, without this, the link landed at the top
   // of /profile with the trophy panel still collapsed.
   const [highlightId, setHighlightId] = useState<string | null>(null);
   useEffect(() => {
@@ -287,7 +287,7 @@ function TrophySection({
   nested?: boolean;
   /** Achievement id from window.location.hash. If it matches a trophy in
    *  this section, the section auto-expands on mount and scrolls into
-   *  view — driven by AchievementToast deep-linking to /profile#trophy-X. */
+   *  view, driven by AchievementToast deep-linking to /profile#trophy-X. */
   highlightId?: string | null;
 }) {
   const tAchievements = useTranslations("achievements");
@@ -322,7 +322,7 @@ function TrophySection({
     setClaimedLocal((prev) => new Set(prev).add(id));
     // Optimistic: fire the floating "+N XP" GainToast and the XP-delta
     // event BEFORE awaiting the server action. Same pattern DailyQuests
-    // uses — the visual is instant on tap, the server confirms in the
+    // uses, the visual is instant on tap, the server confirms in the
     // background. Without this, the toast waited 1-1.5s for the server
     // roundtrip, which felt sluggish vs the quest tick.
     if (xpReward > 0) {
@@ -337,7 +337,7 @@ function TrophySection({
       await claimAchievement(id);
       // No-delta refetch confirms with the server's authoritative
       // numbers (catches edge cases where the optimistic delta drifts
-      // from server truth — shouldn't happen here, but defensive).
+      // from server truth, shouldn't happen here, but defensive).
       notifyStatsUpdated();
     } catch {
       // Rollback: undo the optimistic XP and re-show the Claim button.

@@ -14,7 +14,7 @@ export async function setLocale(locale: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(LOCALE_COOKIE, locale, {
     path: "/",
-    // 1 year — locale is a long-lived preference, not a session thing.
+    // 1 year, locale is a long-lived preference, not a session thing.
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
   });

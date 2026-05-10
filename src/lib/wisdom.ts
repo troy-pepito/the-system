@@ -12,7 +12,7 @@
  *   Thich Nhat Hanh · Eckhart Tolle · J. Krishnamurti · Musashi
  *   Patanjali · Hunter-coded originals
  *
- * Pool is sized at exactly 112 — matching Shiva's 112 methods of
+ * Pool is sized at exactly 112, matching Shiva's 112 methods of
  * meditation. pickWisdomQuote() rotates deterministically by date so
  * all users see the same line on the same day.
  *
@@ -25,7 +25,7 @@ export interface WisdomQuote {
 }
 
 const QUOTES: WisdomQuote[] = [
-  // — Sadhguru (12)
+  //, Sadhguru (12)
   {
     title: "✦ Sadhguru",
     body: "If you do not know how to keep yourself joyful, you will become a source of misery to yourself and to others.",
@@ -40,7 +40,7 @@ const QUOTES: WisdomQuote[] = [
   },
   {
     title: "✦ Sadhguru",
-    body: "Suffering is in the mind. Mind is not your friend — mind is just an accumulation.",
+    body: "Suffering is in the mind. Mind is not your friend, mind is just an accumulation.",
   },
   {
     title: "✦ Sadhguru",
@@ -52,11 +52,11 @@ const QUOTES: WisdomQuote[] = [
   },
   {
     title: "✦ Sadhguru",
-    body: "Fasting is to give the body a break — not to torture yourself. Let the digestive fire rest.",
+    body: "Fasting is to give the body a break, not to torture yourself. Let the digestive fire rest.",
   },
   {
     title: "✦ Sadhguru",
-    body: "If you handle your body, your mind, your emotions, your energy — you handle your life.",
+    body: "If you handle your body, your mind, your emotions, your energy, you handle your life.",
   },
   {
     title: "✦ Sadhguru",
@@ -75,14 +75,14 @@ const QUOTES: WisdomQuote[] = [
     body: "You are the only one stopping you. You are the only one who can move you.",
   },
 
-  // — Osho (12)
+  //, Osho (12)
   {
     title: "✦ Osho",
     body: "Drop the idea of becoming someone, because you are already a masterpiece. You only need to discover it.",
   },
   {
     title: "✦ Osho",
-    body: "Be — don't try to become.",
+    body: "Be, don't try to become.",
   },
   {
     title: "✦ Osho",
@@ -102,7 +102,7 @@ const QUOTES: WisdomQuote[] = [
   },
   {
     title: "✦ Osho",
-    body: "Don't seek, don't search, don't ask, don't knock. Just be — and it is there.",
+    body: "Don't seek, don't search, don't ask, don't knock. Just be, and it is there.",
   },
   {
     title: "✦ Osho",
@@ -125,22 +125,22 @@ const QUOTES: WisdomQuote[] = [
     body: "The moment you become aware you have been carrying a cross, the cross will fall away.",
   },
 
-  // — Bhagavad Gita / Krishna (6)
+  //, Bhagavad Gita / Krishna (6)
   {
     title: "✦ Krishna · Gita",
-    body: "Better one's own duty done imperfectly than another's done well. — BG 3.35",
+    body: "Better one's own duty done imperfectly than another's done well., BG 3.35",
   },
   {
     title: "✦ Krishna · Gita",
-    body: "You have the right to perform your duty, but not to the fruits of your action. — BG 2.47",
+    body: "You have the right to perform your duty, but not to the fruits of your action., BG 2.47",
   },
   {
     title: "✦ Krishna · Gita",
-    body: "The mind is restless and difficult to restrain, but it is subdued by practice. — BG 6.35",
+    body: "The mind is restless and difficult to restrain, but it is subdued by practice., BG 6.35",
   },
   {
     title: "✦ Krishna · Gita",
-    body: "When meditation is mastered, the mind is unwavering — like a lamp in a windless place. — BG 6.19",
+    body: "When meditation is mastered, the mind is unwavering, like a lamp in a windless place., BG 6.19",
   },
   {
     title: "✦ Krishna · Gita",
@@ -148,10 +148,10 @@ const QUOTES: WisdomQuote[] = [
   },
   {
     title: "✦ Krishna · Gita",
-    body: "Whenever righteousness declines and evil rises, I manifest myself. — BG 4.7",
+    body: "Whenever righteousness declines and evil rises, I manifest myself., BG 4.7",
   },
 
-  // — Shiva · 112 methods (Vigyan Bhairav Tantra / Book of Secrets) (5)
+  //, Shiva · 112 methods (Vigyan Bhairav Tantra / Book of Secrets) (5)
   {
     title: "✦ Shiva · 112",
     body: "Watch the gap between two breaths. There, find the Self.",
@@ -170,10 +170,10 @@ const QUOTES: WisdomQuote[] = [
   },
   {
     title: "✦ Shiva · 112",
-    body: "On the in-breath, on the out-breath — between them lies the eternal.",
+    body: "On the in-breath, on the out-breath, between them lies the eternal.",
   },
 
-  // — Kevin Trudeau (4)
+  //, Kevin Trudeau (4)
   {
     title: "✦ Trudeau",
     body: "Decide what you want. Decide it firmly. Then move toward it without explaining yourself.",
@@ -188,10 +188,10 @@ const QUOTES: WisdomQuote[] = [
   },
   {
     title: "✦ Trudeau",
-    body: "The wish is the command. Not the wishing — the certainty behind it.",
+    body: "The wish is the command. Not the wishing, the certainty behind it.",
   },
 
-  // — Jason Capital (4)
+  //, Jason Capital (4)
   {
     title: "✦ Capital",
     body: "Speak less. Speak slower. Speak with finality. The frame you set is the reality others enter.",
@@ -209,7 +209,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Master yourself first. The world conforms to a mastered man, never to a scattered one.",
   },
 
-  // — Buddha (5)
+  //, Buddha (5)
   {
     title: "✦ Buddha",
     body: "What we think, we become. Watch the thoughts before they harden into action.",
@@ -231,7 +231,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Peace comes from within. Do not seek it without.",
   },
 
-  // — Lao Tzu (6)
+  //, Lao Tzu (6)
   {
     title: "✦ Lao Tzu",
     body: "A journey of a thousand miles begins beneath your feet.",
@@ -257,7 +257,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Silence is a source of great strength.",
   },
 
-  // — Confucius (3)
+  //, Confucius (3)
   {
     title: "✦ Confucius",
     body: "The man who moves a mountain begins by carrying away small stones.",
@@ -271,25 +271,25 @@ const QUOTES: WisdomQuote[] = [
     body: "Wherever you go, go with all your heart.",
   },
 
-  // — Jesus Christ (4)
+  //, Jesus Christ (4)
   {
     title: "✦ Christ",
-    body: "The kingdom of God is within you. — Luke 17:21",
+    body: "The kingdom of God is within you., Luke 17:21",
   },
   {
     title: "✦ Christ",
-    body: "Whoever wants to be first must be last. — Mark 9:35",
+    body: "Whoever wants to be first must be last., Mark 9:35",
   },
   {
     title: "✦ Christ",
-    body: "Knock and the door will be opened. Seek and you will find. — Matthew 7:7",
+    body: "Knock and the door will be opened. Seek and you will find., Matthew 7:7",
   },
   {
     title: "✦ Christ",
     body: "What does it profit a man to gain the whole world and lose his soul?",
   },
 
-  // — Khalil Gibran (4)
+  //, Khalil Gibran (4)
   {
     title: "✦ Gibran",
     body: "Out of suffering have emerged the strongest souls. The most massive characters are seared with scars.",
@@ -307,24 +307,24 @@ const QUOTES: WisdomQuote[] = [
     body: "Yesterday is but today's memory, and tomorrow is today's dream.",
   },
 
-  // — Zig Ziglar (3)
+  //, Zig Ziglar (3)
   {
     title: "✦ Ziglar",
     body: "You don't have to be great to start, but you have to start to be great.",
   },
   {
     title: "✦ Ziglar",
-    body: "Motivation doesn't last. Neither does bathing — that's why we recommend it daily.",
+    body: "Motivation doesn't last. Neither does bathing, that's why we recommend it daily.",
   },
   {
     title: "✦ Ziglar",
     body: "Your attitude, not your aptitude, will determine your altitude.",
   },
 
-  // — Marcus Aurelius (4)
+  //, Marcus Aurelius (4)
   {
     title: "✦ Aurelius",
-    body: "You have power over your mind — not outside events. Realize this, and you will find strength.",
+    body: "You have power over your mind, not outside events. Realize this, and you will find strength.",
   },
   {
     title: "✦ Aurelius",
@@ -339,7 +339,7 @@ const QUOTES: WisdomQuote[] = [
     body: "When you arise in the morning, think of what a precious privilege it is to be alive.",
   },
 
-  // — Seneca (3)
+  //, Seneca (3)
   {
     title: "✦ Seneca",
     body: "We suffer more in imagination than in reality.",
@@ -353,17 +353,17 @@ const QUOTES: WisdomQuote[] = [
     body: "Difficulties strengthen the mind, as labor does the body.",
   },
 
-  // — Epictetus (2)
+  //, Epictetus (2)
   {
     title: "✦ Epictetus",
     body: "It's not what happens to you, but how you react to it that matters.",
   },
   {
     title: "✦ Epictetus",
-    body: "First say to yourself what you would be — then do what you have to do.",
+    body: "First say to yourself what you would be, then do what you have to do.",
   },
 
-  // — Carl Jung (4) — direct fit for compulsion / shadow work
+  //, Carl Jung (4), direct fit for compulsion / shadow work
   {
     title: "✦ Jung",
     body: "Until you make the unconscious conscious, it will direct your life and you will call it fate.",
@@ -381,7 +381,7 @@ const QUOTES: WisdomQuote[] = [
     body: "There is no coming to consciousness without pain.",
   },
 
-  // — Naval Ravikant (2)
+  //, Naval Ravikant (2)
   {
     title: "✦ Naval",
     body: "Read what you love until you love to read.",
@@ -391,7 +391,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Desire is a contract you make with yourself to be unhappy until you get what you want.",
   },
 
-  // — David Goggins (3)
+  //, David Goggins (3)
   {
     title: "✦ Goggins",
     body: "The only person you've got to beat is who you were yesterday.",
@@ -405,7 +405,7 @@ const QUOTES: WisdomQuote[] = [
     body: "We live in a world where mediocrity is praised. Refuse to be average.",
   },
 
-  // — Jocko Willink (2)
+  //, Jocko Willink (2)
   {
     title: "✦ Jocko",
     body: "Discipline equals freedom.",
@@ -415,7 +415,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Don't count on motivation. Count on discipline.",
   },
 
-  // — Bruce Lee (3)
+  //, Bruce Lee (3)
   {
     title: "✦ Bruce Lee",
     body: "Long-term consistency beats short-term intensity.",
@@ -429,7 +429,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Absorb what is useful, discard what is useless, add what is essentially your own.",
   },
 
-  // — Rumi (3)
+  //, Rumi (3)
   {
     title: "✦ Rumi",
     body: "The wound is the place where the light enters you.",
@@ -443,7 +443,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Don't grieve. Anything you lose comes round in another form.",
   },
 
-  // — Ramana Maharshi (2)
+  //, Ramana Maharshi (2)
   {
     title: "✦ Ramana",
     body: "Your own Self-realization is the greatest service you can render the world.",
@@ -453,7 +453,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Silence is never-ending speech. Vocal speech obstructs the other.",
   },
 
-  // — Swami Vivekananda (2)
+  //, Swami Vivekananda (2)
   {
     title: "✦ Vivekananda",
     body: "Arise, awake, and stop not until the goal is reached.",
@@ -463,7 +463,7 @@ const QUOTES: WisdomQuote[] = [
     body: "All the powers in the universe are already ours. We put our hands before our eyes and cry that it is dark.",
   },
 
-  // — Thich Nhat Hanh (2)
+  //, Thich Nhat Hanh (2)
   {
     title: "✦ Thich Nhat Hanh",
     body: "Walk as if you are kissing the Earth with your feet.",
@@ -473,17 +473,17 @@ const QUOTES: WisdomQuote[] = [
     body: "Smile, breathe and go slowly.",
   },
 
-  // — Eckhart Tolle (2)
+  //, Eckhart Tolle (2)
   {
     title: "✦ Tolle",
     body: "Realize deeply that the present moment is all you ever have.",
   },
   {
     title: "✦ Tolle",
-    body: "The voice in your head is not who you are. Awareness of it — that is who you are.",
+    body: "The voice in your head is not who you are. Awareness of it, that is who you are.",
   },
 
-  // — J. Krishnamurti (2)
+  //, J. Krishnamurti (2)
   {
     title: "✦ Krishnamurti",
     body: "It is no measure of health to be well-adjusted to a profoundly sick society.",
@@ -493,7 +493,7 @@ const QUOTES: WisdomQuote[] = [
     body: "Freedom is found in the choiceless awareness of our daily existence.",
   },
 
-  // — Miyamoto Musashi (2)
+  //, Miyamoto Musashi (2)
   {
     title: "✦ Musashi",
     body: "Today is victory over yourself of yesterday. Tomorrow is your victory over lesser men.",
@@ -503,16 +503,16 @@ const QUOTES: WisdomQuote[] = [
     body: "Do nothing that is of no use.",
   },
 
-  // — Patanjali · Yoga Sutras (1)
+  //, Patanjali · Yoga Sutras (1)
   {
     title: "✦ Patanjali",
-    body: "Yoga is the cessation of the fluctuations of the mind. — Yoga Sutra 1.2",
+    body: "Yoga is the cessation of the fluctuations of the mind., Yoga Sutra 1.2",
   },
 
-  // — Hunter / System-coded originals (5)
+  //, Hunter / System-coded originals (5)
   {
     title: "✦ Hunter's Code",
-    body: "An E-rank Hunter who shows up daily becomes an S-rank in the only way it's ever happened — slowly, then suddenly.",
+    body: "An E-rank Hunter who shows up daily becomes an S-rank in the only way it's ever happened, slowly, then suddenly.",
   },
   {
     title: "✦ Hunter's Code",
@@ -533,7 +533,7 @@ const QUOTES: WisdomQuote[] = [
 ];
 
 /**
- * Returns a deterministic quote for the given calendar date — same date
+ * Returns a deterministic quote for the given calendar date, same date
  * yields the same quote so all users see the same one that day.
  */
 export function pickWisdomQuote(dateIso: string): WisdomQuote {

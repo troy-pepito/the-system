@@ -23,7 +23,7 @@ interface NoteModalProps {
    * textarea. The chosen value is passed to onSubmit as the second arg.
    */
   showPublicToggle?: boolean;
-  /** Pre-fills the textarea — used by the journal edit flow. */
+  /** Pre-fills the textarea, used by the journal edit flow. */
   initialNote?: string;
   /** Pre-checks the public toggle when showPublicToggle is true. */
   initialIsPublic?: boolean;

@@ -207,7 +207,7 @@ export async function GET(request: Request) {
     let payload: PushPayload;
     let kind: keyof typeof pushSummary.byType;
 
-    // Sundays are wisdom day — without this slot, active hunters with
+    // Sundays are wisdom day, without this slot, active hunters with
     // outstanding dungeons every day never reach the wisdom-fallback
     // branch at the bottom of the chain. Ekadashi + relapse still
     // override Sunday since those carry urgent context the player
@@ -283,7 +283,7 @@ export async function GET(request: Request) {
       lastQuest?.createdAt.getTime() ?? 0,
       lastEvent?.createdAt.getTime() ?? 0
     );
-    // Don't email users with zero activity ever — they aren't lapsed,
+    // Don't email users with zero activity ever, they aren't lapsed,
     // they're just signed-up-but-never-engaged. Sending "The System
     // awaits your return" the morning after sign-up is tone-deaf and
     // is the bug Troy spotted on 2026-05-08 (vishnu.earthfokus signed

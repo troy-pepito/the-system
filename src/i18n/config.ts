@@ -26,7 +26,7 @@ export const LOCALE_COOKIE = "shivaliva-locale";
 
 // Order matches the picker's render order. Native labels (the speaker's
 // own word for their language) are what users actually scan for, so
-// those drive the visible option text — `label` stays around for any
+// those drive the visible option text, `label` stays around for any
 // future analytics / debug surface.
 export const LOCALE_OPTIONS: { value: Locale; label: string; native: string }[] = [
   { value: "en", label: "English", native: "English" },

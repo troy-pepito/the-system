@@ -14,14 +14,14 @@ const POLL_INTERVAL_MS = 60_000;
  *    fires `storage` events on every OTHER same-origin window. We
  *    listen for our own cache/queue keys and re-broadcast as the
  *    in-tab STATS_UPDATED_EVENT, so existing refetch wiring picks it
- *    up. No-op in the originating tab — `storage` only fires elsewhere.
+ *    up. No-op in the originating tab, `storage` only fires elsewhere.
  *
  * 2. Long-idle tabs that never lose focus. A 60s soft poll triggers a
  *    refetch when the tab is visible and online. Skipped while hidden
  *    or offline so we don't waste battery / fail loudly while
  *    disconnected.
  *
- * Mounted once at the layout level (signed-in only — there's nothing
+ * Mounted once at the layout level (signed-in only, there's nothing
  * to refetch when signed out).
  */
 export default function CrossTabSync() {

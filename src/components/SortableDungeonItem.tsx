@@ -13,7 +13,7 @@ interface SortableDungeonItemProps {
  *
  * The drag listeners live on a dedicated handle (the grip icon in the
  * top-right corner), not the whole card. Whole-card drag works on
- * desktop but mobile browsers preempt custom gestures with scrolling —
+ * desktop but mobile browsers preempt custom gestures with scrolling,
  * the browser starts scrolling before dnd-kit's activation delay can
  * fire, so the drag never lifts. A handle with touch-action:none gives
  * dnd-kit unambiguous ownership of touches that start there, leaving

@@ -15,7 +15,7 @@ import { dungeonKey } from "@/lib/i18nKeys";
 interface JournalSectionProps {
   entries: JournalEntry[];
   onEntriesChange: (next: JournalEntry[]) => void;
-  /** When set, only the first N entries render — used by the profile
+  /** When set, only the first N entries render, used by the profile
    *  preview. The full archive (no limit) lives on /journal. */
   previewLimit?: number;
   /** When previewLimit is set and total entries exceed it, this href
@@ -75,7 +75,7 @@ export default function JournalSection({
     try {
       await updateJournalEntry(editingEntry.id, trimmed, nextIsPublic);
     } catch {
-      // Best-effort — server is the source of truth on next refresh.
+      // Best-effort, server is the source of truth on next refresh.
     }
   }
 
@@ -85,7 +85,7 @@ export default function JournalSection({
     try {
       await deleteJournalEntry(id);
     } catch {
-      // Best-effort — entry restored on next refresh if server fails.
+      // Best-effort, entry restored on next refresh if server fails.
     }
   }
 

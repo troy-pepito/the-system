@@ -52,7 +52,7 @@ export default function BigCelebration() {
       if (!detail) return;
       const id = nextId++;
       setQueue((prev) => [...prev, { ...detail, id }]);
-      // No auto-dismiss — celebrations linger until the player taps
+      // No auto-dismiss, celebrations linger until the player taps
       // to close. Troy: "our toasts shouldn't be shy".
     };
     window.addEventListener(CELEBRATION_EVENT, handler);

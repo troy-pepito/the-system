@@ -25,7 +25,7 @@ export async function submitBugReport(opts: {
   const contextUrl = opts.contextUrl.slice(0, MAX_URL_LENGTH);
   const userAgent = opts.userAgent.slice(0, MAX_USER_AGENT_LENGTH);
 
-  // Identity is best-effort. Anonymous reports are still useful — never
+  // Identity is best-effort. Anonymous reports are still useful, never
   // block a submission on Clerk lookup failing.
   let identityLine = "anonymous (not signed in)";
   let subjectPrefix = "Anonymous";

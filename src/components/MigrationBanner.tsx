@@ -22,7 +22,7 @@ export default function MigrationBanner() {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
     url.searchParams.delete("migrated");
-    // history.replaceState avoids a re-render — we're already in the
+    // history.replaceState avoids a re-render, we're already in the
     // dismissed state, no need for the router to do anything.
     window.history.replaceState({}, "", url.toString());
   }
@@ -39,7 +39,7 @@ export default function MigrationBanner() {
           Shivaliva Leveling has moved to{" "}
           <strong className="text-cyan-300">shivalivaleveling.com</strong>. If
           you used the previous URL, your hunter name and streak data did
-          <em>not</em> carry over — sign up fresh to continue. To request
+          <em>not</em> carry over, sign up fresh to continue. To request
           restoration of your old data, reach out via the &quot;Report a
           Bug&quot; link in the footer once you&apos;re signed in.
         </p>

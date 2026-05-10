@@ -132,7 +132,7 @@ export default function Heatmap({ activity }: HeatmapProps) {
                     <div
                       key={ri}
                       title={
-                        cell.future ? "" : `${dateKey(cell.date)} — ${cell.count}`
+                        cell.future ? "" : `${dateKey(cell.date)}, ${cell.count}`
                       }
                       style={{ width: CELL, height: CELL }}
                       className={`shrink-0 rounded-[3px] ${color} ${

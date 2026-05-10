@@ -35,7 +35,7 @@ export default function AchievementToast() {
           ...newly.map((id) => ({ key: Date.now() + Math.random(), id })),
         ]);
       } catch {
-        // swallow — achievement errors must not break the app
+        // swallow, achievement errors must not break the app
       }
     };
 

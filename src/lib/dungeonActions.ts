@@ -97,7 +97,7 @@ export function useJournalAction({
     }
     // Confirm the save with a [System]-flavored notice + jumping-off
     // point to the archive. Fires whether the save went to the server
-    // directly or got queued for offline drain — the entry exists
+    // directly or got queued for offline drain, the entry exists
     // locally either way.
     notifySystemMessage({
       headline: "Reflection Recorded",
@@ -106,7 +106,7 @@ export function useJournalAction({
     });
     // Drives the Profile page's journal section to refetch (or
     // re-read its cache, which we just updated). Without this, the
-    // entry doesn't appear until manual refresh — same root cause as
+    // entry doesn't appear until manual refresh, same root cause as
     // Troy's "is it saved at all?" anxiety.
     notifyStatsUpdated();
   }
@@ -115,7 +115,7 @@ export function useJournalAction({
     open: () => setIsOpen(true),
     modalProps: {
       open: isOpen,
-      title: `Journal — ${dungeonName}`,
+      title: `Journal, ${dungeonName}`,
       placeholder: "What's on your mind today?",
       confirmLabel: "Save Entry",
       skipLabel: "Cancel",
@@ -132,7 +132,7 @@ interface EndRunActionOptions {
   dungeonId: string;
   dungeonName: string;
   reason: "relapse" | "completed" | "exited";
-  /** For analytics — passed through to the relapse track event. */
+  /** For analytics, passed through to the relapse track event. */
   ruleType?: string;
   trackProperties?: Record<string, unknown>;
   /** Synchronous optimistic UI reset run before the server call. */
@@ -151,7 +151,7 @@ interface EndRunActionOptions {
 /**
  * Owns the relapse / claim-victory / exit modal flow. Only `completed`
  * (true victory after reaching the dungeon's target) banks the
- * +XP_PER_COMPLETION bonus — `exited` is a graceful walk-away, no
+ * +XP_PER_COMPLETION bonus, `exited` is a graceful walk-away, no
  * bonus, while `relapse` is the failure path. Cards pass their own
  * optimistic-UI-reset callback.
  */
@@ -202,10 +202,10 @@ export function useEndRunAction(opts: EndRunActionOptions): {
   }
 
   const defaultTitle = isRelapse
-    ? `Relapse — ${opts.dungeonName}`
+    ? `Relapse, ${opts.dungeonName}`
     : isVictory
-    ? `Victory — ${opts.dungeonName}`
-    : `Exit — ${opts.dungeonName}`;
+    ? `Victory, ${opts.dungeonName}`
+    : `Exit, ${opts.dungeonName}`;
   const defaultPlaceholder = isRelapse
     ? "What triggered it? How are you feeling? (optional)"
     : isVictory

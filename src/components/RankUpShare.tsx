@@ -34,7 +34,7 @@ export default function RankUpShare() {
       }, PRE_SHARE_DELAY_MS);
     };
 
-    // Direct trigger for the dev test button — no delay.
+    // Direct trigger for the dev test button, no delay.
     const onDirect = (e: Event) => {
       const detail = (e as CustomEvent<RankPair>).detail;
       if (!detail) return;
@@ -70,7 +70,7 @@ export default function RankUpShare() {
           url,
         });
       } catch {
-        // user cancelled — fall through
+        // user cancelled, fall through
       }
     } else {
       try {

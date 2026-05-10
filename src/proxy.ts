@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 // Permanent redirect from the legacy Vercel-assigned URL to the
 // production domain. Anyone with the old URL bookmarked, an old PWA
 // install pointing at it, or a stale link gets bounced to the new
-// domain with a `?migrated=1` flag — MigrationBanner reads that flag
+// domain with a `?migrated=1` flag, MigrationBanner reads that flag
 // and explains the fresh-start situation (Clerk userIds don't carry
 // across instances, so existing data needs manual restoration).
 //

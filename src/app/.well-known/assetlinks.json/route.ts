@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 
 /**
- * Digital Asset Links — proves to Android that shivalivaleveling.com
+ * Digital Asset Links, proves to Android that shivalivaleveling.com
  * and the Play Store TWA package are operated by the same entity.
  * Without this file, the TWA opens with a "Running in Chrome" address
  * bar instead of full-screen native chrome.
  *
  * The TWA tooling (Bubblewrap) generates the SHA-256 fingerprint of
  * the app signing key. Two fingerprints are listed here:
- *  1. The local debug keystore — for testing the TWA build before
+ *  1. The local debug keystore, for testing the TWA build before
  *     submission.
- *  2. The Play App Signing key — Google re-signs the upload with
+ *  2. The Play App Signing key, Google re-signs the upload with
  *     their managed key; the fingerprint shows up under
  *     Play Console → Setup → App integrity.
  *
@@ -19,7 +19,7 @@ import { NextResponse } from "next/server";
  *
  * Hosted as a route handler (not a static file in /public/.well-known)
  * because Next.js public/ has historical quirks serving dotfile
- * directories. Same URL — /.well-known/assetlinks.json — either way.
+ * directories. Same URL, /.well-known/assetlinks.json, either way.
  */
 
 const PACKAGE_NAME = "com.shivaliva.leveling";
@@ -47,7 +47,7 @@ export async function GET() {
 
   return NextResponse.json(body, {
     headers: {
-      // Long cache OK — Android only refetches periodically. If we
+      // Long cache OK, Android only refetches periodically. If we
       // change fingerprints, deploy and the TWA will eventually pick
       // it up; users on existing installs aren't affected since the
       // initial verification is what matters.

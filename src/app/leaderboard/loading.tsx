@@ -16,7 +16,7 @@ export default function LeaderboardLoading() {
           <div className="mt-3 h-2.5 w-64 mx-auto bg-slate-800 rounded animate-pulse" />
         </div>
 
-        {/* Tab strip skeleton — matches the real 4-tab equal-share row. */}
+        {/* Tab strip skeleton, matches the real 4-tab equal-share row. */}
         <div className="flex items-stretch gap-1 p-1 bg-slate-900/60 border border-slate-800 rounded-md">
           {[0, 1, 2, 3].map((i) => (
             <div

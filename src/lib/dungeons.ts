@@ -26,7 +26,7 @@ export interface WorkoutType {
   /**
    * Optional per-tier rep target. Indices align with the dungeon's
    * `tiers` array (E=0, D=1, ..., S=last). The card reads the *next*
-   * tier the player is working toward — pre-E uses index 0, post-S
+   * tier the player is working toward, pre-E uses index 0, post-S
    * stays on the last entry (maintenance). Omit for non-ramping
    * tasks.
    */
@@ -40,7 +40,7 @@ export interface WorkoutType {
 export interface CadenceConfig {
   /** How many of the listed tasks to clear per window. */
   target: number;
-  /** "day" — resets at UTC midnight. "week" — Monday-Sunday UTC. */
+  /** "day", resets at UTC midnight. "week", Monday-Sunday UTC. */
   window: "day" | "week";
   workouts: WorkoutType[];
 }
@@ -93,17 +93,17 @@ export interface DungeonDef {
   timed?: TimedConfig;
   cadence?: CadenceConfig;
   progressive?: ProgressiveConfig;
-  /** Hunter Type gate — only players matching this type can enter. */
+  /** Hunter Type gate, only players matching this type can enter. */
   hunterType?: HunterType;
   rules?: string[];
   dimensions?: DungeonDimensions;
   /** Single emoji shown next to the dungeon name. Pure cosmetic. */
   icon?: string;
-  /** Visual accent — drives card border + glow color. */
+  /** Visual accent, drives card border + glow color. */
   accent?: DungeonAccent;
 }
 
-/** Class-set per accent — kept here as full literals (not built via
+/** Class-set per accent, kept here as full literals (not built via
  *  template) so Tailwind's purge keeps every variant. */
 export const DUNGEON_ACCENT: Record<
   DungeonAccent,
@@ -201,14 +201,14 @@ export function getDungeonAccent(id: string) {
 export const DIMENSION_RANK_MULTIPLIERS = [1, 2, 4, 8, 16, 32];
 
 // One-time XP bonus credited the moment a player crosses a dungeon tier
-// (E → D → ... → S). Cumulative across tiers — reaching S earns the full
+// (E → D → ... → S). Cumulative across tiers, reaching S earns the full
 // 100 + 200 + 400 + 800 + 1600 + 3200 = 6300 XP from that dungeon's
 // tier ladder alone.
 export const TIER_BONUS_XP = [100, 200, 400, 800, 1600, 3200];
 
 // Per-action scaling bonus added on top of the base XP rate, indexed by
 // the highest tier the player has cleared in that dungeon. Caps at +30
-// at S rank — this is the system's hard ceiling on per-action XP.
+// at S rank, this is the system's hard ceiling on per-action XP.
 export const TIER_PER_ACTION_BONUS = [5, 10, 15, 20, 25, 30];
 
 /** Bonus XP awarded when a cadence dungeon's window is fully cleared
@@ -249,7 +249,7 @@ export const SOCIAL_RECLAIM_RUNGS: Rung[] = [
     rank: "D",
     target: 7,
     description:
-      "Greet 3 strangers out loud — 'hi', 'morning', 'hey'. Voice breaks the silence.",
+      "Greet 3 strangers out loud, 'hi', 'morning', 'hey'. Voice breaks the silence.",
   },
   {
     id: "request",
@@ -257,7 +257,7 @@ export const SOCIAL_RECLAIM_RUNGS: Rung[] = [
     rank: "C",
     target: 10,
     description:
-      "Ask a stranger a small, low-stakes question — the time, directions, a recommendation.",
+      "Ask a stranger a small, low-stakes question, the time, directions, a recommendation.",
   },
   {
     id: "small-talk",
@@ -281,7 +281,7 @@ export const SOCIAL_RECLAIM_RUNGS: Rung[] = [
     rank: "S",
     target: 15,
     description:
-      "Share an opinion, story, or joke in a group setting — meeting, class, party. Be seen and heard.",
+      "Share an opinion, story, or joke in a group setting, meeting, class, party. Be seen and heard.",
   },
 ];
 
@@ -312,11 +312,11 @@ export const DUNGEONS: DungeonDef[] = [
     icon: "☕",
     accent: "amber",
     description:
-      "Reset the nervous system. Up to 2 coffees per month is fine — the 3rd ends the run.",
+      "Reset the nervous system. Up to 2 coffees per month is fine, the 3rd ends the run.",
     rules: [
       "Up to 2 coffees per month is fine. The 3rd is a relapse.",
-      "Confirm each day on the calendar — Cleared if you held the line, Relapsed if you broke it.",
-      "Cleared days bank XP + dimension points permanently. Relapses are calendar markers — Exit Dungeon is the only way to end the run early.",
+      "Confirm each day on the calendar, Cleared if you held the line, Relapsed if you broke it.",
+      "Cleared days bank XP + dimension points permanently. Relapses are calendar markers, Exit Dungeon is the only way to end the run early.",
     ],
     dimensions: { energy: 3 },
   },
@@ -329,12 +329,12 @@ export const DUNGEONS: DungeonDef[] = [
     icon: "🌿",
     accent: "emerald",
     description:
-      "Eat with awareness. 2–3 meals a day, no snacking between. Plant-first, animal-source second, seafood after that, meat only if nothing else. Up to 4 unnatural sweets per month — beyond that is a relapse.",
+      "Eat with awareness. 2–3 meals a day, no snacking between. Plant-first, animal-source second, seafood after that, meat only if nothing else. Up to 4 unnatural sweets per month, beyond that is a relapse.",
     rules: [
-      "2–3 meals per day. No snacks between meals — let the gut rest.",
+      "2–3 meals per day. No snacks between meals, let the gut rest.",
       "Eat plants first; then animal-source (eggs, dairy, nuts); then seafood; then meat only if no alternative.",
       "Up to 4 unnatural sweets per month is fine. The 5th is a relapse.",
-      "Confirm each day on the calendar — Cleared if you held the line, Relapsed if you broke it.",
+      "Confirm each day on the calendar, Cleared if you held the line, Relapsed if you broke it.",
     ],
     dimensions: { body: 2 },
   },
@@ -352,9 +352,9 @@ export const DUNGEONS: DungeonDef[] = [
       workouts: GYM_LIFE_WORKOUTS,
     },
     description:
-      "Forge the body. 5 workouts per week — one per muscle group: Chest & Shoulders, Back & Arms, Legs & Glutes, Core, and Full Body. Discipline is cadence, not intensity.",
+      "Forge the body. 5 workouts per week, one per muscle group: Chest & Shoulders, Back & Arms, Legs & Glutes, Core, and Full Body. Discipline is cadence, not intensity.",
     rules: [
-      "Complete 5 workouts per week — one of each: Chest & Shoulders, Back & Arms, Legs & Glutes, Core, Full Body.",
+      "Complete 5 workouts per week, one of each: Chest & Shoulders, Back & Arms, Legs & Glutes, Core, Full Body.",
       "Pick any exercises that hit the target muscle group. Log when the session is done.",
       "Week runs Monday–Sunday (UTC). Manual relapse if you fall off the cadence.",
     ],
@@ -370,7 +370,7 @@ export const DUNGEONS: DungeonDef[] = [
     accent: "violet",
     timed: { targetDays: 30 },
     description:
-      "30 days without doom scrolling. Messaging, posting, and intentional single-video views are fine — only passive infinite feeds count as a slip.",
+      "30 days without doom scrolling. Messaging, posting, and intentional single-video views are fine, only passive infinite feeds count as a slip.",
     dimensions: { mind: 2, spirit: 1 },
   },
   {
@@ -383,7 +383,7 @@ export const DUNGEONS: DungeonDef[] = [
     accent: "sky",
     timed: { targetDays: 30 },
     description:
-      "30 days without music. A sensory reset — let the ears grow quiet so wind, rain, birdsong, and real voices start to feel alive again.",
+      "30 days without music. A sensory reset, let the ears grow quiet so wind, rain, birdsong, and real voices start to feel alive again.",
     rules: [
       "Relapse = intentionally listening to songs (playlists, albums, concerts, background music you chose).",
       "Allowed: podcasts, audiobooks, film scores, nature sounds, and involuntary ambient music (stores, cafes, other people's speakers).",
@@ -400,9 +400,9 @@ export const DUNGEONS: DungeonDef[] = [
     accent: "rose",
     progressive: { rungs: SOCIAL_RECLAIM_RUNGS },
     description:
-      "Climb the social ladder. Six rungs from silent presence to speaking up in groups — desensitize through graded exposure, one rung at a time.",
+      "Climb the social ladder. Six rungs from silent presence to speaking up in groups, desensitize through graded exposure, one rung at a time.",
     rules: [
-      "Each rung has a target — log an exposure every time you do the action in real life.",
+      "Each rung has a target, log an exposure every time you do the action in real life.",
       "Clear the current rung to unlock the next. No skipping.",
       "Rungs progress ranks E → S. Dungeon cleared when the final rung is complete.",
     ],
@@ -417,11 +417,11 @@ export const DUNGEONS: DungeonDef[] = [
     icon: "🛡",
     accent: "indigo",
     description:
-      "Reclaim your vital energy. Strict: no porn, masturbation, edging, or gooning. Sex and orgasm with a partner are fine — the rule targets compulsive solo use, not intimacy.",
+      "Reclaim your vital energy. Strict: no porn, masturbation, edging, or gooning. Sex and orgasm with a partner are fine, the rule targets compulsive solo use, not intimacy.",
     rules: [
       "Relapse = porn, masturbation, edging, or gooning (thirst traps, bot accounts, sensualized social feeds).",
-      "Allowed: sex and orgasm with a partner — this dungeon is about compulsion, not abstinence.",
-      "Check in each day on the calendar — Cleared or Relapsed. Cleared days bank XP + dimensions permanently. Relapses are markers, not resets.",
+      "Allowed: sex and orgasm with a partner, this dungeon is about compulsion, not abstinence.",
+      "Check in each day on the calendar, Cleared or Relapsed. Cleared days bank XP + dimensions permanently. Relapses are markers, not resets.",
     ],
     // Reframed 2026-05-10 from {emotion: 2, spirit: 1} to
     // {energy: 2, emotion: 1}: NoFap's core claim is reclaiming
@@ -430,7 +430,7 @@ export const DUNGEONS: DungeonDef[] = [
     // affect mood / impulse-regulation. Spirit was the wrong tag.
     dimensions: { energy: 2, emotion: 1 },
   },
-  // Starter routines — one per Hunter Type. Tiny daily floors, three
+  // Starter routines, one per Hunter Type. Tiny daily floors, three
   // boxes each, gated by Path. Designed to be doable on the worst day:
   // the goal is the streak, not the volume.
   {
@@ -473,7 +473,7 @@ export const DUNGEONS: DungeonDef[] = [
       ],
     },
     description:
-      "The Body Hunter's daily floor. Three reps that ramp with your rank — clear any one to bank the day. Pushups, pullups, squats grow as your streak climbs E → S.",
+      "The Body Hunter's daily floor. Three reps that ramp with your rank, clear any one to bank the day. Pushups, pullups, squats grow as your streak climbs E → S.",
     dimensions: { body: 1 },
   },
   {
@@ -539,7 +539,7 @@ export const DUNGEONS: DungeonDef[] = [
       ],
     },
     description:
-      "The Energy Hunter's daily floor. Cold, motion, breath — three small jolts to wake the nervous system. Clear any one to bank the day.",
+      "The Energy Hunter's daily floor. Cold, motion, breath, three small jolts to wake the nervous system. Clear any one to bank the day.",
     dimensions: { energy: 1 },
   },
   {

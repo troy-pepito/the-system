@@ -34,7 +34,7 @@ interface DailyQuestsProps {
   /** Per-quest XP bonus from the player's highest combo milestone. */
   questBonus?: number;
   /**
-   * True when the player has prior activity but missed yesterday — drives
+   * True when the player has prior activity but missed yesterday, drives
    * the red-tinted header treatment so they notice the gap and pick the
    * cadence back up today. Computed server-side in getComboState.
    */

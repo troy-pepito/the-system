@@ -74,7 +74,7 @@ export default function AwakeningOverlay() {
   // Backfill the localStorage AWAKENED_KEY when the user signs in on a
   // device that doesn't have it (e.g. a sign-out wiped it, or they're
   // on a new device). We treat the presence of unsafeMetadata.hunterName
-  // as proof they've already completed awakening — re-running the intro
+  // as proof they've already completed awakening, re-running the intro
   // scene every time someone logs back in is the bug Troy hit.
   const hunterName = user?.unsafeMetadata?.hunterName as string | undefined;
   const alreadyHasIdentity = isLoaded && isSignedIn && !!hunterName;
@@ -82,7 +82,7 @@ export default function AwakeningOverlay() {
     if (!alreadyHasIdentity) return;
     // Only backfill while we're still on the intro phase. Once the user
     // reaches naming/path, Clerk's user.update({hunterName}) flips
-    // alreadyHasIdentity true mid-flow — backfilling there would unmount
+    // alreadyHasIdentity true mid-flow, backfilling there would unmount
     // the overlay before the path picker can render.
     if (phase !== "intro") return;
     if (typeof window === "undefined") return;
@@ -146,7 +146,7 @@ export default function AwakeningOverlay() {
       await user.update({
         unsafeMetadata: { ...user.unsafeMetadata, hunterName: name },
       });
-      // Transition to path-selection rather than finishing awakening —
+      // Transition to path-selection rather than finishing awakening,
       // gives the new player a chance to declare their identity before
       // they hit the dashboard.
       setPhaseTransitioning(true);
@@ -183,7 +183,7 @@ export default function AwakeningOverlay() {
         // Land on Status (the dashboard) instead of /guide. The
         // previous /guide destination dropped a freshly-awakened
         // hunter into an 11-section manual before they'd done a
-        // single thing — high bounce risk. Status shows Daily
+        // single thing, high bounce risk. Status shows Daily
         // Quests immediately + the Portal Registry CTA, so the
         // first action is one tap away. /guide is still linked
         // from the landing-page footer and from /portals for
@@ -199,7 +199,7 @@ export default function AwakeningOverlay() {
   if (awakened) return null;
   if (!isLoaded) return null;
   if (!isSignedIn) return null;
-  // Already-completed awakening — render nothing while the effect
+  // Already-completed awakening, render nothing while the effect
   // above backfills the localStorage flag. Only fires on intro phase:
   // during naming/path, alreadyHasIdentity flips true mid-flow as
   // soon as user.update({hunterName}) resolves, and we must keep the

@@ -49,7 +49,7 @@ export default function Dashboard() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   // Saved dungeon ordering, keyed by Clerk unsafeMetadata.dungeonOrder.
   // Cross-device because it lives on the user record, not localStorage.
-  // Local override exists so drag-and-drop reorders feel instant —
+  // Local override exists so drag-and-drop reorders feel instant,
   // we mirror the server write into local state on drag end and let
   // Clerk's metadata catch up in the background.
   const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
@@ -289,7 +289,7 @@ export default function Dashboard() {
 
         {dashboard && activeRuns.length === 0 && (() => {
           // Fresh hunter detection: zero active runs AND zero lifetime
-          // quest XP. They've awakened but haven't done anything yet —
+          // quest XP. They've awakened but haven't done anything yet,
           // the generic "Portal Registry Awaits" empty state didn't
           // tell them where to start. Returning hunters who've exited
           // all their dungeons keep the original copy.

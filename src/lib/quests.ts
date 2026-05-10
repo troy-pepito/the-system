@@ -28,7 +28,7 @@ export const ZERO_REWARDS: QuestRewards = {
 };
 
 /** Bonus XP for completing every daily quest in a single day. Fires
- *  once per date — independent from the combo milestone bonuses,
+ *  once per date, independent from the combo milestone bonuses,
  *  which reward day-on-day continuity rather than single-day
  *  completeness. */
 export const PERFECT_DAY_BONUS_XP = 30;
@@ -58,7 +58,7 @@ import { MoonPhase } from "astronomy-engine";
  * Returns the lunar tithi (1–30) at sunrise (~06:00 IST = 00:30 UTC) of the
  * given calendar date. Tithi 1 = day after new moon, tithi 16 = day after
  * full moon. Tithi spans roughly 19–26 hours, so sampling at a fixed time
- * tracks the tithi present at sunrise — matching the convention most
+ * tracks the tithi present at sunrise, matching the convention most
  * Hindu calendars (incl. Sadhguru/Isha) use to assign a tithi to a day.
  */
 function tithiAt(dateIso: string): number {
@@ -68,7 +68,7 @@ function tithiAt(dateIso: string): number {
 }
 
 /**
- * True when the date is an Ekadashi — tithi 11 (Shukla Ekadashi, 11th day
+ * True when the date is an Ekadashi, tithi 11 (Shukla Ekadashi, 11th day
  * after new moon) or tithi 26 (Krishna Ekadashi, 11th day after full moon).
  * Computed astronomically, no annual list to maintain.
  */
@@ -86,9 +86,9 @@ export const SIDE_QUESTS: SideQuest[] = [
     body: 5,
     spirit: 3,
     rules: [
-      "No cooked food for the entire day — break the fast at sundown.",
+      "No cooked food for the entire day, break the fast at sundown.",
       "Allowed during the day: water, juice, tea, coffee.",
-      "If a full fast is too much, fruit is okay — keep it light, raw, non-grain.",
+      "If a full fast is too much, fruit is okay, keep it light, raw, non-grain.",
       "Sadhguru frames this as letting the digestive 'Agni' settle so the body cleanses itself.",
     ],
     isAvailable: isEkadashi,
@@ -133,7 +133,7 @@ export const COMBO_MILESTONES: ReadonlyArray<{ days: number; xp: number }> = [
 
 /**
  * Per-quest XP bonus added once you've crossed each combo milestone.
- * Indexed by milestone index — same order as COMBO_MILESTONES. Sticky
+ * Indexed by milestone index, same order as COMBO_MILESTONES. Sticky
  * (once earned, always applied) so a streak break doesn't yank the
  * scaling away. Base daily-quest XP is 10; this caps a 365-day combo
  * hunter at 50 XP per quest, matching the "S-rank max action XP"
@@ -211,7 +211,7 @@ export function milestoneIdsForRuns(runs: ComboRun[]): string[] {
 
 /**
  * Highest combo milestone index ever reached across any run. -1 means
- * no milestone earned yet. Sticky across runs — losing your current
+ * no milestone earned yet. Sticky across runs, losing your current
  * combo doesn't lose the per-quest scaling, same logic as the dungeon
  * tier system preserving rank.
  */

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    // Stable identifier independent of the URL — lets browsers and OS
+    // Stable identifier independent of the URL, lets browsers and OS
     // recognize the same PWA across URL changes (e.g. domain swaps).
     // Once shipped, never change this string or installs become ghosts.
     id: "/?source=pwa",
@@ -36,7 +36,7 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "180x180",
         type: "image/png",
       },
-      // 512×512 served twice — once as `any` (all browsers / OG-style
+      // 512×512 served twice, once as `any` (all browsers / OG-style
       // contexts) and once as `maskable` (Android adaptive icon, what
       // the TWA on Play Store pulls for the launcher). Same source
       // file; icon1.tsx is laid out with a safe zone so the asset

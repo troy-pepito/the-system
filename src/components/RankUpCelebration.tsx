@@ -13,7 +13,7 @@ interface RankChange {
 let nextId = 1;
 
 /**
- * The formal rank-up announcement — a fullscreen ceremonial overlay
+ * The formal rank-up announcement, a fullscreen ceremonial overlay
  * that fires alongside RankUpGlitch (the brief system "stutter") and
  * lingers for ~5 seconds. Backdrop dim, bracket headline, the new
  * rank letter rendered massive in its material vocabulary (bronze →
@@ -66,7 +66,7 @@ export default function RankUpCelebration() {
       className="fixed inset-0 z-[280] flex items-center justify-center bg-slate-950/85 backdrop-blur-sm cursor-pointer animate-fade-in"
     >
       <div className="relative w-[min(92vw,28rem)] px-6 py-10 text-center">
-        {/* Corner brackets — same motif as the hunter ID frame */}
+        {/* Corner brackets, same motif as the hunter ID frame */}
         <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-cyan-300" />
         <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-cyan-300" />
         <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-cyan-300" />

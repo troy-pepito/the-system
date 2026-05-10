@@ -19,7 +19,7 @@ interface LeaderboardViewProps {
  * Tabbed leaderboard. Switching scope re-runs the server action via
  * useTransition so the rest of the page stays interactive while the
  * fetch is in flight. The "guilds" scope flips the row shape from
- * individual hunters to whole-guild aggregates — handled by the
+ * individual hunters to whole-guild aggregates, handled by the
  * `kind` discriminator on LeaderboardResult.
  */
 export default function LeaderboardView({ initial }: LeaderboardViewProps) {

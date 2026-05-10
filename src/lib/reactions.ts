@@ -1,6 +1,6 @@
 /**
  * Fixed set of emoji a hunter can tap on a public journal entry.
- * Limited to keep the UI compact and the tone consistent — every
+ * Limited to keep the UI compact and the tone consistent, every
  * reaction has an unambiguous "what does this say to the poster"
  * meaning that fits the system's hunter / self-improvement context.
  *

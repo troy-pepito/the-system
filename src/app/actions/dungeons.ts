@@ -223,7 +223,7 @@ export async function enterDungeon(
  * Replay version of enterDungeon for the offline drain. Skips creation
  * if any DungeonRun for this dungeon was touched after the mutation
  * was enqueued (which means the user has since interacted with the
- * dungeon — entered, ended, etc. — and a stale replay would resurrect
+ * dungeon, entered, ended, etc., and a stale replay would resurrect
  * a run they've moved past). Without this, a stale `dungeon:enter`
  * mutation can recreate a dungeon the user has ended, e.g. Sound
  * Sensitization auto-reappearing on the dashboard.
@@ -523,7 +523,7 @@ const getRungCountsCached = unstable_cache(
     // Cross-run scope so re-entering Exposure Therapy preserves the
     // ladder progress. The UI reads this to find currentRungIndex; if
     // we scoped to active run only, every re-entry would offer Rung 1
-    // (count=0) again — closes the same exit/re-enter exploit pattern
+    // (count=0) again, closes the same exit/re-enter exploit pattern
     // we fixed for the calendar dungeons.
     const events = await prisma.dungeonEvent.groupBy({
       by: ["type"],
@@ -577,7 +577,7 @@ export async function logRungExposure(
     },
   });
 
-  // Count across all of the user's runs for this dungeon — matches what
+  // Count across all of the user's runs for this dungeon, matches what
   // getRungCounts returns to the client, so the UI's optimistic count
   // and the server's confirmation stay in sync after exit/re-enter.
   const count = await prisma.dungeonEvent.count({
@@ -587,7 +587,7 @@ export async function logRungExposure(
 
   // Mastery is computed but the run is intentionally NOT marked complete
   // here. Auto-completion stripped the player of any chance to undo an
-  // accidental final-rung log — the card vanished from the dashboard
+  // accidental final-rung log, the card vanished from the dashboard
   // before they could react. Now the run stays active in the
   // [Ladder Mastered] state until the player explicitly retires it via
   // endRun({ reason: "completed" }), which claims the +completion XP
@@ -642,7 +642,7 @@ export interface DayCheckIn {
 
 const getCheckInsCached = unstable_cache(
   async (userId: string, dungeonId: string) => {
-    // Scoped by (userId, dungeonId) — the schema unique on
+    // Scoped by (userId, dungeonId), the schema unique on
     // (userId, dungeonId, date) means one row per calendar day, so the
     // calendar shows the user's full history regardless of which run
     // confirmed the day.
@@ -711,7 +711,7 @@ function validateCheckInDate(
   // Clients send "today" in their local timezone. Users east of UTC
   // (e.g. UAE +4, PHT +8) cross midnight before UTC does, so their
   // "today" can legitimately be UTC tomorrow. Allow up to +1 day
-  // from UTC today — covers every timezone from UTC-12 to UTC+14
+  // from UTC today, covers every timezone from UTC-12 to UTC+14
   // while still rejecting actual-future dates.
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   if (date.getTime() > tomorrow.getTime()) {
@@ -772,7 +772,7 @@ export async function confirmDay(
   } else {
     // Don't clobber a "relapsed" record with a "cleared" mark. This is
     // almost always a stale offline mutation replaying after the user
-    // has since marked the day as a relapse — overwriting silently
+    // has since marked the day as a relapse, overwriting silently
     // wipes their relapse history. Skip the upsert in that case.
     const existing = await prisma.dungeonDayCheckIn.findUnique({
       where: { userId_dungeonId_date: { userId, dungeonId, date } },

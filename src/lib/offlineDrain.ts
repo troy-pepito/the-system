@@ -93,7 +93,7 @@ function isDrainable(m: Mutation): boolean {
 // before the dash is the enqueue timestamp in millis. A genuinely
 // offline user is back online within hours; anything older than a
 // week is almost certainly leftover state from a flaky network or a
-// device that was put away for a while — replaying it can resurrect
+// device that was put away for a while, replaying it can resurrect
 // dungeon runs the user has since ended (Sound Sensitization
 // auto-reappearing) or clobber check-in state (relapses overwritten
 // with cleared). Better to drop it than to silently corrupt data.

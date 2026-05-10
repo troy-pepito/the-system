@@ -23,7 +23,7 @@ import {
 
 const TAG = "guild";
 
-/** "One guild per user" rule — checks for any accepted membership. */
+/** "One guild per user" rule, checks for any accepted membership. */
 async function hasAcceptedMembership(userId: string): Promise<boolean> {
   const row = await prisma.guildMember.findFirst({
     where: { userId, status: "accepted" },
@@ -46,10 +46,10 @@ export async function createGuild(input: {
     throw new Error("Guild name must contain at least 3 letters/numbers");
   }
   if (await hasAcceptedMembership(userId)) {
-    throw new Error("You're already in a guild — leave it first");
+    throw new Error("You're already in a guild, leave it first");
   }
 
-  // Case-insensitive name uniqueness — Prisma's @unique on `name` is
+  // Case-insensitive name uniqueness, Prisma's @unique on `name` is
   // exact-match, so we check manually before insert. Combined with the
   // schema-level unique, race conditions still surface as a friendly
   // error rather than a stack trace.
@@ -97,7 +97,7 @@ async function _getGuildBySlug(
     .filter((m) => m.status === "pending")
     .map((m) => m.userId);
 
-  // Pending list is owner-only — non-owners shouldn't see who else
+  // Pending list is owner-only, non-owners shouldn't see who else
   // is mid-application.
   const isOwner = guild.ownerId === viewerId;
   const [acceptedSummaries, pendingSummaries] = await Promise.all([
@@ -128,10 +128,10 @@ async function _getGuildBySlug(
 
 export async function getGuildBySlug(slug: string): Promise<GuildDetail | null> {
   const userId = await requireUserId();
-  // Direct query (no unstable_cache) — the inner getHunterSummariesByIds
+  // Direct query (no unstable_cache), the inner getHunterSummariesByIds
   // already caches per-user snapshots, so the only added cost is the
   // single guild + members findUnique. Caching the wrapper introduced a
-  // stale-null bug right after createGuild — the page 404'd despite the
+  // stale-null bug right after createGuild, the page 404'd despite the
   // row existing in the directory.
   return _getGuildBySlug(slug, userId);
 }
@@ -172,7 +172,7 @@ export async function getMyGuild(): Promise<GuildSummary | null> {
 export async function requestJoinGuild(slug: string): Promise<void> {
   const userId = await requireUserId();
   if (await hasAcceptedMembership(userId)) {
-    throw new Error("You're already in a guild — leave it first");
+    throw new Error("You're already in a guild, leave it first");
   }
   const guild = await prisma.guild.findUnique({
     where: { slug },
@@ -180,7 +180,7 @@ export async function requestJoinGuild(slug: string): Promise<void> {
   });
   if (!guild) throw new Error("Guild not found");
 
-  // Hard cap check on the request side — an at-cap guild shouldn't
+  // Hard cap check on the request side, an at-cap guild shouldn't
   // accumulate pending requests it can never approve.
   const acceptedCount = await prisma.guildMember.count({
     where: { guildId: guild.id, status: "accepted" },
@@ -216,7 +216,7 @@ export async function requestJoinGuild(slug: string): Promise<void> {
 }
 
 /**
- * Withdraw a pending join request the viewer sent. Idempotent — a
+ * Withdraw a pending join request the viewer sent. Idempotent, a
  * request that's already been approved or declined leaves no row to
  * delete. Mirrors declineJoin but caller is the applicant.
  */
@@ -257,7 +257,7 @@ export async function approveJoin(
 ): Promise<void> {
   const { guildId } = await requireOwner(slug);
 
-  // Cap is checked again at approve-time — the guild may have filled
+  // Cap is checked again at approve-time, the guild may have filled
   // up between request and approval.
   const acceptedCount = await prisma.guildMember.count({
     where: { guildId, status: "accepted" },
@@ -267,7 +267,7 @@ export async function approveJoin(
   }
 
   // Applicant might have joined a different guild while their request
-  // was pending. Block approval if they're already in one — keeps the
+  // was pending. Block approval if they're already in one, keeps the
   // "one guild per user" rule honest.
   const applicantHasGuild = await prisma.guildMember.findFirst({
     where: { userId: applicantId, status: "accepted" },
@@ -290,7 +290,7 @@ export async function approveJoin(
   if (result.count === 0) return;
 
   // Auto-decline this hunter's other pending requests now that they
-  // have a home — keeps the experience tidy.
+  // have a home, keeps the experience tidy.
   await prisma.guildMember.deleteMany({
     where: {
       userId: applicantId,
@@ -331,12 +331,12 @@ export async function kickMember(
   memberUserId: string
 ): Promise<void> {
   const { guildId, ownerId } = await requireOwner(slug);
-  // Owner can't kick themselves — disbandGuild is the right tool when
+  // Owner can't kick themselves, disbandGuild is the right tool when
   // they want to dissolve. Allowing self-kick would leave the guild
   // ownerless, since GuildMember.role is informational while the
   // authoritative owner pointer lives on Guild.ownerId.
   if (memberUserId === ownerId) {
-    throw new Error("Owners can't kick themselves — disband instead");
+    throw new Error("Owners can't kick themselves, disband instead");
   }
   await prisma.guildMember.deleteMany({
     where: { guildId, userId: memberUserId, status: "accepted" },
@@ -344,7 +344,7 @@ export async function kickMember(
   updateTag(TAG);
 
   // Soft-notify the kicked hunter so they don't refresh and wonder
-  // where their guild went. Best-effort — push failures are silent.
+  // where their guild went. Best-effort, push failures are silent.
   try {
     const guild = await prisma.guild.findUnique({
       where: { id: guildId },
@@ -368,7 +368,7 @@ export async function leaveGuild(): Promise<void> {
   });
   if (!member) return;
 
-  // Owners can't simply leave — they'd orphan the guild. Disbanding
+  // Owners can't simply leave, they'd orphan the guild. Disbanding
   // (delete the whole guild) is a separate, more deliberate action.
   if (member.guild.ownerId === userId) {
     throw new Error("Owners must disband the guild instead of leaving");
@@ -384,7 +384,7 @@ export async function editGuild(
 ): Promise<void> {
   const { guildId } = await requireOwner(slug);
 
-  // Slug stays stable across renames — changing it would 404 every
+  // Slug stays stable across renames, changing it would 404 every
   // shared link to this guild. Only the display name + description
   // are editable. If the player wants a different URL, they'd have
   // to disband and recreate.
@@ -425,7 +425,7 @@ export async function transferOwnership(
   const { guildId, ownerId } = await requireOwner(slug);
   if (newOwnerId === ownerId) return;
 
-  // The new owner must already be a fully accepted member — can't
+  // The new owner must already be a fully accepted member, can't
   // promote a pending applicant or a stranger by id.
   const target = await prisma.guildMember.findUnique({
     where: { guildId_userId: { guildId, userId: newOwnerId } },
@@ -482,7 +482,7 @@ export async function getGuildFeed(
 ): Promise<FeedPage> {
   const viewerId = await requireUserId();
 
-  // Membership gate — only accepted members (including the owner) see
+  // Membership gate, only accepted members (including the owner) see
   // the guild feed. Pending applicants and strangers get an empty page
   // back rather than a thrown error so the UI can render a "not a
   // member yet" empty state cleanly.
@@ -524,7 +524,7 @@ export async function getGuildFeed(
 
 export async function browseGuilds(): Promise<GuildListItem[]> {
   await requireUserId();
-  // Direct query — caching the directory was a bigger trap than a win.
+  // Direct query, caching the directory was a bigger trap than a win.
   // findMany on Guild with member counts is cheap, and a freshly-created
   // guild needs to show up immediately for the owner without waiting on
   // tag invalidation.

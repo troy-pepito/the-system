@@ -101,7 +101,7 @@ export default function ProgressiveDungeonCard({
       onRelapse?.();
     },
   });
-  // "Retire Ladder" — explicit completion claim from the mastered state.
+  // "Retire Ladder", explicit completion claim from the mastered state.
   // Replaces the old auto-complete: by waiting for an explicit tap, the
   // mastered card stays on the dashboard long enough for the player to
   // hit Undo if the final-rung log was an accident.
@@ -144,7 +144,7 @@ export default function ProgressiveDungeonCard({
     notifyReward({ xp: XP_PER_EXPOSURE });
 
     // Tier crossing: rung cleared for the first time this run.
-    // No localStorage gate — counts reset to 0 on relapse, so re-clearing
+    // No localStorage gate, counts reset to 0 on relapse, so re-clearing
     // a rung after a fresh climb correctly fires again.
     const justClearedRung =
       prevCount < currentRung.target && prevCount + 1 >= currentRung.target;
@@ -178,7 +178,7 @@ export default function ProgressiveDungeonCard({
     // like a journal entry: inject it into the journal cache and
     // surface the [Reflection Recorded] notice. Without this the
     // note vanishes from the UI when offline (Troy's bug 2026-05-08
-    // — "did a journal logging in exposure therapy offline, didn't
+    //, "did a journal logging in exposure therapy offline, didn't
     // show toast, didn't appear in journal entry").
     if (note) {
       injectPendingJournalEntry({
@@ -222,7 +222,7 @@ export default function ProgressiveDungeonCard({
       drainQueue().catch(() => {});
     } finally {
       endMutation();
-      // Triggers Profile journal section + Navbar XP to refetch — same
+      // Triggers Profile journal section + Navbar XP to refetch, same
       // signal the rest of the app uses for "stats may have changed".
       // Without it, the optimistic cache write isn't picked up until
       // the next focus/tab event.
@@ -263,7 +263,7 @@ export default function ProgressiveDungeonCard({
     notifyStatsUpdated({ xpDelta: -XP_PER_EXPOSURE });
 
     // If we're undoing on a rung that was already cleared, the dungeon
-    // may have been marked complete — flip the local active flag back
+    // may have been marked complete, flip the local active flag back
     // on so the card returns to its in-progress treatment.
     if (dungeonCleared) {
       setActive(true);

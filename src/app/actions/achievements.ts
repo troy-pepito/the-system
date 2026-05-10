@@ -90,14 +90,14 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       where: { userId, state: "cleared" },
       _count: { _all: true },
     }),
-    // Claimed trophies — XP source. Unclaimed rows don't contribute
+    // Claimed trophies, XP source. Unclaimed rows don't contribute
     // to totalXp until the player taps Claim, then this list grows
     // and the next snapshot includes the rarity-mapped XP.
     prisma.achievement.findMany({
       where: { userId, claimedAt: { not: null } },
       select: { achievementId: true },
     }),
-    // Weekly cleared-day count — feeds the leaderboard activity-points
+    // Weekly cleared-day count, feeds the leaderboard activity-points
     // calc (1pt per cleared day per ACTIVITY_POINTS.dayCleared). Done
     // as a separate count rather than reading allCheckIns rows so the
     // existing groupBy stays cheap.
@@ -125,7 +125,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   // Only timed (Claim Victory after target days) and progressive
   // (final rung cleared) dungeons can legitimately complete. Anything
   // else with endReason="completed" is a leftover from when Exit Dungeon
-  // mistakenly used reason:"completed" — count those as walk-aways.
+  // mistakenly used reason:"completed", count those as walk-aways.
   const canTrulyComplete = (dungeonId: string): boolean => {
     const d = DUNGEONS.find((x) => x.id === dungeonId);
     return d?.ruleType === "timed" || d?.ruleType === "progressive";
@@ -165,7 +165,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     // For non-checkIn dungeons (cadence + progressive), maxStreak
     // tracks the longest calendar-day streak the player has held.
     // Bumping it on EVERY non-active run preserves tier rank across
-    // exits and relapses — without this, exiting Training Regimen at
+    // exits and relapses, without this, exiting Training Regimen at
     // day 60 (B rank) wipes the tier bonus on the next snapshot.
     if (!run.active && run.startDate && !usesCheckIns) {
       const days = Math.floor(
@@ -281,7 +281,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   const monthByDate: Record<string, Set<string>> = {};
   let weekQuestTotal = 0;
   let monthQuestTotal = 0;
-  // Split daily vs side for the leaderboard — daily quests are 1pt
+  // Split daily vs side for the leaderboard, daily quests are 1pt
   // each (baseline morning routine) while side quests weigh more
   // (intentional, less frequent).
   let weekDailyQuests = 0;
@@ -338,7 +338,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     0
   );
 
-  // Per-quest bonus from the player's highest combo milestone — sticky
+  // Per-quest bonus from the player's highest combo milestone, sticky
   // across runs, mirrors the dungeon tier-per-action scaling so a long
   // habit streak makes every daily quest land harder. Side quests get
   // the base xp only since they're already big special-event rewards.
@@ -436,7 +436,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
         tierIdx =
           d.tiers.filter((t) => run.maxStreak >= t.days).length - 1;
       }
-      // Per-dungeon — the Hunter-Type starter dungeons each have their
+      // Per-dungeon, the Hunter-Type starter dungeons each have their
       // own task volume, distinct from Training Regimen's.
       actionCount = workoutsByDungeon[d.id] ?? 0;
     } else if (d.ruleType === "progressive" && d.progressive) {
@@ -459,7 +459,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
 
   // Perfect-day bonus: +30 XP for every date where all 7 daily quests
   // were completed. Mirrors what DailyQuests.tsx celebrates client-side
-  // with notifyStatsUpdated({ xpDelta: PERFECT_DAY_BONUS_XP }) — without
+  // with notifyStatsUpdated({ xpDelta: PERFECT_DAY_BONUS_XP }), without
   // counting it here the bonus was a phantom that disappeared on the
   // next server refetch (Lv 2 dropping back to Lv 1 after a refresh).
   const perfectDayBonusXp = perfectQuestDays * PERFECT_DAY_BONUS_XP;
@@ -467,12 +467,12 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   // Cadence full-clear bonus: +20 XP for every cadence-window in which
   // the player completed every required workout type for that dungeon.
   // CadenceDungeonCard.tsx awards this client-side via notifyStatsUpdated
-  // — same phantom-XP problem as perfect-day. Count it here so it sticks
+  //, same phantom-XP problem as perfect-day. Count it here so it sticks
   // across refreshes.
   //
   // Window key:
-  // - daily-cadence dungeons (cadence.window === "day") — UTC date.
-  // - weekly-cadence dungeons — UTC Monday of the event's week.
+  // - daily-cadence dungeons (cadence.window === "day"), UTC date.
+  // - weekly-cadence dungeons, UTC Monday of the event's week.
   // Counted via deduped workout types per window: a window is "full
   // clear" when the set size matches cadence.workouts.length.
   function windowKeyFor(date: Date, window: "day" | "week"): string {
@@ -508,7 +508,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
       cadenceFullClearCount++;
       // Window key is a YYYY-MM-DD string (day-cadence) or the Monday
       // of the week (week-cadence). Comparing the parsed date against
-      // weekCutoff catches both shapes — a weekly-cadence Monday
+      // weekCutoff catches both shapes, a weekly-cadence Monday
       // before the cutoff means that whole window is in the past.
       if (new Date(keyDate) >= weekCutoff) weekCadenceFullClearCount++;
     }
@@ -516,7 +516,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   const cadenceFullClearBonusXp =
     cadenceFullClearCount * CADENCE_FULL_CLEAR_BONUS_XP;
 
-  // Claimed trophy XP — sum of rarity-mapped values for every
+  // Claimed trophy XP, sum of rarity-mapped values for every
   // achievement the player has tapped Claim on. Unclaimed trophies
   // contribute zero. Persisted via Achievement.claimedAt, so this
   // calc is deterministic across refetches (no phantom-XP risk).
@@ -563,7 +563,7 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
         workoutTotal: weekWorkout,
         exposureTotal: weekExposure,
         perfectQuestDays: weekPerfect,
-        // Weighted total — leaderboard ranks on this. Pulls weights
+        // Weighted total, leaderboard ranks on this. Pulls weights
         // from ACTIVITY_POINTS so the table is the single source of
         // truth and any rebalance lands in one place.
         activityPoints:
@@ -595,7 +595,7 @@ const buildSnapshot = unstable_cache(
 );
 
 /**
- * Public version for cross-module use (e.g. friends.ts) — returns the
+ * Public version for cross-module use (e.g. friends.ts), returns the
  * authoritative level + rank for any user. Other modules MUST use this
  * instead of recomputing XP locally to avoid drift between views.
  */
@@ -620,12 +620,12 @@ export interface HunterSummary {
 
 /**
  * Lean leaderboard / friend-row reader. Returns just the fields a
- * leaderboard row needs — name, avatar, level, rank, weekly activity
+ * leaderboard row needs, name, avatar, level, rank, weekly activity
  * points. Powers the future weekly leaderboard and is a drop-in
  * replacement for the heavier per-row data the friends list currently
  * builds out of getPlayerLevelForUser + a separate Clerk lookup.
  *
- * For batch use, prefer getHunterSummariesByIds — it issues a single
+ * For batch use, prefer getHunterSummariesByIds, it issues a single
  * Clerk getUserList for the whole set instead of N round-trips.
  */
 export async function getHunterSummariesByIds(
@@ -637,7 +637,7 @@ export async function getHunterSummariesByIds(
   // Distinguish "batch fetch failed" (return null) from "batch returned
   // but this user isn't in it" (orphan, filter). Without the null
   // sentinel a transient Clerk failure would erase every hunter from
-  // the leaderboard / friends list — way worse than leaving in a few
+  // the leaderboard / friends list, way worse than leaving in a few
   // orphan placeholders.
   const [snapshots, clerkUsers] = await Promise.all([
     Promise.all(hunterIds.map((id) => buildSnapshot(id))),
@@ -646,7 +646,7 @@ export async function getHunterSummariesByIds(
         const client = await clerkClient();
         // Clerk's getUserList defaults to limit:10 with a max of 500.
         // Without an explicit limit, anyone past the first 10 returns
-        // missing — and the orphan-filter below would then drop them
+        // missing, and the orphan-filter below would then drop them
         // as ghosts. That's why Troy disappeared from his own
         // leaderboard once active hunter count crossed 10.
         const list = await client.users.getUserList({
@@ -670,7 +670,7 @@ export async function getHunterSummariesByIds(
     const snap = snapshots[i];
     const u = clerkById.get(id);
     // If Clerk responded but this id wasn't in the result, the
-    // account has been deleted upstream — drop the row instead of
+    // account has been deleted upstream, drop the row instead of
     // showing a "Hunter" / "?" orphan tile in the leaderboard. If
     // the whole batch failed (Clerk down), keep the row with a
     // placeholder so a transient outage doesn't wipe the board.
@@ -723,7 +723,7 @@ export async function evaluateAchievements(): Promise<string[]> {
   // already claimed, deleting it also removes the trophy XP since
   // claimedTrophyXp in buildSnapshot only sums existing rows.
   //
-  // Combo milestones are excluded — they're point-in-time markers for
+  // Combo milestones are excluded, they're point-in-time markers for
   // a streak that genuinely happened. Unticking today's quest shouldn't
   // erase a 30-day combo earned weeks ago.
   const definedById = new Map(ACHIEVEMENTS.map((a) => [a.id, a]));
@@ -774,7 +774,7 @@ const getUnlockedAchievementsCached = unstable_cache(
 /**
  * Mark an achievement as claimed and award the rarity-based XP. The
  * server XP calc in buildSnapshot reads claimedAt rows and sums the
- * rarity-mapped XP into totalXp — that's the persistence path. This
+ * rarity-mapped XP into totalXp, that's the persistence path. This
  * action just flips the row.
  *
  * Idempotent: re-claiming a row that already has claimedAt set
@@ -789,7 +789,7 @@ export async function claimAchievement(achievementId: string): Promise<void> {
   updateTag(TAG);
 }
 
-/** Used by the navbar badge — single integer count, dirt cheap. */
+/** Used by the navbar badge, single integer count, dirt cheap. */
 const getUnclaimedTrophyCountCached = unstable_cache(
   async (userId: string): Promise<number> => {
     return prisma.achievement.count({

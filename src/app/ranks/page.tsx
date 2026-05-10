@@ -5,7 +5,7 @@ import { getRank, getXpForLevel } from "@/lib/player";
 import { RANK_STYLES, resolveRankLabels } from "@/lib/rankStyle";
 
 export const metadata = {
-  title: "Hunter Path — Shivaliva Leveling",
+  title: "Hunter Path, Shivaliva Leveling",
   description:
     "Six ranks. Six versions of yourself. The path from awakened to sovereign.",
 };

@@ -59,7 +59,7 @@ export default function DailyReminderAutoEnroll() {
           timezone,
         });
       } catch {
-        // Silent — toggle in profile is the recovery path.
+        // Silent, toggle in profile is the recovery path.
       }
     })();
     return () => {

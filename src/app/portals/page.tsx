@@ -80,7 +80,7 @@ export default function PortalsPage() {
       return next;
     });
     track("dungeon_entered", { dungeon_id: dungeonId });
-    // Once-per-account funnel event — same gating pattern as
+    // Once-per-account funnel event, same gating pattern as
     // first_quest_completed. Together they let us measure the
     // post-awakening → first-action conversion rate, and which of
     // the two paths (quest tick vs dungeon enter) hunters reach
@@ -97,7 +97,7 @@ export default function PortalsPage() {
     router.push(`/#dungeon-${dungeonId}`);
   }
 
-  // Three buckets — drives the section layout. yourPath = dungeons
+  // Three buckets, drives the section layout. yourPath = dungeons
   // matching the player's hunter type. universal = no path required.
   // otherPaths = path-gated dungeons that aren't the player's. When
   // Unaffiliated, yourPath is empty and the section shows a CTA.
@@ -144,7 +144,7 @@ export default function PortalsPage() {
               ))}
               {/* Path badge only when it's NOT in a path-context section.
                   In Your Path / Other Paths sections, the section header
-                  carries the path framing — per-card duplication is noise. */}
+                  carries the path framing, per-card duplication is noise. */}
               {pathDef && !locked && d.hunterType !== viewerHunterType && (
                 <span
                   className={`text-[9px] font-bold uppercase tracking-[0.25em] px-1.5 py-0.5 border rounded-sm ${pathDef.badgeStyle}`}

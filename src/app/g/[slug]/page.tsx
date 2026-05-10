@@ -10,8 +10,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   return {
-    title: `${slug} — The System`,
-    description: "Guild page — members, requests, weekly activity.",
+    title: `${slug}, The System`,
+    description: "Guild page, members, requests, weekly activity.",
   };
 }
 
@@ -24,11 +24,11 @@ export default async function GuildPage({ params }: PageProps) {
   try {
     guild = await getGuildBySlug(slug);
   } catch {
-    // empty fallback — page will render the not-found state
+    // empty fallback, page will render the not-found state
   }
   if (!guild) notFound();
 
-  // Guild feed is server-side membership-gated — pending applicants and
+  // Guild feed is server-side membership-gated, pending applicants and
   // strangers get an empty page back, so we can fetch it eagerly without
   // leaking who's posted what.
   const isMember =

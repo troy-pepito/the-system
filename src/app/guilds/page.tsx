@@ -6,7 +6,7 @@ import GuildCreateForm from "@/components/GuildCreateForm";
 import { GUILD_MEMBER_CAP } from "@/lib/guilds";
 
 export const metadata = {
-  title: "Guilds — The System",
+  title: "Guilds, The System",
   description:
     "Find your hunters. Guilds are small bands of allies pushing the same kind of training together.",
 };
@@ -17,7 +17,7 @@ export default async function GuildsPage() {
 
   const t = await getTranslations("guildsPage");
 
-  // Tolerate failures — if either throws (offline / DB blip), the page
+  // Tolerate failures, if either throws (offline / DB blip), the page
   // still renders something useful instead of dropping into Next's
   // error fallback.
   let myGuild: Awaited<ReturnType<typeof getMyGuild>> = null;

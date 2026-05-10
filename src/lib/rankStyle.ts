@@ -1,5 +1,5 @@
 /**
- * Per-rank visual vocabulary — bronze → iron → silver → gold →
+ * Per-rank visual vocabulary, bronze → iron → silver → gold →
  * platinum → holographic. Higher ranks get richer materials and
  * brighter glow so a Lv 50 hunter's profile looks meaningfully
  * different from a Lv 5's. Same tokens get reused on the navbar,
@@ -13,7 +13,7 @@ export interface RankStyle {
   border: string;
   /** Background tint for filled badges. */
   bg: string;
-  /** Drop-shadow / glow Tailwind class — apply to the same element as text. */
+  /** Drop-shadow / glow Tailwind class, apply to the same element as text. */
   glow: string;
   /**
    * Special class name for ranks that need custom CSS (currently only S
@@ -24,7 +24,7 @@ export interface RankStyle {
   flavor: string;
   /**
    * Box-shadow + inset glow for the hunter-ID card frame. Intensity
-   * scales with rank — E sits subdued, S radiates dramatically.
+   * scales with rank, E sits subdued, S radiates dramatically.
    */
   cardGlow: string;
   /** Border color for the hunter-ID card frame's outer border. */
@@ -51,7 +51,7 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     cornerBorder: "border-orange-400",
     title: "The Awakened",
     description:
-      "You've stepped into the System. The path begins. The body still slumbers and the mind still wanders — but you've shown up, and that is enough.",
+      "You've stepped into the System. The path begins. The body still slumbers and the mind still wanders, but you've shown up, and that is enough.",
   },
   D: {
     text: "text-slate-200",
@@ -66,7 +66,7 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     cornerBorder: "border-slate-200",
     title: "The Disciplined",
     description:
-      "Routine becomes ritual. The first habits hold even when no one watches — even when you yourself don't want to. The hunter taking shape.",
+      "Routine becomes ritual. The first habits hold even when no one watches, even when you yourself don't want to. The hunter taking shape.",
   },
   C: {
     text: "text-zinc-100",
@@ -81,7 +81,7 @@ export const RANK_STYLES: Record<string, RankStyle> = {
     cornerBorder: "border-zinc-100",
     title: "The Cultivated",
     description:
-      "What was effort becomes default. The body and mind compound on each other. You no longer fight to wake up early — you wake. The System recognizes you.",
+      "What was effort becomes default. The body and mind compound on each other. You no longer fight to wake up early, you wake. The System recognizes you.",
   },
   B: {
     text: "text-amber-300",
@@ -114,7 +114,7 @@ export const RANK_STYLES: Record<string, RankStyle> = {
       "Beyond what most ever know of themselves. The five dimensions move in concert. You are the version of you that strangers feel before you speak.",
   },
   S: {
-    // Holographic — see globals.css for the .rank-holo-text rule.
+    // Holographic, see globals.css for the .rank-holo-text rule.
     text: "",
     border: "border-fuchsia-300/70",
     bg: "bg-fuchsia-500/10",

@@ -64,7 +64,7 @@ export function subscribeInstallState(cb: () => void): () => void {
 }
 
 /**
- * Backwards-compatible helper for the auto-popup banner — returns the
+ * Backwards-compatible helper for the auto-popup banner, returns the
  * current deferred prompt if any.
  */
 export function getDeferredPrompt(): BeforeInstallPromptEvent | null {

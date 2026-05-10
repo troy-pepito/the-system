@@ -4,9 +4,9 @@ import { getLeaderboard } from "@/app/actions/leaderboard";
 import LeaderboardView from "@/components/LeaderboardView";
 
 export const metadata = {
-  title: "Leaderboard — The System",
+  title: "Leaderboard, The System",
   description:
-    "Weekly activity ranking. Action counts weighted by difficulty — the harder the action, the more it moves you.",
+    "Weekly activity ranking. Action counts weighted by difficulty, the harder the action, the more it moves you.",
 };
 
 export default async function LeaderboardPage() {
@@ -27,7 +27,7 @@ export default async function LeaderboardPage() {
   try {
     initial = await getLeaderboard("global");
   } catch {
-    // empty fallback — view renders the empty state
+    // empty fallback, view renders the empty state
   }
 
   return (

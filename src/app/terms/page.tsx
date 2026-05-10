@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Terms of Service — Shivaliva Leveling",
+  title: "Terms of Service, Shivaliva Leveling",
   description: "The agreement between you and Shivaliva Leveling.",
 };
 
@@ -39,8 +39,8 @@ export default function TermsPage() {
         </Section>
 
         <Section title="3. What the app is">
-          A gamified self-tracking tool. You log your own behavior —
-          streaks, workouts, exposures, quest completions — and the app
+          A gamified self-tracking tool. You log your own behavior,
+          streaks, workouts, exposures, quest completions, and the app
           visualizes your progress. The app does not provide medical,
           psychological, or professional advice. It is not a substitute
           for therapy, medical treatment, or recovery programs.
@@ -97,7 +97,7 @@ export default function TermsPage() {
           The app is provided &quot;as is&quot; and &quot;as
           available.&quot; We may change, suspend, or discontinue
           features at any time. We don&apos;t guarantee uninterrupted
-          access — the app depends on third-party providers (Clerk,
+          access, the app depends on third-party providers (Clerk,
           Neon, Vercel) and solo maintenance.
         </Section>
 

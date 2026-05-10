@@ -11,7 +11,7 @@ export interface HunterDimensions {
 /**
  * Canonical iteration order for the five dimensions. Matches the
  * Hunter Type ids so dominantDimension can return one directly.
- * Ties resolve in this order (body > mind > emotion > energy > spirit) —
+ * Ties resolve in this order (body > mind > emotion > energy > spirit),
  * feels less random than alphabetical when two dimensions are equal.
  */
 export const DIMENSION_ORDER: ReadonlyArray<HunterType> = [
@@ -25,7 +25,7 @@ export const DIMENSION_ORDER: ReadonlyArray<HunterType> = [
 /**
  * Pick the single dimension with the highest accumulated stat value.
  * Returns null when the hunter has zero progress everywhere (brand-new
- * account) — the caller decides whether to show "no dominant yet" or
+ * account), the caller decides whether to show "no dominant yet" or
  * just hide the badge. Used by both the owner Hunter Card and the
  * public /h/{hunterId} card so the Badges row reads identically across
  * surfaces.

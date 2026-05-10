@@ -109,7 +109,7 @@ export default function DungeonCheckInPanel({
   // Refund tier-crossing bonuses when the cleared-day count drops back
   // below a previously-celebrated tier threshold. Without this, marking
   // a cleared day as relapsed (or undoing it) leaves the tier bonus XP
-  // banked even though the tier is no longer earned — that's the
+  // banked even though the tier is no longer earned, that's the
   // streak-side version of the perfect-day exploit. Removing the
   // celebKey lets the tier re-celebrate cleanly if the player climbs
   // back up.
@@ -140,7 +140,7 @@ export default function DungeonCheckInPanel({
   }
 
   async function commitCleared(date: string) {
-    // Compute next list from the closure synchronously — using the
+    // Compute next list from the closure synchronously, using the
     // functional updater + outer variable mutation was unreliable in
     // React 18 (the updater can run after the next line, leaving
     // nextList as the initial empty array → cleared count rendered as 0).
@@ -235,7 +235,7 @@ export default function DungeonCheckInPanel({
     note?: string,
     isPublic = false
   ) {
-    // Compute XP delta BEFORE we mutate state — if the day was cleared,
+    // Compute XP delta BEFORE we mutate state, if the day was cleared,
     // marking it relapsed wipes that day's XP.
     const existing = checkIns.find((c) => c.date === date);
     const prevState = existing?.state;
@@ -258,7 +258,7 @@ export default function DungeonCheckInPanel({
     reportClearedCount(nextList);
     track("day_confirmed_relapsed", { dungeon_id: dungeonId, date });
     // Pass an explicit xpDelta (even 0) so the panel's own
-    // STATS_UPDATED_EVENT listener skips its refetch — otherwise it
+    // STATS_UPDATED_EVENT listener skips its refetch, otherwise it
     // races with the server write below and clobbers our optimistic
     // update with a stale read.
     notifyStatsUpdated({ xpDelta });
@@ -306,7 +306,7 @@ export default function DungeonCheckInPanel({
     try {
       await clearCheckIn(dungeonId, date);
     } catch {
-      // Best-effort — no offline queue for undo.
+      // Best-effort, no offline queue for undo.
     }
   }
 

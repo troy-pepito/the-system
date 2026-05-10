@@ -7,7 +7,7 @@ import LanguagePicker from "@/components/LanguagePicker";
 import DangerZone from "@/components/DangerZone";
 
 export const metadata = {
-  title: "Settings — The System",
+  title: "Settings, The System",
   description:
     "Tune notifications, install the app, and adjust the look of your hunter window.",
 };

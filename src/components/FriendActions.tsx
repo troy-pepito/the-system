@@ -16,7 +16,7 @@ interface Props {
   /**
    * "default" renders the full pill buttons (used when the actions
    * are the only thing in their row). "compact" renders small
-   * icon-style buttons that fit inside another header — used in the
+   * icon-style buttons that fit inside another header, used in the
    * Hunter ID card top-right slot, mirroring where the kebab sits on
    * the owner's view.
    */
@@ -47,7 +47,7 @@ export default function FriendActions({ hunterId, variant = "default" }: Props) 
     };
   }, [hunterId]);
 
-  // Auto-revert the unfriend confirm if the user wanders off — five
+  // Auto-revert the unfriend confirm if the user wanders off, five
   // seconds of indecision is a strong "I didn't mean it" signal.
   useEffect(() => {
     if (!confirmingUnfriend) return;
@@ -60,7 +60,7 @@ export default function FriendActions({ hunterId, variant = "default" }: Props) 
   }, [confirmingUnfriend]);
 
   // Same auto-revert for the add-friend confirm. Single-tap on "+ Add
-  // Friend" used to fire the request immediately — too easy to hit by
+  // Friend" used to fire the request immediately, too easy to hit by
   // accident on a hunter profile. Now it arms a confirm; the user has
   // to tap again within 5s for the request to actually go out.
   useEffect(() => {

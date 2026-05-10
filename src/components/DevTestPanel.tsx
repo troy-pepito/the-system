@@ -74,7 +74,7 @@ export default function DevTestPanel() {
     try {
       const result = await sendTestPush();
       if (result.sent === 0) {
-        setPushStatus("0 devices — subscribe first");
+        setPushStatus("0 devices, subscribe first");
       } else {
         setPushStatus(`sent → ${result.sent} device${result.sent === 1 ? "" : "s"}`);
       }

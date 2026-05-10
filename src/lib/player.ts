@@ -52,7 +52,7 @@ export const LEVEL_UP_EVENT = "system:level-up";
 export function notifyLevelUp(detail: {
   from: number;
   to: number;
-  /** True when this level-up also crossed a rank boundary — the toast
+  /** True when this level-up also crossed a rank boundary, the toast
    *  uses this to suppress itself, since the rank-up celebration is
    *  the bigger moment and shouldn't be talked over. */
   alsoRankedUp: boolean;
@@ -91,13 +91,13 @@ export function notifyReward(delta: RewardDelta) {
 
 export const CELEBRATION_EVENT = "system:celebration";
 
-/** Distinct from {@link RewardDelta}: a "moment" — the centered banner
+/** Distinct from {@link RewardDelta}: a "moment", the centered banner
  *  for perfect-day, full-clear, tier-crossing, combo-milestone. The
  *  small +XP pill from {@link notifyReward} still fires alongside this
  *  one (the regular gain log pattern), but the celebration owns the
  *  screen for ~2.6s. */
 export interface CelebrationDetail {
-  /** Bigger label — e.g. "PERFECT DAY", "FULL CLEAR", "RANK D". */
+  /** Bigger label, e.g. "PERFECT DAY", "FULL CLEAR", "RANK D". */
   titleKey: string;
   titleValues?: Record<string, string | number>;
   /** Optional smaller subtitle (dungeon name, day count). */
@@ -116,16 +116,16 @@ export function notifyCelebration(detail: CelebrationDetail) {
 export const NOTICE_EVENT = "system:notice";
 
 export interface SystemNotice {
-  /** Bracket-text headline — keep short, all-caps friendly. */
+  /** Bracket-text headline, keep short, all-caps friendly. */
   headline: string;
   /** Optional one-line body under the headline. */
   body?: string;
-  /** Optional CTA — renders as a link styled like a System callout. */
+  /** Optional CTA, renders as a link styled like a System callout. */
   link?: { href: string; label: string };
 }
 
 /**
- * Player-facing System message — the in-world "[Quest Complete]"-flavored
+ * Player-facing System message, the in-world "[Quest Complete]"-flavored
  * announcement, distinct from the mechanical XP/dim toast (REWARD_EVENT).
  * Use sparingly: confirms that something the player did is now durable
  * and points them toward where it lives.

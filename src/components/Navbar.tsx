@@ -80,7 +80,7 @@ export default function Navbar() {
     );
   };
 
-  // SVG props are kept tiny and consistent — 18px in the desktop row,
+  // SVG props are kept tiny and consistent, 18px in the desktop row,
   // 20px in the mobile stack via classes on the wrapper. Stroke-only
   // shapes match the existing settings-gear icon's vibe.
   const iconClass = "w-[18px] h-[18px]";
@@ -126,7 +126,7 @@ export default function Navbar() {
       className={iconClass}
       aria-hidden
     >
-      {/* Stepped bar chart — short, medium, tall — leans into the
+      {/* Stepped bar chart, short, medium, tall, leans into the
           ranking metaphor rather than the trophy/printer the previous
           icon was reading as. */}
       <line x1="6" y1="20" x2="6" y2="14" />

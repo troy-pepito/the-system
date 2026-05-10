@@ -11,7 +11,7 @@ let nextId = 1;
 
 /**
  * Bracket-text [System] callouts for moments that aren't XP rewards
- * but deserve a beat of confirmation — journal saved, entry deleted,
+ * but deserve a beat of confirmation, journal saved, entry deleted,
  * future "quest accepted" / "title acquired" style announcements.
  *
  * Stacks vertically when multiple fire close together. Auto-dismisses
@@ -26,7 +26,7 @@ export default function SystemNoticeToast() {
       if (!detail || !detail.headline) return;
       const id = nextId++;
       setNotices((prev) => [...prev, { ...detail, id }]);
-      // No auto-dismiss — notices stay until the player taps the X
+      // No auto-dismiss, notices stay until the player taps the X
       // (or follows the CTA link). "Our toasts shouldn't be shy."
     };
     window.addEventListener(NOTICE_EVENT, handler);

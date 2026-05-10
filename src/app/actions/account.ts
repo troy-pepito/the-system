@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
 
 /**
- * Permanently delete the viewer's account. Hard delete — no recovery.
+ * Permanently delete the viewer's account. Hard delete, no recovery.
  *
  * Order matters:
  *  1. Disband any guilds the viewer owns (cascade clears their members)
@@ -14,12 +14,12 @@ import { requireUserId } from "@/lib/auth";
  *  3. Delete the Clerk user record (this also signs them out)
  *
  * Steps 1+2 happen in a transaction so a partial failure doesn't leave
- * orphan rows. Clerk deletion runs after — if it fails, the next call
+ * orphan rows. Clerk deletion runs after, if it fails, the next call
  * to a Clerk-aware action will surface a "user not found" and the user
  * can be force-signed-out client-side.
  *
  * Side effect: any guild the viewer owns gets disbanded as a
- * consequence — surfaced in the UI confirmation copy so it's not a
+ * consequence, surfaced in the UI confirmation copy so it's not a
  * surprise.
  */
 export async function deleteAccount(): Promise<void> {
@@ -34,7 +34,7 @@ export async function deleteAccount(): Promise<void> {
     // owner). The `accepted` and `pending` rows both get cleaned up
     // since the where clause is just { userId }.
     prisma.guildMember.deleteMany({ where: { userId } }),
-    // Friendships in either direction — viewer is requester or
+    // Friendships in either direction, viewer is requester or
     // addressee.
     prisma.friendship.deleteMany({
       where: {
@@ -43,7 +43,7 @@ export async function deleteAccount(): Promise<void> {
     }),
     // Reactions the viewer left on other hunters' events. The
     // reverse direction (other hunters' reactions on the viewer's
-    // events) is handled implicitly when DungeonRun is deleted —
+    // events) is handled implicitly when DungeonRun is deleted,
     // DungeonEvent has onDelete: Cascade on runId, and Reaction has
     // onDelete: Cascade on eventId.
     prisma.reaction.deleteMany({ where: { userId } }),
@@ -60,7 +60,7 @@ export async function deleteAccount(): Promise<void> {
     prisma.pushSubscription.deleteMany({ where: { userId } }),
   ]);
 
-  // Clerk lives in a separate service — runs outside the transaction.
+  // Clerk lives in a separate service, runs outside the transaction.
   // If this throws, the local DB is already wiped; the orphan Clerk
   // record is harmless and a manual cleanup or the next sign-in can
   // resolve it.

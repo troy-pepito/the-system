@@ -29,7 +29,7 @@ export interface WindowStats {
   /** Weighted action total for the leaderboard. Computed once in
    *  buildSnapshot from the ACTIVITY_POINTS table; the leaderboard
    *  reads this directly instead of recomputing per-row. Set on the
-   *  week window only — month/all-time aren't ranked yet. Optional
+   *  week window only, month/all-time aren't ranked yet. Optional
    *  on the type so legacy callers reading the month window aren't
    *  forced to handle a field that's never populated for them. */
   activityPoints?: number;
@@ -80,7 +80,7 @@ const anyDungeonStreakAtLeast = (days: number) => (s: PlayerSnapshot) =>
   Object.values(s.runsByDungeon).some((r) => r.maxStreak >= days);
 
 export const ACHIEVEMENTS: AchievementDef[] = [
-  // ——— STARTER (common) ———
+  // === STARTER (common) ===
   {
     id: "awakened",
     name: "Awakened",
@@ -122,7 +122,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     check: (s) => s.exposureTotal >= 1,
   },
 
-  // ——— RANK PROGRESSION (rare) ———
+  // === RANK PROGRESSION (rare) ===
   {
     id: "rank-e",
     name: "E-Rank Clear",
@@ -172,7 +172,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     check: anyDungeonStreakAtLeast(180),
   },
 
-  // ——— CROSS-DUNGEON ———
+  // === CROSS-DUNGEON ===
   {
     id: "multi-classed",
     name: "Multi-Classed",
@@ -190,7 +190,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     check: (s) => s.activeRunCount >= 5,
   },
 
-  // ——— QUEST MASTERY ———
+  // === QUEST MASTERY ===
   {
     id: "perfect-day",
     name: "Perfect Day",
@@ -216,7 +216,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     check: (s) => s.questTotal >= 250,
   },
 
-  // ——— WORKOUT ———
+  // === WORKOUT ===
   {
     id: "iron-will",
     name: "Iron Will",
@@ -234,7 +234,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     check: (s) => s.workoutTotal >= 100,
   },
 
-  // ——— EXPOSURE ———
+  // === EXPOSURE ===
   {
     id: "ladder-climber",
     name: "Ladder Climber",
@@ -264,7 +264,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     },
   },
 
-  // ——— COMPLETION ———
+  // === COMPLETION ===
   {
     id: "dungeon-master",
     name: "Dungeon Master",
@@ -282,7 +282,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     check: (s) => s.completedRunCount >= 3,
   },
 
-  // ——— LEVEL MILESTONES ———
+  // === LEVEL MILESTONES ===
   {
     id: "level-5",
     name: "Novice Hunter",

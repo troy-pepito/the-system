@@ -1,6 +1,6 @@
 import type { HunterSummary } from "@/app/actions/achievements";
 
-/** Hard cap. Started at 50, dropped to 10 on 2026-05-09 — Troy:
+/** Hard cap. Started at 50, dropped to 10 on 2026-05-09, Troy:
  *  "embarrassing how almost nobody uses this app a lot yet, so maybe
  *  we can change that to 50 later on". A small cap makes a 2-3 hunter
  *  guild feel close-to-full instead of cavernously empty. Bump back
@@ -15,7 +15,7 @@ export interface GuildSummary {
   ownerId: string;
   memberCount: number;
   pendingCount: number;
-  /** Authenticated viewer's relationship to this guild — drives the
+  /** Authenticated viewer's relationship to this guild, drives the
    *  request/approve/leave UI in one read. */
   viewerStatus: "owner" | "member" | "pending" | "none";
 }

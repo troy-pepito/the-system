@@ -2,7 +2,7 @@
  * Weighted activity-points table for the weekly leaderboard.
  *
  * Each completed action this week contributes to a player's "activity
- * points" total — the metric the Duolingo-style leaderboard ranks on.
+ * points" total, the metric the Duolingo-style leaderboard ranks on.
  * Weights are pinned to real-world difficulty in the Shivaliva brand:
  * exposure therapy (genuine IRL social anxiety overcome) is worth 3×
  * a daily quest tick, so the hunters doing the hardest things get the
@@ -11,7 +11,7 @@
  * Decision: count actions, NOT XP. XP varies wildly with tier bonuses,
  * combo multipliers, and claimed trophies, so XP-earned-this-week
  * would let veterans rack up 10× more for the same effort as a new
- * hunter — unfair scoring. Action counts equalize the playing field
+ * hunter, unfair scoring. Action counts equalize the playing field
  * and reward consistency.
  */
 export const ACTIVITY_POINTS = {

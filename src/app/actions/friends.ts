@@ -160,7 +160,7 @@ export async function getFriends(): Promise<FriendCard[]> {
     r.requesterId === userId ? r.addresseeId : r.requesterId
   );
 
-  // Batch fetch — one Clerk getUserList for the whole friend set,
+  // Batch fetch, one Clerk getUserList for the whole friend set,
   // snapshots run in parallel inside getHunterSummariesByIds. Replaces
   // the previous N+1 (one Clerk roundtrip per friend) which got bad
   // fast at 20+ friends and would have been brutal for 50-member
@@ -191,7 +191,7 @@ export async function getPendingRequests(): Promise<PendingRequest[]> {
   }> = [];
   try {
     const client = await clerkClient();
-    // Explicit limit — Clerk defaults to 10. See the matching note in
+    // Explicit limit, Clerk defaults to 10. See the matching note in
     // getHunterSummariesByIds.
     const list = await client.users.getUserList({
       userId: requesterIds,

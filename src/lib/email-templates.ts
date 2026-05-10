@@ -34,7 +34,7 @@ export function streakRecoveryHtml(opts: StreakRecoveryOpts): string {
                   The System noticed your absence. Three days of silence.
                 </p>
                 <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:#cbd5e1;">
-                  Your active dungeons haven't ended — not yet. A run paused is still a run. One quest today, and the combo stays alive.
+                  Your active dungeons haven't ended, not yet. A run paused is still a run. One quest today, and the combo stays alive.
                 </p>
                 <p style="margin:0 0 28px 0;font-size:15px;line-height:1.6;color:#94a3b8;font-style:italic;">
                   You built a mirror. Use it.

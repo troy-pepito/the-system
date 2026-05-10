@@ -16,7 +16,7 @@ export default function GrainOverlay() {
 
   return (
     <>
-      {/* Film grain — smaller SVG, fractalNoise cached once */}
+      {/* Film grain, smaller SVG, fractalNoise cached once */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[200] opacity-[0.045] mix-blend-overlay"
@@ -26,7 +26,7 @@ export default function GrainOverlay() {
           animation: "grain-shift 8s steps(10) infinite",
         }}
       />
-      {/* Scanlines with radial mask — static (drift removed; background-position animation caused repaints) */}
+      {/* Scanlines with radial mask, static (drift removed; background-position animation caused repaints) */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[199] opacity-[0.04]"

@@ -46,7 +46,7 @@ export default function GuildPanel({
   const [editOpen, setEditOpen] = useState(false);
   // Two-tap confirms for the destructive / one-shot actions on the
   // viewer's own state. First tap arms the confirm; second tap fires.
-  // Auto-reverts to default after 5s of indecision — same pattern as
+  // Auto-reverts to default after 5s of indecision, same pattern as
   // FriendActions.unfriend so accidental presses are recoverable.
   const [confirmingJoin, setConfirmingJoin] = useState(false);
   const [confirmingLeave, setConfirmingLeave] = useState(false);
@@ -385,7 +385,7 @@ function EditGuildModal({
 
   // Members eligible for ownership transfer = accepted members minus
   // the current owner. The dropdown is empty when the owner is solo,
-  // which is correct — there's no one to transfer to.
+  // which is correct, there's no one to transfer to.
   const transferCandidates = guild.members.filter(
     (m) => m.hunterId !== guild.ownerId
   );
@@ -432,7 +432,7 @@ function EditGuildModal({
     startTransition(async () => {
       try {
         await disbandGuild(slug);
-        // Hard navigate — the guild is gone, so the current /g/{slug}
+        // Hard navigate, the guild is gone, so the current /g/{slug}
         // route would 404 if we just refreshed.
         router.push("/guilds");
       } catch (err) {
@@ -447,7 +447,7 @@ function EditGuildModal({
       onClick={onClose}
     >
       {/* Outer frame: holds corners + X button. Stays overflow-visible
-          so the negative-offset chrome doesn't get clipped — the bug
+          so the negative-offset chrome doesn't get clipped, the bug
           that produced the cut-off X and stray scrollbars before. */}
       <div
         className="relative w-full max-w-lg bg-slate-900/95 border border-cyan-400/40 shadow-[0_0_50px_rgba(34,211,238,0.3)]"
@@ -467,7 +467,7 @@ function EditGuildModal({
           ✕
         </button>
 
-        {/* Inner scroll container — only this scrolls when content
+        {/* Inner scroll container, only this scrolls when content
             exceeds the viewport. Outer frame stays put, X stays
             clickable, corners stay visible. */}
         <div className="max-h-[85vh] overflow-y-auto overflow-x-hidden">

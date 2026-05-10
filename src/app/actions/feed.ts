@@ -30,7 +30,7 @@ const LEGACY_AUTHOR_MAP = new Map(
 /**
  * Shared post-fetch assembly: takes a slice of dungeon events and
  * returns the FeedEntry shape the UI consumes. Used by both the
- * public feed (global) and the guild-scoped feed — the WHERE clause
+ * public feed (global) and the guild-scoped feed, the WHERE clause
  * differs but everything after (Clerk batch lookup, reactions
  * aggregation, entry mapping, legacy-author fallback) is identical.
  */
@@ -47,7 +47,7 @@ export async function assembleFeedEntries(
   >();
   try {
     const client = await clerkClient();
-    // Explicit limit — Clerk defaults to 10. See the matching note in
+    // Explicit limit, Clerk defaults to 10. See the matching note in
     // getHunterSummariesByIds for the full story.
     const list = await client.users.getUserList({
       userId: userIds,
@@ -57,7 +57,7 @@ export async function assembleFeedEntries(
       usersById.set(u.id, resolveHunterDisplay(u));
     }
   } catch {
-    // If Clerk is unreachable, fall through with empty map — entries
+    // If Clerk is unreachable, fall through with empty map, entries
     // render with the "Hunter" placeholder rather than crashing.
   }
 
@@ -118,7 +118,7 @@ export async function toggleReaction(
     throw new Error("Unsupported reaction emoji");
   }
 
-  // Reactions only land on public, noted entries — same gate the feed
+  // Reactions only land on public, noted entries, same gate the feed
   // uses, so a private entry can't accidentally become reactable via
   // a direct API call.
   const event = await prisma.dungeonEvent.findUnique({
