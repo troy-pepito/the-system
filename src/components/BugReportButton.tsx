@@ -126,7 +126,7 @@ export default function BugReportButton() {
                 </div>
               ) : (
                 <>
-                  <p className="text-xs tracking-wider text-slate-400 leading-relaxed">
+                  <p className="text-xs tracking-wider text-slate-300 leading-relaxed">
                     Describe what happened, what you expected, and what you saw
                     instead. The more detail the better — date, dungeon, action,
                     anything. We&apos;ll get the URL and your hunter ID

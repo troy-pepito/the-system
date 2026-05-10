@@ -55,7 +55,7 @@ export default function HunterTypePicker() {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-slate-400 leading-relaxed">
+      <p className="text-xs text-slate-300 leading-relaxed">
         {tPicker("intro")}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

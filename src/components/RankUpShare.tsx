@@ -106,7 +106,7 @@ export default function RankUpShare() {
         <p className="font-display text-base font-bold text-amber-100 tracking-wider mb-1">
           {t("rankReached", { rank: pair.to })}
         </p>
-        <p className="text-xs text-slate-400 leading-relaxed mb-4">
+        <p className="text-xs text-slate-300 leading-relaxed mb-4">
           {t("shareAscension")}
         </p>
 

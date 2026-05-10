@@ -162,7 +162,7 @@ function Section({
       <h2 className="text-sm font-bold text-cyan-100 uppercase tracking-wider">
         {title}
       </h2>
-      <div className="text-sm leading-relaxed text-slate-400">{children}</div>
+      <div className="text-sm leading-relaxed text-slate-300">{children}</div>
     </section>
   );
 }

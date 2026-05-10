@@ -44,7 +44,7 @@ export default function GuildCreateForm() {
         <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-1">
           {t("header")}
         </p>
-        <p className="text-xs text-slate-400 leading-relaxed">{t("intro")}</p>
+        <p className="text-xs text-slate-300 leading-relaxed">{t("intro")}</p>
       </div>
 
       <div>

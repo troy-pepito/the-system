@@ -91,7 +91,7 @@ export default async function GuidePage() {
                     {t(`ruleUsedBy.${rt}`)}
                   </p>
                 </div>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-slate-300 leading-relaxed">
                   {t(`ruleSummaries.${rt}`)}
                 </p>
               </div>
@@ -130,7 +130,7 @@ export default async function GuidePage() {
                     </span>
                   ))}
                 </div>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-slate-300 leading-relaxed">
                   {tDungeons(`${dungeonKey(d.id)}.description`)}
                 </p>
               </div>
@@ -155,7 +155,7 @@ export default async function GuidePage() {
               </div>
             ))}
           </div>
-          <p className="mt-5 text-xs text-slate-400 leading-relaxed">
+          <p className="mt-5 text-xs text-slate-300 leading-relaxed">
             {t("xpDropsIntro")}
           </p>
           <ul className="mt-3 space-y-1.5 text-xs text-slate-400">
@@ -211,7 +211,7 @@ export default async function GuidePage() {
                 >
                   {t(`dimensions.${dimKey}.name`)}
                 </span>
-                <p className="text-sm text-slate-400 leading-relaxed flex-1">
+                <p className="text-sm text-slate-300 leading-relaxed flex-1">
                   {t(`dimensions.${dimKey}.description`)}
                 </p>
               </div>

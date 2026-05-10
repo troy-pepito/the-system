@@ -67,7 +67,7 @@ export default async function GuildsPage() {
                             {g.name}
                           </p>
                           {g.description && (
-                            <p className="text-xs text-slate-400 leading-relaxed mt-1 line-clamp-2">
+                            <p className="text-xs text-slate-300 leading-relaxed mt-1 line-clamp-2">
                               {g.description}
                             </p>
                           )}

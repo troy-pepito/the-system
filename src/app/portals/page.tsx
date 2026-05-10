@@ -161,7 +161,7 @@ export default function PortalsPage() {
           )}
         </div>
 
-        <p className="text-xs text-slate-400 leading-relaxed mb-4">
+        <p className="text-xs text-slate-300 leading-relaxed mb-4">
           {tDungeons(`${dungeonKey(d.id)}.description`)}
         </p>
 
@@ -303,7 +303,7 @@ export default function PortalsPage() {
             </div>
           ) : (
             <Card className="p-5 text-center bg-slate-900/40 border-slate-800">
-              <p className="text-xs text-slate-400 leading-relaxed mb-3">
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">
                 {t("yourPathEmpty")}
               </p>
               <Link

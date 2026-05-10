@@ -356,7 +356,7 @@ export default function ProgressiveDungeonCard({
             <p className="text-2xl font-bold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)] mt-1 uppercase tracking-wider">
               {rungName(currentRung.id, currentRung.name)}
             </p>
-            <p className="text-xs text-slate-400 leading-relaxed mt-2 px-2">
+            <p className="text-xs text-slate-300 leading-relaxed mt-2 px-2">
               {rungDescription(currentRung.id, currentRung.description)}
             </p>
           </div>

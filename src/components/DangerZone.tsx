@@ -55,7 +55,7 @@ export default function DangerZone() {
           <p className="text-[10px] tracking-[0.4em] uppercase text-red-400/80">
             {t("dangerZone")}
           </p>
-          <p className="text-xs text-slate-400 leading-relaxed mt-2">
+          <p className="text-xs text-slate-300 leading-relaxed mt-2">
             {t("deleteAccountIntro")}
           </p>
         </div>

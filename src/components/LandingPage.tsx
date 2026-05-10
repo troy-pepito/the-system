@@ -110,7 +110,7 @@ export default function LandingPage() {
               <p className="font-display text-sm font-bold text-cyan-100 uppercase tracking-wider mb-2">
                 {tLanding(`step${num}Title`)}
               </p>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 {tLanding(`step${num}Description`)}
               </p>
             </div>
@@ -146,7 +146,7 @@ export default function LandingPage() {
                   </span>
                 ))}
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 {tDungeons(`${dungeonKey(d.id)}.description`)}
               </p>
             </div>
@@ -179,7 +179,7 @@ export default function LandingPage() {
               </svg>
               {tLanding("communityGuildsTitle")}
             </p>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               {tLanding("communityGuildsBody")}
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function LandingPage() {
               </svg>
               {tLanding("communityBoardTitle")}
             </p>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               {tLanding("communityBoardBody")}
             </p>
           </div>
@@ -221,7 +221,7 @@ export default function LandingPage() {
           <p className="text-sm text-slate-300 leading-relaxed mb-3">
             {tLanding("whyP2")}
           </p>
-          <p className="text-sm text-slate-400 leading-relaxed">
+          <p className="text-sm text-slate-300 leading-relaxed">
             {tLanding("whyWelcome")}
             <br />
             — Trojan Bulldog

@@ -86,7 +86,7 @@ export default function PwaInstallPrompt() {
             </button>
           </>
         ) : (
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-slate-300 leading-relaxed">
             Tap the <span className="text-cyan-300 font-bold">Share</span> icon,
             then <span className="text-cyan-300 font-bold">Add to Home Screen</span>.
           </p>

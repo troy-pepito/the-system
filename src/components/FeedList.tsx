@@ -83,7 +83,7 @@ export default function FeedList({
         <p className="text-[10px] tracking-[0.4em] uppercase text-slate-500 mb-3">
           {t("emptyTitle")}
         </p>
-        <p className="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto">
+        <p className="text-xs text-slate-300 leading-relaxed max-w-sm mx-auto">
           {t("emptyBody")}
         </p>
       </div>
