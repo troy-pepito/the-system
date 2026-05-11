@@ -44,3 +44,7 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Play Store upload assets (screenshots + logo). 11MB of binaries
+# we'd never serve, kept local for the listing upload only.
+/screenshots/
