@@ -26,6 +26,45 @@ export interface ChangelogChange {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "2.1.0",
+    date: "2026-05-11",
+    title: "The Five Elements",
+    changes: [
+      {
+        kind: "feature",
+        text: "Body / Mind / Emotion / Energy / Spirit are now Earth / Air / Water / Fire / Ether (the Pancha Mahabhuta). Same data, same XP, same Hunter Types — new names, new canonical colors, new vocabulary. Tap any element on the profile chart to read what it trains and where the XP comes from.",
+      },
+      {
+        kind: "feature",
+        text: "Hunter Types follow the elemental rename: Body / Mind / Emotion / Energy / Spirit Hunter become Earth / Air / Water / Fire / Ether Hunter. Path descriptions retuned (\"Train the body, the foundation\" → Earth Hunter, \"Train prana\" → Fire Hunter).",
+      },
+      {
+        kind: "feature",
+        text: "Quest Briefing on dungeon entry. Tap Enter on a portal and the System surfaces objective, cadence, rewards, and a system warning before you commit. Read with intent, enter with intent.",
+      },
+      {
+        kind: "feature",
+        text: "18 new trophies across four new categories: Community (8 — first public reflection, first friend, first guild, friends, weekly activity), Devotion (3 — 30 / 90 / 365 distinct-day ladder), Elemental (5 — 50 XP per element), Shadow (2 hidden — surprises that reveal themselves only once earned). Total trophy count climbs from 102 to 112.",
+      },
+      {
+        kind: "feature",
+        text: "Daily Quests header now shows X/7 cleared and a live countdown to midnight. The window closes whether you move or not.",
+      },
+      {
+        kind: "polish",
+        text: "Air is silver-white, Water is blue. No more two-shades-of-blue confusion on the radar; element colors now match dungeon badges everywhere.",
+      },
+      {
+        kind: "polish",
+        text: "System-voice copy on the scattered state: \"The System marked yesterday as silence. Break it today.\" Sharp without punishing.",
+      },
+      {
+        kind: "fix",
+        text: "Claim trophy persistence: tapping Claim no longer snaps back to unclaimed if you navigate away before the server confirms. Same root cause as the earlier daily-quest persistence fix — Vercel lambda LRU staleness on read-your-own-writes paths.",
+      },
+    ],
+  },
+  {
     version: "2.0.0",
     date: "2026-05-09",
     title: "Guilds + Leaderboards",
