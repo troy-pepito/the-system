@@ -23,6 +23,34 @@ import {
 
 const TAG = "guild";
 
+/**
+ * Filter a userId list to those whose Clerk account still exists.
+ * Orphans (Clerk-deleted users with leftover DB rows) get dropped so
+ * guild member counts don't inflate from accounts that no longer
+ * exist. On transient Clerk failure returns the input as-is rather
+ * than fake-vanishing everyone.
+ *
+ * This catches the case where a user was deleted from the Clerk
+ * dashboard (or via any path that bypasses deleteAccount, which is
+ * the only path that cleans up our DB rows). deleteAccount itself
+ * already wipes guildMember rows, so for in-app deletes this filter
+ * is a no-op.
+ */
+async function filterToActiveUserIds(userIds: string[]): Promise<string[]> {
+  if (userIds.length === 0) return [];
+  try {
+    const client = await clerkClient();
+    const list = await client.users.getUserList({
+      userId: userIds,
+      limit: Math.min(userIds.length, 500),
+    });
+    const activeIds = new Set(list.data.map((u) => u.id));
+    return userIds.filter((id) => activeIds.has(id));
+  } catch {
+    return userIds;
+  }
+}
+
 /** "One guild per user" rule, checks for any accepted membership. */
 async function hasAcceptedMembership(userId: string): Promise<boolean> {
   const row = await prisma.guildMember.findFirst({
@@ -111,14 +139,20 @@ async function _getGuildBySlug(
   else if (viewerMember?.status === "accepted") viewerStatus = "member";
   else if (viewerMember?.status === "pending") viewerStatus = "pending";
 
+  // acceptedSummaries is already orphan-filtered (getHunterSummariesByIds
+  // drops Clerk-deleted users), so its length is the live member count.
+  // Same logic for pendingSummaries when the viewer is the owner;
+  // non-owners get a raw count since they don't see the pending list
+  // anyway. Catches the case where an alt account was deleted via the
+  // Clerk dashboard and its GuildMember row was orphaned.
   return {
     id: guild.id,
     slug: guild.slug,
     name: guild.name,
     description: guild.description,
     ownerId: guild.ownerId,
-    memberCount: acceptedIds.length,
-    pendingCount: pendingIds.length,
+    memberCount: acceptedSummaries.length,
+    pendingCount: isOwner ? pendingSummaries.length : pendingIds.length,
     viewerStatus,
     members: acceptedSummaries,
     pending: pendingSummaries,
@@ -138,19 +172,25 @@ export async function getGuildBySlug(slug: string): Promise<GuildDetail | null> 
 
 export async function getMyGuild(): Promise<GuildSummary | null> {
   const userId = await requireUserId();
+  // Fetch the viewer's guild + the accepted-member userIds so we can
+  // filter out orphans (Clerk-deleted accounts whose GuildMember row
+  // was left behind, e.g. an alt deleted via Clerk dashboard).
   const member = await prisma.guildMember.findFirst({
     where: { userId, status: "accepted" },
     include: {
       guild: {
         include: {
-          _count: {
-            select: { members: { where: { status: "accepted" } } },
+          members: {
+            where: { status: "accepted" },
+            select: { userId: true },
           },
         },
       },
     },
   });
   if (!member) return null;
+  const acceptedIds = member.guild.members.map((m) => m.userId);
+  const liveIds = await filterToActiveUserIds(acceptedIds);
   const pendingCount =
     member.guild.ownerId === userId
       ? await prisma.guildMember.count({
@@ -163,7 +203,7 @@ export async function getMyGuild(): Promise<GuildSummary | null> {
     name: member.guild.name,
     description: member.guild.description,
     ownerId: member.guild.ownerId,
-    memberCount: member.guild._count.members,
+    memberCount: liveIds.length,
     pendingCount,
     viewerStatus: member.guild.ownerId === userId ? "owner" : "member",
   };
@@ -532,16 +572,27 @@ export async function browseGuilds(): Promise<GuildListItem[]> {
     orderBy: { createdAt: "desc" },
     take: 50,
     include: {
-      _count: {
-        select: { members: { where: { status: "accepted" } } },
+      members: {
+        where: { status: "accepted" },
+        select: { userId: true },
       },
     },
   });
-  return guilds.map((g) => ({
-    slug: g.slug,
-    name: g.name,
-    description: g.description,
-    memberCount: g._count.members,
-    spotsLeft: Math.max(0, GUILD_MEMBER_CAP - g._count.members),
-  }));
+  // Single Clerk batch fetch across every accepted member of every
+  // guild on the page, then filter each guild's count to live users
+  // only. Orphan rows (Clerk-deleted accounts) stop inflating counts.
+  const allMemberIds = Array.from(
+    new Set(guilds.flatMap((g) => g.members.map((m) => m.userId)))
+  );
+  const liveIds = new Set(await filterToActiveUserIds(allMemberIds));
+  return guilds.map((g) => {
+    const liveCount = g.members.filter((m) => liveIds.has(m.userId)).length;
+    return {
+      slug: g.slug,
+      name: g.name,
+      description: g.description,
+      memberCount: liveCount,
+      spotsLeft: Math.max(0, GUILD_MEMBER_CAP - liveCount),
+    };
+  });
 }
