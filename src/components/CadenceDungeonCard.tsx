@@ -117,6 +117,17 @@ export default function CadenceDungeonCard({
     setRunStartDateInCache(dungeonId, date);
     onStreakChange?.(days);
     notifyStatsUpdated();
+    // Seed the tier-celebration sentinel for this run so the first
+    // tier reached (typically E at 7 days) fires a normal celebration.
+    // The hook's first-detection branch otherwise silently records the
+    // current tier and swallows the toast, that catch-up is meant for
+    // existing high-tier players on a feature-first-load, not for runs
+    // that start at tierIdx=-1.
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(`tier-last-seen:${dungeonId}:${date}`, "-1");
+      } catch {}
+    }
     await commitSetStartDate(dungeonId, date);
   }
 
