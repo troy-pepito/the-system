@@ -60,8 +60,19 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   const weekCutoffEarly = new Date(_now);
   weekCutoffEarly.setDate(weekCutoffEarly.getDate() - 6);
 
-  const [runs, events, quests, allCheckIns, claimedTrophies, weekClearedDays] =
-    await Promise.all([
+  const [
+    runs,
+    events,
+    quests,
+    allCheckIns,
+    claimedTrophies,
+    weekClearedDays,
+    // Community trophy data, all small per-user reads.
+    publicReflections,
+    friendCount,
+    guildMemberCount,
+    checkInDates,
+  ] = await Promise.all([
     prisma.dungeonRun.findMany({
       where: { userId },
       select: {
@@ -107,6 +118,41 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
         state: "cleared",
         date: { gte: weekCutoffEarly },
       },
+    }),
+    // Public reflections, counts toward Hunter's Voice / Open Hand.
+    // Filter: events tied to user's runs with a note and isPublic=true.
+    prisma.dungeonEvent.count({
+      where: {
+        run: { userId },
+        note: { not: null },
+        isPublic: true,
+      },
+    }),
+    // Friends count, accepted both directions. Powers First Bond
+    // and Five Bonds.
+    prisma.friendship.count({
+      where: {
+        status: "accepted",
+        OR: [
+          { requesterId: userId },
+          { addresseeId: userId },
+        ],
+      },
+    }),
+    // Has the hunter ever been an accepted member of a guild? Powers
+    // Bond Found. Requires status="accepted" so a stale pending
+    // join-request doesn't pre-unlock the trophy before the owner
+    // actually approves. Creating a guild still unlocks: createGuild
+    // writes the owner's own row with status="accepted" in the same
+    // transaction.
+    prisma.guildMember.count({
+      where: { userId, status: "accepted" },
+    }),
+    // Distinct check-in dates, joined with quest + event dates below
+    // to compute distinctActivityDays for Daily Witness.
+    prisma.dungeonDayCheckIn.findMany({
+      where: { userId, state: "cleared" },
+      select: { date: true },
     }),
   ]);
 
@@ -544,6 +590,76 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
 
   const { level } = getLevelFromXp(totalXp);
 
+  // Distinct activity days: union of dates from quests, journal/log
+  // events, and cleared check-ins. "The System knows your face" (Daily
+  // Witness) means you've shown up at all, not that you did everything;
+  // any tracked surface counts.
+  const activityDaySet = new Set<string>();
+  for (const q of quests) {
+    activityDaySet.add(q.date.toISOString().split("T")[0]);
+  }
+  for (const e of events) {
+    activityDaySet.add(e.date.toISOString().split("T")[0]);
+  }
+  for (const c of checkInDates) {
+    activityDaySet.add(c.date.toISOString().split("T")[0]);
+  }
+  const distinctActivityDays = activityDaySet.size;
+
+  // Phoenix (Shadow): hunter has returned to a dungeon they previously
+  // relapsed in. Look for any dungeonId where the user has a "relapse"
+  // event AND multiple runs (proving they exited and re-entered later).
+  // Derived from existing data, no extra prisma query.
+  const relapsedDungeons = new Set<string>();
+  for (const e of events) {
+    if (e.type === "relapse") {
+      relapsedDungeons.add(e.run.dungeonId);
+    }
+  }
+  const runsPerDungeon: Record<string, number> = {};
+  for (const r of runs) {
+    runsPerDungeon[r.dungeonId] = (runsPerDungeon[r.dungeonId] ?? 0) + 1;
+  }
+  const phoenixUnlocked = Array.from(relapsedDungeons).some(
+    (d) => (runsPerDungeon[d] ?? 0) >= 2
+  );
+
+  // Comeback (Shadow): scored a perfect day the morning after a
+  // scattered day. Sort quest completions by date, group per day,
+  // look for a perfect-day immediately following a gap day.
+  // Threshold for "perfect day" mirrors perfectQuestDays logic: all
+  // QUESTS completed on the same day. Skipping side quests since
+  // those don't count toward "perfect" elsewhere.
+  const dailyQuestSet = new Set(QUESTS.map((q) => q.id));
+  const questsByDate = new Map<string, Set<string>>();
+  for (const q of quests) {
+    const day = q.date.toISOString().split("T")[0];
+    if (!dailyQuestSet.has(q.questId)) continue;
+    const bucket = questsByDate.get(day) ?? new Set<string>();
+    bucket.add(q.questId);
+    questsByDate.set(day, bucket);
+  }
+  const sortedDays = Array.from(questsByDate.keys()).sort();
+  let comebackUnlocked = false;
+  for (let i = 1; i < sortedDays.length; i++) {
+    const today = sortedDays[i];
+    const yesterday = sortedDays[i - 1];
+    const todayIsPerfect =
+      (questsByDate.get(today)?.size ?? 0) >= dailyQuestSet.size;
+    if (!todayIsPerfect) continue;
+    // Gap check: was the day BEFORE today not adjacent to today?
+    // "Scattered" means the player missed a day before this one.
+    // Compute calendar diff between today and yesterday-in-our-set.
+    const dToday = new Date(today + "T00:00:00Z").getTime();
+    const dYest = new Date(yesterday + "T00:00:00Z").getTime();
+    const dayMs = 24 * 60 * 60 * 1000;
+    const gap = Math.round((dToday - dYest) / dayMs);
+    if (gap > 1) {
+      comebackUnlocked = true;
+      break;
+    }
+  }
+
   return {
     totalXp,
     level,
@@ -585,6 +701,12 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
     comboMilestoneXp,
     comboMilestoneIds,
     scattered,
+    publicReflections,
+    friendCount,
+    everInGuild: guildMemberCount > 0,
+    distinctActivityDays,
+    phoenixUnlocked,
+    comebackUnlocked,
   };
 }
 
@@ -789,20 +911,15 @@ export async function claimAchievement(achievementId: string): Promise<void> {
   updateTag(TAG);
 }
 
-/** Used by the navbar badge, single integer count, dirt cheap. */
-const getUnclaimedTrophyCountCached = unstable_cache(
-  async (userId: string): Promise<number> => {
-    return prisma.achievement.count({
-      where: { userId, claimedAt: null },
-    });
-  },
-  ["unclaimed-trophy-count"],
-  { tags: [TAG] }
-);
-
+/** Used by the navbar badge, single integer count, dirt cheap. Direct
+ *  read - the navbar badge needs to decrement immediately after a
+ *  claim, and unstable_cache's per-lambda LRU can lag a claim by
+ *  multiple seconds (same root cause as the profile-claim bug). */
 export async function getUnclaimedTrophyCount(): Promise<number> {
   const userId = await requireUserId();
-  return getUnclaimedTrophyCountCached(userId);
+  return prisma.achievement.count({
+    where: { userId, claimedAt: null },
+  });
 }
 
 export async function getUnlockedAchievements(): Promise<UnlockedAchievement[]> {
@@ -910,45 +1027,51 @@ async function _buildHeatmap(userId: string): Promise<Record<string, number>> {
   return bucket;
 }
 
-const getProfilePageDataCached = unstable_cache(
-  async (userId: string) => {
-    const [snapshot, rows, heatmap] = await Promise.all([
-      _buildSnapshot(userId),
-      prisma.achievement.findMany({
-        where: { userId },
-        orderBy: { unlockedAt: "desc" },
-      }),
-      _buildHeatmap(userId),
-    ]);
-    return {
-      stats: {
-        level: snapshot.level,
-        totalXp: snapshot.totalXp,
-        activeRunCount: snapshot.activeRunCount,
-        completedRunCount: snapshot.completedRunCount,
-        workoutTotal: snapshot.workoutTotal,
-        exposureTotal: snapshot.exposureTotal,
-        questTotal: snapshot.questTotal,
-        perfectQuestDays: snapshot.perfectQuestDays,
-        scattered: snapshot.scattered,
-        dimensions: snapshot.dimensions,
-        windows: snapshot.windows,
-      },
-      unlocked: rows.map((r) => ({
-        id: r.achievementId,
-        unlockedAt: r.unlockedAt.toISOString(),
-        claimedAt: r.claimedAt ? r.claimedAt.toISOString() : null,
-      })),
-      heatmap,
-    };
-  },
-  ["profile-page-data"],
-  { tags: [TAG] }
-);
-
+// Direct read, NOT unstable_cache. Same reasoning as
+// getTodayCompletions in quests.ts: unstable_cache's tag invalidation
+// is per-Node-process, and Vercel runs multiple warm lambdas. When
+// claimAchievement runs on lambda A and calls updateTag, only A's
+// LRU is invalidated. The next request can land on lambda B which
+// still holds the pre-claim snapshot+rows, the profile reload then
+// reads claimedAt: null and the UI snaps back to unclaimed. Bug
+// reported on phone: "It took 2+ seconds for the claim trophy to be
+// safely saved or else if i go make other actions ... it goes back
+// to unclaimed which is shit."
+// _buildSnapshot is the heaviest piece (a handful of indexed
+// per-user prisma reads), ~50-200ms warm. Acceptable: the profile
+// page already loads infrequently and the localStorage cache covers
+// the perceived latency.
 export async function getProfilePageData(): Promise<ProfilePageData> {
   const userId = await requireUserId();
-  return getProfilePageDataCached(userId);
+  const [snapshot, rows, heatmap] = await Promise.all([
+    _buildSnapshot(userId),
+    prisma.achievement.findMany({
+      where: { userId },
+      orderBy: { unlockedAt: "desc" },
+    }),
+    _buildHeatmap(userId),
+  ]);
+  return {
+    stats: {
+      level: snapshot.level,
+      totalXp: snapshot.totalXp,
+      activeRunCount: snapshot.activeRunCount,
+      completedRunCount: snapshot.completedRunCount,
+      workoutTotal: snapshot.workoutTotal,
+      exposureTotal: snapshot.exposureTotal,
+      questTotal: snapshot.questTotal,
+      perfectQuestDays: snapshot.perfectQuestDays,
+      scattered: snapshot.scattered,
+      dimensions: snapshot.dimensions,
+      windows: snapshot.windows,
+    },
+    unlocked: rows.map((r) => ({
+      id: r.achievementId,
+      unlockedAt: r.unlockedAt.toISOString(),
+      claimedAt: r.claimedAt ? r.claimedAt.toISOString() : null,
+    })),
+    heatmap,
+  };
 }
 
 export interface PublicDungeonRunSummary {

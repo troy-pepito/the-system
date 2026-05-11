@@ -48,6 +48,7 @@ const RANKS_LADDER = [
 export default async function GuidePage() {
   const tDungeons = await getTranslations("dungeons");
   const t = await getTranslations("guide");
+  const tDimensions = await getTranslations("guide.dimensions");
   return (
     <main className="min-h-screen bg-slate-950 text-slate-300 py-16 px-6">
       <article className="max-w-3xl mx-auto space-y-12">
@@ -126,7 +127,7 @@ export default async function GuidePage() {
                       key={dim}
                       className={`text-[9px] font-bold uppercase tracking-[0.25em] px-1.5 py-0.5 border rounded-sm ${DIM_STYLE[dim]}`}
                     >
-                      {dim}
+                      {tDimensions(`${dim}.name`)}
                     </span>
                   ))}
                 </div>

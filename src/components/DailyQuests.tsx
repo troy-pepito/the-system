@@ -24,6 +24,7 @@ import { dashboardCacheKey } from "@/lib/dashboardCacheOps";
 import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
 import { drainQueue } from "@/lib/offlineDrain";
 import type { DashboardData } from "@/app/actions/dungeons";
+import DailyResetCountdown from "@/components/DailyResetCountdown";
 
 export type { QuestRewards };
 
@@ -273,6 +274,15 @@ export default function DailyQuests({
       >
         {t("subheader")}
       </h2>
+      <p className="text-[10px] font-mono tabular-nums tracking-wider text-cyan-400/70 mt-2">
+        {t("progressLabel", { done: completed.length, total: QUESTS.length })}
+      </p>
+      <DailyResetCountdown label={t("resetsIn")} urgent={scattered} />
+      {scattered && (
+        <p className="text-[10px] tracking-[0.2em] uppercase text-red-400/80 mt-2 max-w-[260px] mx-auto">
+          {t("systemWarningScattered")}
+        </p>
+      )}
     </div>
 
     <ul className="space-y-3 mb-6">

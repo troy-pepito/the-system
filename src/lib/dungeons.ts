@@ -221,10 +221,23 @@ export const CADENCE_FULL_CLEAR_BONUS_XP = 20;
 export const DIM_ORDER = ["body", "mind", "emotion", "energy", "spirit"] as const;
 export type DimKey = (typeof DIM_ORDER)[number];
 
+// Per-element palette. Mapped to canonical Pancha Mahabhuta colors:
+//   Earth   -> emerald  (grass / ground)
+//   Air     -> slate    (clear / silver-white; distinct from Water)
+//   Water   -> blue     (the obvious one)
+//   Fire    -> amber    (flame)
+//   Ether   -> violet   (void / transcendence)
+// Air was cyan, but cyan reads as "shade of blue" next to Water's
+// blue and the two elements blurred together. Pure-white-ish slate
+// keeps Air visually distinct and matches the classical-element
+// convention of Air = clear/silver.
+// Used everywhere a dungeon's element tag is shown so the same color
+// reads consistently across portals, the guide, briefing modal, and
+// the radar chart.
 export const DIM_STYLE: Record<DimKey, string> = {
   body: "text-emerald-300 border-emerald-400/40 bg-emerald-500/10",
-  mind: "text-cyan-300 border-cyan-400/40 bg-cyan-500/10",
-  emotion: "text-rose-300 border-rose-400/40 bg-rose-500/10",
+  mind: "text-slate-200 border-slate-300/40 bg-slate-400/10",
+  emotion: "text-blue-300 border-blue-400/40 bg-blue-500/10",
   energy: "text-amber-300 border-amber-400/40 bg-amber-500/10",
   spirit: "text-violet-300 border-violet-400/40 bg-violet-500/10",
 };

@@ -106,12 +106,24 @@ export default function ProfilePage() {
   const foundations: AchievementDef[] = [];
   const progression: AchievementDef[] = [];
   const training: AchievementDef[] = [];
+  const community: AchievementDef[] = [];
+  const devotion: AchievementDef[] = [];
+  const elemental: AchievementDef[] = [];
+  const shadow: AchievementDef[] = [];
   const byDungeon = new Map<string, AchievementDef[]>();
   for (const def of ACHIEVEMENTS) {
+    // Hidden trophies (Shadow category) only appear in the grid
+    // after the player has unlocked them, so they stay a surprise
+    // until earned. Once unlocked they render normally.
+    if (def.hidden && !unlockedMap.has(def.id)) continue;
     const cat = achievementCategory(def.id);
     if (cat.category === "foundations") foundations.push(def);
     else if (cat.category === "progression") progression.push(def);
     else if (cat.category === "training") training.push(def);
+    else if (cat.category === "community") community.push(def);
+    else if (cat.category === "devotion") devotion.push(def);
+    else if (cat.category === "elemental") elemental.push(def);
+    else if (cat.category === "shadow") shadow.push(def);
     else if (cat.category === "dungeon" && cat.dungeonId) {
       const arr = byDungeon.get(cat.dungeonId) ?? [];
       arr.push(def);
@@ -237,6 +249,32 @@ export default function ProfilePage() {
             unlockedMap={unlockedMap}
             highlightId={highlightId}
           />
+          <TrophySection
+            label={tProfile("categories.community")}
+            defs={community}
+            unlockedMap={unlockedMap}
+            highlightId={highlightId}
+          />
+          <TrophySection
+            label={tProfile("categories.devotion")}
+            defs={devotion}
+            unlockedMap={unlockedMap}
+            highlightId={highlightId}
+          />
+          <TrophySection
+            label={tProfile("categories.elemental")}
+            defs={elemental}
+            unlockedMap={unlockedMap}
+            highlightId={highlightId}
+          />
+          {shadow.length > 0 && (
+            <TrophySection
+              label={tProfile("categories.shadow")}
+              defs={shadow}
+              unlockedMap={unlockedMap}
+              highlightId={highlightId}
+            />
+          )}
           <div className="mt-8">
             <div className="flex items-center gap-4 mb-5">
               <div className="flex-1 h-px bg-gradient-to-r from-transparent to-cyan-500/40" />

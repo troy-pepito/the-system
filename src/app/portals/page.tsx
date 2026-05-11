@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import Card from "@/components/Card";
 import Paywall from "@/components/Paywall";
+import QuestBriefingModal from "@/components/QuestBriefingModal";
 import {
   DUNGEONS,
   dungeonDims,
@@ -27,6 +28,7 @@ type CachedRun = { dungeonId: string };
 export default function PortalsPage() {
   const t = useTranslations("portals");
   const tDungeons = useTranslations("dungeons");
+  const tDimensions = useTranslations("guide.dimensions");
   const tHunterTypes = useTranslations("hunterTypes");
   const tPortalsExtra = useTranslations("portalsExtra");
   const router = useRouter();
@@ -41,6 +43,11 @@ export default function PortalsPage() {
   const [activeIds, setActiveIds] = useState<Set<string> | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  // Quest Briefing modal state, holds the dungeon id pending
+  // confirmation. Null when no briefing is open. The modal shows
+  // objective + cadence + system warning before the player
+  // commits to a multi-week run.
+  const [briefingDungeonId, setBriefingDungeonId] = useState<string | null>(null);
 
   useEffect(() => {
     const cached = readCache<CachedRun[]>(ACTIVE_RUNS_CACHE_KEY);
@@ -139,7 +146,7 @@ export default function PortalsPage() {
                   key={dim}
                   className={`text-[9px] font-bold uppercase tracking-[0.25em] px-1.5 py-0.5 border rounded-sm ${DIM_STYLE[dim]}`}
                 >
-                  {dim}
+                  {tDimensions(`${dim}.name`)}
                 </span>
               ))}
               {/* Path badge only when it's NOT in a path-context section.
@@ -243,7 +250,7 @@ export default function PortalsPage() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                handleEnter(d.id);
+                setBriefingDungeonId(d.id);
               }}
               className="w-full px-4 py-3 bg-cyan-500/20 border border-cyan-500/40 rounded text-cyan-300 text-sm uppercase tracking-widest hover:bg-cyan-500/30 active:scale-[0.98] transition-all drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]"
             >
@@ -356,6 +363,31 @@ export default function PortalsPage() {
         )}
       </div>
       <Paywall open={paywallOpen} onClose={() => setPaywallOpen(false)} />
+      {(() => {
+        const briefing = briefingDungeonId
+          ? DUNGEONS.find((d) => d.id === briefingDungeonId)
+          : null;
+        if (!briefing) return null;
+        const rules = tDungeons.raw(`${dungeonKey(briefing.id)}.rules`) as string[];
+        return (
+          <QuestBriefingModal
+            open={!!briefingDungeonId}
+            dungeonName={tDungeons(`${dungeonKey(briefing.id)}.name`)}
+            dungeonIcon={briefing.icon}
+            description={tDungeons(`${dungeonKey(briefing.id)}.description`)}
+            rules={rules}
+            dimensions={dungeonDims(briefing).map((dim) =>
+              tDimensions(`${dim}.name`)
+            )}
+            onCancel={() => setBriefingDungeonId(null)}
+            onConfirm={() => {
+              const id = briefingDungeonId;
+              setBriefingDungeonId(null);
+              if (id) handleEnter(id);
+            }}
+          />
+        );
+      })()}
     </main>
   );
 }

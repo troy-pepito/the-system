@@ -3,12 +3,25 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useTweenNumber } from "@/lib/useTweenNumber";
 
+// Colors per element (Pancha Mahabhuta). Pulled from the same palette
+// as DIM_STYLE in lib/dungeons.ts so the radar axes match the dungeon
+// badges everywhere else in the app:
+//   Earth   -> emerald-400 (grass / ground)
+//   Air     -> slate-200   (silver-white; distinct from Water's blue)
+//   Water   -> blue-400    (the obvious one)
+//   Fire    -> amber-400   (flame)
+//   Ether   -> violet-400  (void / transcendence)
+// `aspect` is the legacy dimension name shown as a small secondary
+// label so players who haven't internalized the elemental vocabulary
+// yet can still see at a glance that Earth = body, Water = emotion,
+// etc. Hardcoded here instead of i18n-keyed to keep the locale surface
+// small per the project's incremental keying rule.
 const DIMS = [
-  { key: "body", color: "#ef4444" },
-  { key: "mind", color: "#60a5fa" },
-  { key: "emotion", color: "#f472b6" },
-  { key: "energy", color: "#fbbf24" },
-  { key: "spirit", color: "#a78bfa" },
+  { key: "body", color: "#34d399", aspect: "Body" }, // Earth, emerald
+  { key: "mind", color: "#e2e8f0", aspect: "Mind" }, // Air, slate-200
+  { key: "emotion", color: "#60a5fa", aspect: "Emotion" }, // Water, blue
+  { key: "energy", color: "#fbbf24", aspect: "Energy" }, // Fire, amber
+  { key: "spirit", color: "#a78bfa", aspect: "Spirit" }, // Ether, violet
 ] as const;
 
 type DimKey = (typeof DIMS)[number]["key"];
@@ -51,6 +64,12 @@ export default function StatRadar({ values }: StatRadarProps) {
   const [previous] = useState<Record<DimKey, number> | null>(() => readSnapshot());
   const [visible, setVisible] = useState(false);
   const savedRef = useRef(false);
+  // Click an axis label to expand its description. Helps onboard
+  // players who haven't internalized the elemental vocabulary - the
+  // description ties the element back to the real-world actions that
+  // earn XP for it. Click the same axis again (or the close button)
+  // to dismiss.
+  const [selectedDim, setSelectedDim] = useState<DimKey | null>(null);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -139,13 +158,16 @@ export default function StatRadar({ values }: StatRadarProps) {
     }).join(" ")
   );
 
+  const selected = selectedDim ? DIMS.find((d) => d.key === selectedDim) : null;
+
   return (
+    <div className="flex flex-col items-center gap-4">
     <svg
       ref={containerRef}
-      viewBox="0 0 240 260"
+      viewBox="0 0 240 280"
       className="w-full max-w-[18rem] mx-auto"
       role="img"
-      aria-label="Stat dimensions radar"
+      aria-label="Stat dimensions radar. Tap an axis label to learn what that element trains."
     >
       {rings.map((pts, i) => (
         <polygon
@@ -188,22 +210,64 @@ export default function StatRadar({ values }: StatRadarProps) {
         <circle key={i} cx={a.x} cy={a.y} r={3} fill={a.dim.color} />
       ))}
       {axes.map((a, i) => (
-        <g key={i}>
+        <g
+          key={i}
+          onClick={() =>
+            setSelectedDim((current) =>
+              current === a.dim.key ? null : a.dim.key
+            )
+          }
+          className="cursor-pointer"
+          role="button"
+          tabIndex={0}
+          aria-label={`Reveal ${a.dim.aspect} element description`}
+        >
+          {/* Slightly larger transparent hit target around the axis
+              labels so taps don't have to land pixel-perfect. */}
+          <rect
+            x={a.labelX - 24}
+            y={a.labelY - 14}
+            width="48"
+            height="32"
+            fill="transparent"
+          />
+          {/* Element name (e.g. EARTH) in element color */}
           <text
             x={a.labelX}
-            y={a.labelY}
+            y={a.labelY - 5}
             textAnchor="middle"
             dominantBaseline="middle"
             fontSize="8"
             fontWeight="700"
             letterSpacing="0.15em"
             fill={a.dim.color}
+            style={{
+              filter:
+                selectedDim === a.dim.key
+                  ? `drop-shadow(0 0 6px ${a.dim.color})`
+                  : undefined,
+            }}
           >
             {tDimensions(`${a.dim.key}.name`)}
           </text>
+          {/* Aspect name (e.g. Body) in dim slate, ties the element
+              vocabulary back to the original body/mind framing for
+              new players. */}
           <text
             x={a.labelX}
-            y={a.labelY + 11}
+            y={a.labelY + 4}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="6.5"
+            letterSpacing="0.18em"
+            fill="rgb(100, 116, 139)"
+          >
+            {a.dim.aspect.toUpperCase()}
+          </text>
+          {/* Numeric value in mono */}
+          <text
+            x={a.labelX}
+            y={a.labelY + 14}
             textAnchor="middle"
             dominantBaseline="middle"
             fontSize="9"
@@ -215,5 +279,35 @@ export default function StatRadar({ values }: StatRadarProps) {
         </g>
       ))}
     </svg>
+    {selected && (
+      <div
+        className="w-full max-w-[20rem] relative bg-slate-900/70 border rounded-lg p-4 pr-9 animate-fade-in"
+        style={{ borderColor: `${selected.color}66` }}
+      >
+        <button
+          type="button"
+          onClick={() => setSelectedDim(null)}
+          aria-label="Close element description"
+          className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center text-slate-500 hover:text-slate-200 text-base leading-none"
+        >
+          ×
+        </button>
+        <div className="flex items-baseline gap-2 mb-2">
+          <span
+            className="text-xs font-bold uppercase tracking-[0.25em]"
+            style={{ color: selected.color }}
+          >
+            {tDimensions(`${selected.key}.name`)}
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
+            {selected.aspect}
+          </span>
+        </div>
+        <p className="text-xs text-slate-300 leading-relaxed">
+          {tDimensions(`${selected.key}.description`)}
+        </p>
+      </div>
+    )}
+    </div>
   );
 }

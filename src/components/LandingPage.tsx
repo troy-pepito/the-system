@@ -20,6 +20,7 @@ const STEP_NUMS = ["01", "02", "03"] as const;
 
 export default function LandingPage() {
   const tDungeons = useTranslations("dungeons");
+  const tDimensions = useTranslations("guide.dimensions");
   const tLanding = useTranslations("landing");
   const { openSignIn } = useClerk();
   const { isSignedIn } = useUser();
@@ -142,7 +143,7 @@ export default function LandingPage() {
                     key={dim}
                     className={`text-[9px] font-bold uppercase tracking-[0.25em] px-1.5 py-0.5 border rounded-sm ${DIM_STYLE[dim]}`}
                   >
-                    {dim}
+                    {tDimensions(`${dim}.name`)}
                   </span>
                 ))}
               </div>

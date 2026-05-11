@@ -309,7 +309,7 @@
     "title": "Hunter Profile",
     "recordLifetime": "Record, Lifetime",
     "activeDungeons": "Active Dungeons",
-    "dimensions": "Dimensions",
+    "dimensions": "Elements",
     "activityHeader": "Activity, Last 8 Weeks",
     "reflections": "Reflections",
     "trophies": "Trophies",
@@ -327,6 +327,10 @@
       "foundations": "Foundations",
       "progression": "Hunter Progression",
       "training": "Training",
+      "community": "Community",
+      "devotion": "Devotion",
+      "elemental": "Elemental",
+      "shadow": "Shadow",
       "dungeonMastery": "Dungeon Mastery"
     }
   },
@@ -373,7 +377,7 @@
     "A": {
       "flavor": "Platinum",
       "title": "The Ascendant",
-      "description": "Beyond what most ever know of themselves. The five dimensions move in concert. You are the version of you that strangers feel before you speak."
+      "description": "Beyond what most ever know of themselves. The five elements move in concert. You are the version of you that strangers feel before you speak."
     },
     "S": {
       "flavor": "Holo",
@@ -526,6 +530,78 @@
       "level-50": {
         "name": "Shadow Monarch",
         "description": "Reach level 50."
+      },
+      "hunters-voice": {
+        "name": "Hunter's Voice",
+        "description": "Post your first public reflection. Step out of silence."
+      },
+      "first-friend": {
+        "name": "First Bond",
+        "description": "Add your first hunter as a friend. The pack tightens."
+      },
+      "bond-found": {
+        "name": "Bond Found",
+        "description": "Join your first guild. Find the band."
+      },
+      "daily-witness": {
+        "name": "Daily Witness",
+        "description": "Show up on 14 distinct days. The System knows your face."
+      },
+      "open-hand": {
+        "name": "Open Hand",
+        "description": "Post 10 public reflections. Bravery is a habit."
+      },
+      "five-bonds": {
+        "name": "Five Bonds",
+        "description": "Reach 5 friends. A real band, not a list."
+      },
+      "surge": {
+        "name": "Surge",
+        "description": "Score 50 activity points in a single week. A surge week, stacked from quests, workouts, and exposures."
+      },
+      "tempest": {
+        "name": "Tempest",
+        "description": "Score 100 activity points in a single week. Outlier output."
+      },
+      "steadfast": {
+        "name": "Steadfast",
+        "description": "Log activity on 30 distinct days. Consistency over heroics."
+      },
+      "veteran": {
+        "name": "Veteran of the System",
+        "description": "90 distinct activity days. The System recognizes the patient."
+      },
+      "year-one": {
+        "name": "Year One",
+        "description": "365 distinct activity days. A full year of showing up."
+      },
+      "bedrock": {
+        "name": "Bedrock",
+        "description": "Reach 50 Earth XP. The vessel is being forged."
+      },
+      "current": {
+        "name": "Current",
+        "description": "Reach 50 Water XP. The heart's flow learns its shape."
+      },
+      "furnace": {
+        "name": "Furnace",
+        "description": "Reach 50 Fire XP. Prana lit, nervous system awake."
+      },
+      "open-sky": {
+        "name": "Open Sky",
+        "description": "Reach 50 Air XP. Attention reclaimed, thought clarified."
+      },
+      "inner-void": {
+        "name": "Inner Void",
+        "description": "Reach 50 Ether XP. The silent room behind the noise."
+      },
+      "phoenix": {
+        "name": "Phoenix",
+        "description": "Re-enter a dungeon you previously relapsed in. The fall isn't the end."
+      },
+      "comeback": {
+        "name": "Comeback",
+        "description": "Score a perfect day the morning after a scattered day. The System forgets nothing, but neither do you."
       }
     }
   },
@@ -545,7 +621,7 @@
       "progressive": "Progressive Ladder"
     },
     "ruleSummaries": {
-      "continuous_streak": "A daily check-in. Confirm each day as cleared or relapsed in the calendar. Cleared days bank XP + dimensions permanently.",
+      "continuous_streak": "A daily check-in. Confirm each day as cleared or relapsed in the calendar. Cleared days bank XP + elements permanently.",
       "cadence": "A checklist pattern. Tick boxes within a window, daily for the Hunter-Type starters (clear any one), weekly for Training Regimen (5 of 5).",
       "timed": "A daily check-in toward an N-day target. Same calendar mechanic as the streak dungeons. Claim Victory at the target to retire the run.",
       "progressive": "An escalating ladder. Clear a rung to unlock the next. No skipping."
@@ -557,7 +633,7 @@
       "progressive": "Exposure Therapy"
     },
     "section3Title": "3. The Portals",
-    "section3Intro": "Each portal is a specific discipline with specific rules and specific dimensions it trains. Most are open to every hunter; the five Daily-floor starters are gated by your chosen Path.",
+    "section3Intro": "Each portal is a specific discipline with specific rules and specific elements it trains. Most are open to every hunter; the five Daily-floor starters are gated by your chosen Path.",
     "section4Title": "4. Hunter Ranks",
     "section4Intro": "Six ranks. Each holds 10 levels. Sixty levels total to Shadow Monarch. XP required per level follows a 1.5-power curve, the higher you climb, the slower each level arrives.",
     "rankLevels": "Lv {start}–{end}",
@@ -566,28 +642,28 @@
     "xpWorkout": "per workout logged in Training Regimen",
     "xpExposure": "per exposure logged in Exposure Therapy",
     "xpCompletion": "when you claim Victory on a timed dungeon",
-    "section5Title": "5. The Five Dimensions",
-    "section5Intro": "Progress is tracked across five dimensions, not one flat XP bar. Each dungeon trains a specific subset. Your profile shows a radar chart, balanced hunters see a pentagon; specialized hunters see a spike.",
+    "section5Title": "5. The Five Elements",
+    "section5Intro": "Progress is tracked across the five elements (Pancha Mahabhuta), not one flat XP bar. Each dungeon trains a specific subset. Your profile shows a radar chart, balanced hunters see a pentagon; specialized hunters see a spike.",
     "dimensions": {
       "body": {
-        "name": "BODY",
-        "description": "Physical strength and vitality. Earned from workouts and dietary discipline."
+        "name": "EARTH",
+        "description": "The vessel. Foundation, physical capacity. Earned from workouts and bodily discipline."
       },
       "mind": {
-        "name": "MIND",
-        "description": "Clarity, focus, attention. Earned from reclaiming your attention and senses."
+        "name": "AIR",
+        "description": "Breath, thought, clarity, attention. Earned from reclaiming focus and the senses."
       },
       "emotion": {
-        "name": "EMOTION",
-        "description": "Social courage and emotional regulation. Earned from exposure and reclaimed intimacy."
+        "name": "WATER",
+        "description": "Flow. The heart's current, emotional regulation, social courage. Earned from exposure and intimacy."
       },
       "energy": {
-        "name": "ENERGY",
-        "description": "Raw vitality and stamina. Earned from stimulant control, diet, and compulsion resistance."
+        "name": "FIRE",
+        "description": "Prana, vitality, the spark. Earned from stimulant control, fasting, and compulsion resistance."
       },
       "spirit": {
-        "name": "SPIRIT",
-        "description": "Depth, presence, inner silence. Earned from sensory reset and sustained discipline."
+        "name": "ETHER",
+        "description": "The void. Depth, presence, inner silence. Earned from sensory reset and sustained discipline."
       }
     },
     "section6Title": "6. Daily Quests & the Combo System",
@@ -602,7 +678,7 @@
     "section8Title": "8. The Social Layer",
     "section8Intro": "Other hunters exist. The System lets you cross paths.",
     "section8PublicProfileLabel": "Public Profile.",
-    "section8PublicProfileBody": "Every hunter has a read-only profile at <code>/h/&lt;id&gt;</code>, rank, level, active dungeons, dimensions, trophies. Other signed-in hunters with your link can view it (not exposed to the open internet). Find your share link on your <profileLink>/profile</profileLink> page.",
+    "section8PublicProfileBody": "Every hunter has a read-only profile at <code>/h/&lt;id&gt;</code>, rank, level, active dungeons, elements, trophies. Other signed-in hunters with your link can view it (not exposed to the open internet). Find your share link on your <profileLink>/profile</profileLink> page.",
     "section8FriendsLabel": "Friends.",
     "section8FriendsBody": "Visit another hunter's profile and tap <addFriend>+ Add Friend</addFriend>. They'll get a notification, accept, and you both appear on each other's friends list. Friendship feeds the leaderboard's Friends scope, see the next section.",
     "section8JournalLabel": "Journal Entries.",
@@ -625,7 +701,7 @@
     "section9OfflineLabel": "Offline.",
     "section9OfflineBody": "The app works without a connection. On a plane, in the subway, in bad-signal zones, complete quests, log relapses, write journal entries. Everything queues locally and drains to the server the moment you reconnect. An amber banner shows when you're offline and how many actions are waiting to sync.",
     "section10Title": "11. Currently Free",
-    "section10P1": "Every feature is currently free, every dungeon, every achievement, daily quests, dimensions, the heatmap, friends, journal, push, unlimited active runs.",
+    "section10P1": "Every feature is currently free, every dungeon, every achievement, daily quests, elements, the heatmap, friends, journal, push, unlimited active runs.",
     "section10P2": "If paid tiers ever exist, core self-hunting stays free. Competition with yourself shouldn't have a paywall. Early hunters get remembered.",
     "ctaText": "The quest remains open.",
     "ctaButton": "Enter the Portal Registry →"
@@ -646,7 +722,11 @@
     "comboExtended": "Combo extended · See you tomorrow",
     "keepAlive": "{count} more to keep the combo alive",
     "bonusTooltip": "Base {base} + Combo bonus {bonus}",
-    "comboSource": "🔥 {days}-Day Combo"
+    "comboSource": "🔥 {days}-Day Combo",
+    "resetsIn": "Resets in",
+    "progressLabel": "{done}/{total} cleared",
+    "systemWarningScattered": "The System marked yesterday as silence. Break it today.",
+    "systemNoticeIdle": "The window closes at midnight. Move."
   },
   "profile": {
     "recordHeader": "Record: {label}",
@@ -714,7 +794,7 @@
       "rules": [
         "Confirm each day on the calendar, Cleared or Relapsed.",
         "Reach 30 cleared days to unlock Claim Victory.",
-        "Cleared days bank XP + dimensions permanently. Relapses are calendar markers, Exit Dungeon is the only way to end the run early."
+        "Cleared days bank XP + elements permanently. Relapses are calendar markers, Exit Dungeon is the only way to end the run early."
       ]
     },
     "music_sensitization": {
@@ -741,12 +821,12 @@
       "rules": [
         "Relapse = porn, masturbation, edging, or gooning (thirst traps, bot accounts, sensualized social feeds).",
         "Allowed: sex and orgasm with a partner, this dungeon is about compulsion, not abstinence.",
-        "Check in each day on the calendar, Cleared or Relapsed. Cleared days bank XP + dimensions permanently. Relapses are markers, not resets."
+        "Check in each day on the calendar, Cleared or Relapsed. Cleared days bank XP + elements permanently. Relapses are markers, not resets."
       ]
     },
     "starter_body": {
       "name": "Daily Forge",
-      "description": "The Body Hunter's daily floor. Three reps that ramp with your rank, clear any one to bank the day. Pushups, pullups, squats grow as your streak climbs E → S.",
+      "description": "The Earth Hunter's daily floor. Three reps that ramp with your rank, clear any one to bank the day. Pushups, pullups, squats grow as your streak climbs E → S.",
       "rules": [
         "Complete 1 task per day.",
         "Check off each one as you do it. Uncheck to remove a log.",
@@ -755,7 +835,7 @@
     },
     "starter_mind": {
       "name": "Daily Sharpening",
-      "description": "The Mind Hunter's daily floor. A few pages, a new idea, a single honest sentence. Clear any one to bank the day.",
+      "description": "The Air Hunter's daily floor. A few pages, a new idea, a single honest sentence. Clear any one to bank the day.",
       "rules": [
         "Complete 1 task per day.",
         "Check off each one as you do it. Uncheck to remove a log.",
@@ -764,7 +844,7 @@
     },
     "starter_emotion": {
       "name": "Daily Bonds",
-      "description": "The Emotion Hunter's daily floor. Small reps of being seen, heard, present. Clear any one to bank the day.",
+      "description": "The Water Hunter's daily floor. Small reps of being seen, heard, present. Clear any one to bank the day.",
       "rules": [
         "Complete 1 task per day.",
         "Check off each one as you do it. Uncheck to remove a log.",
@@ -773,7 +853,7 @@
     },
     "starter_energy": {
       "name": "Daily Spark",
-      "description": "The Energy Hunter's daily floor. Cold, motion, breath, three small jolts to wake the nervous system. Clear any one to bank the day.",
+      "description": "The Fire Hunter's daily floor. Cold, motion, breath, three small jolts to wake the nervous system. Clear any one to bank the day.",
       "rules": [
         "Complete 1 task per day.",
         "Check off each one as you do it. Uncheck to remove a log.",
@@ -782,7 +862,7 @@
     },
     "starter_spirit": {
       "name": "Daily Stillness",
-      "description": "The Spirit Hunter's daily floor. A breath of silence, a sentence of thanks, one craving denied. Clear any one to bank the day.",
+      "description": "The Ether Hunter's daily floor. A breath of silence, a sentence of thanks, one craving denied. Clear any one to bank the day.",
       "rules": [
         "Complete 1 task per day.",
         "Check off each one as you do it. Uncheck to remove a log.",
@@ -792,29 +872,29 @@
   },
   "hunterTypes": {
     "body": {
-      "label": "Body Hunter",
+      "label": "Earth Hunter",
       "tagline": "Forge the vessel.",
-      "description": "Train physical capacity. Pushups, pullups, squats, incremental ladders that climb to S rank. The path of iron and breath."
+      "description": "Train the body, the foundation. Pushups, pullups, squats, incremental ladders that climb to S rank. The path of iron and breath."
     },
     "mind": {
-      "label": "Mind Hunter",
+      "label": "Air Hunter",
       "tagline": "Sharpen the blade.",
-      "description": "Train intellect. Reading, study, memorization, ladders of focus that compound across years. The path of clarity."
+      "description": "Train clarity. Reading, study, memorization, ladders of focus that compound across years. The path of the open sky."
     },
     "emotion": {
-      "label": "Emotion Hunter",
-      "tagline": "Tend the flame.",
-      "description": "Train relational depth. Vulnerability, empathy, expression, daily reps of being seen. The path of the heart."
+      "label": "Water Hunter",
+      "tagline": "Tend the current.",
+      "description": "Train the heart's flow. Vulnerability, empathy, expression, daily reps of being seen. The path of the moving heart."
     },
     "energy": {
-      "label": "Energy Hunter",
+      "label": "Fire Hunter",
       "tagline": "Master the spark.",
-      "description": "Train vitality. Cold exposure, fasting, cardio, ladders that wake the body up. The path of the awakened nervous system."
+      "description": "Train prana. Cold exposure, fasting, cardio, ladders that wake the nervous system up. The path of the lit forge."
     },
     "spirit": {
-      "label": "Spirit Hunter",
+      "label": "Ether Hunter",
       "tagline": "Touch the silent.",
-      "description": "Train transcendence. Meditation, silence, contemplation, ladders that deepen the inside. The path beyond the self."
+      "description": "Train the void. Meditation, silence, contemplation, ladders that deepen the inside. The path beyond the self."
     }
   },
   "portals": {
@@ -979,5 +1059,16 @@
   },
   "portalsExtra": {
     "changePath": "Change Your Path →"
+  },
+  "questBriefing": {
+    "header": "[ Mission Info ]",
+    "objectiveLabel": "Objective",
+    "rulesLabel": "Cadence",
+    "rewardsLabel": "Rewards",
+    "rewardsDescription": "XP per completion · streak bonuses · trophies on milestones",
+    "warningLabel": "System Notice",
+    "warningBody": "Entering this portal binds you to its rhythm. Relapses are logged. Completions bank XP. Choose with intent.",
+    "cancel": "Stand Down",
+    "confirm": "Enter Dungeon"
   }
 }

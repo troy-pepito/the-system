@@ -64,6 +64,17 @@ export interface PlayerSnapshot {
   comboMilestoneXp: number;
   comboMilestoneIds: string[];
   scattered: boolean;
+  // Community fields, feed the Community trophy category. Pulled
+  // server-side in _buildSnapshot from journal entries, friendships,
+  // guild memberships, and the union of dated activity rows.
+  publicReflections: number;
+  friendCount: number;
+  everInGuild: boolean;
+  distinctActivityDays: number;
+  // Shadow trophy data. Computed in-memory in _buildSnapshot from
+  // existing runs/events/quests; no new prisma queries needed.
+  phoenixUnlocked: boolean;
+  comebackUnlocked: boolean;
 }
 
 export interface AchievementDef {
@@ -315,6 +326,175 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     rarity: "legendary",
     check: (s) => s.level >= 50,
   },
+
+  // === COMMUNITY ===
+  // Accountability-through-others trophies. Journal, guild, friends,
+  // loyalty, and weekly activity-points outliers. All eight derive
+  // from existing data (no schema changes); fields are populated in
+  // _buildSnapshot.
+  {
+    id: "hunters-voice",
+    name: "Hunter's Voice",
+    description: "Post your first public reflection. Step out of silence.",
+    icon: "❝",
+    rarity: "common",
+    check: (s) => s.publicReflections >= 1,
+  },
+  {
+    id: "first-friend",
+    name: "First Bond",
+    description: "Add your first hunter as a friend. The pack tightens.",
+    icon: "✦",
+    rarity: "common",
+    check: (s) => s.friendCount >= 1,
+  },
+  {
+    id: "bond-found",
+    name: "Bond Found",
+    description: "Join your first guild. Find the band.",
+    icon: "◈",
+    rarity: "common",
+    check: (s) => s.everInGuild,
+  },
+  {
+    id: "daily-witness",
+    name: "Daily Witness",
+    description: "Show up on 14 distinct days. The System knows your face.",
+    icon: "◷",
+    rarity: "common",
+    check: (s) => s.distinctActivityDays >= 14,
+  },
+  {
+    id: "open-hand",
+    name: "Open Hand",
+    description: "Post 10 public reflections. Bravery is a habit.",
+    icon: "❞",
+    rarity: "rare",
+    check: (s) => s.publicReflections >= 10,
+  },
+  {
+    id: "five-bonds",
+    name: "Five Bonds",
+    description: "Reach 5 friends. A real band, not a list.",
+    icon: "✺",
+    rarity: "rare",
+    check: (s) => s.friendCount >= 5,
+  },
+  {
+    id: "surge",
+    name: "Surge",
+    description:
+      "Score 50 activity points in a single week. A surge week, stacked from quests, workouts, and exposures.",
+    icon: "⟁",
+    rarity: "epic",
+    check: (s) => (s.windows.week.activityPoints ?? 0) >= 50,
+  },
+  {
+    id: "tempest",
+    name: "Tempest",
+    description:
+      "Score 100 activity points in a single week. Outlier output.",
+    icon: "⚡",
+    rarity: "legendary",
+    check: (s) => (s.windows.week.activityPoints ?? 0) >= 100,
+  },
+
+  // === DEVOTION ===
+  // Long-tail loyalty ladder. Counts distinct days of activity, not
+  // streak. A hunter who shows up 30 days in any pattern earns
+  // Steadfast; the System cares about consistency, not perfection.
+  {
+    id: "steadfast",
+    name: "Steadfast",
+    description: "Log activity on 30 distinct days. Consistency over heroics.",
+    icon: "❋",
+    rarity: "rare",
+    check: (s) => s.distinctActivityDays >= 30,
+  },
+  {
+    id: "veteran",
+    name: "Veteran of the System",
+    description: "90 distinct activity days. The System recognizes the patient.",
+    icon: "❖",
+    rarity: "epic",
+    check: (s) => s.distinctActivityDays >= 90,
+  },
+  {
+    id: "year-one",
+    name: "Year One",
+    description: "365 distinct activity days. A full year of showing up.",
+    icon: "✺",
+    rarity: "legendary",
+    check: (s) => s.distinctActivityDays >= 365,
+  },
+
+  // === ELEMENTAL ===
+  // One trophy per element at the 50-XP threshold. Each rewards a
+  // hunter who's deeply trained one element regardless of which
+  // dungeons they ran to get there.
+  {
+    id: "bedrock",
+    name: "Bedrock",
+    description: "Reach 50 Earth XP. The vessel is being forged.",
+    icon: "▣",
+    rarity: "rare",
+    check: (s) => s.dimensions.body >= 50,
+  },
+  {
+    id: "current",
+    name: "Current",
+    description: "Reach 50 Water XP. The heart's flow learns its shape.",
+    icon: "≈",
+    rarity: "rare",
+    check: (s) => s.dimensions.emotion >= 50,
+  },
+  {
+    id: "furnace",
+    name: "Furnace",
+    description: "Reach 50 Fire XP. Prana lit, nervous system awake.",
+    icon: "▲",
+    rarity: "rare",
+    check: (s) => s.dimensions.energy >= 50,
+  },
+  {
+    id: "open-sky",
+    name: "Open Sky",
+    description: "Reach 50 Air XP. Attention reclaimed, thought clarified.",
+    icon: "◌",
+    rarity: "rare",
+    check: (s) => s.dimensions.mind >= 50,
+  },
+  {
+    id: "inner-void",
+    name: "Inner Void",
+    description: "Reach 50 Ether XP. The silent room behind the noise.",
+    icon: "○",
+    rarity: "rare",
+    check: (s) => s.dimensions.spirit >= 50,
+  },
+
+  // === SHADOW ===
+  // Hidden trophies: won't show in the trophy grid until earned, so
+  // the player finds them by accident or stumbles into them. Designed
+  // around story moments that feel meaningful when they happen.
+  {
+    id: "phoenix",
+    name: "Phoenix",
+    description: "Re-enter a dungeon you previously relapsed in. The fall isn't the end.",
+    icon: "✦",
+    rarity: "rare",
+    hidden: true,
+    check: (s) => s.phoenixUnlocked,
+  },
+  {
+    id: "comeback",
+    name: "Comeback",
+    description: "Score a perfect day the morning after a scattered day. The System forgets nothing, but neither do you.",
+    icon: "☀",
+    rarity: "epic",
+    hidden: true,
+    check: (s) => s.comebackUnlocked,
+  },
 ];
 
 function rarityForRank(rank: string): AchievementRarity {
@@ -434,6 +614,10 @@ export type AchievementCategory =
   | "foundations"
   | "progression"
   | "training"
+  | "community"
+  | "devotion"
+  | "elemental"
+  | "shadow"
   | "dungeon";
 
 const FOUNDATION_IDS = new Set([
@@ -454,11 +638,45 @@ const TRAINING_IDS = new Set([
   "fearless",
 ]);
 
+const COMMUNITY_IDS = new Set([
+  "hunters-voice",
+  "first-friend",
+  "bond-found",
+  "daily-witness",
+  "open-hand",
+  "five-bonds",
+  "surge",
+  "tempest",
+]);
+
+const DEVOTION_IDS = new Set([
+  "steadfast",
+  "veteran",
+  "year-one",
+]);
+
+const ELEMENTAL_IDS = new Set([
+  "bedrock",
+  "current",
+  "furnace",
+  "open-sky",
+  "inner-void",
+]);
+
+const SHADOW_IDS = new Set([
+  "phoenix",
+  "comeback",
+]);
+
 export function achievementCategory(
   id: string
 ): { category: AchievementCategory; dungeonId?: string } {
   if (FOUNDATION_IDS.has(id)) return { category: "foundations" };
   if (TRAINING_IDS.has(id)) return { category: "training" };
+  if (COMMUNITY_IDS.has(id)) return { category: "community" };
+  if (DEVOTION_IDS.has(id)) return { category: "devotion" };
+  if (ELEMENTAL_IDS.has(id)) return { category: "elemental" };
+  if (SHADOW_IDS.has(id)) return { category: "shadow" };
   for (const d of DUNGEONS) {
     if (id.startsWith(`${d.id}-`)) {
       return { category: "dungeon", dungeonId: d.id };
