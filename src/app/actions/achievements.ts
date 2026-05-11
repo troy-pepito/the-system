@@ -721,13 +721,6 @@ const buildSnapshot = unstable_cache(
  * authoritative level + rank for any user. Other modules MUST use this
  * instead of recomputing XP locally to avoid drift between views.
  */
-export async function getPlayerLevelForUser(
-  userId: string
-): Promise<{ level: number; rank: string; totalXp: number }> {
-  const snap = await buildSnapshot(userId);
-  return { level: snap.level, rank: getRank(snap.level), totalXp: snap.totalXp };
-}
-
 export interface HunterSummary {
   hunterId: string;
   hunterName: string;
