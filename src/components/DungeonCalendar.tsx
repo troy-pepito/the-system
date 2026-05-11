@@ -36,6 +36,7 @@ function diffDays(aIso: string, bIso: string): number {
 
 function computeStreaks(
   cleared: Set<string>,
+  relapsed: Set<string>,
   today: string
 ): { current: number; longest: number } {
   // Longest: walk sorted cleared dates, track the longest run of
@@ -52,6 +53,14 @@ function computeStreaks(
     }
     if (runLen > longest) longest = runLen;
     prev = date;
+  }
+
+  // A relapse today breaks any active streak outright, even if every
+  // prior day in the chain is still banked as cleared. Without this
+  // guard, counting back from yesterday silently inherits the broken
+  // streak.
+  if (relapsed.has(today)) {
+    return { current: 0, longest };
   }
 
   // Current: count back from today (or yesterday if today not cleared).
@@ -104,9 +113,15 @@ export default function DungeonCalendar({
     return set;
   }, [checkIns]);
 
+  const relapsedSet = useMemo(() => {
+    const set = new Set<string>();
+    for (const c of checkIns) if (c.state === "relapsed") set.add(c.date);
+    return set;
+  }, [checkIns]);
+
   const streaks = useMemo(
-    () => computeStreaks(clearedSet, today),
-    [clearedSet, today]
+    () => computeStreaks(clearedSet, relapsedSet, today),
+    [clearedSet, relapsedSet, today]
   );
 
   const firstDay = new Date(Date.UTC(view.year, view.month, 1));
