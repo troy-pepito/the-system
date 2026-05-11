@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -60,6 +60,29 @@ export default function GuildPanel({
     const timer = setTimeout(() => setConfirmingLeave(false), 5000);
     return () => clearTimeout(timer);
   }, [confirmingLeave]);
+  // Kebab menu for member actions (currently just Leave Guild).
+  // Tucks the destructive option behind a small ⋯ in the card
+  // corner so it's not the most-prominent control on the page,
+  // matching the HunterCard menu pattern.
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onPointerDown(e: PointerEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
   const guild = initial;
 
   function runAction(fn: () => Promise<void>) {
@@ -106,6 +129,44 @@ export default function GuildPanel({
               ✎
             </span>
           </button>
+        )}
+
+        {/* Kebab menu for non-owner members. Hides while the leave
+            confirm is armed so the inline Confirm/Cancel pair below
+            is the only thing on screen at that moment. */}
+        {isMember && !isOwner && !confirmingLeave && (
+          <div ref={menuRef} className="absolute top-3 right-3 z-10">
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={t("memberMenuAria")}
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              className="flex flex-col items-center justify-center w-7 h-7 rounded text-slate-500 hover:text-cyan-300 hover:bg-slate-900/60 transition-colors"
+            >
+              <span className="block w-1 h-1 rounded-full bg-current mb-0.5" />
+              <span className="block w-1 h-1 rounded-full bg-current mb-0.5" />
+              <span className="block w-1 h-1 rounded-full bg-current" />
+            </button>
+            {menuOpen && (
+              <div
+                role="menu"
+                className="absolute top-full right-0 mt-1.5 min-w-[160px] py-1 bg-slate-900/95 border border-slate-700 rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setConfirmingLeave(true);
+                  }}
+                  className="w-full text-left px-3 py-2 text-[10px] tracking-[0.3em] uppercase text-red-300 hover:bg-red-500/15 hover:text-red-200 transition-colors"
+                >
+                  {t("leaveGuild")}
+                </button>
+              </div>
+            )}
+          </div>
         )}
 
         <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70">
@@ -183,15 +244,10 @@ export default function GuildPanel({
                   : `${t("awaitingApproval")} · ${t("cancelRequest")}`}
               </button>
             )}
-            {isMember && !confirmingLeave && (
-              <button
-                onClick={() => setConfirmingLeave(true)}
-                disabled={pending}
-                className="flex-1 px-4 py-3 bg-red-500/10 border border-red-500/40 text-red-300 text-xs uppercase tracking-[0.3em] hover:bg-red-500/20 transition-all disabled:opacity-40"
-              >
-                {t("leaveGuild")}
-              </button>
-            )}
+            {/* The non-confirming "Leave Guild" trigger lives in the
+                kebab menu in the top-right of the card; only the
+                inline two-tap confirm UI renders here when the
+                player has armed leave. */}
             {isMember && confirmingLeave && (
               <>
                 <button

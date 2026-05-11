@@ -264,7 +264,13 @@ export default function AwakeningOverlay() {
             </div>
           ) : phase === "path" ? (
             <>
-              <div className="min-h-[260px] space-y-3 font-mono text-center">
+              {/* No min-h: previously reserved 260px so buttons
+                  wouldn't jump while text typed in, but the leftover
+                  space after typing completed left a giant gap above
+                  the path choices. Better to let the buttons sit
+                  flush after the 2-sec reveal than to lock in
+                  permanent empty space. */}
+              <div className="space-y-3 font-mono text-center">
                 {PATH_LINES.slice(0, lineIdx).map((line, i) =>
                   renderLine(line, i)
                 )}

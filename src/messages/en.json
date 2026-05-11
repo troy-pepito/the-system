@@ -991,6 +991,7 @@
     "cancelRequest": "Cancel Request",
     "confirmLeave": "Leave for real?",
     "editGuildAria": "Edit guild",
+    "memberMenuAria": "Member options",
     "pendingHeader": "Pending Requests · {count}",
     "approve": "Approve",
     "decline": "Decline",
