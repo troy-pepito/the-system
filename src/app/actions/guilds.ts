@@ -1,6 +1,6 @@
 "use server";
 
-import { updateTag } from "next/cache";
+import { unstable_cache, updateTag } from "next/cache";
 import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
@@ -36,19 +36,35 @@ const TAG = "guild";
  * already wipes guildMember rows, so for in-app deletes this filter
  * is a no-op.
  */
+/** Cached inner. Cache key is the sorted+joined id list, so different
+ *  callers passing the same set in different orders hit the same entry.
+ *  300s revalidate is plenty: Clerk users rarely come/go minute-to-minute,
+ *  and the orphan-filter's job is "weed out long-deleted accounts," not
+ *  "react in real time." Tag lets webhook-driven user-list changes
+ *  invalidate explicitly when we wire that up later. */
+const _filterToActiveUserIds = unstable_cache(
+  async (sortedKey: string): Promise<string[]> => {
+    const userIds = sortedKey.split(",");
+    try {
+      const client = await clerkClient();
+      const list = await client.users.getUserList({
+        userId: userIds,
+        limit: Math.min(userIds.length, 500),
+      });
+      const activeIds = new Set(list.data.map((u) => u.id));
+      return userIds.filter((id) => activeIds.has(id));
+    } catch {
+      return userIds;
+    }
+  },
+  ["filter-active-clerk-users"],
+  { revalidate: 300, tags: ["clerk:users"] }
+);
+
 async function filterToActiveUserIds(userIds: string[]): Promise<string[]> {
   if (userIds.length === 0) return [];
-  try {
-    const client = await clerkClient();
-    const list = await client.users.getUserList({
-      userId: userIds,
-      limit: Math.min(userIds.length, 500),
-    });
-    const activeIds = new Set(list.data.map((u) => u.id));
-    return userIds.filter((id) => activeIds.has(id));
-  } catch {
-    return userIds;
-  }
+  const sortedKey = [...userIds].sort().join(",");
+  return _filterToActiveUserIds(sortedKey);
 }
 
 /** "One guild per user" rule, checks for any accepted membership. */
@@ -562,37 +578,43 @@ export async function getGuildFeed(
   return { entries, nextCursor };
 }
 
+/** Cached directory build. Same data for every signed-in viewer, so
+ *  the cache is shared. Tag-invalidated on any guild mutation (create,
+ *  update, delete, member changes all call updateTag(TAG)) — that's
+ *  what makes caching safe here despite the freshly-created-guild
+ *  visibility requirement we previously couldn't square. */
+const _browseGuilds = unstable_cache(
+  async (): Promise<GuildListItem[]> => {
+    const guilds = await prisma.guild.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: {
+        members: {
+          where: { status: "accepted" },
+          select: { userId: true },
+        },
+      },
+    });
+    const allMemberIds = Array.from(
+      new Set(guilds.flatMap((g) => g.members.map((m) => m.userId)))
+    );
+    const liveIds = new Set(await filterToActiveUserIds(allMemberIds));
+    return guilds.map((g) => {
+      const liveCount = g.members.filter((m) => liveIds.has(m.userId)).length;
+      return {
+        slug: g.slug,
+        name: g.name,
+        description: g.description,
+        memberCount: liveCount,
+        spotsLeft: Math.max(0, GUILD_MEMBER_CAP - liveCount),
+      };
+    });
+  },
+  ["browse-guilds"],
+  { revalidate: 60, tags: [TAG] }
+);
+
 export async function browseGuilds(): Promise<GuildListItem[]> {
   await requireUserId();
-  // Direct query, caching the directory was a bigger trap than a win.
-  // findMany on Guild with member counts is cheap, and a freshly-created
-  // guild needs to show up immediately for the owner without waiting on
-  // tag invalidation.
-  const guilds = await prisma.guild.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 50,
-    include: {
-      members: {
-        where: { status: "accepted" },
-        select: { userId: true },
-      },
-    },
-  });
-  // Single Clerk batch fetch across every accepted member of every
-  // guild on the page, then filter each guild's count to live users
-  // only. Orphan rows (Clerk-deleted accounts) stop inflating counts.
-  const allMemberIds = Array.from(
-    new Set(guilds.flatMap((g) => g.members.map((m) => m.userId)))
-  );
-  const liveIds = new Set(await filterToActiveUserIds(allMemberIds));
-  return guilds.map((g) => {
-    const liveCount = g.members.filter((m) => liveIds.has(m.userId)).length;
-    return {
-      slug: g.slug,
-      name: g.name,
-      description: g.description,
-      memberCount: liveCount,
-      spotsLeft: Math.max(0, GUILD_MEMBER_CAP - liveCount),
-    };
-  });
+  return _browseGuilds();
 }
