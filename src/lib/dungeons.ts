@@ -349,7 +349,7 @@ export const DUNGEONS: DungeonDef[] = [
       "Up to 4 unnatural sweets per month is fine. The 5th is a relapse.",
       "Confirm each day on the calendar, Cleared if you held the line, Relapsed if you broke it.",
     ],
-    dimensions: { body: 2 },
+    dimensions: { body: 2, energy: 1 },
   },
   {
     id: "gym-life",
@@ -371,7 +371,7 @@ export const DUNGEONS: DungeonDef[] = [
       "Pick any exercises that hit the target muscle group. Log when the session is done.",
       "Week runs Monday–Sunday (UTC). Manual relapse if you fall off the cadence.",
     ],
-    dimensions: { body: 2, energy: 1 },
+    dimensions: { body: 2 },
   },
   {
     id: "attention-reclaim",
