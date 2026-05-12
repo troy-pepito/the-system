@@ -36,35 +36,25 @@ const TAG = "guild";
  * already wipes guildMember rows, so for in-app deletes this filter
  * is a no-op.
  */
-/** Cached inner. Cache key is the sorted+joined id list, so different
- *  callers passing the same set in different orders hit the same entry.
- *  300s revalidate is plenty: Clerk users rarely come/go minute-to-minute,
- *  and the orphan-filter's job is "weed out long-deleted accounts," not
- *  "react in real time." Tag lets webhook-driven user-list changes
- *  invalidate explicitly when we wire that up later. */
-const _filterToActiveUserIds = unstable_cache(
-  async (sortedKey: string): Promise<string[]> => {
-    const userIds = sortedKey.split(",");
-    try {
-      const client = await clerkClient();
-      const list = await client.users.getUserList({
-        userId: userIds,
-        limit: Math.min(userIds.length, 500),
-      });
-      const activeIds = new Set(list.data.map((u) => u.id));
-      return userIds.filter((id) => activeIds.has(id));
-    } catch {
-      return userIds;
-    }
-  },
-  ["filter-active-clerk-users"],
-  { revalidate: 300, tags: ["clerk:users"] }
-);
-
 async function filterToActiveUserIds(userIds: string[]): Promise<string[]> {
   if (userIds.length === 0) return [];
-  const sortedKey = [...userIds].sort().join(",");
-  return _filterToActiveUserIds(sortedKey);
+  // Intentionally uncached. We have no Clerk webhook hooked up to
+  // invalidate when an upstream user is deleted, so caching this
+  // returns stale "still alive" answers and inflates member counts
+  // by orphans the rest of the codebase already drops. The cost
+  // (~500ms Clerk batch fetch) is absorbed by outer-layer caches on
+  // browseGuilds / _getMyGuild instead.
+  try {
+    const client = await clerkClient();
+    const list = await client.users.getUserList({
+      userId: userIds,
+      limit: Math.min(userIds.length, 500),
+    });
+    const activeIds = new Set(list.data.map((u) => u.id));
+    return userIds.filter((id) => activeIds.has(id));
+  } catch {
+    return userIds;
+  }
 }
 
 /** "One guild per user" rule, checks for any accepted membership. */
@@ -186,43 +176,52 @@ export async function getGuildBySlug(slug: string): Promise<GuildDetail | null> 
   return _getGuildBySlug(slug, userId);
 }
 
-export async function getMyGuild(): Promise<GuildSummary | null> {
-  const userId = await requireUserId();
-  // Fetch the viewer's guild + the accepted-member userIds so we can
-  // filter out orphans (Clerk-deleted accounts whose GuildMember row
-  // was left behind, e.g. an alt deleted via Clerk dashboard).
-  const member = await prisma.guildMember.findFirst({
-    where: { userId, status: "accepted" },
-    include: {
-      guild: {
-        include: {
-          members: {
-            where: { status: "accepted" },
-            select: { userId: true },
+/** Cached inner. Keyed by userId since the response includes viewer-
+ *  specific fields (viewerStatus, owner-only pendingCount). Tag-
+ *  invalidated on every guild mutation in this file, so member
+ *  count reflects joins/kicks/leaves within seconds, not minutes. */
+const _getMyGuild = unstable_cache(
+  async (userId: string): Promise<GuildSummary | null> => {
+    const member = await prisma.guildMember.findFirst({
+      where: { userId, status: "accepted" },
+      include: {
+        guild: {
+          include: {
+            members: {
+              where: { status: "accepted" },
+              select: { userId: true },
+            },
           },
         },
       },
-    },
-  });
-  if (!member) return null;
-  const acceptedIds = member.guild.members.map((m) => m.userId);
-  const liveIds = await filterToActiveUserIds(acceptedIds);
-  const pendingCount =
-    member.guild.ownerId === userId
-      ? await prisma.guildMember.count({
-          where: { guildId: member.guild.id, status: "pending" },
-        })
-      : 0;
-  return {
-    id: member.guild.id,
-    slug: member.guild.slug,
-    name: member.guild.name,
-    description: member.guild.description,
-    ownerId: member.guild.ownerId,
-    memberCount: liveIds.length,
-    pendingCount,
-    viewerStatus: member.guild.ownerId === userId ? "owner" : "member",
-  };
+    });
+    if (!member) return null;
+    const acceptedIds = member.guild.members.map((m) => m.userId);
+    const liveIds = await filterToActiveUserIds(acceptedIds);
+    const pendingCount =
+      member.guild.ownerId === userId
+        ? await prisma.guildMember.count({
+            where: { guildId: member.guild.id, status: "pending" },
+          })
+        : 0;
+    return {
+      id: member.guild.id,
+      slug: member.guild.slug,
+      name: member.guild.name,
+      description: member.guild.description,
+      ownerId: member.guild.ownerId,
+      memberCount: liveIds.length,
+      pendingCount,
+      viewerStatus: member.guild.ownerId === userId ? "owner" : "member",
+    };
+  },
+  ["get-my-guild"],
+  { revalidate: 60, tags: [TAG] }
+);
+
+export async function getMyGuild(): Promise<GuildSummary | null> {
+  const userId = await requireUserId();
+  return _getMyGuild(userId);
 }
 
 export async function requestJoinGuild(slug: string): Promise<void> {
