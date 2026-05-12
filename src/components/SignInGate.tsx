@@ -2,7 +2,7 @@
 import { useClerk } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 
-const PUBLIC_ROUTES = ["/", "/guide", "/privacy", "/terms"];
+const PUBLIC_ROUTES = ["/", "/guide", "/privacy", "/terms", "/finish-signin"];
 
 export default function SignInGate() {
   const { openSignIn } = useClerk();
