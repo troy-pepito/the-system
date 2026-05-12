@@ -857,8 +857,18 @@ export async function evaluateAchievements(): Promise<string[]> {
   }
 
   if (newlyUnlocked.length > 0) {
+    const now = new Date();
     await prisma.achievement.createMany({
-      data: newlyUnlocked.map((id) => ({ userId, achievementId: id })),
+      // Combo milestones pay out XP via comboMilestoneXp at unlock
+      // time (see totalXp calc above), not via a manual claim. They're
+      // also hidden from the trophy grid by design. Auto-claim them
+      // here so the navbar's unclaimed-badge can't accumulate orphan
+      // entries the player has no way to clear.
+      data: newlyUnlocked.map((id) => ({
+        userId,
+        achievementId: id,
+        ...(isComboAchievementId(id) ? { claimedAt: now } : {}),
+      })),
       skipDuplicates: true,
     });
   }
@@ -910,8 +920,17 @@ export async function claimAchievement(achievementId: string): Promise<void> {
  *  multiple seconds (same root cause as the profile-claim bug). */
 export async function getUnclaimedTrophyCount(): Promise<number> {
   const userId = await requireUserId();
+  // Combo milestones are toast-only moments, never surfaced in the
+  // trophy grid. Excluding them here matches the grid filter so the
+  // badge can't show a count for a trophy the player can't find or
+  // claim. Also backfills the previous bug where combo rows landed
+  // unclaimed and got counted.
   return prisma.achievement.count({
-    where: { userId, claimedAt: null },
+    where: {
+      userId,
+      claimedAt: null,
+      NOT: { achievementId: { startsWith: "combo-" } },
+    },
   });
 }
 
