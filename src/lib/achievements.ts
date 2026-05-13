@@ -403,6 +403,19 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   // Long-tail loyalty ladder. Counts distinct days of activity, not
   // streak. A hunter who shows up 30 days in any pattern earns
   // Steadfast; the System cares about consistency, not perfection.
+  //
+  // first-week sits at the very front of this ladder: 7 distinct
+  // active days is the retention cliff most habit apps lose hunters
+  // at, and surfacing a trophy at the moment the hunter crosses it
+  // marks the moment for them.
+  {
+    id: "first-week",
+    name: "Threshold",
+    description: "Show up on 7 distinct days. You crossed the cliff.",
+    icon: "✦",
+    rarity: "common",
+    check: (s) => s.distinctActivityDays >= 7,
+  },
   {
     id: "steadfast",
     name: "Steadfast",
@@ -650,6 +663,7 @@ const COMMUNITY_IDS = new Set([
 ]);
 
 const DEVOTION_IDS = new Set([
+  "first-week",
   "steadfast",
   "veteran",
   "year-one",

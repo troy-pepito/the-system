@@ -563,6 +563,10 @@
         "name": "Tempest",
         "description": "Score 100 activity points in a single week. Outlier output."
       },
+      "first-week": {
+        "name": "Threshold",
+        "description": "Show up on 7 distinct days. You crossed the cliff."
+      },
       "steadfast": {
         "name": "Steadfast",
         "description": "Log activity on 30 distinct days. Consistency over heroics."

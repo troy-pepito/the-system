@@ -21,6 +21,9 @@ import {
 import StreakCard from "@/components/StreakCard";
 import DailyQuests from "@/components/DailyQuests";
 import SideQuests from "@/components/SideQuests";
+import SoloHunterNudge from "@/components/SoloHunterNudge";
+import FreshHunterBandPrompt from "@/components/FreshHunterBandPrompt";
+import FirstWeekProgressBanner from "@/components/FirstWeekProgressBanner";
 import SortableDungeonItem from "@/components/SortableDungeonItem";
 import {
   STATS_UPDATED_EVENT,
@@ -256,6 +259,10 @@ export default function Dashboard() {
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
+
+        <FirstWeekProgressBanner />
+        <FreshHunterBandPrompt />
+        <SoloHunterNudge />
 
         {dashboard && (
           <DailyQuests
