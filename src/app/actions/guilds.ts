@@ -1,6 +1,6 @@
 "use server";
 
-import { unstable_cache, updateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
@@ -167,57 +167,45 @@ export async function getGuildBySlug(slug: string): Promise<GuildDetail | null> 
   return _getGuildBySlug(slug, userId);
 }
 
-/** Cached inner. Keyed by userId since the response includes viewer-
- *  specific fields (viewerStatus, owner-only pendingCount). Tag-
- *  invalidated on every guild mutation in this file, so member
- *  count reflects joins/kicks/leaves within seconds, not minutes.
- *
- *  Uses filterToActiveUserIds (a direct Clerk call) rather than
- *  getHunterSummariesByIds, because the latter calls requireUserId
- *  and Next.js strips request context inside unstable_cache, which
- *  would make every cached call throw "Not authenticated". */
-const _getMyGuild = unstable_cache(
-  async (userId: string): Promise<GuildSummary | null> => {
-    const member = await prisma.guildMember.findFirst({
-      where: { userId, status: "accepted" },
-      include: {
-        guild: {
-          include: {
-            members: {
-              where: { status: "accepted" },
-              select: { userId: true },
-            },
+export async function getMyGuild(): Promise<GuildSummary | null> {
+  const userId = await requireUserId();
+  // Intentionally not wrapped in unstable_cache. The Clerk SDK call
+  // inside filterToActiveUserIds silently fails when invoked from
+  // inside a cache wrapper (the silent catch then returns input as-is,
+  // inflating member counts by orphan rows). Correctness over speed
+  // here, the page-level shell still renders fast via loading.tsx.
+  const member = await prisma.guildMember.findFirst({
+    where: { userId, status: "accepted" },
+    include: {
+      guild: {
+        include: {
+          members: {
+            where: { status: "accepted" },
+            select: { userId: true },
           },
         },
       },
-    });
-    if (!member) return null;
-    const acceptedIds = member.guild.members.map((m) => m.userId);
-    const liveIds = await filterToActiveUserIds(acceptedIds);
-    const pendingCount =
-      member.guild.ownerId === userId
-        ? await prisma.guildMember.count({
-            where: { guildId: member.guild.id, status: "pending" },
-          })
-        : 0;
-    return {
-      id: member.guild.id,
-      slug: member.guild.slug,
-      name: member.guild.name,
-      description: member.guild.description,
-      ownerId: member.guild.ownerId,
-      memberCount: liveIds.length,
-      pendingCount,
-      viewerStatus: member.guild.ownerId === userId ? "owner" : "member",
-    };
-  },
-  ["get-my-guild"],
-  { revalidate: 60, tags: [TAG] }
-);
-
-export async function getMyGuild(): Promise<GuildSummary | null> {
-  const userId = await requireUserId();
-  return _getMyGuild(userId);
+    },
+  });
+  if (!member) return null;
+  const acceptedIds = member.guild.members.map((m) => m.userId);
+  const liveIds = await filterToActiveUserIds(acceptedIds);
+  const pendingCount =
+    member.guild.ownerId === userId
+      ? await prisma.guildMember.count({
+          where: { guildId: member.guild.id, status: "pending" },
+        })
+      : 0;
+  return {
+    id: member.guild.id,
+    slug: member.guild.slug,
+    name: member.guild.name,
+    description: member.guild.description,
+    ownerId: member.guild.ownerId,
+    memberCount: liveIds.length,
+    pendingCount,
+    viewerStatus: member.guild.ownerId === userId ? "owner" : "member",
+  };
 }
 
 export async function requestJoinGuild(slug: string): Promise<void> {
@@ -573,43 +561,34 @@ export async function getGuildFeed(
   return { entries, nextCursor };
 }
 
-/** Cached directory build. Same data for every signed-in viewer, so
- *  the cache is shared. Tag-invalidated on any guild mutation (create,
- *  update, delete, member changes all call updateTag(TAG)) — that's
- *  what makes caching safe here despite the freshly-created-guild
- *  visibility requirement we previously couldn't square. */
-const _browseGuilds = unstable_cache(
-  async (): Promise<GuildListItem[]> => {
-    const guilds = await prisma.guild.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 50,
-      include: {
-        members: {
-          where: { status: "accepted" },
-          select: { userId: true },
-        },
-      },
-    });
-    const allMemberIds = Array.from(
-      new Set(guilds.flatMap((g) => g.members.map((m) => m.userId)))
-    );
-    const liveIds = new Set(await filterToActiveUserIds(allMemberIds));
-    return guilds.map((g) => {
-      const liveCount = g.members.filter((m) => liveIds.has(m.userId)).length;
-      return {
-        slug: g.slug,
-        name: g.name,
-        description: g.description,
-        memberCount: liveCount,
-        spotsLeft: Math.max(0, GUILD_MEMBER_CAP - liveCount),
-      };
-    });
-  },
-  ["browse-guilds"],
-  { revalidate: 60, tags: [TAG] }
-);
-
 export async function browseGuilds(): Promise<GuildListItem[]> {
   await requireUserId();
-  return _browseGuilds();
+  // Intentionally uncached for the same reason as getMyGuild —
+  // filterToActiveUserIds' Clerk SDK call silently fails inside
+  // unstable_cache and the catch-block fallback inflates the
+  // member counts.
+  const guilds = await prisma.guild.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 50,
+    include: {
+      members: {
+        where: { status: "accepted" },
+        select: { userId: true },
+      },
+    },
+  });
+  const allMemberIds = Array.from(
+    new Set(guilds.flatMap((g) => g.members.map((m) => m.userId)))
+  );
+  const liveIds = new Set(await filterToActiveUserIds(allMemberIds));
+  return guilds.map((g) => {
+    const liveCount = g.members.filter((m) => liveIds.has(m.userId)).length;
+    return {
+      slug: g.slug,
+      name: g.name,
+      description: g.description,
+      memberCount: liveCount,
+      spotsLeft: Math.max(0, GUILD_MEMBER_CAP - liveCount),
+    };
+  });
 }
