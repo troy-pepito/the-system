@@ -69,17 +69,25 @@ export default function DailyQuests({
   // mirror it into local `completed`. Skipped while a toggle is in
   // flight, the optimistic local state is the truth during that window
   // and a stale parent prop would briefly flicker the tick off.
+  //
+  // CRITICAL: busyIds.size is NOT in the deps. If it were, the effect
+  // would refire the moment a toggle finishes (size 1 → 0), running
+  // setCompleted(initialTodayIds) before the parent has refetched the
+  // new authoritative state. That clobbered the optimistic tick with
+  // the stale pre-toggle value, briefly unticking the checkbox until
+  // the parent caught up — the "seesaw" UX bug.
   useEffect(() => {
     if (busyIds.size > 0) return;
     setCompleted(initialTodayIds);
-  }, [initialTodayIds, busyIds.size]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTodayIds]);
 
-  // Same for lifetime rewards. Server reload brings authoritative XP
-  // totals; local state catches up so the gain log + display agree.
+  // Same shape, same bug, same fix for lifetime rewards.
   useEffect(() => {
     if (busyIds.size > 0) return;
     setLifetime(initialLifetime);
-  }, [initialLifetime, busyIds.size]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLifetime]);
 
   const todayQualifies = completed.length >= COMBO_THRESHOLD;
   const comboDays =
