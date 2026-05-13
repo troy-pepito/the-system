@@ -367,8 +367,15 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
 
   const todayISO = todayLocalISO();
   const yesterdayISO = addDaysISO(todayISO, -1);
-  const hasAnyCompletion = Object.keys(byDate).length > 0;
-  const scattered = hasAnyCompletion && !byDate[yesterdayISO];
+  // Scattered requires established history: the hunter must have
+  // completed quests on some day strictly before yesterday AND have
+  // no activity yesterday. Without the "strictly before" guard, any
+  // first-day hunter who completes a quest gets flagged scattered
+  // because yesterday (the day they didn't exist) has no entry.
+  const hasCompletionBeforeYesterday = Object.keys(byDate).some(
+    (d) => d < yesterdayISO
+  );
+  const scattered = hasCompletionBeforeYesterday && !byDate[yesterdayISO];
   const perfectQuestDays = Object.values(byDate).filter(
     (set) => set.size >= QUESTS.length
   ).length;
@@ -841,10 +848,18 @@ export async function evaluateAchievements(): Promise<string[]> {
   // Combo milestones are excluded, they're point-in-time markers for
   // a streak that genuinely happened. Unticking today's quest shouldn't
   // erase a 30-day combo earned weeks ago.
+  //
+  // Weekly-window achievements (surge, tempest) are also excluded,
+  // their conditions reset every Monday UTC, which would otherwise
+  // wipe + re-grant them on every week roll-over. Once a hunter has
+  // hit 100 activity points in a single week, that fact is permanent
+  // and the trophy commemorates that moment, not their current week.
+  const NEVER_REVOKE = new Set(["surge", "tempest"]);
   const definedById = new Map(ACHIEVEMENTS.map((a) => [a.id, a]));
   const toRevoke: string[] = [];
   for (const id of existingIds) {
     if (isComboAchievementId(id)) continue;
+    if (NEVER_REVOKE.has(id)) continue;
     const def = definedById.get(id);
     if (!def) continue;
     if (!def.check(snapshot)) toRevoke.push(id);
