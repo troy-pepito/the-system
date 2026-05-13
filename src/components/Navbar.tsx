@@ -21,6 +21,7 @@ import {
   getProfileStats,
   getUnclaimedTrophyCount,
 } from "@/app/actions/achievements";
+import { getPendingJoinRequestCount } from "@/app/actions/guilds";
 import { readCache, writeCache } from "@/lib/offlineCache";
 
 const TOTAL_XP_CACHE_KEY = "totalXp";
@@ -30,6 +31,7 @@ export default function Navbar() {
   // the first client render. Cache hydration happens in the useEffect.
   const [totalXp, setTotalXp] = useState<number>(0);
   const [unclaimedTrophyCount, setUnclaimedTrophyCount] = useState<number>(0);
+  const [pendingGuildCount, setPendingGuildCount] = useState<number>(0);
   const pathname = usePathname();
   const t = useTranslations("nav");
 
@@ -172,6 +174,13 @@ export default function Navbar() {
         const count = await getUnclaimedTrophyCount();
         setUnclaimedTrophyCount(count);
       } catch {}
+      try {
+        // Same shape as the trophy badge, single COUNT for the guild
+        // owner's pending join requests. Returns 0 for non-owners or
+        // for hunters not in a guild yet.
+        const count = await getPendingJoinRequestCount();
+        setPendingGuildCount(count);
+      } catch {}
     };
     const onEvent = (e: Event) => {
       const delta = (e as CustomEvent<{ xpDelta?: number }>).detail?.xpDelta;
@@ -242,7 +251,9 @@ export default function Navbar() {
           </Link>
           <div className="hidden sm:flex gap-5 text-[10px] uppercase tracking-widest">
             {navItem("/", t("status"), statusIcon)}
-            {navItem("/guilds", t("guilds"), guildsIcon)}
+            {navItem("/guilds", t("guilds"), guildsIcon, {
+              badgeCount: pendingGuildCount,
+            })}
             {navItem("/leaderboard", t("board"), boardIcon)}
             {navItem("/profile", t("profile"), profileIcon, {
               badgeCount: unclaimedTrophyCount,
@@ -311,7 +322,10 @@ export default function Navbar() {
         </div>
         <div className="sm:hidden flex justify-around gap-2 mt-3 pt-2 border-t border-cyan-500/10 text-[10px] uppercase tracking-widest">
           {navItem("/", t("status"), statusIcon, { layout: "stack" })}
-          {navItem("/guilds", t("guilds"), guildsIcon, { layout: "stack" })}
+          {navItem("/guilds", t("guilds"), guildsIcon, {
+            layout: "stack",
+            badgeCount: pendingGuildCount,
+          })}
           {navItem("/leaderboard", t("board"), boardIcon, { layout: "stack" })}
           {navItem("/profile", t("profile"), profileIcon, {
             layout: "stack",

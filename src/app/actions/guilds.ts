@@ -208,6 +208,22 @@ export async function getMyGuild(): Promise<GuildSummary | null> {
   };
 }
 
+/** Cheap COUNT query for the navbar guild-badge. Owners-only, since
+ *  approving applicants is an owner action — non-owners have nothing
+ *  to do about a pending request and don't need to see it. Returns 0
+ *  for non-owners or when the viewer isn't in a guild. */
+export async function getPendingJoinRequestCount(): Promise<number> {
+  const userId = await requireUserId();
+  const guild = await prisma.guild.findFirst({
+    where: { ownerId: userId },
+    select: { id: true },
+  });
+  if (!guild) return 0;
+  return prisma.guildMember.count({
+    where: { guildId: guild.id, status: "pending" },
+  });
+}
+
 export async function requestJoinGuild(slug: string): Promise<void> {
   const userId = await requireUserId();
   if (await hasAcceptedMembership(userId)) {
