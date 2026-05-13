@@ -23,6 +23,31 @@ import {
 
 const TAG = "guild";
 
+/**
+ * Filter a userId list to those whose Clerk account still exists.
+ * Direct Clerk call — intentionally does NOT call requireUserId,
+ * because the callers wrap this in unstable_cache and Next.js strips
+ * request context (cookies/session) inside cache wrappers. Calling
+ * Clerk's auth() in there returns null and would throw.
+ *
+ * Returns the input as-is on Clerk failure rather than fake-vanishing
+ * everyone, a transient outage shouldn't depopulate guilds.
+ */
+async function filterToActiveUserIds(userIds: string[]): Promise<string[]> {
+  if (userIds.length === 0) return [];
+  try {
+    const client = await clerkClient();
+    const list = await client.users.getUserList({
+      userId: userIds,
+      limit: Math.min(userIds.length, 500),
+    });
+    const activeIds = new Set(list.data.map((u) => u.id));
+    return userIds.filter((id) => activeIds.has(id));
+  } catch {
+    return userIds;
+  }
+}
+
 /** "One guild per user" rule, checks for any accepted membership. */
 async function hasAcceptedMembership(userId: string): Promise<boolean> {
   const row = await prisma.guildMember.findFirst({
@@ -147,11 +172,10 @@ export async function getGuildBySlug(slug: string): Promise<GuildDetail | null> 
  *  invalidated on every guild mutation in this file, so member
  *  count reflects joins/kicks/leaves within seconds, not minutes.
  *
- *  Uses getHunterSummariesByIds (not filterToActiveUserIds) so this
- *  count agrees with the detail page (/g/[slug]) byte-for-byte. The
- *  two helpers nominally do the same orphan filter, but empirically
- *  disagreed on the same input — easier to consolidate than to
- *  re-debug Clerk pagination quirks every time. */
+ *  Uses filterToActiveUserIds (a direct Clerk call) rather than
+ *  getHunterSummariesByIds, because the latter calls requireUserId
+ *  and Next.js strips request context inside unstable_cache, which
+ *  would make every cached call throw "Not authenticated". */
 const _getMyGuild = unstable_cache(
   async (userId: string): Promise<GuildSummary | null> => {
     const member = await prisma.guildMember.findFirst({
@@ -169,7 +193,7 @@ const _getMyGuild = unstable_cache(
     });
     if (!member) return null;
     const acceptedIds = member.guild.members.map((m) => m.userId);
-    const liveSummaries = await getHunterSummariesByIds(acceptedIds);
+    const liveIds = await filterToActiveUserIds(acceptedIds);
     const pendingCount =
       member.guild.ownerId === userId
         ? await prisma.guildMember.count({
@@ -182,7 +206,7 @@ const _getMyGuild = unstable_cache(
       name: member.guild.name,
       description: member.guild.description,
       ownerId: member.guild.ownerId,
-      memberCount: liveSummaries.length,
+      memberCount: liveIds.length,
       pendingCount,
       viewerStatus: member.guild.ownerId === userId ? "owner" : "member",
     };
@@ -569,8 +593,7 @@ const _browseGuilds = unstable_cache(
     const allMemberIds = Array.from(
       new Set(guilds.flatMap((g) => g.members.map((m) => m.userId)))
     );
-    const liveSummaries = await getHunterSummariesByIds(allMemberIds);
-    const liveIds = new Set(liveSummaries.map((s) => s.hunterId));
+    const liveIds = new Set(await filterToActiveUserIds(allMemberIds));
     return guilds.map((g) => {
       const liveCount = g.members.filter((m) => liveIds.has(m.userId)).length;
       return {
