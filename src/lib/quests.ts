@@ -136,11 +136,12 @@ export const COMBO_MILESTONES: ReadonlyArray<{ days: number; xp: number }> = [
  * Indexed by milestone index, same order as COMBO_MILESTONES. Sticky
  * (once earned, always applied) so a streak break doesn't yank the
  * scaling away. Base daily-quest XP is 10; this caps a 365-day combo
- * hunter at 50 XP per quest, matching the "S-rank max action XP"
- * ceiling the dungeon tier scaling uses.
+ * hunter at 100 XP per quest, matching the "S-rank max action XP"
+ * ceiling the dungeon tier scaling uses (TIER_PER_ACTION_BONUS, also
+ * topping at +90 bonus + 10 base = 100).
  */
 export const COMBO_PER_QUEST_BONUS: ReadonlyArray<number> = [
-  5, 10, 15, 20, 25, 30, 40,
+  10, 20, 30, 45, 60, 75, 90,
 ];
 
 export interface ComboRun {

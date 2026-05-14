@@ -21,8 +21,7 @@ import { getRankStyle } from "@/lib/rankStyle";
 import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
 import Heatmap from "@/components/Heatmap";
-import FriendActions from "@/components/FriendActions";
-import InviteToGuildAction from "@/components/InviteToGuildAction";
+import HunterActionsMenu from "@/components/HunterActionsMenu";
 
 interface Props {
   params: Promise<{ hunterId: string }>;
@@ -105,13 +104,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
               <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
                 {tHunterCard("id")}
               </p>
-              <div className="flex items-center gap-1.5">
-                <FriendActions hunterId={data.hunterId} variant="compact" />
-                <InviteToGuildAction
-                  hunterId={data.hunterId}
-                  variant="compact"
-                />
-              </div>
+              <HunterActionsMenu hunterId={data.hunterId} />
             </div>
             <div className="flex items-center gap-5">
               <div className="shrink-0 w-24 h-24 sm:w-28 sm:h-28 overflow-hidden border border-cyan-400/50 bg-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.25)]">

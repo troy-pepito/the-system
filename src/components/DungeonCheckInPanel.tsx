@@ -7,7 +7,11 @@ import {
   getCheckIns,
   type DayCheckIn,
 } from "@/app/actions/dungeons";
-import { getDungeon, TIER_BONUS_XP } from "@/lib/dungeons";
+import {
+  getDungeon,
+  TIER_BONUS_XP,
+  tieredStreakRunXp,
+} from "@/lib/dungeons";
 import {
   notifyReward,
   notifyStatsUpdated,
@@ -153,9 +157,21 @@ export default function DungeonCheckInPanel({
     ].sort((a, b) => a.date.localeCompare(b.date));
     setCheckIns(nextList);
     reportClearedCount(nextList);
-    const dims = getDungeon(dungeonId)?.dimensions ?? {};
+    const def = getDungeon(dungeonId);
+    const dims = def?.dimensions ?? {};
+    // Tier-scaled delta mirrors the server's snapshot rebuild: total
+    // XP for the run is clearedCount × (base + tierBonus), where the
+    // bonus boosts every banked day retroactively at each tier cross.
+    // Diffing pre/post run totals captures both the new day's value
+    // AND the retroactive boost in one number — feels right on the
+    // way up, refunds correctly on the way down.
+    const prevCleared = checkIns.filter((c) => c.state === "cleared").length;
+    const nextCleared = nextList.filter((c) => c.state === "cleared").length;
+    const xpDelta =
+      tieredStreakRunXp(nextCleared, def, XP_PER_STREAK_DAY) -
+      tieredStreakRunXp(prevCleared, def, XP_PER_STREAK_DAY);
     notifyReward({
-      xp: XP_PER_STREAK_DAY,
+      xp: xpDelta,
       body: dims.body,
       mind: dims.mind,
       emotion: dims.emotion,
@@ -164,7 +180,7 @@ export default function DungeonCheckInPanel({
       sourceKey: "gainSources.dayCleared",
       sourceValues: { dungeonId },
     });
-    notifyStatsUpdated({ xpDelta: XP_PER_STREAK_DAY });
+    notifyStatsUpdated({ xpDelta });
     track("day_confirmed_cleared", { dungeon_id: dungeonId, date });
 
     // Tier crossing celebration: if this commit moves the cleared count
@@ -236,11 +252,11 @@ export default function DungeonCheckInPanel({
     isPublic = false
   ) {
     // Compute XP delta BEFORE we mutate state, if the day was cleared,
-    // marking it relapsed wipes that day's XP.
+    // marking it relapsed wipes that day's XP — and at higher tiers,
+    // dropping below a threshold also retroactively de-scales the
+    // remaining banked days. Diff the pre/post run XP totals to get
+    // both effects in one number.
     const existing = checkIns.find((c) => c.date === date);
-    const prevState = existing?.state;
-    const xpDelta = prevState === "cleared" ? -XP_PER_STREAK_DAY : 0;
-
     const nextCount =
       existing && existing.state === "relapsed" ? existing.count + 1 : 1;
     const filtered = checkIns.filter((c) => c.date !== date);
@@ -254,6 +270,10 @@ export default function DungeonCheckInPanel({
     const newClearedCount = nextList.filter(
       (c) => c.state === "cleared"
     ).length;
+    const def = getDungeon(dungeonId);
+    const xpDelta =
+      tieredStreakRunXp(newClearedCount, def, XP_PER_STREAK_DAY) -
+      tieredStreakRunXp(prevClearedCount, def, XP_PER_STREAK_DAY);
     setCheckIns(nextList);
     reportClearedCount(nextList);
     track("day_confirmed_relapsed", { dungeon_id: dungeonId, date });
@@ -288,10 +308,8 @@ export default function DungeonCheckInPanel({
   async function commitUndo(date: string) {
     // Same race-fix as commitRelapsed: figure out the XP impact before
     // we drop the entry, then notify with an explicit delta so the
-    // refetch listener stays out of our way.
-    const removed = checkIns.find((c) => c.date === date);
-    const xpDelta = removed?.state === "cleared" ? -XP_PER_STREAK_DAY : 0;
-
+    // refetch listener stays out of our way. Tier-scaled via diff of
+    // run-XP totals to capture retroactive de-scaling.
     const nextList: DayCheckIn[] = checkIns.filter((c) => c.date !== date);
     const prevClearedCount = checkIns.filter(
       (c) => c.state === "cleared"
@@ -299,6 +317,10 @@ export default function DungeonCheckInPanel({
     const newClearedCount = nextList.filter(
       (c) => c.state === "cleared"
     ).length;
+    const def = getDungeon(dungeonId);
+    const xpDelta =
+      tieredStreakRunXp(newClearedCount, def, XP_PER_STREAK_DAY) -
+      tieredStreakRunXp(prevClearedCount, def, XP_PER_STREAK_DAY);
     setCheckIns(nextList);
     reportClearedCount(nextList);
     notifyStatsUpdated({ xpDelta });

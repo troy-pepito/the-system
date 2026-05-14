@@ -207,9 +207,38 @@ export const DIMENSION_RANK_MULTIPLIERS = [1, 2, 4, 8, 16, 32];
 export const TIER_BONUS_XP = [100, 200, 400, 800, 1600, 3200];
 
 // Per-action scaling bonus added on top of the base XP rate, indexed by
-// the highest tier the player has cleared in that dungeon. Caps at +30
-// at S rank, this is the system's hard ceiling on per-action XP.
-export const TIER_PER_ACTION_BONUS = [5, 10, 15, 20, 25, 30];
+// the highest tier the player has cleared in that dungeon. Caps at +90
+// at S rank — combined with the 10 XP base, an S-tier cleared day is
+// worth 100 XP. Curve accelerates at C → B → A so the climb feels like
+// it pays off rather than plateauing early.
+export const TIER_PER_ACTION_BONUS = [10, 20, 35, 55, 75, 90];
+
+/**
+ * Total XP a streak/timed run is worth at a given cleared-day count,
+ * with tier scaling applied retroactively to every banked day. Used
+ * client-side to compute optimistic xpDelta on a check-in toggle so
+ * the +XP toast matches what the server's snapshot rebuild will
+ * produce. Mirrors the formula in achievements.ts.
+ *
+ * Retroactive scaling means crossing a tier boosts every past day's
+ * value at the same time — feels good on the way up, refunds
+ * symmetrically on the way down (relapse / undo).
+ */
+export function tieredStreakRunXp(
+  clearedCount: number,
+  def: DungeonDef | undefined,
+  baseXp: number
+): number {
+  if (clearedCount <= 0) return 0;
+  if (!def?.tiers) return clearedCount * baseXp;
+  const tierCap =
+    def.ruleType === "timed" && def.timed ? def.timed.targetDays : Infinity;
+  const validTiers = def.tiers.filter((t) => t.days <= tierCap);
+  const tierIdx =
+    validTiers.filter((t) => clearedCount >= t.days).length - 1;
+  const bonus = tierIdx >= 0 ? TIER_PER_ACTION_BONUS[tierIdx] ?? 0 : 0;
+  return clearedCount * (baseXp + bonus);
+}
 
 /** Bonus XP awarded when a cadence dungeon's window is fully cleared
  *  (every workout in the list, not just enough to hit the cadence
