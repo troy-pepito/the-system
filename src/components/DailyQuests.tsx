@@ -270,7 +270,7 @@ export default function DailyQuests({
         className={`text-[10px] tracking-[0.4em] uppercase mb-2 ${
           scattered
             ? "text-red-400 drop-shadow-[0_0_6px_rgba(248,113,113,0.6)]"
-            : "text-cyan-400/70"
+            : "text-cyan-300"
         }`}
       >
         {t("header")}
@@ -282,7 +282,7 @@ export default function DailyQuests({
       >
         {t("subheader")}
       </h2>
-      <p className="text-[10px] font-mono tabular-nums tracking-wider text-cyan-400/70 mt-2">
+      <p className="text-[10px] font-mono tabular-nums tracking-wider text-cyan-300 mt-2">
         {t("progressLabel", { done: completed.length, total: QUESTS.length })}
       </p>
       <DailyResetCountdown label={t("resetsIn")} urgent={scattered} />
@@ -329,7 +329,7 @@ export default function DailyQuests({
 
     <div className="border-t border-cyan-500/10 pt-4 flex flex-col items-center gap-1">
       <div className="flex items-center gap-3">
-        <span className="text-[10px] text-cyan-400/70 tracking-[0.3em] uppercase">
+        <span className="text-[10px] text-cyan-300 tracking-[0.3em] uppercase">
           {t("dailyCombo")}
         </span>
         <span

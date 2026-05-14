@@ -169,7 +169,7 @@ export default function GuildPanel({
           </div>
         )}
 
-        <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70">
+        <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-300">
           {t("guildLabel")}
         </p>
         <p className="font-display text-2xl font-bold uppercase tracking-wider text-cyan-100">
@@ -349,7 +349,7 @@ export default function GuildPanel({
                       <span className={rankStyle.text}>{m.rank}</span>
                     </p>
                   </div>
-                  <p className="text-[10px] tracking-widest uppercase text-cyan-400/70 tabular-nums shrink-0">
+                  <p className="text-[10px] tracking-widest uppercase text-cyan-300 tabular-nums shrink-0">
                     {m.weeklyActivityPoints} {t("pts")}
                   </p>
                 </Link>
@@ -383,7 +383,7 @@ export default function GuildPanel({
           </p>
           {initialFeed.length === 0 ? (
             <div className="border border-slate-800 rounded-lg p-6 text-center">
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-sm text-slate-300 leading-relaxed">
                 {t("feedEmpty")}
               </p>
             </div>
@@ -529,7 +529,7 @@ function EditGuildModal({
         <div className="max-h-[85vh] overflow-y-auto overflow-x-hidden">
           {/* Header */}
           <div className="px-6 pt-6 pb-4 border-b border-slate-800">
-            <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-1">
+            <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-300 mb-1">
               {t("header")}
             </p>
             <p className="font-display text-lg font-bold uppercase tracking-wider text-cyan-100">
@@ -542,7 +542,7 @@ function EditGuildModal({
 
           {/* Details section */}
           <section className="px-6 py-5 border-b border-slate-800 space-y-4">
-            <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70">
+            <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-300">
               {t("detailsHeader")}
             </p>
             <div>

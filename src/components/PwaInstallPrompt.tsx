@@ -67,7 +67,7 @@ export default function PwaInstallPrompt() {
         >
           ✕
         </button>
-        <p className="text-[9px] tracking-[0.4em] uppercase text-cyan-400/70 mb-2">
+        <p className="text-[9px] tracking-[0.4em] uppercase text-cyan-300 mb-2">
           [ Install ]
         </p>
         <p className="text-sm font-bold text-cyan-100 mb-2">

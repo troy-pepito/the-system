@@ -210,7 +210,7 @@ export default function PortalsPage() {
           }`}
         >
           <div className="mb-5 border-t border-cyan-500/20 pt-4">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70 mb-2">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-2">
               {t("rules")}
             </p>
             <ul className="space-y-1.5">
@@ -219,7 +219,7 @@ export default function PortalsPage() {
                   key={i}
                   className="text-xs text-slate-300 leading-relaxed flex gap-2"
                 >
-                  <span className="text-cyan-400/60 mt-0.5">▸</span>
+                  <span className="text-cyan-300 mt-0.5">▸</span>
                   <span>{rule}</span>
                 </li>
               ))}
@@ -274,7 +274,7 @@ export default function PortalsPage() {
       <div className="text-center mb-4">
         <p
           className={`text-xs tracking-[0.4em] uppercase ${
-            accent ?? "text-cyan-400/70"
+            accent ?? "text-cyan-300"
           }`}
         >
           {title}
@@ -292,7 +292,7 @@ export default function PortalsPage() {
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-10">
         <div className="text-center">
-          <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
+          <p className="text-sm tracking-[0.3em] uppercase text-cyan-300">
             {t("header")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />

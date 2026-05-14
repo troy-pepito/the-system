@@ -156,7 +156,7 @@ export default function DungeonCalendar({
       <div className="flex items-center justify-between mb-3">
         <button
           onClick={() => shiftMonth(-1)}
-          className="px-2 py-1 text-cyan-400/70 hover:text-cyan-300 text-sm"
+          className="px-2 py-1 text-cyan-300 hover:text-cyan-300 text-sm"
           aria-label={t("previousMonth")}
         >
           ‹
@@ -166,7 +166,7 @@ export default function DungeonCalendar({
         </p>
         <button
           onClick={() => shiftMonth(1)}
-          className="px-2 py-1 text-cyan-400/70 hover:text-cyan-300 text-sm"
+          className="px-2 py-1 text-cyan-300 hover:text-cyan-300 text-sm"
           aria-label={t("nextMonth")}
         >
           ›

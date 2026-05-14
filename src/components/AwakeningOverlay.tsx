@@ -215,7 +215,7 @@ export default function AwakeningOverlay() {
         key={key}
         className={
           isHeader
-            ? "text-[10px] tracking-[0.5em] text-cyan-400/70 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
+            ? "text-[10px] tracking-[0.5em] text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
             : "text-sm sm:text-base tracking-widest text-cyan-200"
         }
       >
@@ -257,7 +257,7 @@ export default function AwakeningOverlay() {
               </p>
               <button
                 onClick={handleReconsider}
-                className="mt-4 text-xs text-cyan-400/70 hover:text-cyan-200 tracking-[0.3em] uppercase transition-colors"
+                className="mt-4 text-xs text-cyan-300 hover:text-cyan-200 tracking-[0.3em] uppercase transition-colors"
               >
                 {t("reconsider")}
               </button>

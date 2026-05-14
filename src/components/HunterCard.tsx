@@ -261,7 +261,7 @@ export default function HunterCard({
         className={`relative bg-slate-950/80 border p-5 sm:p-6 transition-shadow duration-700 ${rankFrame.cardBorder} ${rankFrame.cardGlow}`}
       >
         <div className="flex items-center justify-between mb-4 gap-3">
-          <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
+          <p className="text-[9px] text-cyan-300 tracking-[0.4em] uppercase">
             {t("id")}
           </p>
           {user && (

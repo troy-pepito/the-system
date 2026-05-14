@@ -130,7 +130,7 @@ export default function NotificationSettings() {
           <p className="text-sm text-slate-200 uppercase tracking-wider">
             {t("title")}
           </p>
-          <p className="text-xs text-slate-500 leading-relaxed mt-1">
+          <p className="text-sm text-slate-300 leading-relaxed mt-1">
             {status === "unsupported"
               ? t("unsupported")
               : status === "denied"

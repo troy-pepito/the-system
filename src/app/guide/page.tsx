@@ -60,7 +60,7 @@ export default async function GuidePage() {
           <span>Back</span>
         </Link>
         <header className="text-center border-b border-slate-800 pb-10">
-          <p className="text-[10px] tracking-[0.5em] text-cyan-400/70 uppercase mb-4 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+          <p className="text-[10px] tracking-[0.5em] text-cyan-300 uppercase mb-4 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
             {t("header")}
           </p>
           <h1 className="font-display text-aberration text-3xl sm:text-4xl font-bold tracking-tight text-cyan-100 mb-4">
@@ -161,7 +161,7 @@ export default async function GuidePage() {
           </p>
           <ul className="mt-3 space-y-1.5 text-xs text-slate-300">
             <li className="flex gap-3">
-              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span className="text-cyan-300 mt-0.5">▸</span>
               <span>
                 <span className="text-cyan-300 font-mono">
                   +{XP_PER_STREAK_DAY}
@@ -170,7 +170,7 @@ export default async function GuidePage() {
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span className="text-cyan-300 mt-0.5">▸</span>
               <span>
                 <span className="text-cyan-300 font-mono">
                   +{XP_PER_WORKOUT}
@@ -179,7 +179,7 @@ export default async function GuidePage() {
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span className="text-cyan-300 mt-0.5">▸</span>
               <span>
                 <span className="text-cyan-300 font-mono">
                   +{XP_PER_EXPOSURE}
@@ -188,7 +188,7 @@ export default async function GuidePage() {
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span className="text-cyan-300 mt-0.5">▸</span>
               <span>
                 <span className="text-amber-300 font-mono">
                   +{XP_PER_COMPLETION}
@@ -245,7 +245,7 @@ export default async function GuidePage() {
               </div>
             ))}
           </div>
-          <p className="mt-5 text-xs text-slate-500 leading-relaxed">
+          <p className="mt-5 text-sm text-slate-300 leading-relaxed">
             {t("section6Footnote")}
           </p>
           <p className="mt-3 text-sm text-slate-300 leading-relaxed">
@@ -353,7 +353,7 @@ export default async function GuidePage() {
           </p>
           <ul className="mt-3 space-y-2 text-xs text-slate-300">
             <li className="flex gap-3">
-              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span className="text-cyan-300 mt-0.5">▸</span>
               <span>
                 {t.rich("section9InstallIos", {
                   b: (chunks) => (
@@ -366,7 +366,7 @@ export default async function GuidePage() {
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span className="text-cyan-300 mt-0.5">▸</span>
               <span>
                 {t.rich("section9InstallAndroid", {
                   b: (chunks) => (
@@ -379,7 +379,7 @@ export default async function GuidePage() {
               </span>
             </li>
             <li className="flex gap-3">
-              <span className="text-cyan-400/60 mt-0.5">▸</span>
+              <span className="text-cyan-300 mt-0.5">▸</span>
               <span>
                 {t.rich("section9InstallDesktop", {
                   b: (chunks) => (

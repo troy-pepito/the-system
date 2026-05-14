@@ -50,7 +50,7 @@ export default function RecentGains() {
   if (gains.length === 0) {
     return (
       <Card className="p-6">
-        <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-3">
+        <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-3">
           {t("title")}
         </p>
         <p className="text-xs text-slate-500 italic leading-relaxed">
@@ -71,7 +71,7 @@ export default function RecentGains() {
 
   return (
     <Card className="p-6">
-      <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+      <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-4">
         {t("title")}
       </p>
       <ul className="space-y-2">

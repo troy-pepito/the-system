@@ -19,7 +19,7 @@ export default function SignInGate() {
         <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300" />
         <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300" />
         <div className="relative bg-slate-950/80 p-10 sm:p-12 text-center font-mono space-y-6">
-          <p className="text-[10px] tracking-[0.5em] text-cyan-400/70 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+          <p className="text-[10px] tracking-[0.5em] text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
             [ AUTHENTICATION ]
           </p>
           <p className="text-sm sm:text-base tracking-widest text-cyan-200">

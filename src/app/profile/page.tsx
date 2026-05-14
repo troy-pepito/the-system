@@ -159,7 +159,7 @@ export default function ProfilePage() {
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
-          <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
+          <p className="text-sm tracking-[0.3em] uppercase text-cyan-300">
             {tProfile("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
@@ -175,7 +175,7 @@ export default function ProfilePage() {
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
+            <p className="text-xs tracking-[0.2em] uppercase text-cyan-300">
               {tProfileOwn("recordHeader", { label: rangeLabel })}
             </p>
             <RangeToggle value={range} onChange={setRange} />
@@ -191,7 +191,7 @@ export default function ProfilePage() {
         </Card>
 
         <Card className="p-6">
-          <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+          <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-4">
             {tProfile("dimensions")}
           </p>
           <StatRadar values={stats.dimensions} />
@@ -201,7 +201,7 @@ export default function ProfilePage() {
         </Card>
 
         <Card className="p-6">
-          <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+          <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-4">
             {tProfile("activityHeader")}
           </p>
           <Heatmap activity={data.heatmap} />
@@ -221,7 +221,7 @@ export default function ProfilePage() {
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
+            <p className="text-xs tracking-[0.2em] uppercase text-cyan-300">
               {tProfile("trophies")}
             </p>
             <p className="text-xs text-slate-300">
@@ -420,7 +420,7 @@ function TrophySection({
         <div className="flex items-center gap-2 min-w-0">
           <p
             className={`tracking-[0.3em] uppercase text-left ${
-              nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-300"
+              nested ? "text-[10px] text-cyan-300" : "text-[10px] text-slate-300"
             }`}
           >
             {label}

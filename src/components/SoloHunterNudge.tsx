@@ -88,7 +88,7 @@ export default function SoloHunterNudge() {
         ×
       </button>
 
-      <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-2">
+      <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-300 mb-2">
         [ SYSTEM NOTICE ]
       </p>
       <p className="text-sm text-cyan-100 leading-relaxed pr-6">

@@ -22,7 +22,7 @@ export default function WhatsNewPage() {
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
-          <p className="text-[10px] tracking-[0.5em] uppercase text-cyan-400/70 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+          <p className="text-[10px] tracking-[0.5em] uppercase text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
             {t("header")}
           </p>
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-cyan-100 tracking-wider mt-3">
@@ -39,7 +39,7 @@ export default function WhatsNewPage() {
 
         {CHANGELOG.length === 0 ? (
           <Card className="p-6">
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-sm text-slate-300 leading-relaxed">
               {t("empty")}
             </p>
           </Card>

@@ -32,7 +32,7 @@ export default async function GuildsPage() {
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-6">
         <div className="text-center">
-          <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
+          <p className="text-sm tracking-[0.3em] uppercase text-cyan-300">
             {t("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
@@ -80,7 +80,7 @@ export default async function GuildsPage() {
                             className={`text-[9px] tracking-[0.2em] uppercase mt-0.5 ${
                               g.spotsLeft === 0
                                 ? "text-red-400/80"
-                                : "text-cyan-400/70"
+                                : "text-cyan-300"
                             }`}
                           >
                             {g.spotsLeft === 0
@@ -116,7 +116,7 @@ async function YourGuildCard({
       <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
       <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
 
-      <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70">
+      <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-300">
         {t("yourGuild")}
       </p>
       <p className="font-display text-lg font-bold uppercase tracking-wider text-cyan-100 mt-1">
@@ -141,7 +141,7 @@ async function YourGuildCard({
           </span>
         )}
         {guild.viewerStatus === "owner" && (
-          <span className="text-cyan-400/70">{t("owner")}</span>
+          <span className="text-cyan-300">{t("owner")}</span>
         )}
       </div>
     </Link>

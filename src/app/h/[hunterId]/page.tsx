@@ -77,7 +77,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
-          <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
+          <p className="text-sm tracking-[0.3em] uppercase text-cyan-300">
             {tProfile("title")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
@@ -101,7 +101,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
             className={`relative bg-slate-950/80 border p-5 sm:p-6 ${rankFrame.cardBorder} ${rankFrame.cardGlow}`}
               >
             <div className="flex items-center justify-between gap-3 mb-4">
-              <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase">
+              <p className="text-[9px] text-cyan-300 tracking-[0.4em] uppercase">
                 {tHunterCard("id")}
               </p>
               <HunterActionsMenu hunterId={data.hunterId} />
@@ -221,7 +221,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
         </div>
 
         <Card className="p-6">
-          <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+          <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-4">
             {tProfile("recordLifetime")}
           </p>
           <div className="grid grid-cols-2 gap-3 text-sm">
@@ -245,7 +245,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
 
         {data.activeRuns.length > 0 && (
           <Card className="p-6">
-            <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+            <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-4">
               {tProfile("activeDungeons")}
             </p>
             <ul className="space-y-2">
@@ -273,14 +273,14 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
         )}
 
         <Card className="p-6">
-          <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+          <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-4">
             {tProfile("dimensions")}
           </p>
           <StatRadar values={data.dimensions} />
         </Card>
 
         <Card className="p-6">
-          <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+          <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-4">
             {tProfile("activityHeader")}
           </p>
           <Heatmap activity={data.heatmap} />
@@ -288,7 +288,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
 
         {data.publicJournal.length > 0 && (
           <Card className="p-6">
-            <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-4">
+            <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-4">
               {tProfile("reflections")}
             </p>
             <ul className="space-y-4">
@@ -326,7 +326,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-5">
-            <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
+            <p className="text-xs tracking-[0.2em] uppercase text-cyan-300">
               {tProfile("trophies")}
             </p>
             <p className="text-xs text-slate-300">
@@ -338,7 +338,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
           </div>
 
           {unlockedCount === 0 && (
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-sm text-slate-300 leading-relaxed">
               {tProfile("noTrophies")}
             </p>
           )}
@@ -435,7 +435,7 @@ async function TrophyList({
       <div className="flex items-center justify-between gap-3 py-2 mb-3">
         <p
           className={`tracking-[0.3em] uppercase text-left ${
-            nested ? "text-[10px] text-cyan-400/70" : "text-[10px] text-slate-300"
+            nested ? "text-[10px] text-cyan-300" : "text-[10px] text-slate-300"
           }`}
         >
           {label}

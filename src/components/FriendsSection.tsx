@@ -58,10 +58,10 @@ export default function FriendsSection() {
   if (!hasPending && !hasFriends) {
     return (
       <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
-        <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70 mb-2">
+        <p className="text-xs tracking-[0.2em] uppercase text-cyan-300 mb-2">
           {t("title")}
         </p>
-        <p className="text-xs text-slate-500 leading-relaxed">
+        <p className="text-sm text-slate-300 leading-relaxed">
           {t("emptyBody")}
         </p>
       </div>
@@ -130,7 +130,7 @@ export default function FriendsSection() {
       {hasFriends && (
         <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
+            <p className="text-xs tracking-[0.2em] uppercase text-cyan-300">
               {t("title")}
             </p>
             <p className="text-[10px] text-slate-500 tracking-wider">

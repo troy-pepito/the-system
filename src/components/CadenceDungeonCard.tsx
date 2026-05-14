@@ -310,7 +310,7 @@ export default function CadenceDungeonCard({
 
           <div className="border border-slate-700 rounded-lg p-4 space-y-3 text-left">
             <div className="flex justify-between items-center">
-              <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70">
+              <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-300">
                 {cadence?.window === "day" ? tRun("today") : tRun("thisWeek")}
               </p>
               <span

@@ -10,7 +10,7 @@ export default function PrivacyPage() {
     <main className="min-h-screen bg-slate-950 text-slate-300 py-16 px-6">
       <article className="max-w-2xl mx-auto space-y-8">
         <header className="border-b border-slate-800 pb-6">
-          <p className="text-[10px] tracking-[0.4em] text-cyan-400/70 uppercase mb-3">
+          <p className="text-[10px] tracking-[0.4em] text-cyan-300 uppercase mb-3">
             [ Legal ]
           </p>
           <h1 className="text-2xl sm:text-3xl font-bold text-cyan-100 mb-2">
@@ -146,7 +146,7 @@ export default function PrivacyPage() {
         <footer className="pt-8 border-t border-slate-800">
           <Link
             href="/"
-            className="text-xs text-cyan-400/70 hover:text-cyan-200 tracking-[0.3em] uppercase transition-colors"
+            className="text-xs text-cyan-300 hover:text-cyan-200 tracking-[0.3em] uppercase transition-colors"
           >
             ← Back to Shivaliva Leveling
           </Link>
