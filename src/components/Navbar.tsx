@@ -25,6 +25,7 @@ import {
   getPendingJoinRequestCount,
   getLatestGuildEventTimestamp,
 } from "@/app/actions/guilds";
+import { getPendingFriendRequestCount } from "@/app/actions/friends";
 
 const GUILD_FEED_LAST_SEEN_KEY = "system:guild-feed-last-seen";
 import { readCache, writeCache } from "@/lib/offlineCache";
@@ -38,6 +39,7 @@ export default function Navbar() {
   const [unclaimedTrophyCount, setUnclaimedTrophyCount] = useState<number>(0);
   const [pendingGuildCount, setPendingGuildCount] = useState<number>(0);
   const [hasNewGuildFeed, setHasNewGuildFeed] = useState<boolean>(false);
+  const [pendingFriendCount, setPendingFriendCount] = useState<number>(0);
   const pathname = usePathname();
   const t = useTranslations("nav");
 
@@ -207,6 +209,13 @@ export default function Navbar() {
           setHasNewGuildFeed(latest > lastSeen);
         }
       } catch {}
+      try {
+        // Pending friend requests addressed to the viewer. Surfaces as
+        // a dot on the Profile tab — the requests themselves live in
+        // FriendsSection on /profile.
+        const count = await getPendingFriendRequestCount();
+        setPendingFriendCount(count);
+      } catch {}
     };
     const recompute = async () => {
       try {
@@ -297,6 +306,7 @@ export default function Navbar() {
             {navItem("/leaderboard", t("board"), boardIcon)}
             {navItem("/profile", t("profile"), profileIcon, {
               badgeCount: unclaimedTrophyCount,
+              showDot: pendingFriendCount > 0,
             })}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-[10px] uppercase tracking-widest">
@@ -371,6 +381,7 @@ export default function Navbar() {
           {navItem("/profile", t("profile"), profileIcon, {
             layout: "stack",
             badgeCount: unclaimedTrophyCount,
+            showDot: pendingFriendCount > 0,
           })}
         </div>
       </div>

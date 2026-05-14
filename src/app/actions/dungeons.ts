@@ -115,8 +115,16 @@ const getComboStateCached = unstable_cache(
     const pastRuns = computeComboRuns(pastQualifying);
 
     const yesterdayIso = addDaysISO(todayIso, -1);
-    const hasAnyCompletion = Object.keys(byDate).length > 0;
-    const scattered = hasAnyCompletion && !byDate[yesterdayIso];
+    // Mirror the achievements.ts scattered guard: only flag scattered
+    // when the hunter has established history (a completion on some
+    // day strictly before yesterday). A first-day hunter who ticks
+    // quests today has byDate = { today } and an absent yesterday
+    // entry — that's not "scattered," they just didn't exist yet.
+    const hasCompletionBeforeYesterday = Object.keys(byDate).some(
+      (d) => d < yesterdayIso
+    );
+    const scattered =
+      hasCompletionBeforeYesterday && !byDate[yesterdayIso];
 
     return {
       priorComboDays: computePriorComboDays(pastRuns, todayIso),

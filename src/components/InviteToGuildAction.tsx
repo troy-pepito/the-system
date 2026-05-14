@@ -9,19 +9,30 @@ import {
 
 interface Props {
   hunterId: string;
+  /** Compact mode mirrors FriendActions: a small square pill that
+   *  sits cleanly next to other actions in the Hunter ID header row. */
+  variant?: "default" | "compact";
 }
 
 /**
- * Owner-only invite button on the public hunter card. Renders nothing
- * for non-owners or when the target isn't invitable (already in a
- * guild, is the viewer themselves, etc) — eligibility is checked once
- * on mount via getInviteEligibility so we don't show a button that
- * would just error on click.
+ * Invite button + status pill on the public hunter card. Eligibility
+ * is checked once on mount via getInviteEligibility so we don't show
+ * a button that would error on click.
  *
- * On success, locally flips to "Invited" so the viewer sees immediate
- * feedback without a refetch.
+ * Renders four states:
+ * - hidden (non-owners, viewer looking at themselves)
+ * - "In Guild" pill (target is already in any guild)
+ * - "Invited" pill (viewer already sent an invite)
+ * - "Invite" action button (clear to send)
+ *
+ * Pill styling matches FriendActions so both surfaces read as a
+ * coherent set when shown side-by-side.
  */
-export default function InviteToGuildAction({ hunterId }: Props) {
+export default function InviteToGuildAction({
+  hunterId,
+  variant = "default",
+}: Props) {
+  const compact = variant === "compact";
   const [eligibility, setEligibility] = useState<
     InviteEligibility | "loading"
   >("loading");
@@ -58,18 +69,31 @@ export default function InviteToGuildAction({ hunterId }: Props) {
 
   if (eligibility === "loading" || eligibility === "ineligible") return null;
 
+  // Same pill shape FriendActions uses, so the two indicators sit
+  // cleanly side-by-side in the Hunter ID header row.
+  const pillCls = compact
+    ? "flex items-center justify-center w-7 h-7 rounded text-[12px] leading-none"
+    : "px-4 py-2 text-xs tracking-[0.3em] rounded";
+  const pillBase = compact ? "" : "uppercase";
+
   if (eligibility === "in-guild") {
     return (
-      <span className="text-[10px] tracking-[0.3em] uppercase text-slate-500">
-        Already in a guild
+      <span
+        title="Already in a guild"
+        className={`inline-flex border border-slate-600 bg-slate-800/40 text-slate-300 ${pillCls} ${pillBase}`}
+      >
+        {compact ? <span aria-hidden>🛡</span> : "In Guild"}
       </span>
     );
   }
 
   if (eligibility === "invited") {
     return (
-      <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300/80">
-        Invited
+      <span
+        title="Invited to your guild"
+        className={`inline-flex border border-amber-400/50 bg-amber-500/15 text-amber-200 ${pillCls} ${pillBase}`}
+      >
+        {compact ? <span aria-hidden>📜</span> : "Invited"}
       </span>
     );
   }
@@ -77,16 +101,23 @@ export default function InviteToGuildAction({ hunterId }: Props) {
   return (
     <div className="flex flex-col items-end gap-1">
       <button
+        type="button"
         onClick={handleInvite}
         disabled={busy}
-        className="px-3 py-1.5 bg-cyan-500/20 border border-cyan-400/60 text-cyan-100 text-[10px] uppercase tracking-[0.3em] hover:bg-cyan-500/40 transition-colors disabled:opacity-50"
+        title="Invite to your guild"
+        aria-label="Invite to guild"
+        className={`border border-cyan-400/60 bg-cyan-500/20 text-cyan-100 hover:bg-cyan-500/40 transition-colors disabled:opacity-50 ${pillCls} ${pillBase}`}
       >
-        {busy ? "Sending..." : "Invite to Guild"}
+        {compact ? (
+          <span aria-hidden>+</span>
+        ) : busy ? (
+          "Sending..."
+        ) : (
+          "Invite"
+        )}
       </button>
       {error && (
-        <span className="text-[9px] text-red-400 tracking-wider">
-          {error}
-        </span>
+        <span className="text-[9px] text-red-400 tracking-wider">{error}</span>
       )}
     </div>
   );

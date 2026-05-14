@@ -168,6 +168,16 @@ export async function getFriends(): Promise<FriendCard[]> {
   return getHunterSummariesByIds(friendIds);
 }
 
+/** Cheap COUNT query for the navbar Profile-tab dot indicator. Counts
+ *  pending friend requests addressed to the viewer (i.e. someone else
+ *  asked, viewer needs to accept/decline). */
+export async function getPendingFriendRequestCount(): Promise<number> {
+  const userId = await requireUserId();
+  return prisma.friendship.count({
+    where: { addresseeId: userId, status: "pending" },
+  });
+}
+
 export async function getPendingRequests(): Promise<PendingRequest[]> {
   const userId = await requireUserId();
   const rows = await prisma.friendship.findMany({
