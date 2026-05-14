@@ -208,6 +208,35 @@ export async function getMyGuild(): Promise<GuildSummary | null> {
   };
 }
 
+/** Latest public dungeon-event timestamp from any member of the
+ *  viewer's guild, used by the navbar's "new guild activity" dot.
+ *  Returns null for non-members. Scoped to dungeonEvent only (not
+ *  the full assembled feed) to keep the query a single ORDER BY +
+ *  LIMIT — close enough as a signal that the guild has something
+ *  new without paying the assembleFeedEntries cost on every navbar
+ *  refresh. Journal-only entries are missed; that's acceptable for
+ *  a "yes/no there's new stuff" indicator. */
+export async function getLatestGuildEventTimestamp(): Promise<string | null> {
+  const userId = await requireUserId();
+  const member = await prisma.guildMember.findFirst({
+    where: { userId, status: "accepted" },
+    select: { guildId: true },
+  });
+  if (!member) return null;
+  const memberRows = await prisma.guildMember.findMany({
+    where: { guildId: member.guildId, status: "accepted" },
+    select: { userId: true },
+  });
+  const memberIds = memberRows.map((r) => r.userId);
+  if (memberIds.length === 0) return null;
+  const latest = await prisma.dungeonEvent.findFirst({
+    where: { isPublic: true, run: { userId: { in: memberIds } } },
+    orderBy: { createdAt: "desc" },
+    select: { createdAt: true },
+  });
+  return latest ? latest.createdAt.toISOString() : null;
+}
+
 /** Cheap COUNT query for the navbar guild-badge. Owners-only, since
  *  approving applicants is an owner action — non-owners have nothing
  *  to do about a pending request and don't need to see it. Returns 0
@@ -222,6 +251,199 @@ export async function getPendingJoinRequestCount(): Promise<number> {
   return prisma.guildMember.count({
     where: { guildId: guild.id, status: "pending" },
   });
+}
+
+/**
+ * Owner-initiated invite. Creates a GuildMember row with the new
+ * "invited" status for the target hunter. Invitee can accept (row
+ * flips to "accepted") or decline (row deleted) via acceptGuildInvite
+ * / declineGuildInvite. The inviter is always the guild owner (only
+ * owners can call this), so we don't need a separate invitedBy column.
+ *
+ * Rules:
+ * - Only the guild owner can invite
+ * - Can't invite yourself
+ * - Can't invite a hunter who's already an accepted member of any guild
+ *   (let them leave first; keeps the one-guild-per-user invariant clean)
+ * - Can't invite past the member cap
+ * - Duplicate invite is a no-op (upsert)
+ */
+export async function inviteHunterToGuild(
+  targetUserId: string
+): Promise<void> {
+  const userId = await requireUserId();
+  if (targetUserId === userId) {
+    throw new Error("You can't invite yourself");
+  }
+  const guild = await prisma.guild.findFirst({
+    where: { ownerId: userId },
+    select: { id: true, slug: true, name: true },
+  });
+  if (!guild) {
+    throw new Error("Only guild owners can send invites");
+  }
+  const targetExisting = await prisma.guildMember.findFirst({
+    where: { userId: targetUserId, status: "accepted" },
+    select: { id: true },
+  });
+  if (targetExisting) {
+    throw new Error("That hunter is already in a guild");
+  }
+  const acceptedCount = await prisma.guildMember.count({
+    where: { guildId: guild.id, status: "accepted" },
+  });
+  if (acceptedCount >= GUILD_MEMBER_CAP) {
+    throw new Error("Guild is at capacity");
+  }
+  await prisma.guildMember.upsert({
+    where: { guildId_userId: { guildId: guild.id, userId: targetUserId } },
+    create: {
+      guildId: guild.id,
+      userId: targetUserId,
+      role: "member",
+      status: "invited",
+    },
+    // If a row exists in any other state (e.g. a previous decline), flip
+    // it back to "invited" rather than creating a duplicate.
+    update: { status: "invited" },
+  });
+  updateTag(TAG);
+
+  try {
+    await sendPushToUser(targetUserId, {
+      title: "📜 Guild Invite",
+      body: `You've been invited to join ${guild.name}.`,
+      url: "/",
+    });
+  } catch {}
+}
+
+/** Invitee-initiated accept. Flips an "invited" row to "accepted".
+ *  Idempotent — if the row isn't in the "invited" state (already
+ *  accepted, or invite was cancelled), no-op. */
+export async function acceptGuildInvite(guildId: number): Promise<void> {
+  const userId = await requireUserId();
+  if (await hasAcceptedMembership(userId)) {
+    throw new Error("You're already in a guild, leave it first");
+  }
+  const guild = await prisma.guild.findUnique({
+    where: { id: guildId },
+    select: { id: true, ownerId: true, name: true, slug: true },
+  });
+  if (!guild) throw new Error("Guild not found");
+  const acceptedCount = await prisma.guildMember.count({
+    where: { guildId: guild.id, status: "accepted" },
+  });
+  if (acceptedCount >= GUILD_MEMBER_CAP) {
+    throw new Error("Guild is at capacity");
+  }
+  const updated = await prisma.guildMember.updateMany({
+    where: { guildId, userId, status: "invited" },
+    data: { status: "accepted" },
+  });
+  if (updated.count === 0) {
+    throw new Error("No pending invite for that guild");
+  }
+  // Clean up any other pending requests/invites for this user — they
+  // committed to one guild, the rest are stale.
+  await prisma.guildMember.deleteMany({
+    where: {
+      userId,
+      status: { in: ["pending", "invited"] },
+      NOT: { guildId },
+    },
+  });
+  updateTag(TAG);
+
+  try {
+    const client = await clerkClient();
+    const accepter = await client.users.getUser(userId);
+    const { hunterName } = resolveHunterDisplay(accepter);
+    await sendPushToUser(guild.ownerId, {
+      title: "🛡 Invite Accepted",
+      body: `${hunterName} joined ${guild.name}.`,
+      url: `/g/${guild.slug}`,
+    });
+  } catch {}
+}
+
+export type InviteEligibility =
+  /** Viewer isn't a guild owner, or is looking at themselves. */
+  | "ineligible"
+  /** Target is already an accepted member of some guild. */
+  | "in-guild"
+  /** Viewer has an active invite out to this target already. */
+  | "invited"
+  /** Clear to invite. */
+  | "can-invite";
+
+/** Server-side eligibility check so the InviteToGuildAction button on
+ *  /h/[hunterId] only renders when the action would actually succeed.
+ *  Avoids the "tap → error toast" UX for non-owners. */
+export async function getInviteEligibility(
+  targetUserId: string
+): Promise<InviteEligibility> {
+  const userId = await requireUserId();
+  if (userId === targetUserId) return "ineligible";
+  const myGuild = await prisma.guild.findFirst({
+    where: { ownerId: userId },
+    select: { id: true },
+  });
+  if (!myGuild) return "ineligible";
+  const targetMembership = await prisma.guildMember.findFirst({
+    where: { userId: targetUserId, status: "accepted" },
+    select: { id: true },
+  });
+  if (targetMembership) return "in-guild";
+  const existingInvite = await prisma.guildMember.findFirst({
+    where: { userId: targetUserId, guildId: myGuild.id, status: "invited" },
+    select: { id: true },
+  });
+  if (existingInvite) return "invited";
+  return "can-invite";
+}
+
+/** Invitee declines an invite — just deletes the "invited" row. */
+export async function declineGuildInvite(guildId: number): Promise<void> {
+  const userId = await requireUserId();
+  await prisma.guildMember.deleteMany({
+    where: { guildId, userId, status: "invited" },
+  });
+  updateTag(TAG);
+}
+
+export interface PendingInvite {
+  guildId: number;
+  slug: string;
+  name: string;
+  description: string | null;
+  memberCount: number;
+}
+
+/** Pending invites for the current viewer. Returned shape mirrors the
+ *  guild-summary fields needed to render an accept/decline banner. */
+export async function getMyPendingInvites(): Promise<PendingInvite[]> {
+  const userId = await requireUserId();
+  const rows = await prisma.guildMember.findMany({
+    where: { userId, status: "invited" },
+    include: {
+      guild: {
+        include: {
+          members: {
+            where: { status: "accepted" },
+            select: { userId: true },
+          },
+        },
+      },
+    },
+  });
+  return rows.map((r) => ({
+    guildId: r.guild.id,
+    slug: r.guild.slug,
+    name: r.guild.name,
+    description: r.guild.description,
+    memberCount: r.guild.members.length,
+  }));
 }
 
 export async function requestJoinGuild(slug: string): Promise<void> {

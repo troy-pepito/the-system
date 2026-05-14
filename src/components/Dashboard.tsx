@@ -24,6 +24,7 @@ import SideQuests from "@/components/SideQuests";
 import SoloHunterNudge from "@/components/SoloHunterNudge";
 import FreshHunterBandPrompt from "@/components/FreshHunterBandPrompt";
 import FirstWeekProgressBanner from "@/components/FirstWeekProgressBanner";
+import PendingInvitesBanner from "@/components/PendingInvitesBanner";
 import SortableDungeonItem from "@/components/SortableDungeonItem";
 import {
   STATS_UPDATED_EVENT,
@@ -260,6 +261,7 @@ export default function Dashboard() {
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
         </div>
 
+        <PendingInvitesBanner />
         <FirstWeekProgressBanner />
         <FreshHunterBandPrompt />
         <SoloHunterNudge />

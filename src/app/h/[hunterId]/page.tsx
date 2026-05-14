@@ -22,6 +22,7 @@ import Card from "@/components/Card";
 import StatRadar from "@/components/StatRadar";
 import Heatmap from "@/components/Heatmap";
 import FriendActions from "@/components/FriendActions";
+import InviteToGuildAction from "@/components/InviteToGuildAction";
 
 interface Props {
   params: Promise<{ hunterId: string }>;
@@ -105,6 +106,9 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                 {tHunterCard("id")}
               </p>
               <FriendActions hunterId={data.hunterId} variant="compact" />
+            </div>
+            <div className="flex justify-end mb-4">
+              <InviteToGuildAction hunterId={data.hunterId} />
             </div>
             <div className="flex items-center gap-5">
               <div className="shrink-0 w-24 h-24 sm:w-28 sm:h-28 overflow-hidden border border-cyan-400/50 bg-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.25)]">
@@ -200,9 +204,7 @@ async function PublicProfile({ data }: { data: PublicHunterData }) {
                           <span
                             className={`${badgeBase} ${dominantDef.badgeStyle}`}
                           >
-                            <span>
-                              {dominant?.toUpperCase()}-Dominant
-                            </span>
+                            <span>{dominantDef.elementName}-Dominant</span>
                           </span>
                         )}
                         {data.scattered && (

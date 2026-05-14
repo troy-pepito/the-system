@@ -374,7 +374,7 @@ export default function HunterCard({
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap mb-1.5">
-              <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
+              <p className="text-[10px] text-slate-400 tracking-[0.3em] uppercase">
                 {t("name")}
               </p>
             </div>
@@ -405,7 +405,7 @@ export default function HunterCard({
             )}
             <div className="flex items-center gap-4 mt-5">
               <div>
-                <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
+                <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">
                   {t("rank")}
                 </p>
                 <p
@@ -417,7 +417,7 @@ export default function HunterCard({
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
+                <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">
                   {t("level")}
                 </p>
                 <p className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)] leading-none mt-1">
@@ -445,7 +445,7 @@ export default function HunterCard({
                 "inline-flex items-center gap-1 px-2 py-0.5 border rounded-sm text-[9px] tracking-[0.3em] uppercase font-bold";
               return (
                 <div className="mt-5">
-                  <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">
+                  <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">
                     Badges
                   </p>
                   <div className="flex flex-wrap gap-2 mt-2">
@@ -459,10 +459,10 @@ export default function HunterCard({
                     )}
                     {showDominant && dominantDef && (
                       <span
-                        title={`Your strongest dimension is ${dominantDef.label.replace(" Hunter", "")}`}
+                        title={`Your strongest dimension is ${dominantDef.elementName}`}
                         className={`${badgeBase} ${dominantDef.badgeStyle}`}
                       >
-                        <span>{dominant}-Dominant</span>
+                        <span>{dominantDef.elementName}-Dominant</span>
                       </span>
                     )}
                     {scattered && (

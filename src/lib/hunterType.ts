@@ -22,6 +22,10 @@ export interface HunterTypeDef {
   id: HunterType;
   /** Display name on the hunter card, picker, etc. */
   label: string;
+  /** The renamed elemental noun used in v2.1.0+ ("Earth", "Water",
+   *  etc). Lets the "X-Dominant" badge and similar surfaces show the
+   *  elemental theme without hardcoding the internal dimension key. */
+  elementName: string;
   /** Short evocative line, appears under the label in the picker. */
   tagline: string;
   /** A sentence or two for the picker card body. */
@@ -36,6 +40,7 @@ export const HUNTER_TYPE_DEFS: Record<HunterType, HunterTypeDef> = {
   body: {
     id: "body",
     label: "Body Hunter",
+    elementName: "Earth",
     tagline: "Forge the vessel.",
     description:
       "Train physical capacity. Pushups, pullups, squats, incremental ladders that climb to S rank. The path of iron and breath.",
@@ -45,6 +50,7 @@ export const HUNTER_TYPE_DEFS: Record<HunterType, HunterTypeDef> = {
   mind: {
     id: "mind",
     label: "Mind Hunter",
+    elementName: "Air",
     tagline: "Sharpen the blade.",
     description:
       "Train intellect. Reading, study, memorization, ladders of focus that compound across years. The path of clarity.",
@@ -54,15 +60,17 @@ export const HUNTER_TYPE_DEFS: Record<HunterType, HunterTypeDef> = {
   emotion: {
     id: "emotion",
     label: "Emotion Hunter",
-    tagline: "Tend the flame.",
+    elementName: "Water",
+    tagline: "Tend the current.",
     description:
-      "Train relational depth. Vulnerability, empathy, expression, daily reps of being seen. The path of the heart.",
-    badgeStyle: "text-rose-300 border-rose-400/50 bg-rose-500/10",
-    glow: "shadow-[0_0_12px_rgba(251,113,133,0.4)]",
+      "Train relational depth. Vulnerability, empathy, expression, daily reps of being seen. The path of the moving heart.",
+    badgeStyle: "text-blue-300 border-blue-400/50 bg-blue-500/10",
+    glow: "shadow-[0_0_12px_rgba(96,165,250,0.4)]",
   },
   energy: {
     id: "energy",
     label: "Energy Hunter",
+    elementName: "Fire",
     tagline: "Master the spark.",
     description:
       "Train vitality. Cold exposure, fasting, cardio, ladders that wake the body up. The path of the awakened nervous system.",
@@ -72,6 +80,7 @@ export const HUNTER_TYPE_DEFS: Record<HunterType, HunterTypeDef> = {
   spirit: {
     id: "spirit",
     label: "Spirit Hunter",
+    elementName: "Ether",
     tagline: "Touch the silent.",
     description:
       "Train transcendence. Meditation, silence, contemplation, ladders that deepen the inside. The path beyond the self.",

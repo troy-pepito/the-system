@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import { getGuildBySlug, getGuildFeed } from "@/app/actions/guilds";
 import GuildPanel from "@/components/GuildPanel";
+import MarkGuildFeedSeen from "@/components/MarkGuildFeedSeen";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -39,6 +40,7 @@ export default async function GuildPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
+      {isMember && <MarkGuildFeedSeen />}
       <div className="max-w-2xl mx-auto w-full space-y-6">
         <GuildPanel
           initial={guild}

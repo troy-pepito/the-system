@@ -527,7 +527,7 @@ function TrophySection({
 function StatLine({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex justify-between border-b border-slate-800 py-1.5">
-      <span className="text-[11px] text-slate-500 uppercase tracking-wider">
+      <span className="text-[11px] text-slate-400 uppercase tracking-wider">
         {label}
       </span>
       <span className="text-sm text-cyan-300 font-bold">{value}</span>

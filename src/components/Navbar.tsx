@@ -21,7 +21,12 @@ import {
   getProfileStats,
   getUnclaimedTrophyCount,
 } from "@/app/actions/achievements";
-import { getPendingJoinRequestCount } from "@/app/actions/guilds";
+import {
+  getPendingJoinRequestCount,
+  getLatestGuildEventTimestamp,
+} from "@/app/actions/guilds";
+
+const GUILD_FEED_LAST_SEEN_KEY = "system:guild-feed-last-seen";
 import { readCache, writeCache } from "@/lib/offlineCache";
 
 const TOTAL_XP_CACHE_KEY = "totalXp";
@@ -32,6 +37,7 @@ export default function Navbar() {
   const [totalXp, setTotalXp] = useState<number>(0);
   const [unclaimedTrophyCount, setUnclaimedTrophyCount] = useState<number>(0);
   const [pendingGuildCount, setPendingGuildCount] = useState<number>(0);
+  const [hasNewGuildFeed, setHasNewGuildFeed] = useState<boolean>(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
 
@@ -45,12 +51,20 @@ export default function Navbar() {
     href: string,
     label: string,
     icon: React.ReactNode,
-    options?: { badgeCount?: number; layout?: "row" | "stack" }
+    options?: {
+      badgeCount?: number;
+      layout?: "row" | "stack";
+      /** Independent of badgeCount. Small cyan pulse at the top-left
+       *  of the icon, signals "new activity" without a specific count.
+       *  Used by Guilds for unread feed posts. */
+      showDot?: boolean;
+    }
   ) => {
     const isActive =
       href === "/" ? pathname === "/" : pathname.startsWith(href);
     const layout = options?.layout ?? "row";
     const badgeCount = options?.badgeCount;
+    const showDot = options?.showDot;
     return (
       <Link
         href={href}
@@ -73,6 +87,12 @@ export default function Navbar() {
             >
               {badgeCount > 9 ? "9+" : badgeCount}
             </span>
+          )}
+          {showDot && (
+            <span
+              aria-label="New activity"
+              className="absolute -top-1 -left-1.5 w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_6px_rgba(34,211,238,0.8)] animate-pulse"
+            />
           )}
         </span>
         <span className={layout === "stack" ? "text-[8px]" : ""}>
@@ -160,6 +180,34 @@ export default function Navbar() {
     const cached = readCache<number>(TOTAL_XP_CACHE_KEY);
     if (typeof cached === "number") setTotalXp(cached);
 
+    // Split the recompute into "heavy" (XP via getProfileStats) and
+    // "cheap" (the two badge COUNT queries). Lets the xpDelta fast-path
+    // still refresh the badges without re-fetching XP, so claiming a
+    // trophy or approving a join request decrements the bubble within
+    // the same render cycle instead of waiting for the next no-delta
+    // event (which was the "bubble takes forever to update" bug).
+    const refreshBadges = async () => {
+      try {
+        const count = await getUnclaimedTrophyCount();
+        setUnclaimedTrophyCount(count);
+      } catch {}
+      try {
+        const count = await getPendingJoinRequestCount();
+        setPendingGuildCount(count);
+      } catch {}
+      try {
+        const latest = await getLatestGuildEventTimestamp();
+        if (!latest) {
+          setHasNewGuildFeed(false);
+        } else {
+          let lastSeen = "";
+          try {
+            lastSeen = localStorage.getItem(GUILD_FEED_LAST_SEEN_KEY) ?? "";
+          } catch {}
+          setHasNewGuildFeed(latest > lastSeen);
+        }
+      } catch {}
+    };
     const recompute = async () => {
       try {
         const stats = await getProfileStats();
@@ -167,20 +215,7 @@ export default function Navbar() {
         writeCache(TOTAL_XP_CACHE_KEY, stats.totalXp);
         setTotalXp(stats.totalXp);
       } catch {}
-      try {
-        // Trophy count is cheap (single COUNT query, server-cached) so
-        // pulling it on the same recompute trigger is fine. Fires
-        // alongside totalXp on every STATS_UPDATED_EVENT.
-        const count = await getUnclaimedTrophyCount();
-        setUnclaimedTrophyCount(count);
-      } catch {}
-      try {
-        // Same shape as the trophy badge, single COUNT for the guild
-        // owner's pending join requests. Returns 0 for non-owners or
-        // for hunters not in a guild yet.
-        const count = await getPendingJoinRequestCount();
-        setPendingGuildCount(count);
-      } catch {}
+      await refreshBadges();
     };
     const onEvent = (e: Event) => {
       const delta = (e as CustomEvent<{ xpDelta?: number }>).detail?.xpDelta;
@@ -190,6 +225,10 @@ export default function Navbar() {
           writeCache(TOTAL_XP_CACHE_KEY, next);
           return next;
         });
+        // Badge counts can change on the same event (claiming a trophy
+        // fires xpDelta and also decrements unclaimedTrophyCount), so
+        // refresh them alongside the optimistic XP bump.
+        refreshBadges();
         return;
       }
       recompute();
@@ -253,6 +292,7 @@ export default function Navbar() {
             {navItem("/", t("status"), statusIcon)}
             {navItem("/guilds", t("guilds"), guildsIcon, {
               badgeCount: pendingGuildCount,
+              showDot: hasNewGuildFeed,
             })}
             {navItem("/leaderboard", t("board"), boardIcon)}
             {navItem("/profile", t("profile"), profileIcon, {
@@ -325,6 +365,7 @@ export default function Navbar() {
           {navItem("/guilds", t("guilds"), guildsIcon, {
             layout: "stack",
             badgeCount: pendingGuildCount,
+            showDot: hasNewGuildFeed,
           })}
           {navItem("/leaderboard", t("board"), boardIcon, { layout: "stack" })}
           {navItem("/profile", t("profile"), profileIcon, {
