@@ -11,6 +11,7 @@ import {
 } from "@/app/actions/dungeons";
 import { getDungeon } from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
+import { beginMutation, endMutation } from "@/lib/player";
 
 interface JournalSectionProps {
   entries: JournalEntry[];
@@ -72,20 +73,26 @@ export default function JournalSection({
           : e
       )
     );
+    beginMutation();
     try {
       await updateJournalEntry(editingEntry.id, trimmed, nextIsPublic);
     } catch {
       // Best-effort, server is the source of truth on next refresh.
+    } finally {
+      endMutation();
     }
   }
 
   async function handleConfirmDelete(id: number) {
     setConfirmingDeleteId(null);
     onEntriesChange(entries.filter((e) => e.id !== id));
+    beginMutation();
     try {
       await deleteJournalEntry(id);
     } catch {
       // Best-effort, entry restored on next refresh if server fails.
+    } finally {
+      endMutation();
     }
   }
 

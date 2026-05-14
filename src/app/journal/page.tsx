@@ -8,7 +8,7 @@ import {
 } from "@/app/actions/dungeons";
 import JournalSection from "@/components/JournalSection";
 import { readCache, writeCache } from "@/lib/offlineCache";
-import { STATS_UPDATED_EVENT } from "@/lib/player";
+import { STATS_UPDATED_EVENT, hasPendingMutations } from "@/lib/player";
 
 const JOURNAL_CACHE_KEY = "journal";
 
@@ -23,6 +23,10 @@ export default function JournalPage() {
     const load = () => {
       getJournalEntries()
         .then((j) => {
+          // Skip clobbering optimistic state while a journal mutation
+          // (pin / edit / delete) is in flight. Same guard pattern the
+          // calendar check-in panel uses.
+          if (hasPendingMutations()) return;
           writeCache(JOURNAL_CACHE_KEY, j);
           setEntries(j);
         })

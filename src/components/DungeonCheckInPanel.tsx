@@ -18,6 +18,9 @@ import {
   notifyCelebration,
   STATS_UPDATED_EVENT,
   XP_PER_STREAK_DAY,
+  beginMutation,
+  endMutation,
+  hasPendingMutations,
 } from "@/lib/player";
 import { drainQueue } from "@/lib/offlineDrain";
 import { enqueueMutation, newMutationId } from "@/lib/offlineQueue";
@@ -78,6 +81,13 @@ export default function DungeonCheckInPanel({
       getCheckIns(dungeonId)
         .then((c) => {
           if (cancelled) return;
+          // Skip clobbering optimistic state while a check-in write is
+          // in flight. CrossTabSync's poll + storage events fire
+          // STATS_UPDATED_EVENT without an xpDelta, which would
+          // otherwise trigger this fetch mid-write and pull the
+          // calendar checkbox back to its pre-tick state until the
+          // server cache caught up — the "calendar seesaw" UX bug.
+          if (hasPendingMutations()) return;
           setCheckIns(c);
           setHasData(true);
           writeCache(checkInCacheKey(dungeonId), c);
@@ -232,6 +242,7 @@ export default function DungeonCheckInPanel({
       }
     }
 
+    beginMutation();
     try {
       await confirmDay(dungeonId, date, "cleared");
     } catch {
@@ -243,6 +254,8 @@ export default function DungeonCheckInPanel({
         state: "cleared",
       });
       drainQueue().catch(() => {});
+    } finally {
+      endMutation();
     }
   }
 
@@ -284,6 +297,7 @@ export default function DungeonCheckInPanel({
     notifyStatsUpdated({ xpDelta });
     refundTierCrossings(prevClearedCount, newClearedCount);
 
+    beginMutation();
     try {
       await confirmDay(
         dungeonId,
@@ -302,6 +316,8 @@ export default function DungeonCheckInPanel({
         ...(note ? { note, isPublic } : {}),
       });
       drainQueue().catch(() => {});
+    } finally {
+      endMutation();
     }
   }
 
@@ -325,10 +341,13 @@ export default function DungeonCheckInPanel({
     reportClearedCount(nextList);
     notifyStatsUpdated({ xpDelta });
     refundTierCrossings(prevClearedCount, newClearedCount);
+    beginMutation();
     try {
       await clearCheckIn(dungeonId, date);
     } catch {
       // Best-effort, no offline queue for undo.
+    } finally {
+      endMutation();
     }
   }
 

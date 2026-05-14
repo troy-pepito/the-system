@@ -32,6 +32,7 @@ import {
   STATS_UPDATED_EVENT,
   notifyReward,
   notifyStatsUpdated,
+  hasPendingMutations,
 } from "@/lib/player";
 import { readCache, writeCache } from "@/lib/offlineCache";
 
@@ -71,12 +72,17 @@ export default function ProfilePage() {
     const load = () => {
       getProfilePageData()
         .then((d) => {
+          // Skip during in-flight mutations (trophy claim, journal
+          // pin/edit/delete) so a poll-triggered refetch can't clobber
+          // optimistic state with a stale read from the server cache.
+          if (hasPendingMutations()) return;
           writeCache(PROFILE_CACHE_KEY, d);
           setData(d);
         })
         .catch(() => {});
       getJournalEntries()
         .then((j) => {
+          if (hasPendingMutations()) return;
           writeCache(JOURNAL_CACHE_KEY, j);
           setJournal(j);
         })
