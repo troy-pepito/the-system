@@ -471,7 +471,7 @@ async function TrophyList({
                   >
                     {labels.name}
                   </p>
-                  <p className="text-[11px] leading-relaxed mt-1 text-slate-300">
+                  <p className="text-[11px] leading-relaxed mt-1 text-slate-300 break-words">
                     {labels.description}
                   </p>
                   <p

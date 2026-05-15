@@ -52,15 +52,21 @@ export default function ProfilePage() {
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [range, setRange] = useState<Range>("all");
   // Hash-driven deep link from AchievementToast: clicking the toast
-  // sends the player to /profile#trophy-{id}. We capture the id once
-  // on mount and pipe it down so the matching section auto-expands
-  // and scrolls into view, without this, the link landed at the top
-  // of /profile with the trophy panel still collapsed.
+  // sends the player to /profile#trophy-{id}. Subscribe to hashchange
+  // events too — without it, when the user is ALREADY on /profile and
+  // taps a second toast, the URL hash updates but no remount happens
+  // and the effect doesn't re-fire, so the second click silently lands
+  // at the top of the page instead of scrolling to the second trophy.
   const [highlightId, setHighlightId] = useState<string | null>(null);
   useEffect(() => {
-    const hash = window.location.hash;
-    if (!hash.startsWith("#trophy-")) return;
-    setHighlightId(hash.slice("#trophy-".length));
+    const applyHash = () => {
+      const hash = window.location.hash;
+      if (!hash.startsWith("#trophy-")) return;
+      setHighlightId(hash.slice("#trophy-".length));
+    };
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
   }, []);
 
   useEffect(() => {
@@ -489,14 +495,14 @@ function TrophySection({
                 </span>
                 <div className="flex-1 min-w-0">
                   <p
-                    className={`text-xs font-bold uppercase tracking-wider leading-tight ${
+                    className={`text-xs font-bold uppercase tracking-wider leading-tight break-words ${
                       isUnlocked ? style.text : "text-slate-600"
                     }`}
                   >
                     {isUnlocked ? labels.name : "???"}
                   </p>
                   <p
-                    className={`text-[11px] leading-relaxed mt-1 ${
+                    className={`text-[11px] leading-relaxed mt-1 break-words ${
                       isUnlocked ? "text-slate-300" : "text-slate-700"
                     }`}
                   >
