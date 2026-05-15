@@ -17,7 +17,18 @@
     "notifications": "Benachrichtigungen",
     "install": "Installieren",
     "language": "Sprache",
-    "languageHint": "Wähle die Sprache, in der das System mit dir spricht. Übersetzungen kommen noch — Englisch ist am vollständigsten."
+    "languageHint": "Wähle die Sprache, in der das System mit dir spricht. Übersetzungen kommen noch — Englisch ist am vollständigsten.",
+    "dangerZone": "Gefahrenzone",
+    "deleteAccount": "Konto löschen",
+    "deleteAccountIntro": "Lösche dein Konto dauerhaft. Jeder Dungeon-Lauf, jeder Tagebucheintrag, jede Freundschaft, jede Gildenmitgliedschaft und jede Trophäe wird gelöscht. Wenn du eine Gilde besitzt, wird sie aufgelöst und alle Mitglieder werden entfernt. Dies kann nicht rückgängig gemacht werden.",
+    "deleteAccountButton": "Mein Konto löschen",
+    "deleteAccountConfirmHeader": "Bist du absolut sicher?",
+    "deleteAccountConfirmBody": "Gib unten deinen Jäger-Namen ein, um zu bestätigen. Diese Aktion ist endgültig.",
+    "deleteAccountTypePlaceholder": "Gib deinen Jäger-Namen ein",
+    "deleteAccountConfirmButton": "Für immer löschen",
+    "deleteAccountCancel": "Abbrechen",
+    "deleteAccountDeleting": "Lösche…",
+    "deleteAccountError": "Konto konnte nicht gelöscht werden. Versuche es erneut oder schreibe an trojanato@gmail.com."
   },
   "hunterTypePicker": {
     "intro": "Wähle einen Pfad, um seine Trainingsprogramme freizuschalten. Tippe deinen gewählten Pfad erneut, um zu Unaffiliiert zurückzukehren. Wechseln ist kostenlos — erkunde.",
@@ -63,7 +74,13 @@
     "whyHeader": "Warum es das gibt",
     "whyP1": "Ich habe das während eines dunklen Kapitels gemacht — zuerst für mich selbst. Ich brauchte ein System, das Disziplin weniger nach Willenskraft anfühlt und mehr nach einem Spiel, zu dem ich jeden Tag erscheinen konnte.",
     "whyP2": "Jetzt ist es da für alle, die sich nach demselben sehnen: Menschen, die gegen Zwänge kämpfen, Menschen, die gegen Aufschieberitis verlieren, Menschen, die wissen, dass sie Verantwortung brauchen, aber niemanden haben, der sie ihnen abverlangt.",
-    "whyWelcome": "Wenn das du bist, willkommen."
+    "whyWelcome": "Wenn das du bist, willkommen.",
+    "communityHeader": "Du bist damit nicht allein",
+    "communityIntro": "Jäger, die allein gehen, brechen. Jäger, die zusammen trainieren, steigen auf. Das System gibt dir beides: deine eigenen Dungeons und einen Kreis, mit dem du sie durchschreitest.",
+    "communityGuildsTitle": "Gilden",
+    "communityGuildsBody": "Stelle eine Bande von bis zu 10 Jägern zusammen. Die öffentlichen Reflexionen der Mitglieder landen im Feed deiner Gilde, kleine Banden, keine anonyme Übertragung. Der Besitzer genehmigt, wer beitritt.",
+    "communityBoardTitle": "Wöchentliche Rangliste",
+    "communityBoardBody": "Jede Aktion, die du diese Woche protokollierst, verdient Aktivitätspunkte. Konkurriere weltweit, mit Freunden, in deiner Gilde oder Gilde gegen Gilde. Setzt alle 7 Tage zurück, es ist immer ein neuer Kampf."
   },
   "recentGains": {
     "title": "Aktuelle Gewinne",
@@ -77,7 +94,9 @@
     "header": "Status-Fenster des Spielers",
     "noActiveDungeons": "[ Das Portal-Register Wartet ]",
     "noActiveDungeonsBody": "Noch keine aktiven Dungeons. Wähle dein erstes Portal, um den Weg deines Jägers zu formen.",
-    "enterRegistry": "Register Betreten →"
+    "enterRegistry": "Register Betreten →",
+    "firstHunterHeader": "[ Erste Quest Verfügbar ]",
+    "firstHunterBody": "Willkommen, Jäger. Deine erste Aktion ist einen Tipp entfernt. Hake eine beliebige Tägliche Quest ab, um dein erstes XP zu verdienen, oder öffne das Portal-Verzeichnis unten, um einen Dungeon zu betreten."
   },
   "hunterCard": {
     "id": "Jäger-ID",
@@ -119,7 +138,11 @@
     "comboExtended": "Combo verlängert · Bis morgen",
     "keepAlive": "Noch {count}, um die Combo am Leben zu halten",
     "bonusTooltip": "Basis {base} + Combo-Bonus {bonus}",
-    "comboSource": "🔥 {days}-Tage-Combo"
+    "comboSource": "🔥 {days}-Tage-Combo",
+    "resetsIn": "Setzt zurück in",
+    "progressLabel": "{done}/{total} erledigt",
+    "systemWarningScattered": "Das System hat gestern als Stille markiert. Durchbrich das Muster heute.",
+    "systemNoticeIdle": "Das Fenster schließt um Mitternacht. Beweg dich."
   },
   "profile": {
     "recordHeader": "Bilanz — {label}",
@@ -367,7 +390,9 @@
     "cancel": "Abbrechen",
     "isFriend": "✓ Befreundet",
     "requestSent": "Anfrage Gesendet",
-    "addFriend": "+ Freund Hinzufügen"
+    "addFriend": "+ Freund Hinzufügen",
+    "confirmAdd": "Anfrage senden?",
+    "cancelRequest": "Anfrage abbrechen"
   },
   "installApp": {
     "title": "App Installieren",
@@ -542,7 +567,11 @@
       "foundations": "Grundlagen",
       "progression": "Jäger-Fortschritt",
       "training": "Training",
-      "dungeonMastery": "Dungeon-Meisterschaft"
+      "dungeonMastery": "Dungeon-Meisterschaft",
+      "community": "Gemeinschaft",
+      "devotion": "Hingabe",
+      "elemental": "Elementar",
+      "shadow": "Schatten"
     }
   },
   "ranksPage": {
@@ -638,32 +667,186 @@
     "comboName": "{days}-Tage-Combo",
     "comboDescription": "Daily-Quest-Combo erreichte {days} Tage. +{xp} XP",
     "static": {
-      "awakened": { "name": "Erwacht", "description": "Nimm den Ruf an. Betritt deinen ersten Dungeon." },
-      "first-streak": { "name": "Erstes Blut", "description": "Überstehe deinen ersten Tag in einem Dungeon." },
-      "first-quest": { "name": "Quest Angenommen", "description": "Schließe deine erste Daily Quest ab." },
-      "first-workout": { "name": "Erste Wiederholung", "description": "Logge ein Workout in Gym Life." },
-      "first-exposure": { "name": "Stille Präsenz", "description": "Logge deine erste Exposition auf der Therapieleiter." },
-      "rank-e": { "name": "E-Rang Bestanden", "description": "Halte 7 Tage Strähne in einem Dungeon." },
-      "rank-d": { "name": "D-Rang Bestanden", "description": "Erreiche 14 Tage in einem Dungeon." },
-      "rank-c": { "name": "C-Rang Bestanden", "description": "Erreiche 30 Tage in einem Dungeon." },
-      "rank-b": { "name": "B-Rang Bestanden", "description": "Erreiche 60 Tage in einem Dungeon." },
-      "rank-a": { "name": "A-Rang Bestanden", "description": "Erreiche 90 Tage in einem Dungeon." },
-      "rank-s": { "name": "S-Rang Aufgestiegen", "description": "Erreiche 180 Tage in einem Dungeon." },
-      "multi-classed": { "name": "Multi-Klasse", "description": "Sei in 3 Dungeons gleichzeitig aktiv." },
-      "polymath": { "name": "Polyhistor", "description": "Sei in allen 5 Dungeons gleichzeitig aktiv." },
-      "perfect-day": { "name": "Perfekter Tag", "description": "Schließe alle Daily Quests an einem Tag ab." },
-      "grinder": { "name": "Der Grinder", "description": "50 Quest-Abschlüsse insgesamt." },
-      "grind-lord": { "name": "Grind-Lord", "description": "250 Quest-Abschlüsse insgesamt." },
-      "iron-will": { "name": "Eiserner Wille", "description": "Schließe 10 Workouts ab." },
-      "forged": { "name": "Geschmiedet", "description": "100 Workouts geloggt." },
-      "ladder-climber": { "name": "Leiter-Steiger", "description": "Bestehe 3 Sprossen der Expositionsleiter." },
-      "fearless": { "name": "Furchtlos", "description": "Schließe die gesamte Expositionsleiter ab." },
-      "dungeon-master": { "name": "Dungeon-Meister", "description": "Bestehe und beende einen Dungeon erfolgreich." },
-      "conqueror": { "name": "Eroberer", "description": "Schließe 3 Dungeons vollständig ab." },
-      "level-5": { "name": "Anfänger-Jäger", "description": "Erreiche Stufe 5." },
-      "level-10": { "name": "Adept", "description": "Erreiche Stufe 10." },
-      "level-25": { "name": "Veteran", "description": "Erreiche Stufe 25." },
-      "level-50": { "name": "Schattenmonarch", "description": "Erreiche Stufe 50." }
+      "awakened": {
+        "name": "Erwacht",
+        "description": "Nimm den Ruf an. Betritt deinen ersten Dungeon."
+      },
+      "first-streak": {
+        "name": "Erstes Blut",
+        "description": "Überstehe deinen ersten Tag in einem Dungeon."
+      },
+      "first-quest": {
+        "name": "Quest Angenommen",
+        "description": "Schließe deine erste Daily Quest ab."
+      },
+      "first-workout": {
+        "name": "Erste Wiederholung",
+        "description": "Logge ein Workout in Gym Life."
+      },
+      "first-exposure": {
+        "name": "Stille Präsenz",
+        "description": "Logge deine erste Exposition auf der Therapieleiter."
+      },
+      "rank-e": {
+        "name": "E-Rang Bestanden",
+        "description": "Halte 7 Tage Strähne in einem Dungeon."
+      },
+      "rank-d": {
+        "name": "D-Rang Bestanden",
+        "description": "Erreiche 14 Tage in einem Dungeon."
+      },
+      "rank-c": {
+        "name": "C-Rang Bestanden",
+        "description": "Erreiche 30 Tage in einem Dungeon."
+      },
+      "rank-b": {
+        "name": "B-Rang Bestanden",
+        "description": "Erreiche 60 Tage in einem Dungeon."
+      },
+      "rank-a": {
+        "name": "A-Rang Bestanden",
+        "description": "Erreiche 90 Tage in einem Dungeon."
+      },
+      "rank-s": {
+        "name": "S-Rang Aufgestiegen",
+        "description": "Erreiche 180 Tage in einem Dungeon."
+      },
+      "multi-classed": {
+        "name": "Multi-Klasse",
+        "description": "Sei in 3 Dungeons gleichzeitig aktiv."
+      },
+      "polymath": {
+        "name": "Polyhistor",
+        "description": "Sei in allen 5 Dungeons gleichzeitig aktiv."
+      },
+      "perfect-day": {
+        "name": "Perfekter Tag",
+        "description": "Schließe alle Daily Quests an einem Tag ab."
+      },
+      "grinder": {
+        "name": "Der Grinder",
+        "description": "50 Quest-Abschlüsse insgesamt."
+      },
+      "grind-lord": {
+        "name": "Grind-Lord",
+        "description": "250 Quest-Abschlüsse insgesamt."
+      },
+      "iron-will": {
+        "name": "Eiserner Wille",
+        "description": "Schließe 10 Workouts ab."
+      },
+      "forged": {
+        "name": "Geschmiedet",
+        "description": "100 Workouts geloggt."
+      },
+      "ladder-climber": {
+        "name": "Leiter-Steiger",
+        "description": "Bestehe 3 Sprossen der Expositionsleiter."
+      },
+      "fearless": {
+        "name": "Furchtlos",
+        "description": "Schließe die gesamte Expositionsleiter ab."
+      },
+      "dungeon-master": {
+        "name": "Dungeon-Meister",
+        "description": "Bestehe und beende einen Dungeon erfolgreich."
+      },
+      "conqueror": {
+        "name": "Eroberer",
+        "description": "Schließe 3 Dungeons vollständig ab."
+      },
+      "level-5": {
+        "name": "Anfänger-Jäger",
+        "description": "Erreiche Stufe 5."
+      },
+      "level-10": {
+        "name": "Adept",
+        "description": "Erreiche Stufe 10."
+      },
+      "level-25": {
+        "name": "Veteran",
+        "description": "Erreiche Stufe 25."
+      },
+      "level-50": {
+        "name": "Schattenmonarch",
+        "description": "Erreiche Stufe 50."
+      },
+      "hunters-voice": {
+        "name": "Hunter's Voice",
+        "description": "Veröffentliche deine erste öffentliche Reflexion. Tritt aus dem Schweigen."
+      },
+      "first-friend": {
+        "name": "First Bond",
+        "description": "Füge deinen ersten Jäger als Freund hinzu. Das Rudel zieht sich zusammen."
+      },
+      "bond-found": {
+        "name": "Bond Found",
+        "description": "Tritt deiner ersten Gilde bei. Finde die Bande."
+      },
+      "daily-witness": {
+        "name": "Daily Witness",
+        "description": "Sei an 14 verschiedenen Tagen da. Das System kennt dein Gesicht."
+      },
+      "open-hand": {
+        "name": "Open Hand",
+        "description": "Veröffentliche 10 öffentliche Reflexionen. Mut ist eine Gewohnheit."
+      },
+      "five-bonds": {
+        "name": "Five Bonds",
+        "description": "Erreiche 5 Freunde. Eine echte Bande, keine Liste."
+      },
+      "surge": {
+        "name": "Surge",
+        "description": "Erziele 50 Aktivitätspunkte in einer Woche. Eine Schub-Woche, aufgebaut aus Quests, Trainings und Expositionen."
+      },
+      "tempest": {
+        "name": "Tempest",
+        "description": "Erziele 100 Aktivitätspunkte in einer Woche. Außergewöhnliche Leistung."
+      },
+      "first-week": {
+        "name": "Threshold",
+        "description": "Sei an 7 verschiedenen Tagen da. Du hast die Klippe überschritten."
+      },
+      "steadfast": {
+        "name": "Steadfast",
+        "description": "Aktivität an 30 verschiedenen Tagen protokollieren. Beständigkeit vor Heldentaten."
+      },
+      "veteran": {
+        "name": "Veteran of the System",
+        "description": "90 verschiedene Aktivitätstage. Das System erkennt den Geduldigen."
+      },
+      "year-one": {
+        "name": "Year One",
+        "description": "365 verschiedene Aktivitätstage. Ein ganzes Jahr des Auftauchens."
+      },
+      "bedrock": {
+        "name": "Bedrock",
+        "description": "Erreiche 50 Erd-XP. Das Gefäß wird geschmiedet."
+      },
+      "current": {
+        "name": "Current",
+        "description": "Erreiche 50 Wasser-XP. Der Fluss des Herzens lernt seine Form."
+      },
+      "furnace": {
+        "name": "Furnace",
+        "description": "Erreiche 50 Feuer-XP. Prana entzündet, Nervensystem erwacht."
+      },
+      "open-sky": {
+        "name": "Open Sky",
+        "description": "Erreiche 50 Luft-XP. Aufmerksamkeit zurückerobert, Gedanken geklärt."
+      },
+      "inner-void": {
+        "name": "Inner Void",
+        "description": "Erreiche 50 Äther-XP. Der stille Raum hinter dem Lärm."
+      },
+      "phoenix": {
+        "name": "Phoenix",
+        "description": "Betritt einen Dungeon erneut, in dem du zurückgefallen bist. Der Fall ist nicht das Ende."
+      },
+      "comeback": {
+        "name": "Comeback",
+        "description": "Erziele einen perfekten Tag am Morgen nach einem zerstreuten Tag. Das System vergisst nichts, aber du auch nicht."
+      }
     }
   },
   "guide": {
@@ -819,7 +1002,12 @@
     "kick": "Werfen",
     "kickConfirm": "{name} aus der Gilde werfen? Sie können später erneut beitreten.",
     "guildFeed": "Gilden-Feed",
-    "feedEmpty": "Noch nichts hier. Öffentliche Tagebucheinträge der Mitglieder landen in diesem Feed — aktiviere den Teilen-Schalter an einem Eintrag, um einen abzuwerfen."
+    "feedEmpty": "Noch nichts hier. Öffentliche Tagebucheinträge der Mitglieder landen in diesem Feed — aktiviere den Teilen-Schalter an einem Eintrag, um einen abzuwerfen.",
+    "confirmJoin": "Anfrage senden?",
+    "cancel": "Abbrechen",
+    "cancelRequest": "Anfrage abbrechen",
+    "confirmLeave": "Wirklich verlassen?",
+    "memberMenuAria": "Mitgliedsoptionen"
   },
   "guildModal": {
     "close": "Schließen",
@@ -876,5 +1064,16 @@
   },
   "portalsExtra": {
     "changePath": "Deinen Pfad ändern →"
+  },
+  "questBriefing": {
+    "header": "[ Missionsinfo ]",
+    "objectiveLabel": "Ziel",
+    "rulesLabel": "Rhythmus",
+    "rewardsLabel": "Belohnungen",
+    "rewardsDescription": "XP pro Abschluss · Streak-Boni · Trophäen bei Meilensteinen",
+    "warningLabel": "Systemhinweis",
+    "warningBody": "Dieses Portal zu betreten bindet dich an seinen Rhythmus. Rückfälle werden protokolliert. Abschlüsse sammeln XP. Wähle mit Bedacht.",
+    "cancel": "Zurücktreten",
+    "confirm": "Dungeon betreten"
   }
 }

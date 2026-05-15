@@ -17,7 +17,18 @@
     "notifications": "Notificações",
     "install": "Instalar",
     "language": "Idioma",
-    "languageHint": "Escolha o idioma em que o Sistema fala com você. As traduções ainda estão chegando — o inglês é o mais completo."
+    "languageHint": "Escolha o idioma em que o Sistema fala com você. As traduções ainda estão chegando — o inglês é o mais completo.",
+    "dangerZone": "Zona de Perigo",
+    "deleteAccount": "Excluir Conta",
+    "deleteAccountIntro": "Exclui sua conta permanentemente. Cada incursão de masmorra, entrada de diário, amizade, associação de guilda e troféu será apagado. Se você possui uma guilda, ela será desfeita e todos os membros expulsos. Isto não pode ser desfeito.",
+    "deleteAccountButton": "Excluir Minha Conta",
+    "deleteAccountConfirmHeader": "Tem certeza absoluta?",
+    "deleteAccountConfirmBody": "Digite seu nome de caçador abaixo para confirmar. Esta ação é permanente.",
+    "deleteAccountTypePlaceholder": "Digite seu nome de caçador",
+    "deleteAccountConfirmButton": "Excluir para Sempre",
+    "deleteAccountCancel": "Cancelar",
+    "deleteAccountDeleting": "Excluindo…",
+    "deleteAccountError": "Não foi possível excluir a conta. Tente novamente ou envie um email para trojanato@gmail.com."
   },
   "hunterTypePicker": {
     "intro": "Escolha um caminho para desbloquear seus programas de treino. Toque no caminho escolhido novamente para voltar a Não Filiado. Trocar é grátis — explore.",
@@ -63,7 +74,13 @@
     "whyHeader": "Por que isso existe",
     "whyP1": "Fiz isso durante um capítulo escuro — para mim mesmo, primeiro. Eu precisava de um sistema que fizesse a disciplina parecer menos com força de vontade e mais como um jogo no qual eu pudesse aparecer todo dia.",
     "whyP2": "Agora está aqui para qualquer um que anseie pelo mesmo: gente que luta contra compulsões, gente que perde para a procrastinação, gente que sabe que precisa de cobrança mas não tem quem cobre.",
-    "whyWelcome": "Se essa é você, bem-vindo."
+    "whyWelcome": "Se essa é você, bem-vindo.",
+    "communityHeader": "Você não está sozinho nisso",
+    "communityIntro": "Caçadores que vão sozinhos quebram. Caçadores que treinam juntos sobem de nível. O Sistema te dá ambos: suas próprias masmorras, e um círculo para percorrê-las com você.",
+    "communityGuildsTitle": "Guildas",
+    "communityGuildsBody": "Forme um bando de até 10 caçadores. As reflexões públicas dos membros vão para o feed da sua guilda, bandos pequenos, não transmissão anônima. O dono aprova quem entra.",
+    "communityBoardTitle": "Ranking Semanal",
+    "communityBoardBody": "Cada ação que você registra esta semana ganha pontos de atividade. Compita globalmente, com amigos, dentro da sua guilda ou guilda contra guilda. Reinicia a cada 7 dias, sempre uma nova luta."
   },
   "recentGains": {
     "title": "Ganhos recentes",
@@ -77,7 +94,9 @@
     "header": "Janela de Status do Jogador",
     "noActiveDungeons": "[ O Registro de Portais Aguarda ]",
     "noActiveDungeonsBody": "Ainda sem masmorras ativas. Escolha seu primeiro portal para começar a moldar o caminho do seu caçador.",
-    "enterRegistry": "Entrar no Registro →"
+    "enterRegistry": "Entrar no Registro →",
+    "firstHunterHeader": "[ Primeira Missão Disponível ]",
+    "firstHunterBody": "Bem-vindo, caçador. Sua primeira ação está a um toque acima. Marque qualquer Missão Diária para ganhar seu primeiro XP, ou abra o Registro de Portais abaixo para entrar em uma masmorra."
   },
   "hunterCard": {
     "id": "ID do Caçador",
@@ -119,7 +138,11 @@
     "comboExtended": "Combo estendido · Até amanhã",
     "keepAlive": "Mais {count} para manter o combo vivo",
     "bonusTooltip": "Base {base} + bônus de combo {bonus}",
-    "comboSource": "🔥 Combo de {days} dias"
+    "comboSource": "🔥 Combo de {days} dias",
+    "resetsIn": "Reinicia em",
+    "progressLabel": "{done}/{total} concluídas",
+    "systemWarningScattered": "O Sistema marcou ontem como silêncio. Quebre o padrão hoje.",
+    "systemNoticeIdle": "A janela fecha à meia-noite. Mexa-se."
   },
   "profile": {
     "recordHeader": "Registro — {label}",
@@ -367,7 +390,9 @@
     "cancel": "Cancelar",
     "isFriend": "✓ Amigos",
     "requestSent": "Solicitação Enviada",
-    "addFriend": "+ Adicionar Amigo"
+    "addFriend": "+ Adicionar Amigo",
+    "confirmAdd": "Enviar Pedido?",
+    "cancelRequest": "Cancelar Pedido"
   },
   "installApp": {
     "title": "Instalar App",
@@ -542,7 +567,11 @@
       "foundations": "Fundamentos",
       "progression": "Progressão do caçador",
       "training": "Treinamento",
-      "dungeonMastery": "Maestria de masmorras"
+      "dungeonMastery": "Maestria de masmorras",
+      "community": "Comunidade",
+      "devotion": "Devoção",
+      "elemental": "Elemental",
+      "shadow": "Sombra"
     }
   },
   "ranksPage": {
@@ -638,32 +667,186 @@
     "comboName": "Combo de {days} dias",
     "comboDescription": "O combo de quests diárias atingiu {days} dias. +{xp} XP",
     "static": {
-      "awakened": { "name": "Despertado", "description": "Aceite o chamado. Entre na sua primeira masmorra." },
-      "first-streak": { "name": "Primeiro Sangue", "description": "Sobreviva ao seu primeiro dia dentro de uma masmorra." },
-      "first-quest": { "name": "Quest Aceita", "description": "Conclua sua primeira quest diária." },
-      "first-workout": { "name": "Primeira Repetição", "description": "Registre um treino em Gym Life." },
-      "first-exposure": { "name": "Presença Silenciosa", "description": "Registre sua primeira exposição na escada de terapia." },
-      "rank-e": { "name": "Rank E Concluído", "description": "Mantenha uma sequência de 7 dias em qualquer masmorra." },
-      "rank-d": { "name": "Rank D Concluído", "description": "Atinja 14 dias em qualquer masmorra." },
-      "rank-c": { "name": "Rank C Concluído", "description": "Atinja 30 dias em qualquer masmorra." },
-      "rank-b": { "name": "Rank B Concluído", "description": "Atinja 60 dias em qualquer masmorra." },
-      "rank-a": { "name": "Rank A Concluído", "description": "Atinja 90 dias em qualquer masmorra." },
-      "rank-s": { "name": "Rank S Ascendente", "description": "Atinja 180 dias em qualquer masmorra." },
-      "multi-classed": { "name": "Multiclasse", "description": "Esteja ativo em 3 masmorras ao mesmo tempo." },
-      "polymath": { "name": "Polímata", "description": "Esteja ativo nas 5 masmorras simultaneamente." },
-      "perfect-day": { "name": "Dia Perfeito", "description": "Conclua todas as quests diárias em um só dia." },
-      "grinder": { "name": "O Grinder", "description": "50 quests concluídas no total." },
-      "grind-lord": { "name": "Grind Lord", "description": "250 quests concluídas no total." },
-      "iron-will": { "name": "Vontade de Ferro", "description": "Conclua 10 treinos." },
-      "forged": { "name": "Forjado", "description": "100 treinos registrados." },
-      "ladder-climber": { "name": "Escalador", "description": "Conclua 3 degraus da escada de exposição." },
-      "fearless": { "name": "Sem Medo", "description": "Conclua toda a escada de exposição." },
-      "dungeon-master": { "name": "Mestre de Masmorras", "description": "Conclua e retire uma masmorra com sucesso." },
-      "conqueror": { "name": "Conquistador", "description": "Conclua 3 masmorras até o fim." },
-      "level-5": { "name": "Caçador Novato", "description": "Atinja o nível 5." },
-      "level-10": { "name": "Adepto", "description": "Atinja o nível 10." },
-      "level-25": { "name": "Veterano", "description": "Atinja o nível 25." },
-      "level-50": { "name": "Monarca das Sombras", "description": "Atinja o nível 50." }
+      "awakened": {
+        "name": "Despertado",
+        "description": "Aceite o chamado. Entre na sua primeira masmorra."
+      },
+      "first-streak": {
+        "name": "Primeiro Sangue",
+        "description": "Sobreviva ao seu primeiro dia dentro de uma masmorra."
+      },
+      "first-quest": {
+        "name": "Quest Aceita",
+        "description": "Conclua sua primeira quest diária."
+      },
+      "first-workout": {
+        "name": "Primeira Repetição",
+        "description": "Registre um treino em Gym Life."
+      },
+      "first-exposure": {
+        "name": "Presença Silenciosa",
+        "description": "Registre sua primeira exposição na escada de terapia."
+      },
+      "rank-e": {
+        "name": "Rank E Concluído",
+        "description": "Mantenha uma sequência de 7 dias em qualquer masmorra."
+      },
+      "rank-d": {
+        "name": "Rank D Concluído",
+        "description": "Atinja 14 dias em qualquer masmorra."
+      },
+      "rank-c": {
+        "name": "Rank C Concluído",
+        "description": "Atinja 30 dias em qualquer masmorra."
+      },
+      "rank-b": {
+        "name": "Rank B Concluído",
+        "description": "Atinja 60 dias em qualquer masmorra."
+      },
+      "rank-a": {
+        "name": "Rank A Concluído",
+        "description": "Atinja 90 dias em qualquer masmorra."
+      },
+      "rank-s": {
+        "name": "Rank S Ascendente",
+        "description": "Atinja 180 dias em qualquer masmorra."
+      },
+      "multi-classed": {
+        "name": "Multiclasse",
+        "description": "Esteja ativo em 3 masmorras ao mesmo tempo."
+      },
+      "polymath": {
+        "name": "Polímata",
+        "description": "Esteja ativo nas 5 masmorras simultaneamente."
+      },
+      "perfect-day": {
+        "name": "Dia Perfeito",
+        "description": "Conclua todas as quests diárias em um só dia."
+      },
+      "grinder": {
+        "name": "O Grinder",
+        "description": "50 quests concluídas no total."
+      },
+      "grind-lord": {
+        "name": "Grind Lord",
+        "description": "250 quests concluídas no total."
+      },
+      "iron-will": {
+        "name": "Vontade de Ferro",
+        "description": "Conclua 10 treinos."
+      },
+      "forged": {
+        "name": "Forjado",
+        "description": "100 treinos registrados."
+      },
+      "ladder-climber": {
+        "name": "Escalador",
+        "description": "Conclua 3 degraus da escada de exposição."
+      },
+      "fearless": {
+        "name": "Sem Medo",
+        "description": "Conclua toda a escada de exposição."
+      },
+      "dungeon-master": {
+        "name": "Mestre de Masmorras",
+        "description": "Conclua e retire uma masmorra com sucesso."
+      },
+      "conqueror": {
+        "name": "Conquistador",
+        "description": "Conclua 3 masmorras até o fim."
+      },
+      "level-5": {
+        "name": "Caçador Novato",
+        "description": "Atinja o nível 5."
+      },
+      "level-10": {
+        "name": "Adepto",
+        "description": "Atinja o nível 10."
+      },
+      "level-25": {
+        "name": "Veterano",
+        "description": "Atinja o nível 25."
+      },
+      "level-50": {
+        "name": "Monarca das Sombras",
+        "description": "Atinja o nível 50."
+      },
+      "hunters-voice": {
+        "name": "Hunter's Voice",
+        "description": "Publique sua primeira reflexão pública. Saia do silêncio."
+      },
+      "first-friend": {
+        "name": "First Bond",
+        "description": "Adicione seu primeiro caçador como amigo. A matilha se aperta."
+      },
+      "bond-found": {
+        "name": "Bond Found",
+        "description": "Junte-se à sua primeira guilda. Encontre o bando."
+      },
+      "daily-witness": {
+        "name": "Daily Witness",
+        "description": "Apareça em 14 dias distintos. O Sistema reconhece seu rosto."
+      },
+      "open-hand": {
+        "name": "Open Hand",
+        "description": "Publique 10 reflexões públicas. A coragem é um hábito."
+      },
+      "five-bonds": {
+        "name": "Five Bonds",
+        "description": "Alcance 5 amigos. Um bando real, não uma lista."
+      },
+      "surge": {
+        "name": "Surge",
+        "description": "Marque 50 pontos de atividade em uma semana. Uma semana de onda, acumulada de missões, treinos e exposições."
+      },
+      "tempest": {
+        "name": "Tempest",
+        "description": "Marque 100 pontos de atividade em uma semana. Produção fora da curva."
+      },
+      "first-week": {
+        "name": "Threshold",
+        "description": "Apareça em 7 dias distintos. Você cruzou o precipício."
+      },
+      "steadfast": {
+        "name": "Steadfast",
+        "description": "Registre atividade em 30 dias distintos. Consistência acima do heroísmo."
+      },
+      "veteran": {
+        "name": "Veteran of the System",
+        "description": "90 dias distintos de atividade. O Sistema reconhece o paciente."
+      },
+      "year-one": {
+        "name": "Year One",
+        "description": "365 dias distintos de atividade. Um ano inteiro de aparecer."
+      },
+      "bedrock": {
+        "name": "Bedrock",
+        "description": "Alcance 50 de XP de Terra. O vaso está sendo forjado."
+      },
+      "current": {
+        "name": "Current",
+        "description": "Alcance 50 de XP de Água. O fluxo do coração aprende sua forma."
+      },
+      "furnace": {
+        "name": "Furnace",
+        "description": "Alcance 50 de XP de Fogo. Prana aceso, sistema nervoso desperto."
+      },
+      "open-sky": {
+        "name": "Open Sky",
+        "description": "Alcance 50 de XP de Ar. Atenção recuperada, pensamento clarificado."
+      },
+      "inner-void": {
+        "name": "Inner Void",
+        "description": "Alcance 50 de XP de Éter. A sala silenciosa atrás do ruído."
+      },
+      "phoenix": {
+        "name": "Phoenix",
+        "description": "Entre novamente em uma masmorra na qual você recaiu. A queda não é o fim."
+      },
+      "comeback": {
+        "name": "Comeback",
+        "description": "Marque um dia perfeito na manhã seguinte a um dia disperso. O Sistema não esquece, mas você também não."
+      }
     }
   },
   "guide": {
@@ -819,7 +1002,12 @@
     "kick": "Expulsar",
     "kickConfirm": "Expulsar {name} da guilda? Eles podem pedir para reentrar mais tarde.",
     "guildFeed": "Feed da guilda",
-    "feedEmpty": "Nada por aqui ainda. As entradas públicas do diário dos membros aparecem neste feed — ative o botão Compartilhar em uma entrada para soltar uma."
+    "feedEmpty": "Nada por aqui ainda. As entradas públicas do diário dos membros aparecem neste feed — ative o botão Compartilhar em uma entrada para soltar uma.",
+    "confirmJoin": "Enviar Pedido?",
+    "cancel": "Cancelar",
+    "cancelRequest": "Cancelar Pedido",
+    "confirmLeave": "Sair de verdade?",
+    "memberMenuAria": "Opções de membro"
   },
   "guildModal": {
     "close": "Fechar",
@@ -876,5 +1064,16 @@
   },
   "portalsExtra": {
     "changePath": "Mude seu caminho →"
+  },
+  "questBriefing": {
+    "header": "[ Informações da Missão ]",
+    "objectiveLabel": "Objetivo",
+    "rulesLabel": "Cadência",
+    "rewardsLabel": "Recompensas",
+    "rewardsDescription": "XP por conclusão · bônus de sequência · troféus em marcos",
+    "warningLabel": "Aviso do Sistema",
+    "warningBody": "Entrar neste portal te conecta ao seu ritmo. Recaídas são registradas. Conclusões acumulam XP. Escolha com intenção.",
+    "cancel": "Recuar",
+    "confirm": "Entrar na Masmorra"
   }
 }

@@ -17,7 +17,18 @@
     "notifications": "通知",
     "install": "安装",
     "language": "语言",
-    "languageHint": "选择系统对你说话的语言。翻译还在持续添加中 — 英语是最完整的。"
+    "languageHint": "选择系统对你说话的语言。翻译还在持续添加中 — 英语是最完整的。",
+    "dangerZone": "危险区域",
+    "deleteAccount": "删除账户",
+    "deleteAccountIntro": "永久删除你的账户。所有副本进度、日志记录、好友关系、公会成员资格和奖杯都将被清除。如果你拥有公会，它将被解散，所有成员被驱逐。此操作无法撤销。",
+    "deleteAccountButton": "删除我的账户",
+    "deleteAccountConfirmHeader": "你确定吗？",
+    "deleteAccountConfirmBody": "在下方输入你的猎人名字以确认。此操作是永久的。",
+    "deleteAccountTypePlaceholder": "输入你的猎人名字",
+    "deleteAccountConfirmButton": "永久删除",
+    "deleteAccountCancel": "取消",
+    "deleteAccountDeleting": "正在删除…",
+    "deleteAccountError": "无法删除账户。请重试或发送邮件至 trojanato@gmail.com。"
   },
   "hunterTypePicker": {
     "intro": "选择一条道路以解锁其训练计划。再次点击你选中的道路可返回未归属。切换免费 — 自由探索。",
@@ -63,7 +74,13 @@
     "whyHeader": "为什么有这个",
     "whyP1": "我是在一段黑暗的章节里做出这个的 — 先是为了我自己。我需要一个让纪律感觉不像意志力,更像我每天都能赴约的游戏的系统。",
     "whyP2": "现在它属于所有渴望同样东西的人:与冲动搏斗的人、败给拖延的人、明知需要被监督却无人监督的人。",
-    "whyWelcome": "如果那就是你,欢迎。"
+    "whyWelcome": "如果那就是你,欢迎。",
+    "communityHeader": "你并不孤单",
+    "communityIntro": "独行的猎人会崩溃。同行的猎人会升级。系统给你两者：你自己的副本，加上一同前行的伙伴圈。",
+    "communityGuildsTitle": "公会",
+    "communityGuildsBody": "组建最多10名猎人的小队。成员的公开反思会出现在你的公会动态中，是小队而非匿名广播。加入需公会主批准。",
+    "communityBoardTitle": "周排行榜",
+    "communityBoardBody": "本周记录的每一个行动都获得活动点数。全球、好友、公会内或公会对公会竞争。每7天重置，永远是新的战斗。"
   },
   "recentGains": {
     "title": "最近获得",
@@ -77,7 +94,9 @@
     "header": "玩家状态窗口",
     "noActiveDungeons": "[ 传送门登记处等候 ]",
     "noActiveDungeonsBody": "尚无激活的副本。选择你的第一个传送门,开始塑造猎人之路。",
-    "enterRegistry": "进入登记处 →"
+    "enterRegistry": "进入登记处 →",
+    "firstHunterHeader": "[ 首个任务可用 ]",
+    "firstHunterBody": "欢迎，猎人。你的第一个行动就在上方一触之间。勾选任意每日任务来获得你的第一份XP，或打开下方的传送门登记进入副本。"
   },
   "hunterCard": {
     "id": "猎人 ID",
@@ -119,7 +138,11 @@
     "comboExtended": "连击延续 · 明日再见",
     "keepAlive": "再完成 {count} 项以保持连击",
     "bonusTooltip": "基础 {base} + 连击加成 {bonus}",
-    "comboSource": "🔥 {days} 天连击"
+    "comboSource": "🔥 {days} 天连击",
+    "resetsIn": "重置剩余",
+    "progressLabel": "{done}/{total} 已完成",
+    "systemWarningScattered": "系统将昨日标记为沉默。今天打破它。",
+    "systemNoticeIdle": "窗口在午夜关闭。行动起来。"
   },
   "profile": {
     "recordHeader": "记录 — {label}",
@@ -367,7 +390,9 @@
     "cancel": "取消",
     "isFriend": "✓ 好友",
     "requestSent": "请求已发送",
-    "addFriend": "+ 添加好友"
+    "addFriend": "+ 添加好友",
+    "confirmAdd": "发送请求？",
+    "cancelRequest": "取消请求"
   },
   "installApp": {
     "title": "安装应用",
@@ -542,7 +567,11 @@
       "foundations": "根基",
       "progression": "猎人进阶",
       "training": "训练",
-      "dungeonMastery": "副本精通"
+      "dungeonMastery": "副本精通",
+      "community": "社区",
+      "devotion": "奉献",
+      "elemental": "元素",
+      "shadow": "影"
     }
   },
   "ranksPage": {
@@ -638,32 +667,186 @@
     "comboName": "{days} 天连击",
     "comboDescription": "每日任务连击达到 {days} 天。+{xp} XP",
     "static": {
-      "awakened": { "name": "觉醒", "description": "接受召唤。进入你的第一个副本。" },
-      "first-streak": { "name": "首滴血", "description": "在一个副本中度过你的第一天。" },
-      "first-quest": { "name": "接受任务", "description": "完成你的第一个每日任务。" },
-      "first-workout": { "name": "首次训练", "description": "在 Gym Life 中记录一次训练。" },
-      "first-exposure": { "name": "沉默的在场", "description": "在治疗阶梯中记录你的第一次暴露。" },
-      "rank-e": { "name": "E 级通过", "description": "在任意副本保持 7 天连续记录。" },
-      "rank-d": { "name": "D 级通过", "description": "在任意副本中达到 14 天。" },
-      "rank-c": { "name": "C 级通过", "description": "在任意副本中达到 30 天。" },
-      "rank-b": { "name": "B 级通过", "description": "在任意副本中达到 60 天。" },
-      "rank-a": { "name": "A 级通过", "description": "在任意副本中达到 90 天。" },
-      "rank-s": { "name": "S 级飞升", "description": "在任意副本中达到 180 天。" },
-      "multi-classed": { "name": "多职修行", "description": "同时在 3 个副本中保持活跃。" },
-      "polymath": { "name": "博学", "description": "同时在全部 5 个副本中保持活跃。" },
-      "perfect-day": { "name": "完美一日", "description": "在一天内完成所有每日任务。" },
-      "grinder": { "name": "刷子", "description": "累计完成 50 项任务。" },
-      "grind-lord": { "name": "刷王", "description": "累计完成 250 项任务。" },
-      "iron-will": { "name": "钢铁意志", "description": "完成 10 次训练。" },
-      "forged": { "name": "锻造", "description": "记录 100 次训练。" },
-      "ladder-climber": { "name": "登梯者", "description": "通过暴露阶梯的 3 级。" },
-      "fearless": { "name": "无畏", "description": "完成完整的暴露阶梯。" },
-      "dungeon-master": { "name": "副本大师", "description": "成功完成并退役一个副本。" },
-      "conqueror": { "name": "征服者", "description": "完整通关 3 个副本。" },
-      "level-5": { "name": "新手猎人", "description": "达到 5 级。" },
-      "level-10": { "name": "老练", "description": "达到 10 级。" },
-      "level-25": { "name": "老兵", "description": "达到 25 级。" },
-      "level-50": { "name": "影子君主", "description": "达到 50 级。" }
+      "awakened": {
+        "name": "觉醒",
+        "description": "接受召唤。进入你的第一个副本。"
+      },
+      "first-streak": {
+        "name": "首滴血",
+        "description": "在一个副本中度过你的第一天。"
+      },
+      "first-quest": {
+        "name": "接受任务",
+        "description": "完成你的第一个每日任务。"
+      },
+      "first-workout": {
+        "name": "首次训练",
+        "description": "在 Gym Life 中记录一次训练。"
+      },
+      "first-exposure": {
+        "name": "沉默的在场",
+        "description": "在治疗阶梯中记录你的第一次暴露。"
+      },
+      "rank-e": {
+        "name": "E 级通过",
+        "description": "在任意副本保持 7 天连续记录。"
+      },
+      "rank-d": {
+        "name": "D 级通过",
+        "description": "在任意副本中达到 14 天。"
+      },
+      "rank-c": {
+        "name": "C 级通过",
+        "description": "在任意副本中达到 30 天。"
+      },
+      "rank-b": {
+        "name": "B 级通过",
+        "description": "在任意副本中达到 60 天。"
+      },
+      "rank-a": {
+        "name": "A 级通过",
+        "description": "在任意副本中达到 90 天。"
+      },
+      "rank-s": {
+        "name": "S 级飞升",
+        "description": "在任意副本中达到 180 天。"
+      },
+      "multi-classed": {
+        "name": "多职修行",
+        "description": "同时在 3 个副本中保持活跃。"
+      },
+      "polymath": {
+        "name": "博学",
+        "description": "同时在全部 5 个副本中保持活跃。"
+      },
+      "perfect-day": {
+        "name": "完美一日",
+        "description": "在一天内完成所有每日任务。"
+      },
+      "grinder": {
+        "name": "刷子",
+        "description": "累计完成 50 项任务。"
+      },
+      "grind-lord": {
+        "name": "刷王",
+        "description": "累计完成 250 项任务。"
+      },
+      "iron-will": {
+        "name": "钢铁意志",
+        "description": "完成 10 次训练。"
+      },
+      "forged": {
+        "name": "锻造",
+        "description": "记录 100 次训练。"
+      },
+      "ladder-climber": {
+        "name": "登梯者",
+        "description": "通过暴露阶梯的 3 级。"
+      },
+      "fearless": {
+        "name": "无畏",
+        "description": "完成完整的暴露阶梯。"
+      },
+      "dungeon-master": {
+        "name": "副本大师",
+        "description": "成功完成并退役一个副本。"
+      },
+      "conqueror": {
+        "name": "征服者",
+        "description": "完整通关 3 个副本。"
+      },
+      "level-5": {
+        "name": "新手猎人",
+        "description": "达到 5 级。"
+      },
+      "level-10": {
+        "name": "老练",
+        "description": "达到 10 级。"
+      },
+      "level-25": {
+        "name": "老兵",
+        "description": "达到 25 级。"
+      },
+      "level-50": {
+        "name": "影子君主",
+        "description": "达到 50 级。"
+      },
+      "hunters-voice": {
+        "name": "Hunter's Voice",
+        "description": "发布你的第一篇公开反思。走出沉默。"
+      },
+      "first-friend": {
+        "name": "First Bond",
+        "description": "添加你的第一位猎人为好友。猎群更紧密。"
+      },
+      "bond-found": {
+        "name": "Bond Found",
+        "description": "加入你的第一个公会。找到你的小队。"
+      },
+      "daily-witness": {
+        "name": "Daily Witness",
+        "description": "在14个不同的日子出现。系统认识你的脸。"
+      },
+      "open-hand": {
+        "name": "Open Hand",
+        "description": "发布10篇公开反思。勇气是一种习惯。"
+      },
+      "five-bonds": {
+        "name": "Five Bonds",
+        "description": "达到5位好友。真正的小队，不是名单。"
+      },
+      "surge": {
+        "name": "Surge",
+        "description": "在一周内获得50点活动点数。任务、训练、暴露累积的爆发周。"
+      },
+      "tempest": {
+        "name": "Tempest",
+        "description": "在一周内获得100点活动点数。超出常规的输出。"
+      },
+      "first-week": {
+        "name": "Threshold",
+        "description": "在7个不同的日子出现。你跨过了悬崖。"
+      },
+      "steadfast": {
+        "name": "Steadfast",
+        "description": "在30个不同的日子记录活动。坚持胜过英勇。"
+      },
+      "veteran": {
+        "name": "Veteran of the System",
+        "description": "90个不同的活动日。系统识得有耐心者。"
+      },
+      "year-one": {
+        "name": "Year One",
+        "description": "365个不同的活动日。整整一年的出现。"
+      },
+      "bedrock": {
+        "name": "Bedrock",
+        "description": "达到50点土系XP。容器正在锻造。"
+      },
+      "current": {
+        "name": "Current",
+        "description": "达到50点水系XP。心之流学到了它的形。"
+      },
+      "furnace": {
+        "name": "Furnace",
+        "description": "达到50点火系XP。普拉那点燃，神经系统觉醒。"
+      },
+      "open-sky": {
+        "name": "Open Sky",
+        "description": "达到50点风系XP。注意力收回，思维澄澈。"
+      },
+      "inner-void": {
+        "name": "Inner Void",
+        "description": "达到50点以太XP。喧嚣背后那间静室。"
+      },
+      "phoenix": {
+        "name": "Phoenix",
+        "description": "重新进入你曾复发的副本。跌倒不是终点。"
+      },
+      "comeback": {
+        "name": "Comeback",
+        "description": "在散乱日的次日早晨打出完美日。系统不会忘记，你也一样。"
+      }
     }
   },
   "guide": {
@@ -819,7 +1002,12 @@
     "kick": "踢出",
     "kickConfirm": "把 {name} 从公会踢出?他们之后可以再申请加入。",
     "guildFeed": "公会动态",
-    "feedEmpty": "这里还什么都没有。成员的公开日记条目会落入这个动态 ― 在日记上打开「分享」开关,投放一条进来。"
+    "feedEmpty": "这里还什么都没有。成员的公开日记条目会落入这个动态 ― 在日记上打开「分享」开关,投放一条进来。",
+    "confirmJoin": "发送请求？",
+    "cancel": "取消",
+    "cancelRequest": "取消请求",
+    "confirmLeave": "真的要离开吗？",
+    "memberMenuAria": "成员选项"
   },
   "guildModal": {
     "close": "关闭",
@@ -876,5 +1064,16 @@
   },
   "portalsExtra": {
     "changePath": "更改你的道路 →"
+  },
+  "questBriefing": {
+    "header": "[ 任务简报 ]",
+    "objectiveLabel": "目标",
+    "rulesLabel": "节奏",
+    "rewardsLabel": "奖励",
+    "rewardsDescription": "每次完成获得XP · 连击奖励 · 里程碑奖杯",
+    "warningLabel": "系统提示",
+    "warningBody": "进入此传送门即与其节奏绑定。复发会被记录。完成会累积XP。慎重选择。",
+    "cancel": "撤退",
+    "confirm": "进入副本"
   }
 }

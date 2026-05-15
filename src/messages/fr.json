@@ -17,7 +17,18 @@
     "notifications": "Notifications",
     "install": "Installer",
     "language": "Langue",
-    "languageHint": "Choisis la langue dans laquelle le Système te parle. Les traductions arrivent encore — l'anglais est le plus complet."
+    "languageHint": "Choisis la langue dans laquelle le Système te parle. Les traductions arrivent encore — l'anglais est le plus complet.",
+    "dangerZone": "Zone Dangereuse",
+    "deleteAccount": "Supprimer le Compte",
+    "deleteAccountIntro": "Supprime ton compte de manière permanente. Chaque exploration de donjon, entrée de journal, amitié, adhésion à une guilde et trophée sera effacé. Si tu possèdes une guilde, elle sera dissoute et tous les membres éjectés. Ceci ne peut pas être annulé.",
+    "deleteAccountButton": "Supprimer Mon Compte",
+    "deleteAccountConfirmHeader": "Es-tu absolument sûr ?",
+    "deleteAccountConfirmBody": "Tape ton nom de chasseur ci-dessous pour confirmer. Cette action est permanente.",
+    "deleteAccountTypePlaceholder": "Tape ton nom de chasseur",
+    "deleteAccountConfirmButton": "Supprimer pour Toujours",
+    "deleteAccountCancel": "Annuler",
+    "deleteAccountDeleting": "Suppression…",
+    "deleteAccountError": "Impossible de supprimer le compte. Réessaie ou envoie un email à trojanato@gmail.com."
   },
   "hunterTypePicker": {
     "intro": "Choisis une voie pour débloquer ses programmes d'entraînement. Touche à nouveau ta voie sélectionnée pour revenir à Non-Affilié. Changer est gratuit — explore.",
@@ -63,7 +74,13 @@
     "whyHeader": "Pourquoi ça existe",
     "whyP1": "J'ai créé ça pendant un chapitre sombre — pour moi-même d'abord. J'avais besoin d'un système qui rende la discipline moins comme de la volonté pure et plus comme un jeu auquel je pouvais me présenter chaque jour.",
     "whyP2": "Maintenant c'est là pour quiconque aspire à la même chose : les gens qui combattent des compulsions, les gens qui perdent face à la procrastination, les gens qui savent qu'ils ont besoin d'être tenus responsables mais qui n'ont personne pour le faire.",
-    "whyWelcome": "Si c'est toi, bienvenue."
+    "whyWelcome": "Si c'est toi, bienvenue.",
+    "communityHeader": "Tu n'es pas seul dans ça",
+    "communityIntro": "Les chasseurs qui vont seuls cassent. Les chasseurs qui s'entraînent ensemble montent en niveau. Le Système te donne les deux : tes propres donjons, plus un cercle pour les parcourir avec toi.",
+    "communityGuildsTitle": "Guildes",
+    "communityGuildsBody": "Forme une bande jusqu'à 10 chasseurs. Les réflexions publiques des membres arrivent dans le fil de ta guilde, petites bandes, pas de diffusion anonyme. Le propriétaire approuve qui rejoint.",
+    "communityBoardTitle": "Classement Hebdomadaire",
+    "communityBoardBody": "Chaque action que tu enregistres cette semaine gagne des points d'activité. Compete mondialement, avec des amis, dans ta guilde ou guilde contre guilde. Réinitialise tous les 7 jours, c'est toujours un nouveau combat."
   },
   "recentGains": {
     "title": "Gains récents",
@@ -77,7 +94,9 @@
     "header": "Fenêtre de Statut du Joueur",
     "noActiveDungeons": "[ Le Registre des Portails Attend ]",
     "noActiveDungeonsBody": "Pas encore de donjons actifs. Choisis ton premier portail pour commencer à forger le chemin de ton chasseur.",
-    "enterRegistry": "Entrer dans le Registre →"
+    "enterRegistry": "Entrer dans le Registre →",
+    "firstHunterHeader": "[ Première Quête Disponible ]",
+    "firstHunterBody": "Bienvenue, chasseur. Ta première action est à un tap au-dessus. Coche n'importe quelle Quête Quotidienne pour gagner ton premier XP, ou ouvre le Registre des Portails ci-dessous pour explorer un donjon."
   },
   "hunterCard": {
     "id": "ID du Chasseur",
@@ -119,7 +138,11 @@
     "comboExtended": "Combo prolongé · À demain",
     "keepAlive": "Encore {count} pour garder le combo en vie",
     "bonusTooltip": "Base {base} + bonus de combo {bonus}",
-    "comboSource": "🔥 Combo de {days} jours"
+    "comboSource": "🔥 Combo de {days} jours",
+    "resetsIn": "Réinitialise dans",
+    "progressLabel": "{done}/{total} terminées",
+    "systemWarningScattered": "Le Système a marqué hier comme silence. Brise le schéma aujourd'hui.",
+    "systemNoticeIdle": "La fenêtre se ferme à minuit. Bouge."
   },
   "profile": {
     "recordHeader": "Bilan — {label}",
@@ -367,7 +390,9 @@
     "cancel": "Annuler",
     "isFriend": "✓ Amis",
     "requestSent": "Demande Envoyée",
-    "addFriend": "+ Ajouter un Ami"
+    "addFriend": "+ Ajouter un Ami",
+    "confirmAdd": "Envoyer la Demande ?",
+    "cancelRequest": "Annuler la Demande"
   },
   "installApp": {
     "title": "Installer l'App",
@@ -542,7 +567,11 @@
       "foundations": "Fondations",
       "progression": "Progression du chasseur",
       "training": "Entraînement",
-      "dungeonMastery": "Maîtrise des donjons"
+      "dungeonMastery": "Maîtrise des donjons",
+      "community": "Communauté",
+      "devotion": "Dévotion",
+      "elemental": "Élémentaire",
+      "shadow": "Ombre"
     }
   },
   "ranksPage": {
@@ -638,32 +667,186 @@
     "comboName": "Combo de {days} jours",
     "comboDescription": "Le combo de quêtes quotidiennes a atteint {days} jours. +{xp} XP",
     "static": {
-      "awakened": { "name": "Éveillé", "description": "Accepte l'appel. Entre dans ton premier donjon." },
-      "first-streak": { "name": "Premier Sang", "description": "Survis à ton premier jour dans un donjon." },
-      "first-quest": { "name": "Quête Acceptée", "description": "Termine ta première quête quotidienne." },
-      "first-workout": { "name": "Première Rep", "description": "Logge une séance dans Gym Life." },
-      "first-exposure": { "name": "Présence Silencieuse", "description": "Logge ta première exposition sur l'échelle de thérapie." },
-      "rank-e": { "name": "Rang E Validé", "description": "Tiens une série de 7 jours dans un donjon." },
-      "rank-d": { "name": "Rang D Validé", "description": "Atteins 14 jours dans un donjon." },
-      "rank-c": { "name": "Rang C Validé", "description": "Atteins 30 jours dans un donjon." },
-      "rank-b": { "name": "Rang B Validé", "description": "Atteins 60 jours dans un donjon." },
-      "rank-a": { "name": "Rang A Validé", "description": "Atteins 90 jours dans un donjon." },
-      "rank-s": { "name": "Rang S Ascendant", "description": "Atteins 180 jours dans un donjon." },
-      "multi-classed": { "name": "Multi-Classe", "description": "Sois actif dans 3 donjons à la fois." },
-      "polymath": { "name": "Polymathe", "description": "Sois actif dans les 5 donjons simultanément." },
-      "perfect-day": { "name": "Journée Parfaite", "description": "Termine toutes les quêtes quotidiennes en une journée." },
-      "grinder": { "name": "Le Grinder", "description": "50 quêtes terminées au total." },
-      "grind-lord": { "name": "Grind Lord", "description": "250 quêtes terminées au total." },
-      "iron-will": { "name": "Volonté de Fer", "description": "Termine 10 séances." },
-      "forged": { "name": "Forgé", "description": "100 séances loggées." },
-      "ladder-climber": { "name": "Grimpeur d'Échelle", "description": "Termine 3 barreaux de l'échelle d'exposition." },
-      "fearless": { "name": "Intrépide", "description": "Termine toute l'échelle d'exposition." },
-      "dungeon-master": { "name": "Maître du Donjon", "description": "Termine et retire un donjon avec succès." },
-      "conqueror": { "name": "Conquérant", "description": "Termine 3 donjons jusqu'au bout." },
-      "level-5": { "name": "Chasseur Novice", "description": "Atteins le niveau 5." },
-      "level-10": { "name": "Adepte", "description": "Atteins le niveau 10." },
-      "level-25": { "name": "Vétéran", "description": "Atteins le niveau 25." },
-      "level-50": { "name": "Monarque des Ombres", "description": "Atteins le niveau 50." }
+      "awakened": {
+        "name": "Éveillé",
+        "description": "Accepte l'appel. Entre dans ton premier donjon."
+      },
+      "first-streak": {
+        "name": "Premier Sang",
+        "description": "Survis à ton premier jour dans un donjon."
+      },
+      "first-quest": {
+        "name": "Quête Acceptée",
+        "description": "Termine ta première quête quotidienne."
+      },
+      "first-workout": {
+        "name": "Première Rep",
+        "description": "Logge une séance dans Gym Life."
+      },
+      "first-exposure": {
+        "name": "Présence Silencieuse",
+        "description": "Logge ta première exposition sur l'échelle de thérapie."
+      },
+      "rank-e": {
+        "name": "Rang E Validé",
+        "description": "Tiens une série de 7 jours dans un donjon."
+      },
+      "rank-d": {
+        "name": "Rang D Validé",
+        "description": "Atteins 14 jours dans un donjon."
+      },
+      "rank-c": {
+        "name": "Rang C Validé",
+        "description": "Atteins 30 jours dans un donjon."
+      },
+      "rank-b": {
+        "name": "Rang B Validé",
+        "description": "Atteins 60 jours dans un donjon."
+      },
+      "rank-a": {
+        "name": "Rang A Validé",
+        "description": "Atteins 90 jours dans un donjon."
+      },
+      "rank-s": {
+        "name": "Rang S Ascendant",
+        "description": "Atteins 180 jours dans un donjon."
+      },
+      "multi-classed": {
+        "name": "Multi-Classe",
+        "description": "Sois actif dans 3 donjons à la fois."
+      },
+      "polymath": {
+        "name": "Polymathe",
+        "description": "Sois actif dans les 5 donjons simultanément."
+      },
+      "perfect-day": {
+        "name": "Journée Parfaite",
+        "description": "Termine toutes les quêtes quotidiennes en une journée."
+      },
+      "grinder": {
+        "name": "Le Grinder",
+        "description": "50 quêtes terminées au total."
+      },
+      "grind-lord": {
+        "name": "Grind Lord",
+        "description": "250 quêtes terminées au total."
+      },
+      "iron-will": {
+        "name": "Volonté de Fer",
+        "description": "Termine 10 séances."
+      },
+      "forged": {
+        "name": "Forgé",
+        "description": "100 séances loggées."
+      },
+      "ladder-climber": {
+        "name": "Grimpeur d'Échelle",
+        "description": "Termine 3 barreaux de l'échelle d'exposition."
+      },
+      "fearless": {
+        "name": "Intrépide",
+        "description": "Termine toute l'échelle d'exposition."
+      },
+      "dungeon-master": {
+        "name": "Maître du Donjon",
+        "description": "Termine et retire un donjon avec succès."
+      },
+      "conqueror": {
+        "name": "Conquérant",
+        "description": "Termine 3 donjons jusqu'au bout."
+      },
+      "level-5": {
+        "name": "Chasseur Novice",
+        "description": "Atteins le niveau 5."
+      },
+      "level-10": {
+        "name": "Adepte",
+        "description": "Atteins le niveau 10."
+      },
+      "level-25": {
+        "name": "Vétéran",
+        "description": "Atteins le niveau 25."
+      },
+      "level-50": {
+        "name": "Monarque des Ombres",
+        "description": "Atteins le niveau 50."
+      },
+      "hunters-voice": {
+        "name": "Hunter's Voice",
+        "description": "Publie ta première réflexion publique. Sors du silence."
+      },
+      "first-friend": {
+        "name": "First Bond",
+        "description": "Ajoute ton premier chasseur en ami. La meute se resserre."
+      },
+      "bond-found": {
+        "name": "Bond Found",
+        "description": "Rejoins ta première guilde. Trouve la bande."
+      },
+      "daily-witness": {
+        "name": "Daily Witness",
+        "description": "Sois présent 14 jours distincts. Le Système connaît ton visage."
+      },
+      "open-hand": {
+        "name": "Open Hand",
+        "description": "Publie 10 réflexions publiques. Le courage est une habitude."
+      },
+      "five-bonds": {
+        "name": "Five Bonds",
+        "description": "Atteins 5 amis. Une vraie bande, pas une liste."
+      },
+      "surge": {
+        "name": "Surge",
+        "description": "Marque 50 points d'activité en une semaine. Une semaine de poussée, accumulée de quêtes, entraînements et expositions."
+      },
+      "tempest": {
+        "name": "Tempest",
+        "description": "Marque 100 points d'activité en une semaine. Production hors normes."
+      },
+      "first-week": {
+        "name": "Threshold",
+        "description": "Sois présent 7 jours distincts. Tu as franchi le précipice."
+      },
+      "steadfast": {
+        "name": "Steadfast",
+        "description": "Enregistre une activité sur 30 jours distincts. La constance avant l'héroïsme."
+      },
+      "veteran": {
+        "name": "Veteran of the System",
+        "description": "90 jours distincts d'activité. Le Système reconnaît le patient."
+      },
+      "year-one": {
+        "name": "Year One",
+        "description": "365 jours distincts d'activité. Une année entière de présence."
+      },
+      "bedrock": {
+        "name": "Bedrock",
+        "description": "Atteins 50 XP de Terre. Le vaisseau se forge."
+      },
+      "current": {
+        "name": "Current",
+        "description": "Atteins 50 XP d'Eau. Le flux du cœur apprend sa forme."
+      },
+      "furnace": {
+        "name": "Furnace",
+        "description": "Atteins 50 XP de Feu. Prana allumé, système nerveux éveillé."
+      },
+      "open-sky": {
+        "name": "Open Sky",
+        "description": "Atteins 50 XP d'Air. Attention reconquise, pensée clarifiée."
+      },
+      "inner-void": {
+        "name": "Inner Void",
+        "description": "Atteins 50 XP d'Éther. La pièce silencieuse derrière le bruit."
+      },
+      "phoenix": {
+        "name": "Phoenix",
+        "description": "Rentre dans un donjon où tu as rechuté. La chute n'est pas la fin."
+      },
+      "comeback": {
+        "name": "Comeback",
+        "description": "Marque un jour parfait le lendemain matin d'un jour dispersé. Le Système n'oublie rien, mais toi non plus."
+      }
     }
   },
   "guide": {
@@ -819,7 +1002,12 @@
     "kick": "Expulser",
     "kickConfirm": "Expulser {name} de la guilde ? Ils peuvent demander à rejoindre plus tard.",
     "guildFeed": "Fil de la guilde",
-    "feedEmpty": "Rien ici pour l'instant. Les entrées publiques du journal des membres atterrissent dans ce fil — activez le bouton Partager sur une entrée pour en déposer une."
+    "feedEmpty": "Rien ici pour l'instant. Les entrées publiques du journal des membres atterrissent dans ce fil — activez le bouton Partager sur une entrée pour en déposer une.",
+    "confirmJoin": "Envoyer la Demande ?",
+    "cancel": "Annuler",
+    "cancelRequest": "Annuler la Demande",
+    "confirmLeave": "Vraiment quitter ?",
+    "memberMenuAria": "Options du membre"
   },
   "guildModal": {
     "close": "Fermer",
@@ -876,5 +1064,16 @@
   },
   "portalsExtra": {
     "changePath": "Changer de chemin →"
+  },
+  "questBriefing": {
+    "header": "[ Détails de la Mission ]",
+    "objectiveLabel": "Objectif",
+    "rulesLabel": "Cadence",
+    "rewardsLabel": "Récompenses",
+    "rewardsDescription": "XP par complétion · bonus de série · trophées aux jalons",
+    "warningLabel": "Avis du Système",
+    "warningBody": "Entrer dans ce portail te lie à son rythme. Les rechutes sont enregistrées. Les complétions accumulent du XP. Choisis avec intention.",
+    "cancel": "Reculer",
+    "confirm": "Entrer dans le Donjon"
   }
 }

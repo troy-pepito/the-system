@@ -17,7 +17,18 @@
     "notifications": "通知",
     "install": "インストール",
     "language": "言語",
-    "languageHint": "システムがあなたに話しかける言語を選んでください。翻訳は順次追加中です — 英語が最も充実しています。"
+    "languageHint": "システムがあなたに話しかける言語を選んでください。翻訳は順次追加中です — 英語が最も充実しています。",
+    "dangerZone": "危険ゾーン",
+    "deleteAccount": "アカウントを削除",
+    "deleteAccountIntro": "アカウントを永久に削除します。すべてのダンジョン挑戦、ジャーナル記録、フレンド関係、ギルド所属、トロフィーが消去されます。ギルドを所有している場合、解散され、すべてのメンバーが排出されます。この操作は取り消せません。",
+    "deleteAccountButton": "アカウントを削除する",
+    "deleteAccountConfirmHeader": "本当によろしいですか？",
+    "deleteAccountConfirmBody": "確認のため、下にハンター名を入力してください。この操作は取り消せません。",
+    "deleteAccountTypePlaceholder": "ハンター名を入力",
+    "deleteAccountConfirmButton": "永久に削除",
+    "deleteAccountCancel": "キャンセル",
+    "deleteAccountDeleting": "削除中…",
+    "deleteAccountError": "アカウントを削除できませんでした。再試行するか、trojanato@gmail.com までご連絡ください。"
   },
   "hunterTypePicker": {
     "intro": "道を選んでトレーニング・プログラムを解放。選んだ道をもう一度タップすると無所属に戻る。切替は自由 — 試して。",
@@ -63,7 +74,13 @@
     "whyHeader": "なぜこれが存在するのか",
     "whyP1": "暗い章の中で、まず自分のためにこれを作った。意志力ではなく、毎日顔を出せるゲームのように規律を感じられる仕組みが必要だった。",
     "whyP2": "今は同じものを求めるすべての人のためにある — 衝動と戦う人、先延ばしに負ける人、責任を求められる相手がいないと知っている人。",
-    "whyWelcome": "それが君なら、ようこそ。"
+    "whyWelcome": "それが君なら、ようこそ。",
+    "communityHeader": "あなたは一人じゃない",
+    "communityIntro": "一人で進むハンターは折れる。共に鍛えるハンターはレベルを上げる。システムはその両方を与える: 自分のダンジョン、そしてそれを共に歩む仲間の輪を。",
+    "communityGuildsTitle": "ギルド",
+    "communityGuildsBody": "最大10人のハンターのバンドを結成。メンバーの公開リフレクションはあなたのギルドフィードに流れます。匿名配信ではなく、小さな結束。オーナーが参加を承認します。",
+    "communityBoardTitle": "週間ランキング",
+    "communityBoardBody": "今週ログしたすべての行動がアクティビティポイントを生みます。グローバル、フレンド、ギルド内、またはギルド対戦で競争。7日ごとにリセット、常に新たな戦い。"
   },
   "recentGains": {
     "title": "最近の獲得",
@@ -77,7 +94,9 @@
     "header": "プレイヤー・ステータス・ウィンドウ",
     "noActiveDungeons": "[ ポータル・レジストリが待っている ]",
     "noActiveDungeonsBody": "まだアクティブなダンジョンはありません。最初のポータルを選んで、ハンターの道を歩み始めましょう。",
-    "enterRegistry": "レジストリへ入る →"
+    "enterRegistry": "レジストリへ入る →",
+    "firstHunterHeader": "[ 最初のクエスト ]",
+    "firstHunterBody": "ようこそ、ハンター。最初の行動はすぐ上のタップひとつです。デイリークエストにチェックを入れて最初のXPを獲得するか、下のポータル登録からダンジョンに挑みましょう。"
   },
   "hunterCard": {
     "id": "ハンターID",
@@ -119,7 +138,11 @@
     "comboExtended": "コンボ延長 · また明日",
     "keepAlive": "あと {count} 個でコンボ継続",
     "bonusTooltip": "基本 {base} + コンボ・ボーナス {bonus}",
-    "comboSource": "🔥 {days}日コンボ"
+    "comboSource": "🔥 {days}日コンボ",
+    "resetsIn": "リセットまで",
+    "progressLabel": "{done}/{total} 達成",
+    "systemWarningScattered": "システムは昨日を「沈黙」と記録しました。今日、その流れを断ちましょう。",
+    "systemNoticeIdle": "ウィンドウは深夜に閉じます。動いてください。"
   },
   "profile": {
     "recordHeader": "記録 — {label}",
@@ -367,7 +390,9 @@
     "cancel": "キャンセル",
     "isFriend": "✓ フレンド",
     "requestSent": "リクエスト送信済み",
-    "addFriend": "+ フレンド追加"
+    "addFriend": "+ フレンド追加",
+    "confirmAdd": "リクエストを送信？",
+    "cancelRequest": "リクエストをキャンセル"
   },
   "installApp": {
     "title": "アプリをインストール",
@@ -542,7 +567,11 @@
       "foundations": "基礎",
       "progression": "ハンターの進歩",
       "training": "鍛錬",
-      "dungeonMastery": "ダンジョン制覇"
+      "dungeonMastery": "ダンジョン制覇",
+      "community": "コミュニティ",
+      "devotion": "献身",
+      "elemental": "元素",
+      "shadow": "影"
     }
   },
   "ranksPage": {
@@ -638,32 +667,186 @@
     "comboName": "{days} 日コンボ",
     "comboDescription": "デイリークエストのコンボが {days} 日に達した。+{xp} XP",
     "static": {
-      "awakened": { "name": "覚醒", "description": "呼びかけを受け入れよ。最初のダンジョンに入れ。" },
-      "first-streak": { "name": "ファースト・ブラッド", "description": "ダンジョン内で最初の1日を生き延びる。" },
-      "first-quest": { "name": "クエスト受諾", "description": "最初のデイリークエストを完了する。" },
-      "first-workout": { "name": "最初のレップ", "description": "Gym Life でワークアウトを記録する。" },
-      "first-exposure": { "name": "静かな存在", "description": "セラピー階段で最初の曝露を記録する。" },
-      "rank-e": { "name": "E ランク達成", "description": "任意のダンジョンで 7 日のストリークを保つ。" },
-      "rank-d": { "name": "D ランク達成", "description": "任意のダンジョンで 14 日に到達する。" },
-      "rank-c": { "name": "C ランク達成", "description": "任意のダンジョンで 30 日に到達する。" },
-      "rank-b": { "name": "B ランク達成", "description": "任意のダンジョンで 60 日に到達する。" },
-      "rank-a": { "name": "A ランク達成", "description": "任意のダンジョンで 90 日に到達する。" },
-      "rank-s": { "name": "S ランク昇華", "description": "任意のダンジョンで 180 日に到達する。" },
-      "multi-classed": { "name": "マルチクラス", "description": "同時に 3 ダンジョンでアクティブ。" },
-      "polymath": { "name": "ポリマス", "description": "5 つすべてのダンジョンで同時にアクティブ。" },
-      "perfect-day": { "name": "完璧な1日", "description": "1日にすべてのデイリークエストを完了。" },
-      "grinder": { "name": "ザ・グラインダー", "description": "クエスト総完了 50 回。" },
-      "grind-lord": { "name": "グラインド・ロード", "description": "クエスト総完了 250 回。" },
-      "iron-will": { "name": "鉄の意志", "description": "10 回のワークアウトを完了。" },
-      "forged": { "name": "鍛造", "description": "100 回のワークアウトを記録。" },
-      "ladder-climber": { "name": "ラダー登攀者", "description": "曝露階段の 3 段を達成。" },
-      "fearless": { "name": "恐れ知らず", "description": "曝露階段全体を完了。" },
-      "dungeon-master": { "name": "ダンジョン・マスター", "description": "ダンジョンを成功裏に完了し引退させる。" },
-      "conqueror": { "name": "征服者", "description": "3 つのダンジョンを完了する。" },
-      "level-5": { "name": "新人ハンター", "description": "レベル 5 に到達する。" },
-      "level-10": { "name": "達人", "description": "レベル 10 に到達する。" },
-      "level-25": { "name": "ベテラン", "description": "レベル 25 に到達する。" },
-      "level-50": { "name": "影の君主", "description": "レベル 50 に到達する。" }
+      "awakened": {
+        "name": "覚醒",
+        "description": "呼びかけを受け入れよ。最初のダンジョンに入れ。"
+      },
+      "first-streak": {
+        "name": "ファースト・ブラッド",
+        "description": "ダンジョン内で最初の1日を生き延びる。"
+      },
+      "first-quest": {
+        "name": "クエスト受諾",
+        "description": "最初のデイリークエストを完了する。"
+      },
+      "first-workout": {
+        "name": "最初のレップ",
+        "description": "Gym Life でワークアウトを記録する。"
+      },
+      "first-exposure": {
+        "name": "静かな存在",
+        "description": "セラピー階段で最初の曝露を記録する。"
+      },
+      "rank-e": {
+        "name": "E ランク達成",
+        "description": "任意のダンジョンで 7 日のストリークを保つ。"
+      },
+      "rank-d": {
+        "name": "D ランク達成",
+        "description": "任意のダンジョンで 14 日に到達する。"
+      },
+      "rank-c": {
+        "name": "C ランク達成",
+        "description": "任意のダンジョンで 30 日に到達する。"
+      },
+      "rank-b": {
+        "name": "B ランク達成",
+        "description": "任意のダンジョンで 60 日に到達する。"
+      },
+      "rank-a": {
+        "name": "A ランク達成",
+        "description": "任意のダンジョンで 90 日に到達する。"
+      },
+      "rank-s": {
+        "name": "S ランク昇華",
+        "description": "任意のダンジョンで 180 日に到達する。"
+      },
+      "multi-classed": {
+        "name": "マルチクラス",
+        "description": "同時に 3 ダンジョンでアクティブ。"
+      },
+      "polymath": {
+        "name": "ポリマス",
+        "description": "5 つすべてのダンジョンで同時にアクティブ。"
+      },
+      "perfect-day": {
+        "name": "完璧な1日",
+        "description": "1日にすべてのデイリークエストを完了。"
+      },
+      "grinder": {
+        "name": "ザ・グラインダー",
+        "description": "クエスト総完了 50 回。"
+      },
+      "grind-lord": {
+        "name": "グラインド・ロード",
+        "description": "クエスト総完了 250 回。"
+      },
+      "iron-will": {
+        "name": "鉄の意志",
+        "description": "10 回のワークアウトを完了。"
+      },
+      "forged": {
+        "name": "鍛造",
+        "description": "100 回のワークアウトを記録。"
+      },
+      "ladder-climber": {
+        "name": "ラダー登攀者",
+        "description": "曝露階段の 3 段を達成。"
+      },
+      "fearless": {
+        "name": "恐れ知らず",
+        "description": "曝露階段全体を完了。"
+      },
+      "dungeon-master": {
+        "name": "ダンジョン・マスター",
+        "description": "ダンジョンを成功裏に完了し引退させる。"
+      },
+      "conqueror": {
+        "name": "征服者",
+        "description": "3 つのダンジョンを完了する。"
+      },
+      "level-5": {
+        "name": "新人ハンター",
+        "description": "レベル 5 に到達する。"
+      },
+      "level-10": {
+        "name": "達人",
+        "description": "レベル 10 に到達する。"
+      },
+      "level-25": {
+        "name": "ベテラン",
+        "description": "レベル 25 に到達する。"
+      },
+      "level-50": {
+        "name": "影の君主",
+        "description": "レベル 50 に到達する。"
+      },
+      "hunters-voice": {
+        "name": "Hunter's Voice",
+        "description": "最初の公開リフレクションを投稿しよう。沈黙から踏み出せ。"
+      },
+      "first-friend": {
+        "name": "First Bond",
+        "description": "最初のハンターをフレンドに追加。群れが締まる。"
+      },
+      "bond-found": {
+        "name": "Bond Found",
+        "description": "最初のギルドに参加。バンドを見つけよう。"
+      },
+      "daily-witness": {
+        "name": "Daily Witness",
+        "description": "14日間活動を記録。システムは君の顔を覚える。"
+      },
+      "open-hand": {
+        "name": "Open Hand",
+        "description": "公開リフレクションを10回投稿。勇気は習慣だ。"
+      },
+      "five-bonds": {
+        "name": "Five Bonds",
+        "description": "5人のフレンドに到達。本物のバンド、リストではない。"
+      },
+      "surge": {
+        "name": "Surge",
+        "description": "1週間で50アクティビティポイント獲得。クエスト、ワークアウト、エクスポージャーで積み上げた高潮の週。"
+      },
+      "tempest": {
+        "name": "Tempest",
+        "description": "1週間で100アクティビティポイント獲得。並外れた出力。"
+      },
+      "first-week": {
+        "name": "Threshold",
+        "description": "7日間活動を記録。崖を越えた。"
+      },
+      "steadfast": {
+        "name": "Steadfast",
+        "description": "30日間活動を記録。英雄譚より一貫性。"
+      },
+      "veteran": {
+        "name": "Veteran of the System",
+        "description": "活動90日。システムは忍耐する者を認める。"
+      },
+      "year-one": {
+        "name": "Year One",
+        "description": "活動365日。一年間、現れ続けた証。"
+      },
+      "bedrock": {
+        "name": "Bedrock",
+        "description": "地のXP 50に到達。器が鍛えられていく。"
+      },
+      "current": {
+        "name": "Current",
+        "description": "水のXP 50に到達。心の流れがその形を学ぶ。"
+      },
+      "furnace": {
+        "name": "Furnace",
+        "description": "火のXP 50に到達。プラーナが灯り、神経系が目覚める。"
+      },
+      "open-sky": {
+        "name": "Open Sky",
+        "description": "風のXP 50に到達。注意を取り戻し、思考が澄む。"
+      },
+      "inner-void": {
+        "name": "Inner Void",
+        "description": "空のXP 50に到達。喧騒の奥にある静寂の部屋。"
+      },
+      "phoenix": {
+        "name": "Phoenix",
+        "description": "再発したダンジョンに再び挑む。転倒は終わりじゃない。"
+      },
+      "comeback": {
+        "name": "Comeback",
+        "description": "散漫な日の翌朝にパーフェクトデイを達成。システムは忘れない、君もまた。"
+      }
     }
   },
   "guide": {
@@ -819,7 +1002,12 @@
     "kick": "追放",
     "kickConfirm": "{name} をギルドから追放しますか? あとで再参加をリクエストできます。",
     "guildFeed": "ギルドフィード",
-    "feedEmpty": "まだ何もありません。メンバーの公開ジャーナルエントリがこのフィードに流れます ― ジャーナルの「公開」をオンにして投下しよう。"
+    "feedEmpty": "まだ何もありません。メンバーの公開ジャーナルエントリがこのフィードに流れます ― ジャーナルの「公開」をオンにして投下しよう。",
+    "confirmJoin": "リクエストを送信？",
+    "cancel": "キャンセル",
+    "cancelRequest": "リクエストをキャンセル",
+    "confirmLeave": "本当に脱退しますか？",
+    "memberMenuAria": "メンバーオプション"
   },
   "guildModal": {
     "close": "閉じる",
@@ -876,5 +1064,16 @@
   },
   "portalsExtra": {
     "changePath": "パスを変更 →"
+  },
+  "questBriefing": {
+    "header": "[ ミッション情報 ]",
+    "objectiveLabel": "目的",
+    "rulesLabel": "ペース",
+    "rewardsLabel": "報酬",
+    "rewardsDescription": "達成ごとのXP・連続ボーナス・節目のトロフィー",
+    "warningLabel": "システム通知",
+    "warningBody": "このポータルに入ると、そのリズムに縛られます。再発は記録されます。達成はXPを蓄えます。意志を持って選びましょう。",
+    "cancel": "退く",
+    "confirm": "ダンジョンに入る"
   }
 }

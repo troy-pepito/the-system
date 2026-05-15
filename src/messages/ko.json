@@ -17,7 +17,18 @@
     "notifications": "알림",
     "install": "설치",
     "language": "언어",
-    "languageHint": "시스템이 당신에게 말하는 언어를 선택하세요. 번역은 계속 추가되고 있습니다 — 영어가 가장 완성도가 높습니다."
+    "languageHint": "시스템이 당신에게 말하는 언어를 선택하세요. 번역은 계속 추가되고 있습니다 — 영어가 가장 완성도가 높습니다.",
+    "dangerZone": "위험 구역",
+    "deleteAccount": "계정 삭제",
+    "deleteAccountIntro": "계정을 영구적으로 삭제합니다. 모든 던전 진행, 일지 기록, 친구 관계, 길드 소속, 트로피가 지워집니다. 길드를 소유하고 있다면 해체되고 모든 멤버가 추방됩니다. 이 작업은 되돌릴 수 없습니다.",
+    "deleteAccountButton": "내 계정 삭제",
+    "deleteAccountConfirmHeader": "정말 확실합니까?",
+    "deleteAccountConfirmBody": "확인을 위해 아래에 헌터 이름을 입력하세요. 이 작업은 영구적입니다.",
+    "deleteAccountTypePlaceholder": "헌터 이름 입력",
+    "deleteAccountConfirmButton": "영원히 삭제",
+    "deleteAccountCancel": "취소",
+    "deleteAccountDeleting": "삭제 중…",
+    "deleteAccountError": "계정을 삭제할 수 없습니다. 다시 시도하거나 trojanato@gmail.com 으로 이메일을 보내세요."
   },
   "hunterTypePicker": {
     "intro": "길을 선택해 훈련 프로그램을 잠금 해제하세요. 선택한 길을 다시 탭하면 무소속으로 돌아갑니다. 전환은 무료입니다 — 탐색해 보세요.",
@@ -63,7 +74,13 @@
     "whyHeader": "이게 왜 존재하는가",
     "whyP1": "어두운 시기에 만들었다 — 우선은 나 자신을 위해. 의지력이 아니라, 매일 출근할 수 있는 게임처럼 규율을 느끼게 하는 시스템이 필요했다.",
     "whyP2": "이제 같은 것을 갈망하는 누구에게나 열려 있다 — 충동과 싸우는 사람, 미루기에 지는 사람, 책임감이 필요하다는 걸 알지만 그것을 요구해줄 사람이 없는 사람.",
-    "whyWelcome": "그게 너라면, 환영한다."
+    "whyWelcome": "그게 너라면, 환영한다.",
+    "communityHeader": "당신은 혼자가 아닙니다",
+    "communityIntro": "혼자 가는 헌터는 꺾인다. 함께 단련하는 헌터는 레벨업한다. 시스템은 둘 다 준다: 너만의 던전, 그리고 함께 걸을 동료의 원.",
+    "communityGuildsTitle": "길드",
+    "communityGuildsBody": "최대 10명의 헌터로 구성된 밴드를 만드세요. 멤버들의 공개 회고가 길드 피드에 올라옵니다, 익명 방송이 아닌 작은 결속. 가입은 오너가 승인합니다.",
+    "communityBoardTitle": "주간 리더보드",
+    "communityBoardBody": "이번 주에 기록한 모든 행동이 활동 포인트를 얻습니다. 전 세계, 친구, 길드 내, 또는 길드 vs 길드로 경쟁하세요. 7일마다 초기화, 언제나 새로운 싸움."
   },
   "recentGains": {
     "title": "최근 획득",
@@ -77,7 +94,9 @@
     "header": "플레이어 상태 창",
     "noActiveDungeons": "[ 포털 레지스트리가 기다리고 있다 ]",
     "noActiveDungeonsBody": "아직 활성 던전이 없습니다. 첫 포털을 선택해 헌터의 길을 시작하세요.",
-    "enterRegistry": "레지스트리 입장 →"
+    "enterRegistry": "레지스트리 입장 →",
+    "firstHunterHeader": "[ 첫 퀘스트 가능 ]",
+    "firstHunterBody": "환영합니다, 헌터. 첫 행동은 바로 위 한 번의 탭입니다. 데일리 퀘스트를 체크해 첫 XP를 얻거나, 아래의 포털 레지스트리에서 던전에 도전하세요."
   },
   "hunterCard": {
     "id": "헌터 ID",
@@ -119,7 +138,11 @@
     "comboExtended": "콤보 연장 · 내일 봐요",
     "keepAlive": "콤보를 유지하려면 {count}개 더 필요",
     "bonusTooltip": "기본 {base} + 콤보 보너스 {bonus}",
-    "comboSource": "🔥 {days}일 콤보"
+    "comboSource": "🔥 {days}일 콤보",
+    "resetsIn": "초기화까지",
+    "progressLabel": "{done}/{total} 완료",
+    "systemWarningScattered": "시스템이 어제를 침묵으로 기록했습니다. 오늘 그 흐름을 끊으세요.",
+    "systemNoticeIdle": "창은 자정에 닫힙니다. 움직이세요."
   },
   "profile": {
     "recordHeader": "기록 — {label}",
@@ -367,7 +390,9 @@
     "cancel": "취소",
     "isFriend": "✓ 친구",
     "requestSent": "요청 보냄",
-    "addFriend": "+ 친구 추가"
+    "addFriend": "+ 친구 추가",
+    "confirmAdd": "요청 보내기?",
+    "cancelRequest": "요청 취소"
   },
   "installApp": {
     "title": "앱 설치",
@@ -542,7 +567,11 @@
       "foundations": "기반",
       "progression": "헌터 진행",
       "training": "훈련",
-      "dungeonMastery": "던전 정복"
+      "dungeonMastery": "던전 정복",
+      "community": "커뮤니티",
+      "devotion": "헌신",
+      "elemental": "원소",
+      "shadow": "그림자"
     }
   },
   "ranksPage": {
@@ -638,32 +667,186 @@
     "comboName": "{days}일 콤보",
     "comboDescription": "일일 퀘스트 콤보가 {days}일에 도달. +{xp} XP",
     "static": {
-      "awakened": { "name": "각성", "description": "부름을 수락하라. 첫 던전에 들어가라." },
-      "first-streak": { "name": "첫 피", "description": "던전에서 첫 하루를 살아남는다." },
-      "first-quest": { "name": "퀘스트 수락", "description": "첫 일일 퀘스트를 완료한다." },
-      "first-workout": { "name": "첫 한 세트", "description": "Gym Life에서 운동을 기록한다." },
-      "first-exposure": { "name": "조용한 임재", "description": "치료 사다리에서 첫 노출을 기록한다." },
-      "rank-e": { "name": "E 랭크 클리어", "description": "어떤 던전에서든 7일 스트릭을 유지." },
-      "rank-d": { "name": "D 랭크 클리어", "description": "어떤 던전에서든 14일에 도달." },
-      "rank-c": { "name": "C 랭크 클리어", "description": "어떤 던전에서든 30일에 도달." },
-      "rank-b": { "name": "B 랭크 클리어", "description": "어떤 던전에서든 60일에 도달." },
-      "rank-a": { "name": "A 랭크 클리어", "description": "어떤 던전에서든 90일에 도달." },
-      "rank-s": { "name": "S 랭크 승격", "description": "어떤 던전에서든 180일에 도달." },
-      "multi-classed": { "name": "멀티클래스", "description": "동시에 3개 던전에서 활동." },
-      "polymath": { "name": "박학다식", "description": "동시에 5개 던전 모두 활동." },
-      "perfect-day": { "name": "완벽한 하루", "description": "하루에 모든 일일 퀘스트를 완료." },
-      "grinder": { "name": "그라인더", "description": "총 50개의 퀘스트 완료." },
-      "grind-lord": { "name": "그라인드 로드", "description": "총 250개의 퀘스트 완료." },
-      "iron-will": { "name": "강철 의지", "description": "운동 10회 완료." },
-      "forged": { "name": "단련된 자", "description": "운동 100회 기록." },
-      "ladder-climber": { "name": "사다리 등반자", "description": "노출 사다리 3단 클리어." },
-      "fearless": { "name": "두려움 없는 자", "description": "전체 노출 사다리를 완료." },
-      "dungeon-master": { "name": "던전 마스터", "description": "던전을 성공적으로 완료해 마무리한다." },
-      "conqueror": { "name": "정복자", "description": "3개 던전을 끝까지 완료." },
-      "level-5": { "name": "초보 헌터", "description": "레벨 5 도달." },
-      "level-10": { "name": "숙련자", "description": "레벨 10 도달." },
-      "level-25": { "name": "베테랑", "description": "레벨 25 도달." },
-      "level-50": { "name": "섀도우 모나크", "description": "레벨 50 도달." }
+      "awakened": {
+        "name": "각성",
+        "description": "부름을 수락하라. 첫 던전에 들어가라."
+      },
+      "first-streak": {
+        "name": "첫 피",
+        "description": "던전에서 첫 하루를 살아남는다."
+      },
+      "first-quest": {
+        "name": "퀘스트 수락",
+        "description": "첫 일일 퀘스트를 완료한다."
+      },
+      "first-workout": {
+        "name": "첫 한 세트",
+        "description": "Gym Life에서 운동을 기록한다."
+      },
+      "first-exposure": {
+        "name": "조용한 임재",
+        "description": "치료 사다리에서 첫 노출을 기록한다."
+      },
+      "rank-e": {
+        "name": "E 랭크 클리어",
+        "description": "어떤 던전에서든 7일 스트릭을 유지."
+      },
+      "rank-d": {
+        "name": "D 랭크 클리어",
+        "description": "어떤 던전에서든 14일에 도달."
+      },
+      "rank-c": {
+        "name": "C 랭크 클리어",
+        "description": "어떤 던전에서든 30일에 도달."
+      },
+      "rank-b": {
+        "name": "B 랭크 클리어",
+        "description": "어떤 던전에서든 60일에 도달."
+      },
+      "rank-a": {
+        "name": "A 랭크 클리어",
+        "description": "어떤 던전에서든 90일에 도달."
+      },
+      "rank-s": {
+        "name": "S 랭크 승격",
+        "description": "어떤 던전에서든 180일에 도달."
+      },
+      "multi-classed": {
+        "name": "멀티클래스",
+        "description": "동시에 3개 던전에서 활동."
+      },
+      "polymath": {
+        "name": "박학다식",
+        "description": "동시에 5개 던전 모두 활동."
+      },
+      "perfect-day": {
+        "name": "완벽한 하루",
+        "description": "하루에 모든 일일 퀘스트를 완료."
+      },
+      "grinder": {
+        "name": "그라인더",
+        "description": "총 50개의 퀘스트 완료."
+      },
+      "grind-lord": {
+        "name": "그라인드 로드",
+        "description": "총 250개의 퀘스트 완료."
+      },
+      "iron-will": {
+        "name": "강철 의지",
+        "description": "운동 10회 완료."
+      },
+      "forged": {
+        "name": "단련된 자",
+        "description": "운동 100회 기록."
+      },
+      "ladder-climber": {
+        "name": "사다리 등반자",
+        "description": "노출 사다리 3단 클리어."
+      },
+      "fearless": {
+        "name": "두려움 없는 자",
+        "description": "전체 노출 사다리를 완료."
+      },
+      "dungeon-master": {
+        "name": "던전 마스터",
+        "description": "던전을 성공적으로 완료해 마무리한다."
+      },
+      "conqueror": {
+        "name": "정복자",
+        "description": "3개 던전을 끝까지 완료."
+      },
+      "level-5": {
+        "name": "초보 헌터",
+        "description": "레벨 5 도달."
+      },
+      "level-10": {
+        "name": "숙련자",
+        "description": "레벨 10 도달."
+      },
+      "level-25": {
+        "name": "베테랑",
+        "description": "레벨 25 도달."
+      },
+      "level-50": {
+        "name": "섀도우 모나크",
+        "description": "레벨 50 도달."
+      },
+      "hunters-voice": {
+        "name": "Hunter's Voice",
+        "description": "첫 공개 회고를 게시하세요. 침묵에서 나오세요."
+      },
+      "first-friend": {
+        "name": "First Bond",
+        "description": "첫 번째 헌터를 친구로 추가하세요. 무리가 단단해집니다."
+      },
+      "bond-found": {
+        "name": "Bond Found",
+        "description": "첫 길드에 가입하세요. 동료를 찾으세요."
+      },
+      "daily-witness": {
+        "name": "Daily Witness",
+        "description": "14일 동안 활동을 기록하세요. 시스템이 당신의 얼굴을 기억합니다."
+      },
+      "open-hand": {
+        "name": "Open Hand",
+        "description": "공개 회고를 10번 게시하세요. 용기는 습관입니다."
+      },
+      "five-bonds": {
+        "name": "Five Bonds",
+        "description": "친구 5명에 도달하세요. 진짜 동료, 명단이 아닌."
+      },
+      "surge": {
+        "name": "Surge",
+        "description": "한 주에 활동 포인트 50을 획득하세요. 퀘스트, 운동, 노출로 쌓아 올린 급상승의 주."
+      },
+      "tempest": {
+        "name": "Tempest",
+        "description": "한 주에 활동 포인트 100을 획득하세요. 평범을 벗어난 출력."
+      },
+      "first-week": {
+        "name": "Threshold",
+        "description": "7일 동안 활동을 기록하세요. 절벽을 건넜습니다."
+      },
+      "steadfast": {
+        "name": "Steadfast",
+        "description": "30일 동안 활동을 기록하세요. 영웅담보다 꾸준함."
+      },
+      "veteran": {
+        "name": "Veteran of the System",
+        "description": "활동 90일. 시스템은 인내하는 자를 알아봅니다."
+      },
+      "year-one": {
+        "name": "Year One",
+        "description": "활동 365일. 일 년 내내 나타난 증거."
+      },
+      "bedrock": {
+        "name": "Bedrock",
+        "description": "땅의 XP 50에 도달하세요. 그릇이 단련되고 있습니다."
+      },
+      "current": {
+        "name": "Current",
+        "description": "물의 XP 50에 도달하세요. 마음의 흐름이 형태를 익힙니다."
+      },
+      "furnace": {
+        "name": "Furnace",
+        "description": "불의 XP 50에 도달하세요. 프라나가 점화되고 신경계가 깨어납니다."
+      },
+      "open-sky": {
+        "name": "Open Sky",
+        "description": "바람의 XP 50에 도달하세요. 주의를 되찾고, 사고가 맑아집니다."
+      },
+      "inner-void": {
+        "name": "Inner Void",
+        "description": "에테르의 XP 50에 도달하세요. 소음 뒤의 고요한 방."
+      },
+      "phoenix": {
+        "name": "Phoenix",
+        "description": "재발했던 던전에 다시 들어가세요. 추락은 끝이 아닙니다."
+      },
+      "comeback": {
+        "name": "Comeback",
+        "description": "흩어진 다음 날 아침에 퍼펙트 데이를 달성하세요. 시스템은 잊지 않습니다, 당신도 마찬가지."
+      }
     }
   },
   "guide": {
@@ -819,7 +1002,12 @@
     "kick": "추방",
     "kickConfirm": "{name} 을 길드에서 추방할까요? 나중에 다시 가입을 요청할 수 있습니다.",
     "guildFeed": "길드 피드",
-    "feedEmpty": "아직 아무것도 없습니다. 멤버의 공개 저널 항목이 이 피드에 올라옵니다 ― 저널의 공유 토글을 켜서 하나 떨어뜨리세요."
+    "feedEmpty": "아직 아무것도 없습니다. 멤버의 공개 저널 항목이 이 피드에 올라옵니다 ― 저널의 공유 토글을 켜서 하나 떨어뜨리세요.",
+    "confirmJoin": "요청 보내기?",
+    "cancel": "취소",
+    "cancelRequest": "요청 취소",
+    "confirmLeave": "정말 탈퇴하시겠습니까?",
+    "memberMenuAria": "멤버 옵션"
   },
   "guildModal": {
     "close": "닫기",
@@ -876,5 +1064,16 @@
   },
   "portalsExtra": {
     "changePath": "패스 변경 →"
+  },
+  "questBriefing": {
+    "header": "[ 미션 정보 ]",
+    "objectiveLabel": "목표",
+    "rulesLabel": "리듬",
+    "rewardsLabel": "보상",
+    "rewardsDescription": "완료당 XP · 연속 보너스 · 마일스톤 트로피",
+    "warningLabel": "시스템 알림",
+    "warningBody": "이 포털에 들어가면 그 리듬에 묶입니다. 재발은 기록됩니다. 완료는 XP를 쌓습니다. 의지를 가지고 선택하세요.",
+    "cancel": "물러나기",
+    "confirm": "던전 진입"
   }
 }
