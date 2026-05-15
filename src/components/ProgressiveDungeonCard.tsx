@@ -400,7 +400,7 @@ export default function ProgressiveDungeonCard({
           </div>
 
           <div className="border border-slate-700 rounded-lg p-3 space-y-2 text-left">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-1">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70 mb-1">
               {tRun("ladder")}
             </p>
             <ul className="space-y-1.5">

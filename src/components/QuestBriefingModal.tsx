@@ -105,7 +105,7 @@ export default function QuestBriefingModal({
         <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
         <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
 
-        <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-300 text-center mb-4">
+        <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 text-center mb-4">
           {t("header")}
         </p>
 
@@ -135,7 +135,7 @@ export default function QuestBriefingModal({
         )}
 
         <section className="mt-6">
-          <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-2">
+          <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70 mb-2">
             {t("objectiveLabel")}
           </p>
           <p className="text-xs text-slate-300 leading-relaxed">
@@ -145,7 +145,7 @@ export default function QuestBriefingModal({
 
         {safeRules.length > 0 && (
           <section className="mt-5">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-2">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-cyan-400/70 mb-2">
               {t("rulesLabel")}
             </p>
             <ul className="space-y-1.5">
@@ -154,7 +154,7 @@ export default function QuestBriefingModal({
                   key={i}
                   className="text-xs text-slate-300 leading-relaxed flex gap-2"
                 >
-                  <span className="text-cyan-300 mt-0.5">▸</span>
+                  <span className="text-cyan-400/60 mt-0.5">▸</span>
                   <span>{rule}</span>
                 </li>
               ))}

@@ -110,7 +110,7 @@ function NoteModalInner({
           ✕
         </button>
 
-        <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-300 mb-2">
+        <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-2">
           {t("chrome")}
         </p>
         <p className="text-sm text-cyan-100 uppercase tracking-wider mb-4">

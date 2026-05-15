@@ -47,7 +47,7 @@ export default function HunterTypePicker() {
 
   if (!isLoaded || !user) {
     return (
-      <p className="text-sm text-slate-300 leading-relaxed">
+      <p className="text-xs text-slate-500 leading-relaxed">
         {tPicker("loading")}
       </p>
     );

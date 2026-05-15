@@ -45,7 +45,7 @@ export default function LandingPage() {
         <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0px,transparent_3px,rgba(34,211,238,0.02)_3px,rgba(34,211,238,0.02)_4px)]" />
         <div className="relative max-w-3xl mx-auto px-6 py-20 sm:py-28 text-center">
           <p
-            className="text-[10px] tracking-[0.5em] text-cyan-300 uppercase mb-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] animate-reveal"
+            className="text-[10px] tracking-[0.5em] text-cyan-400/70 uppercase mb-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] animate-reveal"
             style={{ animationDelay: "0.05s" }}
           >
             [ Shivaliva Leveling ]
@@ -96,7 +96,7 @@ export default function LandingPage() {
       </section>
 
       <section className="max-w-3xl mx-auto px-6 py-16">
-        <p className="text-xs tracking-[0.3em] uppercase text-cyan-300 text-center mb-10">
+        <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-10">
           {tLanding("howItWorks")}
         </p>
         <div className="grid sm:grid-cols-3 gap-4">
@@ -105,7 +105,7 @@ export default function LandingPage() {
               key={num}
               className="border border-slate-800 bg-slate-900/40 p-6"
             >
-              <p className="text-[10px] tracking-[0.4em] text-cyan-300 mb-3">
+              <p className="text-[10px] tracking-[0.4em] text-cyan-400/60 mb-3">
                 {num}
               </p>
               <p className="font-display text-sm font-bold text-cyan-100 uppercase tracking-wider mb-2">
@@ -120,7 +120,7 @@ export default function LandingPage() {
       </section>
 
       <section className="max-w-3xl mx-auto px-6 py-16 border-t border-slate-800/60">
-        <p className="text-xs tracking-[0.3em] uppercase text-cyan-300 text-center mb-10">
+        <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-10">
           {tLanding("portalsHeader")}
         </p>
         <div className="grid sm:grid-cols-2 gap-4">
@@ -156,7 +156,7 @@ export default function LandingPage() {
       </section>
 
       <section className="max-w-3xl mx-auto px-6 py-16 border-t border-slate-800/60">
-        <p className="text-xs tracking-[0.3em] uppercase text-cyan-300 text-center mb-3">
+        <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 text-center mb-3">
           {tLanding("communityHeader")}
         </p>
         <p className="text-sm text-slate-300 text-center max-w-xl mx-auto mb-10 leading-relaxed">
@@ -213,7 +213,7 @@ export default function LandingPage() {
 
       <section className="max-w-2xl mx-auto px-6 py-16 border-t border-slate-800/60">
         <div className="border border-slate-800 bg-slate-900/40 p-8">
-          <p className="text-xs tracking-[0.3em] uppercase text-cyan-300 mb-5">
+          <p className="text-xs tracking-[0.3em] uppercase text-cyan-400/70 mb-5">
             {tLanding("whyHeader")}
           </p>
           <p className="text-sm text-slate-300 leading-relaxed mb-3">
@@ -354,7 +354,7 @@ function StatusWindowPreview() {
       <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-400 z-10 pointer-events-none" />
       <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-400 z-10 pointer-events-none" />
       <div className="relative bg-slate-950/80 border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.25),inset_0_0_20px_rgba(34,211,238,0.05)] p-5 sm:p-6">
-        <p className="text-[9px] text-cyan-300 tracking-[0.4em] uppercase mb-5">
+        <p className="text-[9px] text-cyan-400/70 tracking-[0.4em] uppercase mb-5">
           {t("statusWindow")}
         </p>
         <div className="flex items-center gap-6 mb-5">

@@ -255,7 +255,7 @@ export default function Dashboard() {
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-8">
         <div className="text-center">
-          <p className="text-sm tracking-[0.3em] uppercase text-cyan-300">
+          <p className="text-sm tracking-[0.3em] uppercase text-cyan-400/60">
             {t("header")}
           </p>
           <div className="mx-auto mt-3 h-px w-48 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
@@ -309,7 +309,7 @@ export default function Dashboard() {
               <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-cyan-300 pointer-events-none" />
               <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-300 pointer-events-none" />
               <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-300 pointer-events-none" />
-              <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-300 mb-3">
+              <p className="text-[10px] tracking-[0.4em] uppercase text-cyan-400/70 mb-3">
                 {isFreshHunter
                   ? t("firstHunterHeader")
                   : t("noActiveDungeons")}

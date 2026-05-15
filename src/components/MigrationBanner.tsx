@@ -45,7 +45,7 @@ export default function MigrationBanner() {
         </p>
         <button
           onClick={dismiss}
-          className="text-cyan-300 hover:text-cyan-200 transition-colors px-2 -mt-1 text-base leading-none"
+          className="text-cyan-400/70 hover:text-cyan-200 transition-colors px-2 -mt-1 text-base leading-none"
           aria-label="Dismiss"
         >
           ✕

@@ -99,7 +99,7 @@ export default function JournalSection({
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-        <p className="text-xs tracking-[0.2em] uppercase text-cyan-300">
+        <p className="text-xs tracking-[0.2em] uppercase text-cyan-400/70">
           {title ?? t("title")}
         </p>
         {entries.length > 0 && (
@@ -112,7 +112,7 @@ export default function JournalSection({
         )}
       </div>
       {entries.length === 0 ? (
-        <p className="text-sm text-slate-300 leading-relaxed">
+        <p className="text-xs text-slate-500 leading-relaxed">
           {t("empty")}
         </p>
       ) : (

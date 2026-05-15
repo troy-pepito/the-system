@@ -270,7 +270,7 @@ function EmptyState({ scope }: { scope: LeaderboardScope }) {
   else copy = t("emptyGlobal");
   return (
     <div className="border border-slate-800 rounded-lg p-6 text-center">
-      <p className="text-sm text-slate-300 leading-relaxed">{copy}</p>
+      <p className="text-xs text-slate-500 leading-relaxed">{copy}</p>
     </div>
   );
 }
