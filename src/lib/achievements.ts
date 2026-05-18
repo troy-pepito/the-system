@@ -9,16 +9,15 @@ export type AchievementRarity =
   | "legendary";
 
 /**
- * XP awarded when a trophy is claimed (manually, from /profile). Tuned
- * against the existing economy: common ≈ 1 daily quest, legendary ≈
- * 5× a perfect day. Big enough to feel like a moment, small enough
- * not to break the level curve.
+ * XP awarded when a trophy is claimed (manually, from /profile). Trophies
+ * fire once each, so the per-claim value can sit well above a daily quest
+ * without warping the level curve.
  */
 export const TROPHY_XP_BY_RARITY: Record<AchievementRarity, number> = {
-  common: 10,
-  rare: 25,
-  epic: 60,
-  legendary: 150,
+  common: 25,
+  rare: 75,
+  epic: 150,
+  legendary: 250,
 };
 
 export interface WindowStats {
