@@ -36,10 +36,14 @@ export default function OfflineSyncManager() {
   }, []);
 
   useEffect(() => {
-    if (online && queueCount > 0) {
-      drainQueue().catch(() => {});
-    }
-  }, [online, queueCount]);
+    // Gate on a hydrated, signed-in Clerk session: mutations are
+    // user-scoped server actions and 401 without auth. Re-firing on
+    // user change matters when an expired session is restored mid-
+    // session — without it, queued offline writes don't drain until
+    // the next page nav.
+    if (!online || !isLoaded || !user || queueCount === 0) return;
+    drainQueue().catch(() => {});
+  }, [online, queueCount, isLoaded, user]);
 
   useEffect(() => {
     if (!online || !isLoaded || !user) return;

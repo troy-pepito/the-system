@@ -58,10 +58,12 @@ export function markKnownSignedIn(userId: string): void {
 export function clearKnownSignedIn(): void {
   try {
     if (localStorage.getItem(KNOWN_SIGNED_IN_KEY) === null) return;
-    // Sign-out, wipe per-user state so it can't leak into the next
-    // account that signs in (or be read by an unauthenticated session
-    // sniffing localStorage).
-    wipeUserScopedStorage();
+    // Sign-out (often involuntary — Clerk session expiry, especially
+    // after offline use). Do NOT wipe per-user storage here: if the
+    // same user signs back in, we need shivaliva:queue intact so
+    // pending offline mutations (journal entries, check-ins) can
+    // drain. Cross-user protection is handled by markKnownSignedIn,
+    // which wipes only when a different user id signs in.
     localStorage.removeItem(KNOWN_SIGNED_IN_KEY);
     window.dispatchEvent(new Event(KNOWN_SIGNED_IN_EVENT));
   } catch {}
