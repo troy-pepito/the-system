@@ -240,6 +240,19 @@ export function tieredStreakRunXp(
   return clearedCount * (baseXp + bonus);
 }
 
+/**
+ * Per-action XP bonus at the given cleared-tier index. Returns 0 if no
+ * tier has been crossed yet. Used by Progressive (exposure) and Cadence
+ * (workout) cards to match the server-side dungeonPerActionBonusTotal
+ * math when firing optimistic +XP toasts. Without this, the toast
+ * shows the flat base (20 / 25) regardless of rank, while the actual
+ * banked XP on next snapshot read is much higher.
+ */
+export function tieredActionBonus(tierIdx: number): number {
+  if (tierIdx < 0) return 0;
+  return TIER_PER_ACTION_BONUS[tierIdx] ?? 0;
+}
+
 /** Bonus XP awarded when a cadence dungeon's window is fully cleared
  *  (every workout in the list, not just enough to hit the cadence
  *  target). Fires once per (dungeonId, windowStart). For Training

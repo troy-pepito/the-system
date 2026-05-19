@@ -5,6 +5,7 @@ import {
   CADENCE_FULL_CLEAR_BONUS_XP,
   getDungeon,
   getDungeonAccent,
+  tieredActionBonus,
 } from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
 import { todayLocalISO } from "@/lib/quests";
@@ -140,12 +141,17 @@ export default function CadenceDungeonCard({
       : completed.filter((id) => id !== workoutId);
     setCompleted(nextCompleted);
     setWorkoutInCache(dungeonId, workoutId, isNowDone);
-    const xpDelta = (isNowDone ? 1 : -1) * XP_PER_WORKOUT;
+    // Tier-scaled per-action XP, matching the server's
+    // dungeonPerActionBonusTotal math for cadence dungeons (uses the
+    // current streak's tier index). Without this the toast shows a
+    // flat 25 even at S rank while the actual banked XP is higher.
+    const workoutXp = XP_PER_WORKOUT + tieredActionBonus(tierIdxForHook);
+    const xpDelta = (isNowDone ? 1 : -1) * workoutXp;
     notifyStatsUpdated({ xpDelta });
     if (isNowDone) {
       const dims = dungeon?.dimensions ?? {};
       notifyReward({
-        xp: XP_PER_WORKOUT,
+        xp: workoutXp,
         body: dims.body,
         mind: dims.mind,
         emotion: dims.emotion,

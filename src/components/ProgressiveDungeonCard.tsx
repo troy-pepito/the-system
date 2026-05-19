@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { getDungeon, getDungeonAccent, TIER_BONUS_XP } from "@/lib/dungeons";
+import {
+  getDungeon,
+  getDungeonAccent,
+  TIER_BONUS_XP,
+  tieredActionBonus,
+} from "@/lib/dungeons";
 import { dungeonKey } from "@/lib/i18nKeys";
 import {
   notifyStatsUpdated,
@@ -140,8 +145,17 @@ export default function ProgressiveDungeonCard({
       setActive(true);
       addRunToCache(dungeonId, null);
     }
-    notifyStatsUpdated({ xpDelta: XP_PER_EXPOSURE });
-    notifyReward({ xp: XP_PER_EXPOSURE });
+    // Tier-scaled per-action XP, matching the server's
+    // dungeonPerActionBonusTotal math. tierIdx here is clearedRungs - 1
+    // BEFORE this log; if this log clears a new rung, the rung-crossing
+    // bonus fires below and the snapshot refetch retroactively rescales
+    // every prior action to the new tier.
+    const clearedRungsBefore = currentRungIndex >= 0
+      ? currentRungIndex
+      : RUNGS.length;
+    const logXp = XP_PER_EXPOSURE + tieredActionBonus(clearedRungsBefore - 1);
+    notifyStatsUpdated({ xpDelta: logXp });
+    notifyReward({ xp: logXp });
 
     // Tier crossing: rung cleared for the first time this run.
     // No localStorage gate, counts reset to 0 on relapse, so re-clearing
@@ -260,7 +274,14 @@ export default function ProgressiveDungeonCard({
     setBusy(true);
     setCounts((prev) => ({ ...prev, [rungId]: prevCount - 1 }));
     adjustRungCountInCache(dungeonId, rungId, -1);
-    notifyStatsUpdated({ xpDelta: -XP_PER_EXPOSURE });
+    // Mirror the tier-scaled credit from handleLog when undoing. If the
+    // undo also crosses a rung back down, the rung-crossing refund
+    // branch below handles that delta separately.
+    const clearedRungsBeforeUndo = currentRungIndex >= 0
+      ? currentRungIndex
+      : RUNGS.length;
+    const undoXp = XP_PER_EXPOSURE + tieredActionBonus(clearedRungsBeforeUndo - 1);
+    notifyStatsUpdated({ xpDelta: -undoXp });
 
     // If we're undoing on a rung that was already cleared, the dungeon
     // may have been marked complete, flip the local active flag back
