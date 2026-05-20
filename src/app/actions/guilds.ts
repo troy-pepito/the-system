@@ -253,6 +253,17 @@ export async function getPendingJoinRequestCount(): Promise<number> {
   });
 }
 
+/** Cheap COUNT query for the navbar guild-badge, invitee side. Counts
+ *  guild invites the viewer has received and not yet accepted/declined.
+ *  Same row shape as getMyPendingInvites but returns a count instead
+ *  of the full guild-detail payload — the navbar only needs a number. */
+export async function getMyPendingInviteCount(): Promise<number> {
+  const userId = await requireUserId();
+  return prisma.guildMember.count({
+    where: { userId, status: "invited" },
+  });
+}
+
 /**
  * Owner-initiated invite. Creates a GuildMember row with the new
  * "invited" status for the target hunter. Invitee can accept (row

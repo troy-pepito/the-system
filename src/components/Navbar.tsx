@@ -23,6 +23,7 @@ import {
 } from "@/app/actions/achievements";
 import {
   getPendingJoinRequestCount,
+  getMyPendingInviteCount,
   getLatestGuildEventTimestamp,
 } from "@/app/actions/guilds";
 import { getPendingFriendRequestCount } from "@/app/actions/friends";
@@ -38,6 +39,7 @@ export default function Navbar() {
   const [totalXp, setTotalXp] = useState<number>(0);
   const [unclaimedTrophyCount, setUnclaimedTrophyCount] = useState<number>(0);
   const [pendingGuildCount, setPendingGuildCount] = useState<number>(0);
+  const [pendingGuildInviteCount, setPendingGuildInviteCount] = useState<number>(0);
   const [hasNewGuildFeed, setHasNewGuildFeed] = useState<boolean>(false);
   const [pendingFriendCount, setPendingFriendCount] = useState<number>(0);
   const pathname = usePathname();
@@ -198,6 +200,10 @@ export default function Navbar() {
         setPendingGuildCount(count);
       } catch {}
       try {
+        const count = await getMyPendingInviteCount();
+        setPendingGuildInviteCount(count);
+      } catch {}
+      try {
         const latest = await getLatestGuildEventTimestamp();
         if (!latest) {
           setHasNewGuildFeed(false);
@@ -244,7 +250,19 @@ export default function Navbar() {
     };
     recompute();
     window.addEventListener(STATS_UPDATED_EVENT, onEvent);
-    return () => window.removeEventListener(STATS_UPDATED_EVENT, onEvent);
+    // Background poll for badges so external events (friend requests
+    // received, guild invites received, owner approving a join request
+    // on another device) surface within ~60s without the viewer having
+    // to refocus the tab or take any action. Cheap COUNT queries only,
+    // not the full getProfileStats path.
+    const pollId = window.setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      refreshBadges();
+    }, 60_000);
+    return () => {
+      window.removeEventListener(STATS_UPDATED_EVENT, onEvent);
+      window.clearInterval(pollId);
+    };
   }, []);
 
   const tweenedTotal = useTweenNumber(totalXp, 600);
@@ -300,7 +318,7 @@ export default function Navbar() {
           <div className="hidden sm:flex gap-5 text-[10px] uppercase tracking-widest">
             {navItem("/", t("status"), statusIcon)}
             {navItem("/guilds", t("guilds"), guildsIcon, {
-              badgeCount: pendingGuildCount,
+              badgeCount: pendingGuildCount + pendingGuildInviteCount,
               showDot: hasNewGuildFeed,
             })}
             {navItem("/leaderboard", t("board"), boardIcon)}
@@ -374,7 +392,7 @@ export default function Navbar() {
           {navItem("/", t("status"), statusIcon, { layout: "stack" })}
           {navItem("/guilds", t("guilds"), guildsIcon, {
             layout: "stack",
-            badgeCount: pendingGuildCount,
+            badgeCount: pendingGuildCount + pendingGuildInviteCount,
             showDot: hasNewGuildFeed,
           })}
           {navItem("/leaderboard", t("board"), boardIcon, { layout: "stack" })}
