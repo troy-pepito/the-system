@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -17,17 +18,10 @@ export default async function GuildsPage() {
 
   const t = await getTranslations("guildsPage");
 
-  // Tolerate failures, if either throws (offline / DB blip), the page
-  // still renders something useful instead of dropping into Next's
-  // error fallback.
-  let myGuild: Awaited<ReturnType<typeof getMyGuild>> = null;
-  let directory: Awaited<ReturnType<typeof browseGuilds>> = [];
-  try {
-    [myGuild, directory] = await Promise.all([getMyGuild(), browseGuilds()]);
-  } catch {
-    // empty fallback
-  }
-
+  // Stream the guild data below the header so the page shell paints
+  // immediately. getMyGuild + browseGuilds both touch unstable_cache
+  // and can be slow on cold cache, blocking would freeze the whole
+  // route for several seconds.
   return (
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-6">
@@ -41,62 +35,100 @@ export default async function GuildsPage() {
           </p>
         </div>
 
-        {myGuild ? <YourGuildCard guild={myGuild} /> : <GuildCreateForm />}
-
-        <div>
-          <p className="text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-3">
-            {myGuild ? t("otherGuilds") : t("browse")}
-          </p>
-          {directory.length === 0 ? (
-            <div className="border border-slate-800 rounded-lg p-6 text-center">
-              <p className="text-xs text-slate-500">{t("empty")}</p>
-            </div>
-          ) : (
-            <ul className="space-y-2">
-              {directory
-                .filter((g) => !myGuild || g.slug !== myGuild.slug)
-                .map((g) => (
-                  <li key={g.slug}>
-                    <Link
-                      href={`/g/${g.slug}`}
-                      className="block bg-slate-900/60 border border-slate-800 rounded-lg p-4 hover:border-cyan-500/40 transition-colors"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-bold tracking-wider text-cyan-200">
-                            {g.name}
-                          </p>
-                          {g.description && (
-                            <p className="text-xs text-slate-300 leading-relaxed mt-1 line-clamp-2">
-                              {g.description}
-                            </p>
-                          )}
-                        </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-[10px] tracking-widest uppercase text-slate-500">
-                            {t("membersShort", { count: g.memberCount })}
-                          </p>
-                          <p
-                            className={`text-[9px] tracking-[0.2em] uppercase mt-0.5 ${
-                              g.spotsLeft === 0
-                                ? "text-red-400/80"
-                                : "text-cyan-400/70"
-                            }`}
-                          >
-                            {g.spotsLeft === 0
-                              ? t("full")
-                              : t("spotsLeft", { count: g.spotsLeft })}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          )}
-        </div>
+        <Suspense fallback={<GuildsSkeleton />}>
+          <GuildsData />
+        </Suspense>
       </div>
     </main>
+  );
+}
+
+async function GuildsData() {
+  const t = await getTranslations("guildsPage");
+
+  // Tolerate failures, if either throws (offline / DB blip), the page
+  // still renders something useful instead of dropping into Next's
+  // error fallback.
+  let myGuild: Awaited<ReturnType<typeof getMyGuild>> = null;
+  let directory: Awaited<ReturnType<typeof browseGuilds>> = [];
+  try {
+    [myGuild, directory] = await Promise.all([getMyGuild(), browseGuilds()]);
+  } catch {
+    // empty fallback
+  }
+
+  return (
+    <>
+      {myGuild ? <YourGuildCard guild={myGuild} /> : <GuildCreateForm />}
+
+      <div>
+        <p className="text-[10px] tracking-[0.3em] uppercase text-slate-300 mb-3">
+          {myGuild ? t("otherGuilds") : t("browse")}
+        </p>
+        {directory.length === 0 ? (
+          <div className="border border-slate-800 rounded-lg p-6 text-center">
+            <p className="text-xs text-slate-500">{t("empty")}</p>
+          </div>
+        ) : (
+          <ul className="space-y-2">
+            {directory
+              .filter((g) => !myGuild || g.slug !== myGuild.slug)
+              .map((g) => (
+                <li key={g.slug}>
+                  <Link
+                    href={`/g/${g.slug}`}
+                    className="block bg-slate-900/60 border border-slate-800 rounded-lg p-4 hover:border-cyan-500/40 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold tracking-wider text-cyan-200">
+                          {g.name}
+                        </p>
+                        {g.description && (
+                          <p className="text-xs text-slate-300 leading-relaxed mt-1 line-clamp-2">
+                            {g.description}
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-[10px] tracking-widest uppercase text-slate-500">
+                          {t("membersShort", { count: g.memberCount })}
+                        </p>
+                        <p
+                          className={`text-[9px] tracking-[0.2em] uppercase mt-0.5 ${
+                            g.spotsLeft === 0
+                              ? "text-red-400/80"
+                              : "text-cyan-400/70"
+                          }`}
+                        >
+                          {g.spotsLeft === 0
+                            ? t("full")
+                            : t("spotsLeft", { count: g.spotsLeft })}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
+    </>
+  );
+}
+
+function GuildsSkeleton() {
+  return (
+    <div className="space-y-3 animate-pulse">
+      <div className="h-32 bg-slate-900/60 border border-slate-800/60 rounded-lg" />
+      <div className="h-4 w-32 bg-slate-800/40 rounded" />
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div
+          key={i}
+          className="h-20 bg-slate-900/60 border border-slate-800/60 rounded-lg"
+        />
+      ))}
+    </div>
   );
 }
 

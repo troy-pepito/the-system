@@ -16,13 +16,12 @@ import {
 } from "@/lib/quests";
 import { requireUserId } from "@/lib/auth";
 import { clerkClient } from "@clerk/nextjs/server";
+import { playerStatsTag } from "@/lib/cacheTags";
 import {
   FREE_DUNGEON_LIMIT,
   isPricingEnabled,
   isUserPro,
 } from "@/lib/pricing";
-
-const TAG = "player:stats";
 
 export interface DungeonRunState {
   id: number;
@@ -94,48 +93,50 @@ export async function getAllActiveRuns(): Promise<DungeonRunState[]> {
   return runs.map(toState);
 }
 
-const getComboStateCached = unstable_cache(
-  async (userId: string, todayIso: string) => {
-    const rows = await prisma.questCompletion.findMany({
-      where: { userId },
-      select: { questId: true, date: true },
-    });
-    const byDate: Record<string, Set<string>> = {};
-    for (const r of rows) {
-      const key = r.date.toISOString().split("T")[0];
-      if (!byDate[key]) byDate[key] = new Set();
-      byDate[key].add(r.questId);
-    }
-    const allQualifying = Object.entries(byDate)
-      .filter(([, set]) => set.size >= COMBO_THRESHOLD)
-      .map(([d]) => d)
-      .sort();
-    const pastQualifying = allQualifying.filter((d) => d < todayIso);
-    const runs = computeComboRuns(allQualifying);
-    const pastRuns = computeComboRuns(pastQualifying);
+function getComboStateCached(userId: string, todayIso: string) {
+  return unstable_cache(
+    async () => {
+      const rows = await prisma.questCompletion.findMany({
+        where: { userId },
+        select: { questId: true, date: true },
+      });
+      const byDate: Record<string, Set<string>> = {};
+      for (const r of rows) {
+        const key = r.date.toISOString().split("T")[0];
+        if (!byDate[key]) byDate[key] = new Set();
+        byDate[key].add(r.questId);
+      }
+      const allQualifying = Object.entries(byDate)
+        .filter(([, set]) => set.size >= COMBO_THRESHOLD)
+        .map(([d]) => d)
+        .sort();
+      const pastQualifying = allQualifying.filter((d) => d < todayIso);
+      const runs = computeComboRuns(allQualifying);
+      const pastRuns = computeComboRuns(pastQualifying);
 
-    const yesterdayIso = addDaysISO(todayIso, -1);
-    // Mirror the achievements.ts scattered guard: only flag scattered
-    // when the hunter has established history (a completion on some
-    // day strictly before yesterday). A first-day hunter who ticks
-    // quests today has byDate = { today } and an absent yesterday
-    // entry — that's not "scattered," they just didn't exist yet.
-    const hasCompletionBeforeYesterday = Object.keys(byDate).some(
-      (d) => d < yesterdayIso
-    );
-    const scattered =
-      hasCompletionBeforeYesterday && !byDate[yesterdayIso];
+      const yesterdayIso = addDaysISO(todayIso, -1);
+      // Mirror the achievements.ts scattered guard: only flag scattered
+      // when the hunter has established history (a completion on some
+      // day strictly before yesterday). A first-day hunter who ticks
+      // quests today has byDate = { today } and an absent yesterday
+      // entry — that's not "scattered," they just didn't exist yet.
+      const hasCompletionBeforeYesterday = Object.keys(byDate).some(
+        (d) => d < yesterdayIso
+      );
+      const scattered =
+        hasCompletionBeforeYesterday && !byDate[yesterdayIso];
 
-    return {
-      priorComboDays: computePriorComboDays(pastRuns, todayIso),
-      milestoneXp: totalMilestoneXp(runs),
-      scattered,
-      questBonus: comboBonusPerQuest(highestMilestoneIdx(runs)),
-    };
-  },
-  ["combo-state"],
-  { tags: [TAG] }
-);
+      return {
+        priorComboDays: computePriorComboDays(pastRuns, todayIso),
+        milestoneXp: totalMilestoneXp(runs),
+        scattered,
+        questBonus: comboBonusPerQuest(highestMilestoneIdx(runs)),
+      };
+    },
+    ["combo-state", userId, todayIso],
+    { tags: [playerStatsTag(userId)] }
+  )();
+}
 
 async function getComboState(todayIso: string): Promise<{
   priorComboDays: number;
@@ -213,7 +214,7 @@ export async function enterDungeon(
   const run = await prisma.dungeonRun.create({
     data: { userId, dungeonId, active: true },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
   return toState(run);
 }
 
@@ -260,7 +261,7 @@ export async function replayEnterDungeon(
   await prisma.dungeonRun.create({
     data: { userId, dungeonId, active: true },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
 }
 
 export async function setRunStartDate(
@@ -277,13 +278,13 @@ export async function setRunStartDate(
       where: { id: existing.id },
       data: { startDate: date },
     });
-    updateTag(TAG);
+    updateTag(playerStatsTag(userId));
     return toState(updated);
   }
   const run = await prisma.dungeonRun.create({
     data: { userId, dungeonId, startDate: date, active: true },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
   return toState(run);
 }
 
@@ -315,7 +316,7 @@ export async function endRun(
     where: { userId, dungeonId, active: true },
     data: { active: false, endReason: reason },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
 }
 
 function currentWeekBounds(): { start: Date; end: Date } {
@@ -401,66 +402,68 @@ export async function toggleWorkout(
         date: { gte: start, lt: end },
       },
     });
-    updateTag(TAG);
+    updateTag(playerStatsTag(userId));
     return { completed: false };
   }
 
   await prisma.dungeonEvent.create({
     data: { runId: run.id, type: workoutType, date: new Date() },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
   return { completed: true };
 }
 
-const getBonusXpCached = unstable_cache(
-  async (userId: string) => {
-    const workoutIds = Array.from(
-      new Set(
-        DUNGEONS.flatMap((d) => d.cadence?.workouts.map((w) => w.id) ?? [])
-      )
-    );
-    const exposureIds = Array.from(
-      new Set(
-        DUNGEONS.flatMap((d) => d.progressive?.rungs.map((r) => r.id) ?? [])
-      )
-    );
-
-    const [workoutCount, exposureCount, completedRuns] = await Promise.all([
-      workoutIds.length > 0
-        ? prisma.dungeonEvent.count({
-            where: { type: { in: workoutIds }, run: { userId } },
-          })
-        : Promise.resolve(0),
-      exposureIds.length > 0
-        ? prisma.dungeonEvent.count({
-            where: { type: { in: exposureIds }, run: { userId } },
-          })
-        : Promise.resolve(0),
-      prisma.dungeonRun.findMany({
-        where: { userId, active: false, endReason: "completed" },
-        select: { startDate: true, updatedAt: true },
-      }),
-    ]);
-
-    const bankedStreakDays = completedRuns.reduce((sum, run) => {
-      if (!run.startDate) return sum;
-      const days = Math.floor(
-        (run.updatedAt.getTime() - run.startDate.getTime()) /
-          (1000 * 60 * 60 * 24)
+function getBonusXpCached(userId: string) {
+  return unstable_cache(
+    async () => {
+      const workoutIds = Array.from(
+        new Set(
+          DUNGEONS.flatMap((d) => d.cadence?.workouts.map((w) => w.id) ?? [])
+        )
       );
-      return sum + Math.max(0, days);
-    }, 0);
+      const exposureIds = Array.from(
+        new Set(
+          DUNGEONS.flatMap((d) => d.progressive?.rungs.map((r) => r.id) ?? [])
+        )
+      );
 
-    return {
-      workouts: workoutCount,
-      exposures: exposureCount,
-      completions: completedRuns.length,
-      bankedStreakDays,
-    };
-  },
-  ["bonus-xp"],
-  { tags: [TAG] }
-);
+      const [workoutCount, exposureCount, completedRuns] = await Promise.all([
+        workoutIds.length > 0
+          ? prisma.dungeonEvent.count({
+              where: { type: { in: workoutIds }, run: { userId } },
+            })
+          : Promise.resolve(0),
+          exposureIds.length > 0
+          ? prisma.dungeonEvent.count({
+              where: { type: { in: exposureIds }, run: { userId } },
+            })
+          : Promise.resolve(0),
+        prisma.dungeonRun.findMany({
+          where: { userId, active: false, endReason: "completed" },
+          select: { startDate: true, updatedAt: true },
+        }),
+      ]);
+
+      const bankedStreakDays = completedRuns.reduce((sum, run) => {
+        if (!run.startDate) return sum;
+        const days = Math.floor(
+          (run.updatedAt.getTime() - run.startDate.getTime()) /
+            (1000 * 60 * 60 * 24)
+        );
+        return sum + Math.max(0, days);
+      }, 0);
+
+      return {
+        workouts: workoutCount,
+        exposures: exposureCount,
+        completions: completedRuns.length,
+        bankedStreakDays,
+      };
+    },
+    ["bonus-xp", userId],
+    { tags: [playerStatsTag(userId)] }
+  )();
+}
 
 export async function getBonusXp(): Promise<{
   workouts: number;
@@ -482,27 +485,29 @@ export interface JournalEntry {
   createdAt: string;
 }
 
-const getJournalEntriesCached = unstable_cache(
-  async (userId: string) => {
-    const events = await prisma.dungeonEvent.findMany({
-      where: { note: { not: null }, run: { userId } },
-      include: { run: { select: { dungeonId: true } } },
-      orderBy: { createdAt: "desc" },
-      take: 100,
-    });
-    return events.map((e) => ({
-      id: e.id,
-      dungeonId: e.run.dungeonId,
-      type: e.type,
-      date: e.date.toISOString().split("T")[0],
-      note: e.note ?? "",
-      isPublic: e.isPublic,
-      createdAt: e.createdAt.toISOString(),
-    }));
-  },
-  ["journal-entries"],
-  { tags: [TAG] }
-);
+function getJournalEntriesCached(userId: string) {
+  return unstable_cache(
+    async () => {
+      const events = await prisma.dungeonEvent.findMany({
+        where: { note: { not: null }, run: { userId } },
+        include: { run: { select: { dungeonId: true } } },
+        orderBy: { createdAt: "desc" },
+        take: 100,
+      });
+      return events.map((e) => ({
+        id: e.id,
+        dungeonId: e.run.dungeonId,
+        type: e.type,
+        date: e.date.toISOString().split("T")[0],
+        note: e.note ?? "",
+        isPublic: e.isPublic,
+        createdAt: e.createdAt.toISOString(),
+      }));
+    },
+    ["journal-entries", userId],
+    { tags: [playerStatsTag(userId)] }
+  )();
+}
 
 export async function getJournalEntries(): Promise<JournalEntry[]> {
   const userId = await requireUserId();
@@ -590,7 +595,7 @@ export async function logRungExposure(
     );
   }
 
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
   return { count, rungCleared, dungeonCleared };
 }
 
@@ -614,7 +619,7 @@ export async function undoRungExposure(
   const count = await prisma.dungeonEvent.count({
     where: { run: { userId, dungeonId }, type: rungId },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
   return { count };
 }
 
@@ -659,7 +664,7 @@ export async function clearCheckIn(
   await prisma.dungeonDayCheckIn.deleteMany({
     where: { userId, dungeonId, date },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
 }
 
 async function findActiveStreakRun(userId: string, dungeonId: string) {
@@ -755,7 +760,7 @@ export async function confirmDay(
       where: { userId_dungeonId_date: { userId, dungeonId, date } },
     });
     if (existing?.state === "relapsed") {
-      updateTag(TAG);
+      updateTag(playerStatsTag(userId));
       return;
     }
     await prisma.dungeonDayCheckIn.upsert({
@@ -777,7 +782,7 @@ export async function confirmDay(
     });
   }
 
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
 }
 
 export async function logJournalEntry(
@@ -802,7 +807,7 @@ export async function logJournalEntry(
       isPublic,
     },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
 }
 
 /**
@@ -822,7 +827,7 @@ export async function updateJournalEntry(
     where: { id: eventId, run: { userId } },
     data: { note: trimmed, isPublic },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
 }
 
 /**
@@ -833,5 +838,5 @@ export async function deleteJournalEntry(eventId: number): Promise<void> {
   await prisma.dungeonEvent.deleteMany({
     where: { id: eventId, run: { userId } },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
 }

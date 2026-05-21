@@ -4,8 +4,7 @@ import { unstable_cache, updateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { QUESTS, applyQuest, ZERO_REWARDS, type QuestRewards } from "@/lib/quests";
 import { requireUserId } from "@/lib/auth";
-
-const TAG = "player:stats";
+import { playerStatsTag } from "@/lib/cacheTags";
 
 // Direct read, NOT unstable_cache. unstable_cache's tag invalidation is
 // per-Node-process; on Vercel each lambda has its own LRU, so updateTag
@@ -35,30 +34,32 @@ export async function toggleQuestCompletion(
   });
   if (existing) {
     await prisma.questCompletion.delete({ where: { id: existing.id } });
-    updateTag(TAG);
+    updateTag(playerStatsTag(userId));
     return { completed: false };
   }
   await prisma.questCompletion.create({ data: { userId, questId, date } });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
   return { completed: true };
 }
 
-const getLifetimeRewardsCached = unstable_cache(
-  async (userId: string) => {
-    const rows = await prisma.questCompletion.findMany({
-      where: { userId },
-      select: { questId: true },
-    });
-    let total = ZERO_REWARDS;
-    for (const row of rows) {
-      const q = QUESTS.find((x) => x.id === row.questId);
-      if (q) total = applyQuest(total, q, 1);
-    }
-    return total;
-  },
-  ["lifetime-rewards"],
-  { tags: [TAG] }
-);
+function getLifetimeRewardsCached(userId: string): Promise<QuestRewards> {
+  return unstable_cache(
+    async () => {
+      const rows = await prisma.questCompletion.findMany({
+        where: { userId },
+        select: { questId: true },
+      });
+      let total = ZERO_REWARDS;
+      for (const row of rows) {
+        const q = QUESTS.find((x) => x.id === row.questId);
+        if (q) total = applyQuest(total, q, 1);
+      }
+      return total;
+    },
+    ["lifetime-rewards", userId],
+    { tags: [playerStatsTag(userId)] }
+  )();
+}
 
 export async function getLifetimeRewards(): Promise<QuestRewards> {
   const userId = await requireUserId();

@@ -32,6 +32,7 @@ import {
 import { ACTIVITY_POINTS } from "@/lib/leaderboard";
 import { resolveHunterDisplay } from "@/lib/hunterDisplay";
 import { requireUserId } from "@/lib/auth";
+import { playerStatsTag } from "@/lib/cacheTags";
 
 import {
   XP_PER_STREAK_DAY,
@@ -42,8 +43,6 @@ import {
   getRank,
   computeStreakDays,
 } from "@/lib/player";
-
-const TAG = "player:stats";
 
 export interface UnlockedAchievement {
   id: string;
@@ -717,11 +716,19 @@ async function _buildSnapshot(userId: string): Promise<PlayerSnapshot> {
   };
 }
 
-const buildSnapshot = unstable_cache(
-  _buildSnapshot,
-  ["build-snapshot"],
-  { tags: [TAG] }
-);
+// Per-user wrapper for _buildSnapshot. We allocate the unstable_cache
+// closure per call so the tag can be per-user — without per-user tags,
+// one user's mutation busts every other user's cached snapshot, which
+// makes the leaderboard rebuild N snapshots cold on every load. The
+// cache itself is keyed on ["build-snapshot", userId], so same-user
+// calls hit the same entry; only the closure is fresh.
+function buildSnapshot(userId: string): Promise<PlayerSnapshot> {
+  return unstable_cache(
+    () => _buildSnapshot(userId),
+    ["build-snapshot", userId],
+    { tags: [playerStatsTag(userId)] }
+  )();
+}
 
 /**
  * Public version for cross-module use (e.g. friends.ts), returns the
@@ -889,27 +896,31 @@ export async function evaluateAchievements(): Promise<string[]> {
   }
 
   if (newlyUnlocked.length > 0 || toRevoke.length > 0) {
-    updateTag(TAG);
+    updateTag(playerStatsTag(userId));
   }
 
   return newlyUnlocked;
 }
 
-const getUnlockedAchievementsCached = unstable_cache(
-  async (userId: string): Promise<UnlockedAchievement[]> => {
-    const rows = await prisma.achievement.findMany({
-      where: { userId },
-      orderBy: { unlockedAt: "desc" },
-    });
-    return rows.map((r) => ({
-      id: r.achievementId,
-      unlockedAt: r.unlockedAt.toISOString(),
-      claimedAt: r.claimedAt ? r.claimedAt.toISOString() : null,
-    }));
-  },
-  ["unlocked-achievements"],
-  { tags: [TAG] }
-);
+function getUnlockedAchievementsCached(
+  userId: string
+): Promise<UnlockedAchievement[]> {
+  return unstable_cache(
+    async () => {
+      const rows = await prisma.achievement.findMany({
+        where: { userId },
+        orderBy: { unlockedAt: "desc" },
+      });
+      return rows.map((r) => ({
+        id: r.achievementId,
+        unlockedAt: r.unlockedAt.toISOString(),
+        claimedAt: r.claimedAt ? r.claimedAt.toISOString() : null,
+      }));
+    },
+    ["unlocked-achievements", userId],
+    { tags: [playerStatsTag(userId)] }
+  )();
+}
 
 /**
  * Mark an achievement as claimed and award the rarity-based XP. The
@@ -926,7 +937,7 @@ export async function claimAchievement(achievementId: string): Promise<void> {
     where: { userId, achievementId, claimedAt: null },
     data: { claimedAt: new Date() },
   });
-  updateTag(TAG);
+  updateTag(playerStatsTag(userId));
 }
 
 /** Used by the navbar badge, single integer count, dirt cheap. Direct

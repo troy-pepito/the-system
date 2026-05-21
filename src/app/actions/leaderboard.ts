@@ -7,8 +7,7 @@ import {
   getHunterSummariesByIds,
   type HunterSummary,
 } from "@/app/actions/achievements";
-
-const TAG = "player:stats";
+import { GLOBAL_HUNTERS_TAG } from "@/lib/cacheTags";
 
 export type LeaderboardScope = "global" | "friends" | "guild" | "guilds";
 
@@ -77,7 +76,12 @@ const _globalHunterIds = unstable_cache(
     return Array.from(set);
   },
   ["global-hunter-ids"],
-  { tags: [TAG] }
+  // Own tag, NOT the per-user player:stats — this list only changes
+  // when a brand-new user takes their first action. Busting it on every
+  // mutation (as the pre-refactor global TAG did) flushed every cached
+  // entry uselessly. With no explicit revalidate, new users surface
+  // within Next's default cache TTL.
+  { tags: [GLOBAL_HUNTERS_TAG] }
 );
 
 /** Friend ids in the "accepted" status, input to the friends-scope
