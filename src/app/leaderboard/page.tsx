@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { auth } from "@clerk/nextjs/server";
 import { getTranslations } from "next-intl/server";
 import { getLeaderboard } from "@/app/actions/leaderboard";
@@ -16,10 +15,21 @@ export default async function LeaderboardPage() {
 
   const t = await getTranslations("leaderboard");
 
-  // Page shell renders immediately; the heavy getLeaderboard call
-  // (N user snapshots) streams in below via Suspense. Without this
-  // split the whole route blocks on rebuilding every user's snapshot
-  // on cold cache, which can be several seconds at ~20 hunters.
+  // Default to the global view on the server. The client component
+  // re-fetches when the viewer switches scope so the initial paint is
+  // useful even before hydration.
+  let initial: Awaited<ReturnType<typeof getLeaderboard>> = {
+    scope: "global",
+    kind: "hunters",
+    rows: [],
+    viewerRow: null,
+  };
+  try {
+    initial = await getLeaderboard("global");
+  } catch {
+    // empty fallback, view renders the empty state
+  }
+
   return (
     <main className="min-h-screen bg-slate-950 p-4 sm:p-8">
       <div className="max-w-2xl mx-auto w-full space-y-6">
@@ -33,38 +43,8 @@ export default async function LeaderboardPage() {
           </p>
         </div>
 
-        <Suspense fallback={<LeaderboardSkeleton />}>
-          <LeaderboardData />
-        </Suspense>
+        <LeaderboardView initial={initial} />
       </div>
     </main>
-  );
-}
-
-async function LeaderboardData() {
-  let initial: Awaited<ReturnType<typeof getLeaderboard>> = {
-    scope: "global",
-    kind: "hunters",
-    rows: [],
-    viewerRow: null,
-  };
-  try {
-    initial = await getLeaderboard("global");
-  } catch {
-    // empty fallback, view renders the empty state
-  }
-  return <LeaderboardView initial={initial} />;
-}
-
-function LeaderboardSkeleton() {
-  return (
-    <div className="space-y-2 animate-pulse">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div
-          key={i}
-          className="h-14 bg-slate-900/60 border border-slate-800/60 rounded-lg"
-        />
-      ))}
-    </div>
   );
 }
